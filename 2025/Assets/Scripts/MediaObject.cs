@@ -4,11 +4,14 @@ public class Entity : MonoBehaviour
 {
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log($"Collided with: {collision.gameObject.name}, Tag: {collision.gameObject.tag}");
+        bool draggable = GetComponent<Draggable>();
+        Debug.Log($"Draggable? {draggable}");
+
+        //Debug.Log($"Collided with: {collision.gameObject.name}, Tag: {collision.gameObject.tag}");
         if (collision.gameObject.CompareTag("DropBox"))
         {
-            Debug.Log("DropBox detected, destroying...");
-            Destroy(collision.gameObject);
+            //Debug.Log("DropBox detected, destroying...");
+            Destroy(gameObject);
         }
     }
 

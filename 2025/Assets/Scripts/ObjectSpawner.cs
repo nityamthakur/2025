@@ -5,9 +5,9 @@ using UnityEngine;
 public class ObjectSpawner : MonoBehaviour
 {
     [SerializeField] private GameObject mediaObject;     
-    [SerializeField] private GameObject mediaSpawner;     
+    [SerializeField] private GameObject mediaSpawner;    
+    private float downwardForce = 0.001f;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         SpawnNewMediaObject();
@@ -23,7 +23,20 @@ public class ObjectSpawner : MonoBehaviour
         Debug.Log($"Spawning object at: {mediaSpawner.transform.position}");
 
         // Create a new GameObject and assign the sprite
-        Instantiate(mediaObject, mediaSpawner.transform.position, Quaternion.identity);
+        GameObject newMedia = Instantiate(mediaObject, mediaSpawner.transform.position, Quaternion.identity);
+        
+        // Get the Rigidbody component on the instantiated object
+        Rigidbody2D rb = newMedia.GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            // Apply downward force
+            rb.AddForce(Vector3.down * downwardForce, ForceMode2D.Impulse);
+        }
+        else
+        {
+            Debug.LogError("No Rigidbody found on the instantiated object!");
+        }
+
     }
 
     // EventManager for creating a new media object after one gets destroyed
