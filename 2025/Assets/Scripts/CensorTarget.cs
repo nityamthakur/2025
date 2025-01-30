@@ -1,22 +1,20 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class CensorTarget : MonoBehaviour
+public class CensorTarget : MonoBehaviour, IPointerClickHandler
 {
-    private Entity parentEntity; // Reference to the parent media object
+    private SpriteRenderer spriteRenderer;
+    
 
     void Start()
     {
-        // Get the parent object (Entity)
-        parentEntity = GetComponentInParent<Entity>();
-        if (parentEntity == null)
-        {
-            Debug.LogError("No parent Entity found for CensorTarget!");
-        }
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    private void OnMouseDown()
+    public void OnPointerClick(PointerEventData eventData)
     {
-        // Call the censoring logic on the parent object
-        parentEntity.CensorObject();
+        spriteRenderer.enabled = true;
+
+        GameManager.Instance.CensorTargetClicked();
     }
 }

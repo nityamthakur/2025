@@ -5,11 +5,18 @@ using UnityEngine;
 public class ObjectSpawner : MonoBehaviour
 {
     [SerializeField] private GameObject mediaObject;     
-    [SerializeField] private GameObject mediaSpawner;    
+    [SerializeField] private GameObject mediaSpawner;
+    [SerializeField] private GameObject currentMediaObject; 
     private float downwardForce = 0.001f;
 
     void Start()
     {
+        if (currentMediaObject == null) 
+        {
+            // Throw error
+            Debug.LogError("Current Media Object is not assigned.");
+        }
+
         SpawnNewMediaObject();
     }
 
@@ -23,7 +30,7 @@ public class ObjectSpawner : MonoBehaviour
         Debug.Log($"Spawning object at: {mediaSpawner.transform.position}");
 
         // Create a new GameObject and assign the sprite
-        GameObject newMedia = Instantiate(mediaObject, mediaSpawner.transform.position, Quaternion.identity);
+        GameObject newMedia = Instantiate(mediaObject, mediaSpawner.transform.position, Quaternion.identity, currentMediaObject.transform);
         
         // Get the Rigidbody component on the instantiated object
         Rigidbody2D rb = newMedia.GetComponent<Rigidbody2D>();

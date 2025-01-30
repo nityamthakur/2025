@@ -29,6 +29,7 @@ public class Draggable : MonoBehaviour
         // Disable physics while dragging by setting the body type to Kinematic
         if (rb != null)
         {
+            rb.linearVelocity = Vector2.zero;
             rb.bodyType = RigidbodyType2D.Kinematic;
         }
     }
