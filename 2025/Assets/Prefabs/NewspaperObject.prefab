@@ -98,6 +98,7 @@ GameObject:
   - component: {fileID: 2962568857113499834}
   - component: {fileID: 1557041313085716512}
   - component: {fileID: 6764300093197395354}
+  - component: {fileID: -4859060692816504937}
   - component: {fileID: 6355933026193757114}
   - component: {fileID: 6181959918788005876}
   - component: {fileID: 7158566480172305870}
@@ -142,7 +143,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   censorBoxPrefab: {fileID: 1238444521771680430, guid: 2ffe89bad49217d4197da332cf5fc953, type: 3}
-  censorButtonPrefab: {fileID: 6669403705108761382, guid: fe1997f13d93d8a43959a5c78446c108, type: 3}
 --- !u!114 &6764300093197395354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -155,6 +155,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eca91fbb84a85f44cbdbac6d3b5e557f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-4859060692816504937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4998836287132237453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3436f6230c941db478a06195b1f108f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  zoomSpeed: 0.2
 --- !u!61 &6355933026193757114
 BoxCollider2D:
   m_ObjectHideFlags: 0
