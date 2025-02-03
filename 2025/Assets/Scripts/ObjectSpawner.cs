@@ -8,6 +8,8 @@ public class ObjectSpawner : MonoBehaviour
     [SerializeField] private GameObject mediaSpawner;
     [SerializeField] private GameObject currentMediaObject; 
     private float downwardForce = 0.001f;
+    // Quick fix for preventing object spawn on game close
+    bool quitting = false;
 
     void Start()
     {
@@ -45,6 +47,10 @@ public class ObjectSpawner : MonoBehaviour
         }
 
     }
+    void OnApplicationQuit ()
+    {
+        quitting = true;
+    }
 
     // EventManager for creating a new media object after one gets destroyed
     private void OnEnable()
@@ -54,8 +60,13 @@ public class ObjectSpawner : MonoBehaviour
 
     private void OnDisable()
     {
+        if(quitting)
+        {
+            return;
+        }
         EventManager.OnMediaDestroyed -= HandleMediaDestroyed;
     }
+
     private void HandleMediaDestroyed(GameObject customer)
     {
         SpawnNewMediaObject();

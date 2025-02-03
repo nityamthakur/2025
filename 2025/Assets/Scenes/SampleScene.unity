@@ -119,37 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &31645277
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 31645278}
-  m_Layer: 0
-  m_Name: CurrentMedia
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &31645278
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 31645277}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.0165129, y: -0.042749844, z: -0.040422987}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -1195,7 +1164,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mediaObject: {fileID: 4998836287132237453, guid: 0c53175a4e94f6d4781fe217fb8b0dde, type: 3}
   mediaSpawner: {fileID: 955105929}
-  currentMediaObject: {fileID: 31645277}
+  currentMediaObject: {fileID: 4998836287132237453, guid: 0c53175a4e94f6d4781fe217fb8b0dde, type: 3}
 --- !u!4 &1245310924
 Transform:
   m_ObjectHideFlags: 0
@@ -1872,4 +1841,3 @@ SceneRoots:
   - {fileID: 1245310924}
   - {fileID: 2017419446}
   - {fileID: 601703687}
-  - {fileID: 31645278}
