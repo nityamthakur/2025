@@ -11,6 +11,9 @@ public class GameManager : MonoBehaviour
     private int totalCensorTargets = 0;
     private int currentCensorNum = 0;
     
+    private int totalScore = 0; // Keeps track of total correct censorships
+    private int totalWordsProcessed = 0; // Keeps track of all words processed for scoring
+
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -42,11 +45,14 @@ public class GameManager : MonoBehaviour
     public void RegisterCensorTarget()
     {
         totalCensorTargets++;
+        totalWordsProcessed++;
     }
 
     public void CensorTargetClicked()
     {
         currentCensorNum++;
+        totalScore++;
+        Debug.Log($"Censored Word! Score: {totalScore}/{totalWordsProcessed}");
     }
 
     public void ResetCensorTracking()
@@ -69,6 +75,7 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("Player has not censored all targets.");
         }
+        EvaluatePlayerScore();
         ResetCensorTracking();
     }
 
@@ -77,12 +84,17 @@ public class GameManager : MonoBehaviour
         if (banTargetWords.Length > 0)
         {
             Debug.Log("Player correctly destroyed the object.");
-            return;
         }
         else
         {
             Debug.Log("Player mistakenly destroyed the object.");
         }
+        EvaluatePlayerScore();
         ResetCensorTracking();
+    }
+
+    public void EvaluatePlayerScore()
+    {
+        Debug.Log($"Final Score: {totalScore}/{totalWordsProcessed} words correctly censored.");
     }
 }
