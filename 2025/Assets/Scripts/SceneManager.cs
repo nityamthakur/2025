@@ -3,24 +3,73 @@ using TMPro;
 using System.IO;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEditor.Search;
 
 public class SceneManager : MonoBehaviour
 {
     [SerializeField] private GameObject UITextBox;
+    [SerializeField] private Sprite FemaleNewsAnchor;
+    [SerializeField] private Sprite MaleNewsAnchor;
+    private GameObject currentTextBox;
     private TextMeshProUGUI TextBox;
-    private GameObject currentTextBox; // To track the created popup menu
-
-    private int dayCounter = 1;
+    private Image backgroundImage;
+    
+    private int dayCounter = 0;
     private int linePos = 0;
     private string[] currentLines;
 
     void Start()
     {
+        // Comment out to skip to job
+        LoadDayStart();
+    }
+
+    private void LoadDayStart() {
+        
+        dayCounter++;
+        currentTextBox = Instantiate(UITextBox);
+
+        if (currentTextBox == null)
+        {
+            Debug.LogError("currentTextBox is null.");
+            return;
+        }
+
+        ShowBackgroundImage();
         ShowDialogTextBox();
         LoadJsonFromFile();
     }
 
-    void LoadJsonFromFile()
+    private void ShowBackgroundImage()
+    {
+        backgroundImage = currentTextBox.transform.Find("BackgroundImage").GetComponent<Image>();
+        if(backgroundImage == null)
+        {
+            Debug.Log("Failed to find Image component");
+            return;
+        }
+        backgroundImage.sprite = FemaleNewsAnchor; 
+    }
+
+    private void ShowDialogTextBox()
+    {
+        TextBox = currentTextBox.transform.Find("TextBox")?.GetComponent<TextMeshProUGUI>();
+        if (TextBox == null)
+        {
+            Debug.LogError("Failed to find TextMeshProUGUI component.");
+            return;
+        }
+
+        Button nextButton = currentTextBox.transform.Find("NextTextButton")?.GetComponent<Button>();
+        if (nextButton == null)
+        {
+            Debug.LogError("Failed to find Button component.");
+            return;
+        }
+        nextButton.onClick.AddListener(ReadNextLine);
+    }
+
+    private void LoadJsonFromFile()
     {
         string path = Path.Combine(Application.streamingAssetsPath, "GameText.json");
         if (!File.Exists(path))
@@ -33,7 +82,7 @@ public class SceneManager : MonoBehaviour
         ParseJson(json);
     }
 
-    void ParseJson(string json)
+    private void ParseJson(string json)
     {
         var jsonObject = JsonUtility.FromJson<Wrapper>(json);
 
@@ -49,7 +98,7 @@ public class SceneManager : MonoBehaviour
         }
     }
 
-    string[] GetLinesForDay(List<Entry> entries, int day)
+    private string[] GetLinesForDay(List<Entry> entries, int day)
     {
         foreach (var entry in entries)
         {
@@ -61,7 +110,7 @@ public class SceneManager : MonoBehaviour
         return new string[0];
     }
 
-    public void ReadNextLine()
+    private void ReadNextLine()
     {
         if (linePos < currentLines.Length)
         {
@@ -76,16 +125,6 @@ public class SceneManager : MonoBehaviour
         }
     }
 
-    public void ShowDialogTextBox()
-    {
-        if (currentTextBox != null) return;
-
-        currentTextBox = Instantiate(UITextBox);
-        TextBox = currentTextBox.transform.Find("TextBox").GetComponent<TextMeshProUGUI>();
-        Button nextButton = currentTextBox.transform.Find("NextTextButton").GetComponent<Button>();
-        nextButton.onClick.AddListener(() => { ReadNextLine(); });
-    }
-
     private void DestroyTextBox()
     {
         if (currentTextBox != null)
@@ -93,8 +132,13 @@ public class SceneManager : MonoBehaviour
             Destroy(currentTextBox);
             currentTextBox = null;
         }
+        BeginWorkDay();
     }
 
+    private void BeginWorkDay()
+    {
+        
+    }
 
     [System.Serializable]
     private class Wrapper
