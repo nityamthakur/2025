@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using System;
 using System.Collections;
-using Unity.VisualScripting;
 
 public class SceneManager : MonoBehaviour
 {
@@ -84,6 +83,7 @@ public class SceneManager : MonoBehaviour
 
     private void LoadJsonFromFile()
     {
+        // Check if Json is found in StreamingAssets folder
         string path = Path.Combine(Application.streamingAssetsPath, "GameText.json");
         if (!File.Exists(path))
         {
@@ -200,13 +200,13 @@ public class SceneManager : MonoBehaviour
         throw new NotImplementedException();
     }
 
-    [System.Serializable]
+    [Serializable]
     private class Wrapper
     {
         public List<Entry> newsCasterIntro;
     }
 
-    [System.Serializable]
+    [Serializable]
     private class Entry
     {
         public int day;
