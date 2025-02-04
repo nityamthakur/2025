@@ -3,7 +3,9 @@ using TMPro;
 using System.IO;
 using System.Collections.Generic;
 using UnityEngine.UI;
-using UnityEditor.Search;
+using System;
+using System.Collections;
+using Unity.VisualScripting;
 
 public class SceneManager : MonoBehaviour
 {
@@ -12,7 +14,9 @@ public class SceneManager : MonoBehaviour
     [SerializeField] private Sprite MaleNewsAnchor;
     private GameObject currentTextBox;
     private TextMeshProUGUI TextBox;
+    private Button NextButton;
     private Image backgroundImage;
+    private Image FadeOutImage;
     
     private int dayCounter = 0;
     private int linePos = 0;
@@ -20,7 +24,8 @@ public class SceneManager : MonoBehaviour
 
     void Start()
     {
-        // Comment out to skip to job
+        // Comment out to skip right to the job
+        // Possible addition to add a skip to job button after one playthrough?
         LoadDayStart();
     }
 
@@ -49,6 +54,18 @@ public class SceneManager : MonoBehaviour
             return;
         }
         backgroundImage.sprite = FemaleNewsAnchor; 
+
+        // Hide Fadeout Image for the future
+        FadeOutImage = currentTextBox.transform.Find("FadeOutImage").GetComponent<Image>();
+        if(FadeOutImage == null)
+        {
+            Debug.Log("Failed to find FadeOut component");
+            return;
+        }
+
+        // Set false to allow interaction with button 
+        FadeOutImage.gameObject.SetActive(false);
+        FadeOutImage.color = new Color (0, 0, 0, 0); 
     }
 
     private void ShowDialogTextBox()
@@ -60,13 +77,13 @@ public class SceneManager : MonoBehaviour
             return;
         }
 
-        Button nextButton = currentTextBox.transform.Find("NextTextButton")?.GetComponent<Button>();
-        if (nextButton == null)
+        NextButton = currentTextBox.transform.Find("NextTextButton")?.GetComponent<Button>();
+        if (NextButton == null)
         {
             Debug.LogError("Failed to find Button component.");
             return;
         }
-        nextButton.onClick.AddListener(ReadNextLine);
+        NextButton.onClick.AddListener(ReadNextLine);
     }
 
     private void LoadJsonFromFile()
@@ -121,23 +138,62 @@ public class SceneManager : MonoBehaviour
         {
             // Destroy UI object or hide.
             Debug.Log("End of dialogue.");
-            DestroyTextBox();
+            StartCoroutine(FadeOutAndDestroy());
         }
     }
 
-    private void DestroyTextBox()
+    private float fadeDuration = 3f; // Adjustable fade duration
+    private float waitTime = 2f; // Time to wait before fading back in
+
+    private IEnumerator FadeOutAndDestroy()
     {
-        if (currentTextBox != null)
-        {
-            Destroy(currentTextBox);
-            currentTextBox = null;
-        }
+        // Set true so that it can be visible and fade in and out
+        FadeOutImage.gameObject.SetActive(true);
+
+        // Fade to black
+        yield return StartCoroutine(FadeImage(FadeOutImage, 0f, 1f, fadeDuration));
+
+        // Hide UI elements after fade-out
+        backgroundImage.gameObject.SetActive(false);
+        TextBox.gameObject.SetActive(false);
+        NextButton.gameObject.SetActive(false);
+        Image TextBoxBackground = currentTextBox.transform.Find("TextBoxBackground").GetComponent<Image>();
+        TextBoxBackground.gameObject.SetActive(false);
+
+        // Wait before fading back in
+        yield return new WaitForSeconds(waitTime);
+
+        // Fade to next scene
+        yield return StartCoroutine(FadeImage(FadeOutImage, 1f, 0f, fadeDuration));
+
+        Destroy(currentTextBox);
+        currentTextBox = null;
         BeginWorkDay();
     }
 
+    private IEnumerator FadeImage(Image image, float startAlpha, float endAlpha, float duration)
+    {
+        float elapsedTime = 0f;
+        Color color = image.color;
+        color.a = startAlpha;
+        image.color = color;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            color.a = Mathf.Lerp(startAlpha, endAlpha, elapsedTime / duration);
+            image.color = color;
+            yield return null;
+        }
+
+        color.a = endAlpha;
+        image.color = color;
+    }
+
+
     private void BeginWorkDay()
     {
-        
+        throw new NotImplementedException();
     }
 
     [System.Serializable]
