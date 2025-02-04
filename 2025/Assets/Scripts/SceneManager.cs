@@ -40,9 +40,10 @@ public class SceneManager : MonoBehaviour
             return;
         }
 
-        ShowBackgroundImage();
         ShowDialogTextBox();
         LoadJsonFromFile();
+        ShowBackgroundImage();
+        StartCoroutine(FadeInDayStart());
     }
 
     private void ShowBackgroundImage()
@@ -55,17 +56,12 @@ public class SceneManager : MonoBehaviour
         }
         backgroundImage.sprite = FemaleNewsAnchor; 
 
-        // Hide Fadeout Image for the future
         FadeOutImage = currentTextBox.transform.Find("FadeOutImage").GetComponent<Image>();
         if(FadeOutImage == null)
         {
             Debug.Log("Failed to find FadeOut component");
             return;
         }
-
-        // Set false to allow interaction with button 
-        FadeOutImage.gameObject.SetActive(false);
-        FadeOutImage.color = new Color (0, 0, 0, 0); 
     }
 
     private void ShowDialogTextBox()
@@ -143,7 +139,15 @@ public class SceneManager : MonoBehaviour
     }
 
     private float fadeDuration = 3f; // Adjustable fade duration
-    private float waitTime = 2f; // Time to wait before fading back in
+    private float waitTime = 1f; // Time to wait before fading back in
+
+    private IEnumerator FadeInDayStart()
+    {
+        // Start with FadeOutImage dark then fade in
+        yield return new WaitForSeconds(waitTime);
+        yield return StartCoroutine(FadeImage(FadeOutImage, 1f, 0f, fadeDuration));
+        FadeOutImage.gameObject.SetActive(false);
+    }
 
     private IEnumerator FadeOutAndDestroy()
     {
