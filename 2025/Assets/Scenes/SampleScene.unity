@@ -1526,7 +1526,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7166bcba713f9f43a8496ccdd63b791, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UITextBox: {fileID: 4986825238899682302, guid: e96150c8905d65c4bb2b259bc47af605, type: 3}
+  UITextBox: {fileID: 4986825238899682302, guid: cc809ff330541a84aa7d1c21ab46ac07, type: 3}
   FemaleNewsAnchor: {fileID: -9148649168555976762, guid: c0076031d1972be4f89fb9fec336f2bb, type: 3}
   MaleNewsAnchor: {fileID: -1487834262871342188, guid: c162df2e07f939c4cbb1416f1229077f, type: 3}
 --- !u!4 &1487003098

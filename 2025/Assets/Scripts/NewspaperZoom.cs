@@ -1,3 +1,4 @@
+using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 
 public class NewspaperZoom : MonoBehaviour
@@ -37,14 +38,36 @@ public class NewspaperZoom : MonoBehaviour
 
     void ToggleZoom()
     {
+        Entity entityComponent = GetComponent<Entity>(); // Get the Entity script
+
         if (isZoomedIn)
         {
+            if (entityComponent != null)
+            {
+                // Rotation of media object being wonky with the censor bars
+                //entityComponent.ChangeMediaRotation(60); // Reset rotation when zooming out
+            }
+            else
+            {
+                Debug.LogError("Entity component not found on Newspaper!");
+            }
+
             StartCoroutine(SmoothTransition(originalPosition, originalScale));
             newspaperCollider.enabled = true;  // Re-enable collision
             if (draggableScript != null) draggableScript.enabled = true;  // Re-enable dragging
         }
         else
         {
+            if (entityComponent != null)
+            {
+                // Rotation of media object being wonky with the censor bars
+                //entityComponent.ChangeMediaRotation(-60); // Reset rotation when zooming out
+            }
+            else
+            {
+                Debug.LogError("Entity component not found on Newspaper!");
+            }
+
             StartCoroutine(SmoothTransition(zoomPosition, zoomScale));
             newspaperCollider.enabled = false; // Disable collision
             if (draggableScript != null) draggableScript.enabled = false; // Disable dragging

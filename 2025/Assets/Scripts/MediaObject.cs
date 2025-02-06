@@ -31,6 +31,14 @@ public class Entity : MonoBehaviour
         textComponent.ForceMeshUpdate();
     }
 
+    public void ChangeMediaRotation( int angleX )
+    {
+        transform.eulerAngles = new Vector3(
+        transform.eulerAngles.x + angleX,
+        transform.eulerAngles.y,
+        transform.eulerAngles.z
+    );}
+
     private void CreateCensorBoxes()
     {
         // Loop through each word in the text

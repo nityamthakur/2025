@@ -25,7 +25,7 @@ public class SceneManager : MonoBehaviour
     {
         // Comment out to skip right to the job
         // Possible addition to add a skip to job button after one playthrough?
-        LoadDayStart();
+        //LoadDayStart();
     }
 
     private void LoadDayStart() {

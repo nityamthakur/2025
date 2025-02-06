@@ -33,7 +33,20 @@ public class ObjectSpawner : MonoBehaviour
 
         // Create a new GameObject and assign the sprite
         GameObject newMedia = Instantiate(mediaObject, mediaSpawner.transform.position, Quaternion.identity, currentMediaObject.transform);
+        //newMedia.transform.Rotate(90.0f, 0.0f, 0.0f, Space.Self);
         
+        // Get the Entity component to rotate the object
+        Entity entityComponent = newMedia.GetComponent<Entity>();
+        if (entityComponent != null)
+        {
+            // Rotation of media object being wonky with the censor bars
+            //entityComponent.ChangeMediaRotation(60);
+        }
+        else
+        {
+            Debug.LogError("Entity component not found on newMedia!");
+        }
+
         // Get the Rigidbody component on the instantiated object
         Rigidbody2D rb = newMedia.GetComponent<Rigidbody2D>();
         if (rb != null)
@@ -47,6 +60,7 @@ public class ObjectSpawner : MonoBehaviour
         }
 
     }
+
     void OnApplicationQuit ()
     {
         quitting = true;
@@ -60,15 +74,13 @@ public class ObjectSpawner : MonoBehaviour
 
     private void OnDisable()
     {
-        if(quitting)
-        {
-            return;
-        }
+        if(quitting) return;
         EventManager.OnMediaDestroyed -= HandleMediaDestroyed;
     }
 
     private void HandleMediaDestroyed(GameObject customer)
     {
+        if (quitting) return; // Prevent spawning when quitting
         SpawnNewMediaObject();
     }
 }
