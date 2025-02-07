@@ -44,8 +44,7 @@ public class NewspaperZoom : MonoBehaviour
         {
             if (entityComponent != null)
             {
-                // Rotation of media object being wonky with the censor bars
-                //entityComponent.ChangeMediaRotation(60); // Reset rotation when zooming out
+                entityComponent.ChangeMediaRotation(60); // Reset rotation when zooming out
             }
             else
             {
@@ -60,8 +59,7 @@ public class NewspaperZoom : MonoBehaviour
         {
             if (entityComponent != null)
             {
-                // Rotation of media object being wonky with the censor bars
-                //entityComponent.ChangeMediaRotation(-60); // Reset rotation when zooming out
+                entityComponent.ChangeMediaRotation(-60); // Reset rotation when zooming out
             }
             else
             {

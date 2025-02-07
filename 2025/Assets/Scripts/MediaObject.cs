@@ -18,6 +18,7 @@ public class Entity : MonoBehaviour
         }
         GenerateText();
         CreateCensorBoxes();
+        ChangeMediaRotation(60);
     }
 
     private void GenerateText()

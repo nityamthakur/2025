@@ -32,20 +32,7 @@ public class ObjectSpawner : MonoBehaviour
         Debug.Log($"Spawning object at: {mediaSpawner.transform.position}");
 
         // Create a new GameObject and assign the sprite
-        GameObject newMedia = Instantiate(mediaObject, mediaSpawner.transform.position, Quaternion.identity, currentMediaObject.transform);
-        //newMedia.transform.Rotate(90.0f, 0.0f, 0.0f, Space.Self);
-        
-        // Get the Entity component to rotate the object
-        Entity entityComponent = newMedia.GetComponent<Entity>();
-        if (entityComponent != null)
-        {
-            // Rotation of media object being wonky with the censor bars
-            //entityComponent.ChangeMediaRotation(60);
-        }
-        else
-        {
-            Debug.LogError("Entity component not found on newMedia!");
-        }
+        GameObject newMedia = Instantiate(mediaObject, mediaSpawner.transform.position, Quaternion.identity, currentMediaObject.transform);        
 
         // Get the Rigidbody component on the instantiated object
         Rigidbody2D rb = newMedia.GetComponent<Rigidbody2D>();

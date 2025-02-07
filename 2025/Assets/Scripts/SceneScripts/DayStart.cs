@@ -6,31 +6,22 @@ using UnityEngine.UI;
 using System;
 using System.Collections;
 
-public class SceneManager : MonoBehaviour
+public class DayStart : MonoBehaviour
 {
     [SerializeField] private GameObject UITextBox;
     [SerializeField] private Sprite FemaleNewsAnchor;
     [SerializeField] private Sprite MaleNewsAnchor;
     private GameObject currentTextBox;
     private TextMeshProUGUI TextBox;
-    private Button NextButton;
-    private Image backgroundImage;
-    private Image FadeOutImage;
-    
-    private int dayCounter = 0;
+    private Button nextButton;
+    private Image backgroundImage;    
+    private int currDay = 0;
     private int linePos = 0;
     private string[] currentLines;
 
-    void Start()
-    {
-        // Comment out to skip right to the job
-        // Possible addition to add a skip to job button after one playthrough?
-        //LoadDayStart();
-    }
-
-    private void LoadDayStart() {
+    public void LoadDayStart(int day) {
         
-        dayCounter++;
+        currDay = day;
         currentTextBox = Instantiate(UITextBox);
 
         if (currentTextBox == null)
@@ -39,14 +30,10 @@ public class SceneManager : MonoBehaviour
             return;
         }
 
-        ShowDialogTextBox();
-        LoadJsonFromFile();
-        ShowBackgroundImage();
-        StartCoroutine(FadeInDayStart());
+        SetUpDayStart();
     }
 
-    private void ShowBackgroundImage()
-    {
+    private void SetUpDayStart() {
         backgroundImage = currentTextBox.transform.Find("BackgroundImage").GetComponent<Image>();
         if(backgroundImage == null)
         {
@@ -55,30 +42,22 @@ public class SceneManager : MonoBehaviour
         }
         backgroundImage.sprite = FemaleNewsAnchor; 
 
-        FadeOutImage = currentTextBox.transform.Find("FadeOutImage").GetComponent<Image>();
-        if(FadeOutImage == null)
-        {
-            Debug.Log("Failed to find FadeOut component");
-            return;
-        }
-    }
-
-    private void ShowDialogTextBox()
-    {
-        TextBox = currentTextBox.transform.Find("TextBox")?.GetComponent<TextMeshProUGUI>();
+        TextBox = currentTextBox.transform.Find("TextBox").GetComponent<TextMeshProUGUI>();
         if (TextBox == null)
         {
             Debug.LogError("Failed to find TextMeshProUGUI component.");
             return;
         }
 
-        NextButton = currentTextBox.transform.Find("NextTextButton")?.GetComponent<Button>();
-        if (NextButton == null)
+        nextButton = currentTextBox.transform.Find("NextTextButton").GetComponent<Button>();
+        if (nextButton == null)
         {
             Debug.LogError("Failed to find Button component.");
             return;
         }
-        NextButton.onClick.AddListener(ReadNextLine);
+        nextButton.onClick.AddListener(ReadNextLine);
+
+        LoadJsonFromFile();
     }
 
     private void LoadJsonFromFile()
@@ -101,7 +80,7 @@ public class SceneManager : MonoBehaviour
 
         if (jsonObject != null && jsonObject.newsCasterIntro.Count > 0)
         {
-            currentLines = GetLinesForDay(jsonObject.newsCasterIntro, dayCounter);
+            currentLines = GetLinesForDay(jsonObject.newsCasterIntro, currDay);
             linePos = 0;
             ReadNextLine();
         }
@@ -134,70 +113,18 @@ public class SceneManager : MonoBehaviour
         {
             // Destroy UI object or hide.
             Debug.Log("End of dialogue.");
-            StartCoroutine(FadeOutAndDestroy());
+            NextScene();
         }
     }
 
-    private float fadeDuration = 3f; // Adjustable fade duration
-    private float waitTime = 1f; // Time to wait before fading back in
-
-    private IEnumerator FadeInDayStart()
-    {
-        // Start with FadeOutImage dark then fade in
-        yield return new WaitForSeconds(waitTime);
-        yield return StartCoroutine(FadeImage(FadeOutImage, 1f, 0f, fadeDuration));
-        FadeOutImage.gameObject.SetActive(false);
-    }
-
-    private IEnumerator FadeOutAndDestroy()
-    {
-        // Set true so that it can be visible and fade in and out
-        FadeOutImage.gameObject.SetActive(true);
-
-        // Fade to black
-        yield return StartCoroutine(FadeImage(FadeOutImage, 0f, 1f, fadeDuration));
-
-        // Hide UI elements after fade-out
+    private void NextScene() {
         backgroundImage.gameObject.SetActive(false);
         TextBox.gameObject.SetActive(false);
-        NextButton.gameObject.SetActive(false);
+        nextButton.gameObject.SetActive(false);
         Image TextBoxBackground = currentTextBox.transform.Find("TextBoxBackground").GetComponent<Image>();
         TextBoxBackground.gameObject.SetActive(false);
-
-        // Wait before fading back in
-        yield return new WaitForSeconds(waitTime);
-
-        // Fade to next scene
-        yield return StartCoroutine(FadeImage(FadeOutImage, 1f, 0f, fadeDuration));
-
         Destroy(currentTextBox);
         currentTextBox = null;
-        BeginWorkDay();
-    }
-
-    private IEnumerator FadeImage(Image image, float startAlpha, float endAlpha, float duration)
-    {
-        float elapsedTime = 0f;
-        Color color = image.color;
-        color.a = startAlpha;
-        image.color = color;
-
-        while (elapsedTime < duration)
-        {
-            elapsedTime += Time.deltaTime;
-            color.a = Mathf.Lerp(startAlpha, endAlpha, elapsedTime / duration);
-            image.color = color;
-            yield return null;
-        }
-
-        color.a = endAlpha;
-        image.color = color;
-    }
-
-
-    private void BeginWorkDay()
-    {
-        throw new NotImplementedException();
     }
 
     [Serializable]
