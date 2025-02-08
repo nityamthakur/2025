@@ -3,7 +3,6 @@ using UnityEngine.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.Rendering;
 
 public class SceneManager : MonoBehaviour
 {
@@ -11,12 +10,12 @@ public class SceneManager : MonoBehaviour
 
     int day = 1;
 
-    [SerializeField] private MainMenu mainMenu;
-    [SerializeField] private DayStart dayStart;
+    [SerializeField] private MainMenuScene mainMenuScene;
+    [SerializeField] private DayStartScene dayStartScene;
+    [SerializeField] private JobScene jobScene;
     [SerializeField] private GameObject fadingScreenPrefab;
     private GameObject fadingScreen;
     private Image fadingImage;
-    //[SerializeField] private JobMode jobMode;
     //[SerializeField] private EndOfDay endOfDay;
 
     private int currentSceneIndex = 0;
@@ -27,8 +26,8 @@ public class SceneManager : MonoBehaviour
         // Define the order of the scenes
         sceneSequence = new List<Action>
         {
-            () => dayStart.LoadDayStart(day),
-            //() => jobMode.LoadJobStart(),
+            () => dayStartScene.LoadDayStart(day),
+            () => jobScene.LoadJobStart(day),
             //() => endOfDay.LoadEndOfDay()
         };
 
@@ -55,7 +54,7 @@ public class SceneManager : MonoBehaviour
 
     public void StartGameLoop()
     {
-        mainMenu.LoadMainMenu();
+        mainMenuScene.LoadMainMenu();
     }
 
     public void StartNextScene()
@@ -85,14 +84,14 @@ public class SceneManager : MonoBehaviour
     private float waitTime = 1f; // Time to wait before fading back in
     private IEnumerator FadeIn()
     {
+        Debug.Log("FadeIn called");
         yield return StartCoroutine(FadeImage(fadingImage, 1f, 0f, fadeDuration)); // fadeInOut goes to 100% opacity (Black Screen) 
         fadingImage.gameObject.SetActive(false);
-        Destroy(fadingScreen);
-        fadingScreen = null;
     }
 
     private IEnumerator FadeOut()
     {
+        Debug.Log("FadeOut called");
         fadingImage.gameObject.SetActive(true);   
         yield return StartCoroutine(FadeImage(fadingImage, 0f, 1f, fadeDuration)); // fadeInOut goes to 100% opacity (Black Screen)    
     }

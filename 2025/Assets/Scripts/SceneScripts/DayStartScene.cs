@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using System;
 using System.Collections;
 
-public class DayStart : MonoBehaviour
+public class DayStartScene : MonoBehaviour
 {
     [SerializeField] private GameObject UITextBox;
     [SerializeField] private Sprite FemaleNewsAnchor;
@@ -31,6 +31,7 @@ public class DayStart : MonoBehaviour
         }
 
         SetUpDayStart();
+        EventManager.FadeIn?.Invoke(); 
     }
 
     private void SetUpDayStart() {
@@ -113,18 +114,20 @@ public class DayStart : MonoBehaviour
         {
             // Destroy UI object or hide.
             Debug.Log("End of dialogue.");
-            NextScene();
+            StartCoroutine(NextScene());
         }
     }
 
-    private void NextScene() {
-        backgroundImage.gameObject.SetActive(false);
-        TextBox.gameObject.SetActive(false);
-        nextButton.gameObject.SetActive(false);
-        Image TextBoxBackground = currentTextBox.transform.Find("TextBoxBackground").GetComponent<Image>();
-        TextBoxBackground.gameObject.SetActive(false);
+    private IEnumerator NextScene()
+    {
+        EventManager.FadeOut?.Invoke();
+        yield return new WaitForSeconds(2f);
+
         Destroy(currentTextBox);
         currentTextBox = null;
+        
+        yield return new WaitForSeconds(2f);
+        EventManager.NextScene?.Invoke();
     }
 
     [Serializable]

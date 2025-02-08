@@ -11,18 +11,16 @@ public class ObjectSpawner : MonoBehaviour
     // Quick fix for preventing object spawn on game close
     bool quitting = false;
 
-    void Start()
+    void Awake()
     {
         if (currentMediaObject == null) 
         {
             // Throw error
             Debug.LogError("Current Media Object is not assigned.");
         }
-
-        SpawnNewMediaObject();
     }
 
-    void SpawnNewMediaObject() {
+    public void SpawnNewMediaObject() {
         if (mediaSpawner == null)
         {
             Debug.LogError("MediaSpawner GameObject is not assigned.");

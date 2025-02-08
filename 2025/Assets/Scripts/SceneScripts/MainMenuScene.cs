@@ -1,11 +1,8 @@
 using UnityEngine;
-using TMPro;
 using UnityEngine.UI;
 using System.Collections;
-using System;
-using UnityEngine.EventSystems;
 
-public class MainMenu : MonoBehaviour
+public class MainMenuScene : MonoBehaviour
 {
     [SerializeField] private GameObject menuObject;
     [SerializeField] private Sprite mainMenuImage;
@@ -26,10 +23,6 @@ public class MainMenu : MonoBehaviour
 
         SetUpMainMenu();
         EventManager.FadeIn?.Invoke(); 
-
-
-        //Debug.Log("Forcing PlayButton Click AFTER Setup inside of LoadMainMenu"); 
-        playButton.onClick.Invoke();
     }
 
     private void SetUpMainMenu()
@@ -48,7 +41,7 @@ public class MainMenu : MonoBehaviour
             Debug.LogError("Failed to find playButton component in MainMenu.");
             return;
         }
-        playButton.onClick.AddListener(StartGame);
+        playButton.onClick.AddListener(() => StartCoroutine(StartGame()));
 
         loadButton = currentMenuObject.transform.Find("LoadButton").GetComponent<Button>();
         if (loadButton == null)
@@ -56,7 +49,7 @@ public class MainMenu : MonoBehaviour
             Debug.LogError("Failed to find loadButton component in MainMenu.");
             return;
         }
-        loadButton.onClick.AddListener(StartGame);
+        loadButton.onClick.AddListener(LoadGame);
 
         optionsButton = currentMenuObject.transform.Find("OptionsButton").GetComponent<Button>();
         if (optionsButton == null)
@@ -64,26 +57,28 @@ public class MainMenu : MonoBehaviour
             Debug.LogError("Failed to find optionsButton component in MainMenu.");
             return;
         }
-        optionsButton.onClick.AddListener(StartGame);
+        optionsButton.onClick.AddListener(OptionsMenu);
     }
-
-    public void StartGame(){
-        Debug.Log("Game starting");
-
-        EventManager.FadeOut?.Invoke();  
+    private IEnumerator StartGame()
+    {
+        EventManager.FadeOut?.Invoke();
+        yield return new WaitForSeconds(2f);
 
         Destroy(currentMenuObject);
         currentMenuObject = null;
-        
-        EventManager.NextScene?.Invoke();    
+
+        yield return new WaitForSeconds(2f);
+        EventManager.NextScene?.Invoke();
     }
 
     private void LoadGame(){
         // Will set up after load screen and saving finished
+        Debug.Log("Load Button pressed");
     }
 
     private void OptionsMenu(){
         // Will set up after options screen and volume, grayscale, anything else is finished
+        Debug.Log("Options Button pressed");
     }
 
 }
