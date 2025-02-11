@@ -15,6 +15,7 @@ public class JobScene : MonoBehaviour
     private GameObject currJobScene;
     private Image backgroundImage;
     private Button startWorkButton;
+    private TextMeshProUGUI resultsText;
 
     [SerializeField] private GameObject jobBuildingPrefab;
     [SerializeField] private Sprite jobBuildingImage;
@@ -118,6 +119,14 @@ public class JobScene : MonoBehaviour
             return;
         }
         startWorkButton.onClick.AddListener(BeginWorkDay);
+
+        resultsText = currJobScene.transform.Find("ComputerScreenText").GetComponent<TextMeshProUGUI>();
+        if (resultsText == null)
+        {
+            Debug.LogError("Failed to find resultsText component in ShowResults.");
+            return;
+        }
+        resultsText.gameObject.SetActive(false);
     }
 
     private void BeginWorkDay(){
@@ -137,7 +146,7 @@ public class JobScene : MonoBehaviour
     private void ShowResults() {
         TextMeshProUGUI buttonText = startWorkButton.GetComponentInChildren<TextMeshProUGUI>();
         if (buttonText != null) {
-            buttonText.text = "Continue";  // Set the desired text
+            buttonText.text = "End Day";
         } else {
             Debug.LogError("TextMeshProUGUI component not found on startWorkButton.");
         }
@@ -145,6 +154,7 @@ public class JobScene : MonoBehaviour
         startWorkButton.onClick.RemoveAllListeners();
         startWorkButton.onClick.AddListener(() => StartCoroutine(NextScene()));
         startWorkButton.gameObject.SetActive(true);
+        resultsText.gameObject.SetActive(true);
     }
 
     private IEnumerator NextScene()
