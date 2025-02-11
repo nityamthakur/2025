@@ -28,7 +28,6 @@ public class SceneManager : MonoBehaviour
         {
             () => dayStartScene.LoadDayStart(day),
             () => jobScene.LoadJobStart(day),
-            //() => endOfDay.LoadEndOfDay()
         };
 
         fadingScreen = Instantiate(fadingScreenPrefab);
@@ -49,12 +48,11 @@ public class SceneManager : MonoBehaviour
 
     void Start()
     {
-        StartGameLoop();
-    }
-
-    public void StartGameLoop()
-    {
+        // Start the game in the main menu
         mainMenuScene.LoadMainMenu();
+
+        // Start the game at the job scene
+        //jobScene.LoadJobStart(day);
     }
 
     public void StartNextScene()
@@ -84,14 +82,12 @@ public class SceneManager : MonoBehaviour
     private float waitTime = 1f; // Time to wait before fading back in
     private IEnumerator FadeIn()
     {
-        Debug.Log("FadeIn called");
         yield return StartCoroutine(FadeImage(fadingImage, 1f, 0f, fadeDuration)); // fadeInOut goes to 100% opacity (Black Screen) 
         fadingImage.gameObject.SetActive(false);
     }
 
     private IEnumerator FadeOut()
     {
-        Debug.Log("FadeOut called");
         fadingImage.gameObject.SetActive(true);   
         yield return StartCoroutine(FadeImage(fadingImage, 0f, 1f, fadeDuration)); // fadeInOut goes to 100% opacity (Black Screen)    
     }

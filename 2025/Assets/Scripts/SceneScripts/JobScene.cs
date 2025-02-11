@@ -14,6 +14,7 @@ public class JobScene : MonoBehaviour
     [SerializeField] private Sprite workBackgroundImage;
     private GameObject currJobScene;
     private Image backgroundImage;
+    private Button startWorkButton;
 
     [SerializeField] private GameObject jobBuildingPrefab;
     [SerializeField] private Sprite jobBuildingImage;
@@ -34,16 +35,13 @@ public class JobScene : MonoBehaviour
 
     public void LoadJobStart(int day) {
 
-        EventManager.FadeIn?.Invoke(); 
         ShowBuildingTransition();
-        EventManager.FadeOut?.Invoke(); 
         SetUpJobStart(day);
-        EventManager.FadeIn?.Invoke(); 
-        objectSpawner.SpawnNewMediaObject();
     }
 
     private void ShowBuildingTransition()
     {
+        Debug.Log("Starting Building Transition");
         outsideBuildingObject = Instantiate(jobBuildingPrefab);
         if (outsideBuildingObject == null)
         {
@@ -57,7 +55,7 @@ public class JobScene : MonoBehaviour
             Debug.Log("Failed to find BackgroundImage in ShowBuildingTransition.");
             return;
         }
-        backgroundImage.sprite = workBackgroundImage; 
+        backgroundImage.sprite = jobBuildingImage; 
 
         StartCoroutine(TransitionBuildingFade());
     }
@@ -67,14 +65,20 @@ public class JobScene : MonoBehaviour
         EventManager.FadeIn?.Invoke();
         yield return new WaitForSeconds(2f);
 
+        // Press to Continue or Continue Automatically?
+        yield return new WaitForSeconds(2f);
+
+        EventManager.FadeOut?.Invoke();
+        yield return new WaitForSeconds(2f);
         Destroy(outsideBuildingObject);
         outsideBuildingObject = null;
-        
         yield return new WaitForSeconds(2f);
+        EventManager.FadeIn?.Invoke(); 
     }
 
-
     private void SetUpJobStart(int day) {
+        Debug.Log("Setting up Job Start");
+
         currDay = day;
         numMediaProcessed = 0;
         numMediaNeeded = 10;
@@ -88,16 +92,14 @@ public class JobScene : MonoBehaviour
             return;
         }
 
-        // ✅ Assign the main camera to the Event Camera of the Canvas
         Canvas canvas = currJobScene.GetComponentInChildren<Canvas>();
-        if (canvas != null && mainCamera != null)
+        if (canvas == null && mainCamera == null)
         {
-            canvas.worldCamera = mainCamera.GetComponent<Camera>(); // ✅ Assign the camera
-            Debug.Log($"🎥 Event Camera set for currJobScene: {mainCamera.name}");
+            Debug.LogError("Failed to set Event Camera. Canvas or mainCamera is missing.");
         }
         else
         {
-            Debug.LogError("❌ Failed to set Event Camera. Canvas or mainCamera is missing.");
+            canvas.worldCamera = mainCamera.GetComponent<Camera>();
         }
 
 
@@ -109,6 +111,19 @@ public class JobScene : MonoBehaviour
         }
         backgroundImage.sprite = workBackgroundImage; 
 
+        startWorkButton = currJobScene.transform.Find("WorkButton").GetComponent<Button>();
+        if (startWorkButton == null)
+        {
+            Debug.LogError("Failed to find startWorkButton component in SetUpJobStart.");
+            return;
+        }
+        startWorkButton.onClick.AddListener(BeginWorkDay);
+    }
+
+    private void BeginWorkDay(){
+        objectSpawner.StartMediaSpawn();
+        startWorkButton.gameObject.SetActive(false);
+        ShowResults();
     }
 
     private void ProcessMediaObject()
@@ -117,6 +132,19 @@ public class JobScene : MonoBehaviour
         // Destroy UI object or hide.
         Debug.Log("End of dialogue.");
         StartCoroutine(NextScene());
+    }
+
+    private void ShowResults() {
+        TextMeshProUGUI buttonText = startWorkButton.GetComponentInChildren<TextMeshProUGUI>();
+        if (buttonText != null) {
+            buttonText.text = "Continue";  // Set the desired text
+        } else {
+            Debug.LogError("TextMeshProUGUI component not found on startWorkButton.");
+        }
+
+        startWorkButton.onClick.RemoveAllListeners();
+        startWorkButton.onClick.AddListener(() => StartCoroutine(NextScene()));
+        startWorkButton.gameObject.SetActive(true);
     }
 
     private IEnumerator NextScene()

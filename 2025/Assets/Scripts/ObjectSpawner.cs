@@ -20,13 +20,12 @@ public class ObjectSpawner : MonoBehaviour
         }
     }
 
-    public void SpawnNewMediaObject() {
-        if (mediaSpawner == null)
-        {
-            Debug.LogError("MediaSpawner GameObject is not assigned.");
-            return;
-        }
+    public void StartMediaSpawn()
+    {
+        SpawnNewMediaObject();
+    }
 
+    private void SpawnNewMediaObject() {
         Debug.Log($"Spawning object at: {mediaSpawner.transform.position}");
 
         // Create a new GameObject and assign the sprite
