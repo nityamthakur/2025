@@ -5,6 +5,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
+    [SerializeField] SceneManager sceneManager;
     [SerializeField] private string[] censorTargetWords;
     [SerializeField] private string[] banTargetWords;
 
@@ -21,6 +22,7 @@ public class GameManager : MonoBehaviour
         else
             Instance = this;
     }
+
 
     public string[] getCensorTargetWords()
     {

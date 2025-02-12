@@ -11,29 +11,26 @@ public class ObjectSpawner : MonoBehaviour
     // Quick fix for preventing object spawn on game close
     bool quitting = false;
 
-    void Start()
+    void Awake()
     {
         if (currentMediaObject == null) 
         {
             // Throw error
             Debug.LogError("Current Media Object is not assigned.");
         }
+    }
 
+    public void StartMediaSpawn()
+    {
         SpawnNewMediaObject();
     }
 
-    void SpawnNewMediaObject() {
-        if (mediaSpawner == null)
-        {
-            Debug.LogError("MediaSpawner GameObject is not assigned.");
-            return;
-        }
-
+    private void SpawnNewMediaObject() {
         Debug.Log($"Spawning object at: {mediaSpawner.transform.position}");
 
         // Create a new GameObject and assign the sprite
-        GameObject newMedia = Instantiate(mediaObject, mediaSpawner.transform.position, Quaternion.identity, currentMediaObject.transform);
-        
+        GameObject newMedia = Instantiate(mediaObject, mediaSpawner.transform.position, Quaternion.identity, currentMediaObject.transform);        
+
         // Get the Rigidbody component on the instantiated object
         Rigidbody2D rb = newMedia.GetComponent<Rigidbody2D>();
         if (rb != null)
@@ -47,6 +44,7 @@ public class ObjectSpawner : MonoBehaviour
         }
 
     }
+
     void OnApplicationQuit ()
     {
         quitting = true;
@@ -60,15 +58,13 @@ public class ObjectSpawner : MonoBehaviour
 
     private void OnDisable()
     {
-        if(quitting)
-        {
-            return;
-        }
+        if(quitting) return;
         EventManager.OnMediaDestroyed -= HandleMediaDestroyed;
     }
 
     private void HandleMediaDestroyed(GameObject customer)
     {
+        if (quitting) return; // Prevent spawning when quitting
         SpawnNewMediaObject();
     }
 }

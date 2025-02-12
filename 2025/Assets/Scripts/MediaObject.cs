@@ -18,6 +18,7 @@ public class Entity : MonoBehaviour
         }
         GenerateText();
         CreateCensorBoxes();
+        ChangeMediaRotation(60);
     }
 
     private void GenerateText()
@@ -30,6 +31,14 @@ public class Entity : MonoBehaviour
         // Force the text component to update its internal data
         textComponent.ForceMeshUpdate();
     }
+
+    public void ChangeMediaRotation( int angleX )
+    {
+        transform.eulerAngles = new Vector3(
+        transform.eulerAngles.x + angleX,
+        transform.eulerAngles.y,
+        transform.eulerAngles.z
+    );}
 
     private void CreateCensorBoxes()
     {

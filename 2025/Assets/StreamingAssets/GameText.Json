@@ -1,0 +1,20 @@
+{
+    "newsCasterIntro": [
+        {
+            "day": 1,
+            "lines": [
+                "The Green party is spreading fake news against NewMerica.",
+                "NewMerica is hiring more to put a stop to The Green Party,",
+                "In better news Brown Oil Conglomerate says they will back off from drilling in the rivers and keep to the rain forests."
+            ]
+        },
+        {
+            "day": 2,
+            "lines": [
+                "Welcome back to another broadcast.",
+                "The weather today is strange.",
+                "More updates coming soon!"
+            ]
+        }
+    ]
+}
