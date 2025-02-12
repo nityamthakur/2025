@@ -78,7 +78,7 @@ public class SceneManager : MonoBehaviour
         EventManager.FadeOut -= () => StartCoroutine(FadeOut());
     }
 
-    private float fadeDuration = 2f; // Adjustable fade duration
+    private float fadeDuration = 1f; // Adjustable fade duration
     private float waitTime = 1f; // Time to wait before fading back in
     private IEnumerator FadeIn()
     {

@@ -7,8 +7,12 @@ public class ObjectSpawner : MonoBehaviour
     [SerializeField] private GameObject mediaObject;     
     [SerializeField] private GameObject mediaSpawner;
     [SerializeField] private GameObject currentMediaObject; 
-    private float downwardForce = 0.001f;
+    private float downwardForce = 0.0005f;
+    private float rightwardForce = 0.002f;
     // Quick fix for preventing object spawn on game close
+    private int currDay;
+    public JobScene jobScene; 
+
     bool quitting = false;
 
     void Awake()
@@ -20,12 +24,34 @@ public class ObjectSpawner : MonoBehaviour
         }
     }
 
-    public void StartMediaSpawn()
+    public void StartMediaSpawn(int day, JobScene workScene)
     {
+        currDay = day;
+        jobScene = workScene;
+
+        if(jobScene == null) {
+            Debug.LogError("jobScene is null.");
+        }
+
+        if(jobScene.jobDetails == null) {
+            Debug.LogError("jobScene.jobDetails is null.");
+        }
+
         SpawnNewMediaObject();
     }
 
     private void SpawnNewMediaObject() {
+        // Prevent spawning when player has reached the media process goal
+        if (jobScene.jobDetails.numMediaProcessed++ >= jobScene.jobDetails.numMediaNeeded) {
+            jobScene.ShowResults();
+            return;
+        }
+
+        // Prevent spawning errors when exiting Unity play mode
+        if(quitting) {
+            return;
+        }
+        
         Debug.Log($"Spawning object at: {mediaSpawner.transform.position}");
 
         // Create a new GameObject and assign the sprite
@@ -37,6 +63,7 @@ public class ObjectSpawner : MonoBehaviour
         {
             // Apply downward force
             rb.AddForce(Vector3.down * downwardForce, ForceMode2D.Impulse);
+            rb.AddForce(Vector3.right * rightwardForce, ForceMode2D.Impulse);
         }
         else
         {
@@ -58,13 +85,11 @@ public class ObjectSpawner : MonoBehaviour
 
     private void OnDisable()
     {
-        if(quitting) return;
         EventManager.OnMediaDestroyed -= HandleMediaDestroyed;
     }
 
     private void HandleMediaDestroyed(GameObject customer)
     {
-        if (quitting) return; // Prevent spawning when quitting
         SpawnNewMediaObject();
     }
 }

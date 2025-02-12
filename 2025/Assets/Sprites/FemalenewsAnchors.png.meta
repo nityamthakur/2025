@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      FemalenewsAnchors_0: -9148649168555976762
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

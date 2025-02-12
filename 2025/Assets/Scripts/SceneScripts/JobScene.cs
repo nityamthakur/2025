@@ -1,10 +1,7 @@
-using UnityEngine;
-using TMPro;
-using System.IO;
-using System.Collections.Generic;
 using UnityEngine.UI;
-using System;
+using UnityEngine;
 using System.Collections;
+using TMPro;
 
 public class JobScene : MonoBehaviour
 {
@@ -15,24 +12,18 @@ public class JobScene : MonoBehaviour
     private GameObject currJobScene;
     private Image backgroundImage;
     private Button startWorkButton;
-    private TextMeshProUGUI resultsText;
-
+    private TextMeshProUGUI screenText;
+    
+    // ---------------------------------
     [SerializeField] private GameObject jobBuildingPrefab;
     [SerializeField] private Sprite jobBuildingImage;
     private GameObject outsideBuildingObject;
-
+    
+    // ---------------------------------
+    public JobDetails jobDetails;
     private int currDay = 0;
 
-    // For using a media target goal for the day
-    private int numMediaProcessed = 0; 
-    private int numMediaNeeded = 10;
-
-    // For using a time based system for the day
-    private int currClockTime = 0;
-    private int clockTimeJobEnd = 1000;
-
-    // Idea to consider. Pass in the parameters of Day and Reputation with the two parties
-    // and other internal values as a class so that they can be used instead of multiple variables
+    // ---------------------------------
 
     public void LoadJobStart(int day) {
 
@@ -81,10 +72,7 @@ public class JobScene : MonoBehaviour
         Debug.Log("Setting up Job Start");
 
         currDay = day;
-        numMediaProcessed = 0;
-        numMediaNeeded = 10;
-        currClockTime = 0;
-        clockTimeJobEnd = 1000;
+
         currJobScene = Instantiate(jobScenePrefab);
 
         if (currJobScene == null)
@@ -120,30 +108,22 @@ public class JobScene : MonoBehaviour
         }
         startWorkButton.onClick.AddListener(BeginWorkDay);
 
-        resultsText = currJobScene.transform.Find("ComputerScreenText").GetComponent<TextMeshProUGUI>();
-        if (resultsText == null)
+        screenText = currJobScene.transform.Find("ComputerScreenText").GetComponent<TextMeshProUGUI>();
+        if (screenText == null)
         {
-            Debug.LogError("Failed to find resultsText component in ShowResults.");
+            Debug.LogError("Failed to find screenText component in ShowResults.");
             return;
         }
-        resultsText.gameObject.SetActive(false);
+        screenText.text = "Censor List:\nBrown Oil Conglomerate\nBolivia\nBrian Jay\n\nBan List:\nNewMerica";
     }
 
     private void BeginWorkDay(){
-        objectSpawner.StartMediaSpawn();
+        jobDetails = new JobDetails();
+        objectSpawner.StartMediaSpawn(currDay, this);
         startWorkButton.gameObject.SetActive(false);
-        ShowResults();
     }
 
-    private void ProcessMediaObject()
-    {
-        // Check for Spawning a NewMedia Object or Moving to Next Scene / Job Day End
-        // Destroy UI object or hide.
-        Debug.Log("End of dialogue.");
-        StartCoroutine(NextScene());
-    }
-
-    private void ShowResults() {
+    public void ShowResults() {
         TextMeshProUGUI buttonText = startWorkButton.GetComponentInChildren<TextMeshProUGUI>();
         if (buttonText != null) {
             buttonText.text = "End Day";
@@ -154,7 +134,10 @@ public class JobScene : MonoBehaviour
         startWorkButton.onClick.RemoveAllListeners();
         startWorkButton.onClick.AddListener(() => StartCoroutine(NextScene()));
         startWorkButton.gameObject.SetActive(true);
-        resultsText.gameObject.SetActive(true);
+        screenText.text = "Day X Results:\n\nMedia Processed: 0\n\nSupervisors Notified of Your Day\n\nProfit: $10 + $ 5 (Bonus)\n\nPossiibility of Promotion: High";
+
+
+        // Set the results text based on the job details
     }
 
     private IEnumerator NextScene()
@@ -164,8 +147,25 @@ public class JobScene : MonoBehaviour
 
         Destroy(currJobScene);
         currJobScene = null;
+        jobDetails = null;
         
         yield return new WaitForSeconds(2f);
         EventManager.NextScene?.Invoke();
+    }
+}
+
+public class JobDetails {
+    // For using a media target goal for the day
+    public int numMediaProcessed; 
+    public int numMediaNeeded;
+
+    // For using a time based system for the day
+    public int currClockTime;
+    public int clockTimeJobEnd;
+    public JobDetails() {
+        numMediaProcessed = 0;
+        numMediaNeeded = 5;
+        currClockTime = 0;
+        clockTimeJobEnd = 1000;
     }
 }
