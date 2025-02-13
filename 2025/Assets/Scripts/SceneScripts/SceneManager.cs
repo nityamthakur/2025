@@ -8,8 +8,6 @@ public class SceneManager : MonoBehaviour
 {
     public static SceneManager Instance { get; private set; }
 
-    int day = 1;
-
     [SerializeField] private MainMenuScene mainMenuScene;
     [SerializeField] private DayStartScene dayStartScene;
     [SerializeField] private JobScene jobScene;
@@ -26,8 +24,8 @@ public class SceneManager : MonoBehaviour
         // Define the order of the scenes
         sceneSequence = new List<Action>
         {
-            () => dayStartScene.LoadDayStart(day),
-            () => jobScene.LoadJobStart(day),
+            () => dayStartScene.LoadDayStart(GameManager.Instance.GetCurrentDay()),
+            () => jobScene.LoadJobStart(GameManager.Instance.GetCurrentDay()),
         };
         fadingScreen = Instantiate(fadingScreenPrefab);
 
@@ -51,7 +49,7 @@ public class SceneManager : MonoBehaviour
         mainMenuScene.LoadMainMenu();
 
         // Start the game at the job scene
-        //jobScene.LoadJobStart(day);
+        //jobScene.LoadJobStart(GameManager.Instance.GetCurrentDay());
     }
 
     public void StartNextScene()

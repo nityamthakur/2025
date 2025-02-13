@@ -2,6 +2,9 @@ using UnityEngine.UI;
 using UnityEngine;
 using System.Collections;
 using TMPro;
+using System.IO;
+using System.Collections.Generic;
+using System;
 
 public class JobScene : MonoBehaviour
 {
@@ -13,21 +16,19 @@ public class JobScene : MonoBehaviour
     private Image backgroundImage;
     private Button startWorkButton;
     private TextMeshProUGUI screenText;
+    private string currentEmail;
     
     // ---------------------------------
     [SerializeField] private GameObject jobBuildingPrefab;
     [SerializeField] private Sprite jobBuildingImage;
     private GameObject outsideBuildingObject;
-    
-    // ---------------------------------
-    public JobDetails jobDetails;
-    private int currDay = 0;
 
     // ---------------------------------
 
     public void LoadJobStart(int day) {
 
         ShowBuildingTransition();
+        LoadJsonFromFile();
         SetUpJobStart(day);
     }
 
@@ -71,8 +72,6 @@ public class JobScene : MonoBehaviour
     private void SetUpJobStart(int day) {
         Debug.Log("Setting up Job Start");
 
-        currDay = day;
-
         currJobScene = Instantiate(jobScenePrefab);
 
         if (currJobScene == null)
@@ -90,7 +89,6 @@ public class JobScene : MonoBehaviour
         {
             canvas.worldCamera = mainCamera.GetComponent<Camera>();
         }
-
 
         backgroundImage = currJobScene.transform.Find("BackgroundImage").GetComponent<Image>();
         if(backgroundImage == null)
@@ -114,16 +112,40 @@ public class JobScene : MonoBehaviour
             Debug.LogError("Failed to find screenText component in ShowResults.");
             return;
         }
-        screenText.text = "Censor List:\nBrown Oil Conglomerate\nBolivia\nBrian Jay\n\nBan List:\nNewMerica";
+        SetScreenEmail(screenText);
+    }
+
+    private void SetScreenEmail(TextMeshProUGUI screenText)
+    {
+        screenText.text = currentEmail;
+    }
+
+    private void SetScreenObjectives(TextMeshProUGUI screenText)
+    {
+        screenText.text = "Ban List:\n";
+        foreach (string ban in GameManager.Instance.GetBanTargetWords())
+        {
+            screenText.text += ban + "\n";
+        }
+        
+        // Don't show the censor list on the first day
+        if (GameManager.Instance.GetCurrentDay() == 1) return;
+
+        screenText.text += "\nCensor List:\n";
+        foreach (string censor in GameManager.Instance.GetCensorTargetWords())
+        {
+            screenText.text += censor + "\n";
+        }
     }
 
     private void BeginWorkDay(){
-        jobDetails = new JobDetails();
-        objectSpawner.StartMediaSpawn(currDay, this);
+        GameManager.Instance.SetJobScene(this);
+        objectSpawner.StartMediaSpawn();
+        SetScreenObjectives(screenText);
         startWorkButton.gameObject.SetActive(false);
     }
 
-    public void ShowResults() {
+    public void ShowResults(int day, int mediaProcessed, int score) {
         TextMeshProUGUI buttonText = startWorkButton.GetComponentInChildren<TextMeshProUGUI>();
         if (buttonText != null) {
             buttonText.text = "End Day";
@@ -134,7 +156,7 @@ public class JobScene : MonoBehaviour
         startWorkButton.onClick.RemoveAllListeners();
         startWorkButton.onClick.AddListener(() => StartCoroutine(NextScene()));
         startWorkButton.gameObject.SetActive(true);
-        screenText.text = "Day X Results:\n\nMedia Processed: 0\n\nSupervisors Notified of Your Day\n\nProfit: $10 + $ 5 (Bonus)\n\nPossiibility of Promotion: High";
+        screenText.text = $"Day {day} Results:\n\nMedia Processed: {mediaProcessed}\n\nSupervisors Notified of Your Day\n\nProfit: ${score}\n\nPossibility of Promotion: Unknown";
 
 
         // Set the results text based on the job details
@@ -147,25 +169,63 @@ public class JobScene : MonoBehaviour
 
         Destroy(currJobScene);
         currJobScene = null;
-        jobDetails = null;
         
         yield return new WaitForSeconds(2f);
         EventManager.NextScene?.Invoke();
     }
-}
 
-public class JobDetails {
-    // For using a media target goal for the day
-    public int numMediaProcessed; 
-    public int numMediaNeeded;
+    private void LoadJsonFromFile()
+    {
+        // Check if Json is found in StreamingAssets folder
+        string path = Path.Combine(Application.streamingAssetsPath, "GameText.json");
+        if (!File.Exists(path))
+        {
+            Debug.LogError("JSON file not found at: " + path);
+            return;
+        }
 
-    // For using a time based system for the day
-    public int currClockTime;
-    public int clockTimeJobEnd;
-    public JobDetails() {
-        numMediaProcessed = 0;
-        numMediaNeeded = 5;
-        currClockTime = 0;
-        clockTimeJobEnd = 1000;
+        string json = File.ReadAllText(path);
+        ParseJson(json);
+    }
+
+    private void ParseJson(string json)
+    {
+        var jsonObject = JsonUtility.FromJson<Wrapper>(json);
+
+        if (jsonObject != null && jsonObject.emailText.Count > 0)
+        {
+            currentEmail = GetEmailForDay(jsonObject.emailText, GameManager.Instance.GetCurrentDay());
+        }
+        else
+        {
+            Debug.LogError("JSON parsing failed or empty list.");
+        }
+    }
+
+    private string GetEmailForDay(List<Entry> entries, int day)
+    {
+        foreach (var entry in entries)
+        {
+            if (entry.day == day)
+            {
+                return entry.email;
+            }
+        }
+        return string.Empty;
+    }
+
+    [Serializable]
+    private class Wrapper
+    {
+        public List<Entry> emailText;
+    }
+
+    [Serializable]
+    private class Entry
+    {
+        public int day;
+        public string email;
     }
 }
+
+

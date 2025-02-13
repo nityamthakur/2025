@@ -15,13 +15,12 @@ public class DayStartScene : MonoBehaviour
     private TextMeshProUGUI TextBox;
     private Button nextButton;
     private Image backgroundImage;    
-    private int currDay = 0;
+    //private int currDay = 0;
     private int linePos = 0;
     private string[] currentLines;
 
     public void LoadDayStart(int day) {
         
-        currDay = day;
         currentTextBox = Instantiate(UITextBox);
 
         if (currentTextBox == null)
@@ -81,7 +80,8 @@ public class DayStartScene : MonoBehaviour
 
         if (jsonObject != null && jsonObject.newsCasterIntro.Count > 0)
         {
-            currentLines = GetLinesForDay(jsonObject.newsCasterIntro, currDay);
+            currentLines = GetLinesForDay(jsonObject.newsCasterIntro, GameManager.Instance.GetCurrentDay());
+            
             linePos = 0;
             ReadNextLine();
         }
