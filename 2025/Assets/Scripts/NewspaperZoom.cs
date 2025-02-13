@@ -5,6 +5,7 @@ public class NewspaperZoom : MonoBehaviour
 {
     private Vector3 originalScale;
     private Vector3 originalPosition;
+    private Vector3 previousPosition;
     private bool isZoomedIn = false;
     private Camera mainCamera;
     private Vector3 zoomPosition;
@@ -51,7 +52,8 @@ public class NewspaperZoom : MonoBehaviour
                 Debug.LogError("Entity component not found on Newspaper!");
             }
 
-            StartCoroutine(SmoothTransition(originalPosition, originalScale));
+            //StartCoroutine(SmoothTransition(originalPosition, originalScale));
+            StartCoroutine(SmoothTransition(previousPosition, originalScale));
             newspaperCollider.enabled = true;  // Re-enable collision
             if (draggableScript != null) draggableScript.enabled = true;  // Re-enable dragging
         }
@@ -67,6 +69,7 @@ public class NewspaperZoom : MonoBehaviour
             }
 
             StartCoroutine(SmoothTransition(zoomPosition, zoomScale));
+            previousPosition = transform.position;
             newspaperCollider.enabled = false; // Disable collision
             if (draggableScript != null) draggableScript.enabled = false; // Disable dragging
         }

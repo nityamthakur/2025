@@ -37,7 +37,7 @@ public class MediaSplinePath : MonoBehaviour
 
     private IEnumerator MoveBetweenPoints(Transform target, Vector3 start, Vector3 end, float moveTime, bool easeOut)
     {
-        Debug.Log("Moving media object");
+        //Debug.Log("Moving media object");
         isMoving = true;
         float elapsedTime = 0f;
 

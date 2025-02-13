@@ -761,10 +761,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mediaObject: {fileID: 4998836287132237453, guid: 0c53175a4e94f6d4781fe217fb8b0dde, type: 3}
   mediaSpawner: {fileID: 955105929}
-  currentMediaObject: {fileID: 4998836287132237453, guid: 0c53175a4e94f6d4781fe217fb8b0dde, type: 3}
   splinePath: {fileID: 2498711219787459138, guid: c003f66e5ed7a12499011dd10c519d4b, type: 3}
-  currSplinePath: {fileID: 0}
-  jobScene: {fileID: 0}
 --- !u!4 &1245310924
 Transform:
   m_ObjectHideFlags: 0
@@ -1107,11 +1104,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneManager: {fileID: 1487003097}
-  censorTargetWords:
-  - Brown Oil Conglomerate
-  - Bolivia
-  - Brian Jay
-  banTargetWords: []
 --- !u!4 &2059682409
 Transform:
   m_ObjectHideFlags: 0

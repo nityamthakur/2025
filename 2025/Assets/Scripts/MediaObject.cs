@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Mono.Cecil;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Animations;
@@ -8,6 +9,7 @@ using UnityEngine.UI;
 public class Entity : MonoBehaviour
 {
     [SerializeField] private GameObject censorBoxPrefab;
+    private Newspaper newspaperData;
     private TMP_Text textComponent;
     private MediaSplinePath currSplinePath;
     private GameObject splinePrefab;
@@ -24,22 +26,29 @@ public class Entity : MonoBehaviour
         if (textComponent == null)
         {
             Debug.LogError("No TextMeshPro component found!");
-        }
-        GenerateText();
-        CreateCensorBoxes();
-        ChangeMediaRotation(60);
-        SetUpSplinePath();       
+        }       
     }
 
-    private void GenerateText()
+    public void PassNewspaperData(Newspaper newspaper)
     {
-        textComponent.text = 
-        @"At the moment Brown Oil Conglomerate has no plans to begin drilling for oil at or near NewMerican rivers.
-        In fact Brown Oil Conglomerate promises to prioritize drilling in less environmentally concerning locations.
-        We are happy to reveal that our next operation will be within Bolivia’s rainforest.";
-    
-        // Force the text component to update its internal data
+        if (newspaper == null)
+        {
+            Debug.LogError("Newspaper data is null.");
+            return;
+        }
+        newspaperData = newspaper;
+
+        textComponent.text = newspaper.body;
+
         textComponent.ForceMeshUpdate();
+
+        // Disable censoring on the first day
+        if (GameManager.Instance.GetCurrentDay() != 1)
+        {
+            CreateCensorBoxes();
+        }
+        ChangeMediaRotation(60);
+        SetUpSplinePath(); 
     }
 
     public void ChangeMediaRotation( int angleX )
@@ -52,15 +61,19 @@ public class Entity : MonoBehaviour
 
     private void CreateCensorBoxes()
     {
+        int curLineIndex = 0;
+        int curWordIndex = 0;
+        float prevLastCharX = 0;
+        
         // Loop through each word in the text
         foreach (var wordInfo in textComponent.textInfo.wordInfo)
         {
             if (wordInfo.characterCount == 0) continue;
 
             string word = wordInfo.GetWord();
-            bool isCensorable = false;
+            bool isCensorTarget = false;
             // Find if the word contains any censor words
-            foreach (string censorWord in GameManager.Instance.getCensorTargetWords())
+            foreach (string censorWord in GameManager.Instance.GetCensorTargetWords())
             {
                 // Split the censor word/phrase into individual words
                 string[] splicedWord = censorWord.Split(' ');
@@ -68,29 +81,44 @@ public class Entity : MonoBehaviour
                 {
                     if (word.Contains(individualWord))
                     {
-                        isCensorable = true;
+                        isCensorTarget = true;
                         break;
                     }
                 }
             }
-            if (!isCensorable) continue;
 
             // Gather the corners of the word
             var firstCharInfo = textComponent.textInfo.characterInfo[wordInfo.firstCharacterIndex];
             var lastCharInfo = textComponent.textInfo.characterInfo[wordInfo.lastCharacterIndex];
             var topLeft = textComponent.transform.TransformPoint(firstCharInfo.topLeft);
             var bottomRight = textComponent.transform.TransformPoint(lastCharInfo.bottomRight);
-    
+
+            if (curWordIndex != 0) {
+                topLeft.x = prevLastCharX;
+            }
+            prevLastCharX = bottomRight.x;
+            
             // Create rectangle to block out the word
             var boxSize = new Vector2(Mathf.Abs(topLeft.x - bottomRight.x), 
                 Mathf.Abs(topLeft.y - bottomRight.y));
 
             GameObject newCensorBox = Instantiate(censorBoxPrefab, transform);
+            
             // Center the box around the word
             newCensorBox.transform.position = new Vector3((topLeft.x + bottomRight.x) / 2, (topLeft.y + bottomRight.y) / 2, 0);
             newCensorBox.transform.localScale = boxSize;
 
-            GameManager.Instance.RegisterCensorTarget();
+            curWordIndex++;
+            if (curWordIndex >= textComponent.textInfo.lineInfo[curLineIndex].wordCount) {
+                curLineIndex++;
+                curWordIndex = 0;
+            }
+
+            if (isCensorTarget)
+            {
+                newCensorBox.GetComponent<CensorTarget>().SetToCensorTarget();
+                GameManager.Instance.RegisterCensorTarget();
+            }
         }
     }
 
@@ -119,20 +147,14 @@ public class Entity : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        bool draggable = GetComponent<Draggable>();
-        Debug.Log($"Draggable? {draggable}");
-
-        //Debug.Log($"Collided with: {collision.gameObject.name}, Tag: {collision.gameObject.tag}");
         if (collision.gameObject.CompareTag("DropBoxAccept"))
         {
-            GameManager.Instance.EvaluatePlayerAccept();
-            //Debug.Log("DropBox detected, destroying...");
+            GameManager.Instance.EvaluatePlayerAccept(newspaperData.banWords);
             StartCoroutine(DestroyAfterExitMovement("Accept"));
         }
         else if (collision.gameObject.CompareTag("DropBoxDestroy"))
         {
-            GameManager.Instance.EvalutatePlayerDestroy();
-            //Debug.Log("DropBox detected, destroying...");
+            GameManager.Instance.EvalutatePlayerDestroy(newspaperData.banWords);
             StartCoroutine(DestroyAfterExitMovement("Destroy"));
         }
     }
@@ -170,5 +192,15 @@ public class Entity : MonoBehaviour
         }
         
         EventManager.OnMediaDestroyed?.Invoke(gameObject);
+    }
+
+    [Serializable]
+    public class Newspaper
+    {
+        public string publisher;
+        public string title;
+        public string body;
+        public string[] banWords;
+        public string[] censorWords;
     }
 }
