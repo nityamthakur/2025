@@ -29,7 +29,6 @@ public class SceneManager : MonoBehaviour
             () => dayStartScene.LoadDayStart(day),
             () => jobScene.LoadJobStart(day),
         };
-
         fadingScreen = Instantiate(fadingScreenPrefab);
 
         if (fadingScreen == null)

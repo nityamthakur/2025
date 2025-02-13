@@ -7,8 +7,8 @@ public class ObjectSpawner : MonoBehaviour
     [SerializeField] private GameObject mediaObject;     
     [SerializeField] private GameObject mediaSpawner;
     [SerializeField] private GameObject currentMediaObject; 
-    private float downwardForce = 0.0005f;
-    private float rightwardForce = 0.002f;
+    [SerializeField] private GameObject splinePath;
+
     // Quick fix for preventing object spawn on game close
     private int currDay;
     public JobScene jobScene; 
@@ -41,35 +41,25 @@ public class ObjectSpawner : MonoBehaviour
     }
 
     private void SpawnNewMediaObject() {
-        // Prevent spawning when player has reached the media process goal
         if (jobScene.jobDetails.numMediaProcessed++ >= jobScene.jobDetails.numMediaNeeded) {
             jobScene.ShowResults();
             return;
         }
 
-        // Prevent spawning errors when exiting Unity play mode
-        if(quitting) {
-            return;
-        }
-        
+        if (quitting) return;
+
         Debug.Log($"Spawning object at: {mediaSpawner.transform.position}");
 
-        // Create a new GameObject and assign the sprite
-        GameObject newMedia = Instantiate(mediaObject, mediaSpawner.transform.position, Quaternion.identity, currentMediaObject.transform);        
+        // Create new media object
+        GameObject newMedia = Instantiate(mediaObject, mediaSpawner.transform.position, Quaternion.identity, currentMediaObject.transform);
 
-        // Get the Rigidbody component on the instantiated object
-        Rigidbody2D rb = newMedia.GetComponent<Rigidbody2D>();
-        if (rb != null)
-        {
-            // Apply downward force
-            rb.AddForce(Vector3.down * downwardForce, ForceMode2D.Impulse);
-            rb.AddForce(Vector3.right * rightwardForce, ForceMode2D.Impulse);
+        // Pass the spline prefab reference
+        Entity mediaEntity = newMedia.GetComponent<Entity>();
+        if (mediaEntity != null) {
+            mediaEntity.SetSplinePrefab(splinePath); // Pass the splinePath prefab reference
+        } else {
+            Debug.LogError("Spawned media object is missing the Entity script!");
         }
-        else
-        {
-            Debug.LogError("No Rigidbody found on the instantiated object!");
-        }
-
     }
 
     void OnApplicationQuit ()

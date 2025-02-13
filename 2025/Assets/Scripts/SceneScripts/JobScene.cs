@@ -64,7 +64,7 @@ public class JobScene : MonoBehaviour
         yield return new WaitForSeconds(2f);
         Destroy(outsideBuildingObject);
         outsideBuildingObject = null;
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(0f);
         EventManager.FadeIn?.Invoke(); 
     }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Animations;
@@ -8,6 +9,14 @@ public class Entity : MonoBehaviour
 {
     [SerializeField] private GameObject censorBoxPrefab;
     private TMP_Text textComponent;
+    private MediaSplinePath currSplinePath;
+    private GameObject splinePrefab;
+    private Draggable draggableScript;
+
+    public void SetSplinePrefab(GameObject prefab)
+    {
+        splinePrefab = prefab;
+    }
 
     private void Start()
     {
@@ -19,6 +28,7 @@ public class Entity : MonoBehaviour
         GenerateText();
         CreateCensorBoxes();
         ChangeMediaRotation(60);
+        SetUpSplinePath();       
     }
 
     private void GenerateText()
@@ -84,6 +94,29 @@ public class Entity : MonoBehaviour
         }
     }
 
+    private void SetUpSplinePath() {
+        draggableScript = GetComponent<Draggable>(); // Get the Draggable script
+        draggableScript.enabled = false;        
+
+        // Create a new spline path
+        if (splinePrefab == null)
+        {
+            Debug.LogError("Spline prefab not assigned correctly in Entity."); 
+        }
+        GameObject newSplinePath = Instantiate(splinePrefab);
+        currSplinePath = newSplinePath.GetComponent<MediaSplinePath>();
+
+        if (currSplinePath != null)
+        {
+            currSplinePath.EntranceMovement(transform);
+        }
+        else
+        {
+            Debug.LogError("MediaSplinePath component is missing on instantiated spline.");
+        }
+        draggableScript.enabled = true; 
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         bool draggable = GetComponent<Draggable>();
@@ -93,21 +126,49 @@ public class Entity : MonoBehaviour
         if (collision.gameObject.CompareTag("DropBoxAccept"))
         {
             GameManager.Instance.EvaluatePlayerAccept();
-            
             //Debug.Log("DropBox detected, destroying...");
-            Destroy(gameObject);
+            StartCoroutine(DestroyAfterExitMovement("Accept"));
         }
         else if (collision.gameObject.CompareTag("DropBoxDestroy"))
         {
             GameManager.Instance.EvalutatePlayerDestroy();
-            
             //Debug.Log("DropBox detected, destroying...");
-            Destroy(gameObject);
+            StartCoroutine(DestroyAfterExitMovement("Destroy"));
         }
+    }
+
+    private IEnumerator DestroyAfterExitMovement(string box)
+    {
+        // Turn of Rigidbody because newspaper gets wierd when colliding with boxes
+        if (TryGetComponent<Rigidbody2D>(out var rigidBody))
+        {
+            rigidBody.simulated = false; // ✅ Disables physics interactions without removing Rigidbody2D
+        }
+
+        draggableScript.enabled = false; 
+        if (box == "Accept")
+        {
+            currSplinePath.ExitMovementAccept(transform);
+        }
+        else
+        {
+            currSplinePath.ExitMovementDestroy(transform);
+        }
+
+        // Wait for the movement to complete (adjust time if needed)
+        yield return new WaitForSeconds(1.5f);
+
+        Destroy(gameObject);
     }
 
     private void OnDestroy()
     {
+        // Ensure the spline path is destroyed when media is destroyed
+        if (currSplinePath != null)
+        {
+            Destroy(currSplinePath.gameObject);
+        }
+        
         EventManager.OnMediaDestroyed?.Invoke(gameObject);
     }
 }
