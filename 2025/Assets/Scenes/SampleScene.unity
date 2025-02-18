@@ -530,7 +530,7 @@ MonoBehaviour:
   mainCamera: {fileID: 519420028}
   objectSpawner: {fileID: 1245310923}
   jobScenePrefab: {fileID: 8812546023612397849, guid: a38fe3e81ffbe1742861b58be4594a85, type: 3}
-  workBackgroundImage: {fileID: 6142478296129381541, guid: c0820b116163949479b29b185bfda6f7, type: 3}
+  workBackgroundImage: {fileID: 8959367852718000375, guid: c2eb2095f5d13414eb6c53f38948fb9f, type: 3}
   jobBuildingPrefab: {fileID: 7365597034380788627, guid: 179c1e3c7be1eed4385ed3fdeb7cc64b, type: 3}
   jobBuildingImage: {fileID: 7500719156437101807, guid: f0d23fea0664eb14a9e6c31266085328, type: 3}
 --- !u!1 &714306990
@@ -645,7 +645,7 @@ Transform:
   m_GameObject: {fileID: 955105929}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -6.2, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

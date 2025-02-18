@@ -1,10 +1,7 @@
 using System;
 using System.Collections;
-using Mono.Cecil;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Animations;
-using UnityEngine.UI;
 
 public class Entity : MonoBehaviour
 {

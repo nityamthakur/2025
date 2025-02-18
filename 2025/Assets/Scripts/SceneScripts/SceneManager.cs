@@ -14,7 +14,7 @@ public class SceneManager : MonoBehaviour
     [SerializeField] private GameObject fadingScreenPrefab;
     private GameObject fadingScreen;
     private Image fadingImage;
-    //[SerializeField] private EndOfDay endOfDay;
+    private Image deskOverlayImage;
 
     private int currentSceneIndex = 0;
     private List<Action> sceneSequence;
@@ -41,6 +41,15 @@ public class SceneManager : MonoBehaviour
             Debug.LogError("Failed to find FadingImage component in SceneManager");
             return;
         }
+
+        // Used for ensuring the media gets enters and leaves behind certain screen elements
+        deskOverlayImage = fadingScreen.transform.Find("DeskOverlay").GetComponent<Image>();
+        if (deskOverlayImage == null)
+        {
+            Debug.LogError("Failed to find DeskOverlay component in SceneManager");
+            return;
+        }
+        deskOverlayImage.gameObject.SetActive(false);
     }
 
     void Start()
@@ -66,6 +75,8 @@ public class SceneManager : MonoBehaviour
         EventManager.NextScene += StartNextScene;
         EventManager.FadeIn += () => StartCoroutine(FadeIn());
         EventManager.FadeOut += () => StartCoroutine(FadeOut());
+        EventManager.ShowDeskOverlay += ShowDeskOverLay;
+        EventManager.HideDeskOverlay += HideDeskOverLay;
     }
 
     void OnDisable()
@@ -73,10 +84,12 @@ public class SceneManager : MonoBehaviour
         EventManager.NextScene -= StartNextScene;
         EventManager.FadeIn -= () => StartCoroutine(FadeIn());
         EventManager.FadeOut -= () => StartCoroutine(FadeOut());
+        EventManager.ShowDeskOverlay -= ShowDeskOverLay;
+        EventManager.HideDeskOverlay -= HideDeskOverLay;
     }
 
     private float fadeDuration = 1f; // Adjustable fade duration
-    private float waitTime = 1f; // Time to wait before fading back in
+    //private float waitTime = 1f; // Time to wait before fading back in
     private IEnumerator FadeIn()
     {
         yield return StartCoroutine(FadeImage(fadingImage, 1f, 0f, fadeDuration)); // fadeInOut goes to 100% opacity (Black Screen) 
@@ -106,5 +119,16 @@ public class SceneManager : MonoBehaviour
 
         color.a = endAlpha;
         image.color = color;
+    }
+
+    private void ShowDeskOverLay()
+    {
+        Debug.Log("ShowDeskOverlay called");
+        deskOverlayImage.gameObject.SetActive(true);   
+    }
+    private void HideDeskOverLay()
+    {
+        Debug.Log("HideDeskOverlay called");
+        deskOverlayImage.gameObject.SetActive(false);   
     }
 }
