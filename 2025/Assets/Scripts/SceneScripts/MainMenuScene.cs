@@ -41,7 +41,11 @@ public class MainMenuScene : MonoBehaviour
             Debug.LogError("Failed to find playButton component in MainMenu.");
             return;
         }
-        playButton.onClick.AddListener(() => StartCoroutine(StartGame()));
+        playButton.onClick.AddListener(() =>
+        {
+            playButton.interactable = false; // Disable immediately
+            StartCoroutine(StartGame());
+        });
 
         loadButton = currentMenuObject.transform.Find("LoadButton").GetComponent<Button>();
         if (loadButton == null)
@@ -49,7 +53,11 @@ public class MainMenuScene : MonoBehaviour
             Debug.LogError("Failed to find loadButton component in MainMenu.");
             return;
         }
-        loadButton.onClick.AddListener(LoadGame);
+        loadButton.onClick.AddListener(() =>
+        {
+            loadButton.interactable = false; // Disable immediately
+            LoadGame();
+        });
 
         optionsButton = currentMenuObject.transform.Find("OptionsButton").GetComponent<Button>();
         if (optionsButton == null)
@@ -57,7 +65,12 @@ public class MainMenuScene : MonoBehaviour
             Debug.LogError("Failed to find optionsButton component in MainMenu.");
             return;
         }
-        optionsButton.onClick.AddListener(OptionsMenu);
+        optionsButton.onClick.AddListener(() =>
+        {
+            optionsButton.interactable = false; // Disable immediately
+            OptionsMenu();
+        });
+    
     }
     private IEnumerator StartGame()
     {

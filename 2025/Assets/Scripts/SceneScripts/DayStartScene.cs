@@ -112,7 +112,7 @@ public class DayStartScene : MonoBehaviour
         }
         else
         {
-            // Destroy UI object or hide.
+            nextButton.interactable = false; // Prevent player from pressing the button multiple times
             Debug.Log("End of dialogue.");
             StartCoroutine(NextScene());
         }
