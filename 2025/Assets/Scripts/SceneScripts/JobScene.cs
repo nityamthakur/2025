@@ -27,9 +27,10 @@ public class JobScene : MonoBehaviour
 
     public void LoadJobStart(int day) {
 
-        ShowBuildingTransition();
+        //ShowBuildingTransition();
         LoadJsonFromFile();
         SetUpJobStart(day);
+        EventManager.FadeIn?.Invoke(); 
     }
 
     private void ShowBuildingTransition()
@@ -104,7 +105,11 @@ public class JobScene : MonoBehaviour
             Debug.LogError("Failed to find startWorkButton component in SetUpJobStart.");
             return;
         }
-        startWorkButton.onClick.AddListener(BeginWorkDay);
+        startWorkButton.onClick.AddListener(() =>
+        {
+            startWorkButton.interactable = false; // Disable immediately
+            BeginWorkDay();
+        });
 
         screenText = currJobScene.transform.Find("ComputerScreenText").GetComponent<TextMeshProUGUI>();
         if (screenText == null)
@@ -154,10 +159,14 @@ public class JobScene : MonoBehaviour
         }
 
         startWorkButton.onClick.RemoveAllListeners();
-        startWorkButton.onClick.AddListener(() => StartCoroutine(NextScene()));
+        startWorkButton.interactable = true;
         startWorkButton.gameObject.SetActive(true);
+        startWorkButton.onClick.AddListener(() =>
+        {
+            startWorkButton.interactable = false; // Disable immediately
+            StartCoroutine(NextScene());
+        });
         screenText.text = $"Day {day} Results:\n\nMedia Processed: {mediaProcessed}\n\nSupervisors Notified of Your Day\n\nProfit: ${score}\n\nPossibility of Promotion: Unknown";
-
 
         // Set the results text based on the job details
     }

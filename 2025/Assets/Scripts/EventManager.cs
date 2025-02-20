@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using UnityEngine;
 
 public static class EventManager
@@ -8,4 +7,8 @@ public static class EventManager
     public static Action NextScene; // Event for beginning the next scene
     public static Action FadeIn; // Trigger Fade in animation as a coroutine
     public static Action FadeOut; // Trigger Fade out animation as a coroutine
+    
+    // Used for ensuring the media gets enters and leaves behind certain screen elements
+    public static Action ShowDeskOverlay;
+    public static Action HideDeskOverlay;
 }
