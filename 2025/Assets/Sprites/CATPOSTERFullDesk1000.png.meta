@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      CATPOSTERFullDesk1000_0: 8959367852718000375
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

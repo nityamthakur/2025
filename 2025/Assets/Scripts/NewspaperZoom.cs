@@ -12,6 +12,9 @@ public class NewspaperZoom : MonoBehaviour
 
     public float zoomFactor = 2.0f;
     public float zoomSpeed = 0.2f;
+    public bool canZoom = true;
+    public bool stopZoom = true;
+    public Entity entityComponent = null;
 
     private Collider2D newspaperCollider; // Reference to the collider
     private Draggable draggableScript; // Reference to the Draggable script
@@ -26,58 +29,58 @@ public class NewspaperZoom : MonoBehaviour
 
         zoomScale = originalScale * zoomFactor;
         zoomPosition = new Vector3(mainCamera.transform.position.x, mainCamera.transform.position.y, originalPosition.z);
+
+        entityComponent = GetComponent<Entity>(); // Get the Entity script
+        if (entityComponent == null)
+        {
+            Debug.LogError("Entity component not found on Newspaper!");
+        }
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && canZoom && stopZoom)
         {
+            canZoom = false;
             ToggleZoom();
         }
     }
 
     void ToggleZoom()
     {
-        Entity entityComponent = GetComponent<Entity>(); // Get the Entity script
-
+        // Zoom Out
         if (isZoomedIn)
         {
-            if (entityComponent != null)
-            {
-                entityComponent.ChangeMediaRotation(60); // Reset rotation when zooming out
-            }
-            else
-            {
-                Debug.LogError("Entity component not found on Newspaper!");
-            }
-
+            if(entityComponent) 
+                entityComponent.ChangeMediaRotation(60);
+            
             //StartCoroutine(SmoothTransition(originalPosition, originalScale));
             StartCoroutine(SmoothTransition(previousPosition, originalScale));
-            newspaperCollider.enabled = true;  // Re-enable collision
-            if (draggableScript != null) draggableScript.enabled = true;  // Re-enable dragging
+            //newspaperCollider.enabled = true;  // Re-enable collision
+
+            if (draggableScript != null) 
+                draggableScript.enabled = true;  // Re-enable dragging
         }
+        // Zoom In
         else
         {
-            if (entityComponent != null)
-            {
-                entityComponent.ChangeMediaRotation(-60); // Reset rotation when zooming out
-            }
-            else
-            {
-                Debug.LogError("Entity component not found on Newspaper!");
-            }
+            if(entityComponent) 
+                entityComponent.ChangeMediaRotation(-60);
 
             StartCoroutine(SmoothTransition(zoomPosition, zoomScale));
             previousPosition = transform.position;
-            newspaperCollider.enabled = false; // Disable collision
-            if (draggableScript != null) draggableScript.enabled = false; // Disable dragging
+            //newspaperCollider.enabled = false; // Disable collision
+
+            if (draggableScript != null) 
+                draggableScript.enabled = false; // Disable dragging
         }
 
-        isZoomedIn = !isZoomedIn;
     }
 
     System.Collections.IEnumerator SmoothTransition(Vector3 targetPos, Vector3 targetScale)
     {
+        newspaperCollider.enabled = false; // Disable collision before transition occurs
+
         Vector3 startPos = transform.position;
         Vector3 startScale = transform.localScale;
         float t = 0f;
@@ -92,5 +95,18 @@ public class NewspaperZoom : MonoBehaviour
 
         transform.position = targetPos;
         transform.localScale = targetScale;
+    
+        canZoom = true;
+
+        isZoomedIn = !isZoomedIn;
+
+        if(!isZoomedIn)
+            newspaperCollider.enabled = true; // Enable collision after transition occurs if not zoomed in
+    }
+
+    // To stop zoom fully, independent of canZoom
+    public void preventZoom()
+    {
+        stopZoom = false;
     }
 }

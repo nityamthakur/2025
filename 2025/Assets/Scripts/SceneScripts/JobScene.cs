@@ -27,9 +27,10 @@ public class JobScene : MonoBehaviour
 
     public void LoadJobStart(int day) {
 
-        ShowBuildingTransition();
+        //ShowBuildingTransition();
         LoadJsonFromFile();
         SetUpJobStart(day);
+        EventManager.FadeIn?.Invoke(); 
     }
 
     private void ShowBuildingTransition()

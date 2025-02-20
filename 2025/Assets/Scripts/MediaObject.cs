@@ -53,8 +53,8 @@ public class Entity : MonoBehaviour
         transform.eulerAngles = new Vector3(
         transform.eulerAngles.x + angleX,
         transform.eulerAngles.y,
-        transform.eulerAngles.z
-    );}
+        transform.eulerAngles.z);
+    }
 
     private void CreateCensorBoxes()
     {
@@ -148,11 +148,17 @@ public class Entity : MonoBehaviour
         {
             GameManager.Instance.EvaluatePlayerAccept(newspaperData.banWords);
             StartCoroutine(DestroyAfterExitMovement("Accept"));
+
+            NewspaperZoom zoomComponent = GetComponentInChildren<NewspaperZoom>();
+            zoomComponent.preventZoom();
         }
         else if (collision.gameObject.CompareTag("DropBoxDestroy"))
         {
             GameManager.Instance.EvalutatePlayerDestroy(newspaperData.banWords);
             StartCoroutine(DestroyAfterExitMovement("Destroy"));
+
+            NewspaperZoom zoomComponent = GetComponentInChildren<NewspaperZoom>();
+            zoomComponent.preventZoom();
         }
     }
 
@@ -161,7 +167,7 @@ public class Entity : MonoBehaviour
         // Turn of Rigidbody because newspaper gets wierd when colliding with boxes
         if (TryGetComponent<Rigidbody2D>(out var rigidBody))
         {
-            rigidBody.simulated = false; // ✅ Disables physics interactions without removing Rigidbody2D
+            rigidBody.simulated = false; // Disables physics interactions without removing Rigidbody2D
         }
 
         draggableScript.enabled = false; 
