@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 public class SceneManager : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class SceneManager : MonoBehaviour
 
     private int currentSceneIndex = 0;
     private List<Action> sceneSequence;
+    private bool grayscaleOn = false;
 
     void Awake()
     {
@@ -55,10 +57,10 @@ public class SceneManager : MonoBehaviour
     void Start()
     {
         // Start the game in the main menu
-        //mainMenuScene.LoadMainMenu();
+        mainMenuScene.LoadMainMenu();
 
         // Start the game at the job scene
-        jobScene.LoadJobStart(GameManager.Instance.GetCurrentDay());
+        //jobScene.LoadJobStart(GameManager.Instance.GetCurrentDay());
     }
 
     public void StartNextScene()
@@ -130,5 +132,10 @@ public class SceneManager : MonoBehaviour
     {
         Debug.Log("HideDeskOverlay called");
         deskOverlayImage.gameObject.SetActive(false);   
+    }
+
+    public void ToggleGrayscale()
+    {
+        EventManager.ToggleGrayscaleState();
     }
 }

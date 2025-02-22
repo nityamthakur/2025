@@ -11,4 +11,18 @@ public static class EventManager
     // Used for ensuring the media gets enters and leaves behind certain screen elements
     public static Action ShowDeskOverlay;
     public static Action HideDeskOverlay;
+
+    public static Action<string> PlayMusic;
+    public static Action StopMusic;
+    public static Action<string> PlaySound;
+    public static Action<int, int, int> UpdateVolume;
+
+    public static Action<bool> ToggleGrayscale;
+    public static bool IsGrayscale { get; private set; } = false;
+    public static void ToggleGrayscaleState()
+    {
+        IsGrayscale = !IsGrayscale;
+        ToggleGrayscale?.Invoke(IsGrayscale);
+    }
+
 }
