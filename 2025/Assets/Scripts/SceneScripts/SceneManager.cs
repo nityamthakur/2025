@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 public class SceneManager : MonoBehaviour
 {
@@ -55,10 +56,10 @@ public class SceneManager : MonoBehaviour
     void Start()
     {
         // Start the game in the main menu
-        //mainMenuScene.LoadMainMenu();
+        mainMenuScene.LoadMainMenu();
 
         // Start the game at the job scene
-        jobScene.LoadJobStart(GameManager.Instance.GetCurrentDay());
+        //jobScene.LoadJobStart(GameManager.Instance.GetCurrentDay());
     }
 
     public void StartNextScene()

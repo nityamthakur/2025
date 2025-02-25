@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System;
 
 public class MainMenuScene : MonoBehaviour
 {
@@ -13,7 +14,8 @@ public class MainMenuScene : MonoBehaviour
     private Image backgroundImage;
 
     public void LoadMainMenu() {
-        
+        EventManager.PlayMusic?.Invoke("menu"); 
+
         currentMenuObject = Instantiate(menuObject);
         if (menuObject == null)
         {
@@ -43,8 +45,9 @@ public class MainMenuScene : MonoBehaviour
         }
         playButton.onClick.AddListener(() =>
         {
-            playButton.interactable = false; // Disable immediately
+            playButton.interactable = false;
             StartCoroutine(StartGame());
+            EventManager.StopMusic?.Invoke(); 
         });
 
         loadButton = currentMenuObject.transform.Find("LoadButton").GetComponent<Button>();
@@ -55,8 +58,9 @@ public class MainMenuScene : MonoBehaviour
         }
         loadButton.onClick.AddListener(() =>
         {
-            loadButton.interactable = false; // Disable immediately
+            loadButton.interactable = false;
             LoadGame();
+            EventManager.PlaySound?.Invoke("switch1"); 
         });
 
         optionsButton = currentMenuObject.transform.Find("OptionsButton").GetComponent<Button>();
@@ -67,8 +71,9 @@ public class MainMenuScene : MonoBehaviour
         }
         optionsButton.onClick.AddListener(() =>
         {
-            optionsButton.interactable = false; // Disable immediately
+            optionsButton.interactable = false;
             OptionsMenu();
+            EventManager.PlaySound?.Invoke("switch1"); 
         });
     
     }
@@ -86,12 +91,32 @@ public class MainMenuScene : MonoBehaviour
 
     private void LoadGame(){
         // Will set up after load screen and saving finished
-        Debug.Log("Load Button pressed");
+        EventManager.OpenOptionsMenu?.Invoke();
     }
 
     private void OptionsMenu(){
         // Will set up after options screen and volume, grayscale, anything else is finished
-        Debug.Log("Options Button pressed");
+        EventManager.OpenOptionsMenu?.Invoke();
     }
 
+    private void ReactivateMainMenuButtons()
+    {
+        // Prevent reactivating load and open buttons when game has started
+        if(playButton.IsActive())
+        {
+            loadButton.interactable = true;
+            optionsButton.interactable = true;
+        }
+    }
+
+
+    void OnEnable()
+    {
+        EventManager.ReactivateMainMenuButtons += ReactivateMainMenuButtons;
+    }
+
+    void OnDisable()
+    {
+        EventManager.ReactivateMainMenuButtons -= ReactivateMainMenuButtons;
+    }
 }
