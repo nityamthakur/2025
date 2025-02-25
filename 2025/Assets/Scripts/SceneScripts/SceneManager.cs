@@ -19,7 +19,6 @@ public class SceneManager : MonoBehaviour
 
     private int currentSceneIndex = 0;
     private List<Action> sceneSequence;
-    private bool grayscaleOn = false;
 
     void Awake()
     {
@@ -132,10 +131,5 @@ public class SceneManager : MonoBehaviour
     {
         Debug.Log("HideDeskOverlay called");
         deskOverlayImage.gameObject.SetActive(false);   
-    }
-
-    public void ToggleGrayscale()
-    {
-        EventManager.ToggleGrayscaleState();
     }
 }

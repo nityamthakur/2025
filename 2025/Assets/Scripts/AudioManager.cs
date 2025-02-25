@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.Rendering;
 
 public class AudioManager : MonoBehaviour
 {
@@ -13,8 +12,6 @@ public class AudioManager : MonoBehaviour
     public float musicVolume = 1.0f;
     public float sfxVolume = 1.0f;
     public float muteVolume = 1.0f;
-    public bool isMuted = false;
-
     private void Start()
     {
         musicSource = gameObject.AddComponent<AudioSource>();
@@ -150,14 +147,13 @@ public class AudioManager : MonoBehaviour
         sfxVolume = Mathf.Clamp(volume, 0f, 1f); 
     }
 
-    public void MuteToggle()
+    public void MuteToggle(bool isOn)
     {
-        if(!isMuted)
+        if(isOn)
             muteVolume = 0f;
         else
             muteVolume = 1.0f;
 
         musicSource.volume = masterVolume * musicVolume * muteVolume;
-        isMuted = !isMuted;
     }
 }

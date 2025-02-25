@@ -12,10 +12,12 @@ public static class EventManager
     public static Action ShowDeskOverlay;
     public static Action HideDeskOverlay;
 
+    public static Action OpenOptionsMenu;
+    public static Action ReactivateMainMenuButtons;
+
     public static Action<string> PlayMusic;
     public static Action StopMusic;
     public static Action<string> PlaySound;
-    public static Action<int, int, int> UpdateVolume;
 
     public static Action<bool> ToggleGrayscale;
     public static bool IsGrayscale { get; private set; } = false;
