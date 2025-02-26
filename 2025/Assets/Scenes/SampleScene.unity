@@ -972,7 +972,7 @@ GameObject:
   - component: {fileID: 1487003098}
   - component: {fileID: 1487003097}
   m_Layer: 0
-  m_Name: SceneManager
+  m_Name: SceneChanger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -990,6 +990,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7166bcba713f9f43a8496ccdd63b791, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameManager: {fileID: 2059682408}
   mainMenuScene: {fileID: 1781939494}
   dayStartScene: {fileID: 374167943}
   jobScene: {fileID: 713576585}
@@ -1199,7 +1200,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e0444c3f7e1a964f895d93018772405, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneManager: {fileID: 1487003097}
 --- !u!4 &2059682409
 Transform:
   m_ObjectHideFlags: 0

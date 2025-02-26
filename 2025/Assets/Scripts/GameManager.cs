@@ -1,11 +1,10 @@
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance { get; private set; }
-
-    [SerializeField] SceneManager sceneManager;
+    public GameManager Instance { get; private set; }
     private string[] censorTargetWords;
     private string[] banTargetWords;
 
@@ -28,6 +27,8 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
+        // Commented out as necessary to allow it to be destroyed for game restart
+        /*
         if (Instance != null && Instance != this)
             Destroy(gameObject);
         else
@@ -35,6 +36,7 @@ public class GameManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
+        */
     }
 
     void Start()
@@ -206,6 +208,15 @@ public class GameManager : MonoBehaviour
         jobDetails.numMediaProcessed = 0;
         jobDetails.currClockTime = 0;
     }
+
+    private void Update() {
+        if (Input.GetKeyDown(KeyCode.R)) {
+            Debug.Log("Restarting Game");
+            Time.timeScale = 1;
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+    }
+
 }
 
 public class JobDetails {
