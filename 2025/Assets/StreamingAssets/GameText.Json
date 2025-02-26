@@ -20,11 +20,11 @@
     "emailText": [
         {
             "day": 1,
-            "email": "Hello.\n\nWelcome to your very first day working for NewMerica within the Media Regulation Branch. While you may be inclined to get started right away, there are a few rules that all employees must abide by. For your first day, we require you to simply dispose of any articles with undesirable content."
+            "email": "<size=17>Welcome to your very first day working for NewMerica within the Media Regulation Branch. For your first day, we require you to simply dispose of any articles with undesirable content.\n\n<color=#FFFF00><b>Click and drag to move newspapers.\nRight-click to zoom in and out on the newspapers.</color></b>\n\n Ensure all documents meet NewMerican standards. Good luck on your first day!</size>"
         },
         {
             "day": 2,
-            "email": "Hello.\n\nCongratulations on surviving the first day working for NewMerica. In fact your diligent efforts in maintaining the nation’s values and ensuring proper information flow have not gone unnoticed. As a reward your work will now be doubled, as you are now also required to censor certain content."
+            "email": "<size=17>Congratulations on a successful first day at NewMerica. As a reward, your work will now be doubled, as you are now also required to censor certain content.\n\n<color=#FFFF00><b>Click and drag to move newspapers.\nRight-click to zoom in and out on the newspapers.\nLeft-click on words to censor them.</color></b>\n\nAny failure to censor sensitive content will result in disciplinary action. Good luck!</size>"
         }
     ],
     "newspaperText": [
