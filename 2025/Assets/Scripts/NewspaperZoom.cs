@@ -39,7 +39,7 @@ public class NewspaperZoom : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && canZoom && stopZoom)
+        if (Input.GetMouseButtonDown(1) && canZoom && stopZoom) // Right-click to zoom
         {
             canZoom = false;
             ToggleZoom();
@@ -51,30 +51,26 @@ public class NewspaperZoom : MonoBehaviour
         // Zoom Out
         if (isZoomedIn)
         {
-            if(entityComponent) 
+            if (entityComponent)
                 entityComponent.ChangeMediaRotation(60);
-            
-            //StartCoroutine(SmoothTransition(originalPosition, originalScale));
-            StartCoroutine(SmoothTransition(previousPosition, originalScale));
-            //newspaperCollider.enabled = true;  // Re-enable collision
 
-            if (draggableScript != null) 
+            StartCoroutine(SmoothTransition(previousPosition, originalScale));
+
+            if (draggableScript != null)
                 draggableScript.enabled = true;  // Re-enable dragging
         }
         // Zoom In
         else
         {
-            if(entityComponent) 
+            if (entityComponent)
                 entityComponent.ChangeMediaRotation(-60);
 
             StartCoroutine(SmoothTransition(zoomPosition, zoomScale));
             previousPosition = transform.position;
-            //newspaperCollider.enabled = false; // Disable collision
 
-            if (draggableScript != null) 
+            if (draggableScript != null)
                 draggableScript.enabled = false; // Disable dragging
         }
-
     }
 
     System.Collections.IEnumerator SmoothTransition(Vector3 targetPos, Vector3 targetScale)
@@ -95,12 +91,11 @@ public class NewspaperZoom : MonoBehaviour
 
         transform.position = targetPos;
         transform.localScale = targetScale;
-    
-        canZoom = true;
 
+        canZoom = true;
         isZoomedIn = !isZoomedIn;
 
-        if(!isZoomedIn)
+        if (!isZoomedIn)
             newspaperCollider.enabled = true; // Enable collision after transition occurs if not zoomed in
     }
 
