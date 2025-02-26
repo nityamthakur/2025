@@ -41,9 +41,11 @@ public class ObjectSpawner : MonoBehaviour
     }
 
     private void SpawnNewMediaObject() {
-        if (gameManager.IsDayEnded()) return;
+        if (gameManager.IsDayEnded()) 
+            return;
 
-        if (quitting) return;
+        if (quitting) 
+            return;
 
         //Debug.Log($"Spawning object at: {mediaSpawner.transform.position}");
 
@@ -54,10 +56,13 @@ public class ObjectSpawner : MonoBehaviour
 
         // Pass the spline prefab reference
         Entity mediaEntity = newMedia.GetComponent<Entity>();
-        if (mediaEntity != null) {
+        if (mediaEntity != null) 
+        {
             StartCoroutine(DelayedPassNewspaperData(mediaEntity, currentNewspaper));
             mediaEntity.SetSplinePrefab(splinePath); // Pass the splinePath prefab reference
-        } else {
+        } 
+        else 
+        {
             Debug.LogError("Spawned media object is missing the Entity script!");
         }
     }
