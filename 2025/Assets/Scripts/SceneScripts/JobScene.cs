@@ -34,7 +34,7 @@ public class JobScene : MonoBehaviour
 
     public void LoadJobStart(int day) {
 
-        //ShowBuildingTransition();
+        ShowBuildingTransition();
         LoadJsonFromFile();
         SetUpJobStart(day);
         EventManager.FadeIn?.Invoke(); 
@@ -152,6 +152,7 @@ public class JobScene : MonoBehaviour
 
     private void BeginWorkDay(){
         gameManager.SetJobScene(this);
+        gameManager.StartJobTimer(60f); // Start the game timer
         objectSpawner.StartMediaSpawn();
         SetScreenObjectives(screenText);
         startWorkButton.gameObject.SetActive(false);

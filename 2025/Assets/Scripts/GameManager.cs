@@ -1,22 +1,27 @@
+using System.Collections;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public GameManager Instance { get; private set; }
+    [SerializeField] TextMeshProUGUI onScreenTimer;
+    private JobDetails jobDetails;
+    private JobScene jobScene;
+    private Coroutine jobTimerCoroutine;
+
     private string[] censorTargetWords;
     private string[] banTargetWords;
-
     private int totalCensorTargets = 0;
     private int currentCensorNum = 0;
     private int numCensorMistakes = 0;
+
     private int currentDay = 1;
     private bool dayEnded = false;
-    private JobDetails jobDetails;
-    private JobScene jobScene;
-    // Set total score minimum to 0
 
+    // Set total score minimum to 0
     private int totalScore = 0;
     public int TotalScore
     {
@@ -24,26 +29,23 @@ public class GameManager : MonoBehaviour
         private set { totalScore = Mathf.Max(0, value); }
     }
 
-
-    void Awake()
+    // --------------------------------------------
+    // Getters and Setters
+    public bool IsDayEnded()
     {
-        // Commented out as necessary to allow it to be destroyed for game restart
-        /*
-        if (Instance != null && Instance != this)
-            Destroy(gameObject);
-        else
-        {    
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        */
+        return dayEnded;
     }
 
-    void Start()
+    public int GetCurrentDay()
     {
-        jobDetails = new JobDetails();
+        return currentDay;
     }
-    
+    public void SetCurrentDay(int day)
+    {
+        currentDay = day;
+    }
+
+   
     public JobDetails GetJobDetails()
     {
         return jobDetails;
@@ -57,20 +59,6 @@ public class GameManager : MonoBehaviour
         
         jobScene = workScene;
         dayEnded = false;
-    }
-
-    public bool IsDayEnded()
-    {
-        return dayEnded;
-    }
-
-    public int GetCurrentDay()
-    {
-        return currentDay;
-    }
-    public void SetCurrentDay(int day)
-    {
-        currentDay = day;
     }
 
     public string[] GetCensorTargetWords()
@@ -92,6 +80,30 @@ public class GameManager : MonoBehaviour
     {
         banTargetWords = words;
     }
+
+    // -------------------------------------
+    // Functions
+    void Start()
+    {
+        jobDetails = new JobDetails();
+        onScreenTimer.enabled = false; // Hide the onscreen timer
+    }
+
+    private void Update() {
+        if (Input.GetKeyDown(KeyCode.R)) {
+            Debug.Log("Restarting Game");
+            Time.timeScale = 1;
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+
+        if (Input.GetKeyDown(KeyCode.T)) {
+            Debug.Log("Showing Timer");
+            onScreenTimer.enabled = !onScreenTimer.enabled; // Hide the onscreen timer
+        }
+        if(onScreenTimer.enabled == true)
+            setOnScreenTimer();
+    }
+
 
     public void RegisterCensorTarget()
     {
@@ -190,7 +202,7 @@ public class GameManager : MonoBehaviour
 
     public void CheckDayEnd()
     {
-        if (jobDetails.numMediaProcessed >= jobDetails.numMediaNeeded)
+        if (jobDetails.numMediaProcessed >= jobDetails.numMediaNeeded || jobDetails.currClockTime <= 0)
         {
             Debug.Log("Day has ended.");
             dayEnded = true;
@@ -206,17 +218,37 @@ public class GameManager : MonoBehaviour
     public void ResetJobDetails()
     {
         jobDetails.numMediaProcessed = 0;
+        StopCoroutine(jobTimerCoroutine);
         jobDetails.currClockTime = 0;
     }
 
-    private void Update() {
-        if (Input.GetKeyDown(KeyCode.R)) {
-            Debug.Log("Restarting Game");
-            Time.timeScale = 1;
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    public void StartJobTimer(float time)
+    {
+        if (jobTimerCoroutine != null)
+        {
+            StopCoroutine(jobTimerCoroutine); // Stops any previous job timer
         }
+        jobTimerCoroutine = StartCoroutine(BeginWorkTimer(time));
     }
 
+    private IEnumerator BeginWorkTimer(float time)
+    {
+        Debug.Log("Job Timer Started...");
+        jobDetails.currClockTime = time;
+
+        while (jobDetails.currClockTime > 0)
+        {
+            jobDetails.currClockTime -= Time.deltaTime;
+            yield return null; // Waits for the next frame
+        }
+
+        jobDetails.currClockTime = 0;
+    }
+
+    private void setOnScreenTimer()
+    {
+        onScreenTimer.text = $"Timer: {jobDetails.currClockTime:F2}s";
+    }
 }
 
 public class JobDetails {
@@ -225,12 +257,10 @@ public class JobDetails {
     public int numMediaNeeded;
 
     // For using a time based system for the day
-    public int currClockTime;
-    public int clockTimeJobEnd;
+    public float currClockTime;
     public JobDetails() {
         numMediaProcessed = 0;
         numMediaNeeded = 5;
-        currClockTime = 0;
-        clockTimeJobEnd = 1000;
+        currClockTime = 0f;
     }
 }
