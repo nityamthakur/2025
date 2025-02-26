@@ -12,6 +12,8 @@ public class AudioManager : MonoBehaviour
     public float musicVolume = 1.0f;
     public float sfxVolume = 1.0f;
     public float muteVolume = 1.0f;
+    private Coroutine currentMusicCoroutine; // Store the currently running coroutine
+
     private void Start()
     {
         musicSource = gameObject.AddComponent<AudioSource>();
@@ -50,7 +52,7 @@ public class AudioManager : MonoBehaviour
 
     public void PlayMusic(string soundName)
     {
-        //Debug.Log($"PlayMusic called with: {soundName}");
+        Debug.Log($"PlayMusic called with: {soundName}");
         AudioClip sound = null;
         bool soundExists = musicDict.TryGetValue(soundName.ToLower(), out sound);
 
@@ -68,12 +70,23 @@ public class AudioManager : MonoBehaviour
         musicSource.clip = sound;
         musicSource.Play();
 
-        StartCoroutine(FadeInMusic());
+        if (currentMusicCoroutine != null)
+        {
+            StopCoroutine(currentMusicCoroutine);
+        }
+
+        currentMusicCoroutine = StartCoroutine(FadeInMusic());
     }
 
     public void StopMusic()
     {
-        StartCoroutine(FadeOutMusic());
+        Debug.Log("Music Stopping");
+        if (currentMusicCoroutine != null)
+        {
+            StopCoroutine(currentMusicCoroutine);
+        }
+
+        currentMusicCoroutine = StartCoroutine(FadeOutMusic());
     }
 
     public void PlaySound(string soundName)
@@ -110,6 +123,7 @@ public class AudioManager : MonoBehaviour
 
         while (musicSource.volume < masterVolume * musicVolume * muteVolume)
         {
+            Debug.Log("FadeInMusic");
             musicSource.volume += Time.deltaTime / duration;
             yield return null;
         }
@@ -119,15 +133,18 @@ public class AudioManager : MonoBehaviour
 
     private IEnumerator FadeOutMusic()
     {
+        Debug.Log("Music Stopping");
         float duration = 2.0f;
 
         while (musicSource.volume > 0)
         {
+            Debug.Log("FadeOutMusic");
             musicSource.volume -= Time.deltaTime / duration;
             yield return null;
         }
 
         musicSource.volume = 0;
+        musicSource.Stop();
     }
 
     public void UpdateMasterVolume(float volume)

@@ -11,6 +11,7 @@ public class Entity : MonoBehaviour
     private MediaSplinePath currSplinePath;
     private GameObject splinePrefab;
     private Draggable draggableScript;
+    private GameManager gameManager;
 
     public void SetSplinePrefab(GameObject prefab)
     {
@@ -23,7 +24,9 @@ public class Entity : MonoBehaviour
         if (textComponent == null)
         {
             Debug.LogError("No TextMeshPro component found!");
-        }       
+        }
+        gameManager = FindFirstObjectByType<GameManager>();
+
     }
 
     public void PassNewspaperData(Newspaper newspaper)
@@ -40,7 +43,7 @@ public class Entity : MonoBehaviour
         textComponent.ForceMeshUpdate();
 
         // Disable censoring on the first day
-        if (GameManager.Instance.GetCurrentDay() != 1)
+        if (gameManager.GetCurrentDay() != 1)
         {
             CreateCensorBoxes();
         }
@@ -70,7 +73,7 @@ public class Entity : MonoBehaviour
             string word = wordInfo.GetWord();
             bool isCensorTarget = false;
             // Find if the word contains any censor words
-            foreach (string censorWord in GameManager.Instance.GetCensorTargetWords())
+            foreach (string censorWord in gameManager.GetCensorTargetWords())
             {
                 // Split the censor word/phrase into individual words
                 string[] splicedWord = censorWord.Split(' ');
@@ -114,7 +117,7 @@ public class Entity : MonoBehaviour
             if (isCensorTarget)
             {
                 newCensorBox.GetComponent<CensorTarget>().SetToCensorTarget();
-                GameManager.Instance.RegisterCensorTarget();
+                gameManager.RegisterCensorTarget();
             }
         }
     }
@@ -146,7 +149,7 @@ public class Entity : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("DropBoxAccept"))
         {
-            GameManager.Instance.EvaluatePlayerAccept(newspaperData.banWords);
+            gameManager.EvaluatePlayerAccept(newspaperData.banWords);
             StartCoroutine(DestroyAfterExitMovement("Accept"));
 
             NewspaperZoom zoomComponent = GetComponentInChildren<NewspaperZoom>();
@@ -154,7 +157,7 @@ public class Entity : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("DropBoxDestroy"))
         {
-            GameManager.Instance.EvalutatePlayerDestroy(newspaperData.banWords);
+            gameManager.EvalutatePlayerDestroy(newspaperData.banWords);
             StartCoroutine(DestroyAfterExitMovement("Destroy"));
 
             NewspaperZoom zoomComponent = GetComponentInChildren<NewspaperZoom>();

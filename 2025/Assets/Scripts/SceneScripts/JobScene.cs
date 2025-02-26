@@ -25,6 +25,13 @@ public class JobScene : MonoBehaviour
 
     // ---------------------------------
 
+    private GameManager gameManager;
+
+    private void Start()
+    {
+        gameManager = FindFirstObjectByType<GameManager>();
+    }
+
     public void LoadJobStart(int day) {
 
         //ShowBuildingTransition();
@@ -128,23 +135,23 @@ public class JobScene : MonoBehaviour
     private void SetScreenObjectives(TextMeshProUGUI screenText)
     {
         screenText.text = "Ban List:\n";
-        foreach (string ban in GameManager.Instance.GetBanTargetWords())
+        foreach (string ban in gameManager.GetBanTargetWords())
         {
             screenText.text += ban + "\n";
         }
         
         // Don't show the censor list on the first day
-        if (GameManager.Instance.GetCurrentDay() == 1) return;
+        if (gameManager.GetCurrentDay() == 1) return;
 
         screenText.text += "\nCensor List:\n";
-        foreach (string censor in GameManager.Instance.GetCensorTargetWords())
+        foreach (string censor in gameManager.GetCensorTargetWords())
         {
             screenText.text += censor + "\n";
         }
     }
 
     private void BeginWorkDay(){
-        GameManager.Instance.SetJobScene(this);
+        gameManager.SetJobScene(this);
         objectSpawner.StartMediaSpawn();
         SetScreenObjectives(screenText);
         startWorkButton.gameObject.SetActive(false);
@@ -203,7 +210,7 @@ public class JobScene : MonoBehaviour
 
         if (jsonObject != null && jsonObject.emailText.Count > 0)
         {
-            currentEmail = GetEmailForDay(jsonObject.emailText, GameManager.Instance.GetCurrentDay());
+            currentEmail = GetEmailForDay(jsonObject.emailText, gameManager.GetCurrentDay());
         }
         else
         {

@@ -102,7 +102,7 @@ public class MainMenuScene : MonoBehaviour
     private void ReactivateMainMenuButtons()
     {
         // Prevent reactivating load and open buttons when game has started
-        if(playButton.IsActive())
+        if(playButton != null && playButton.IsActive())
         {
             loadButton.interactable = true;
             optionsButton.interactable = true;
