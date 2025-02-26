@@ -19,6 +19,13 @@ public class DayStartScene : MonoBehaviour
     private int linePos = 0;
     private string[] currentLines;
 
+    private GameManager gameManager;
+
+    public void Start()
+    {
+        gameManager = FindFirstObjectByType<GameManager>();
+    }
+
     public void LoadDayStart(int day) {
         
         currentTextBox = Instantiate(UITextBox);
@@ -80,7 +87,7 @@ public class DayStartScene : MonoBehaviour
 
         if (jsonObject != null && jsonObject.newsCasterIntro.Count > 0)
         {
-            currentLines = GetLinesForDay(jsonObject.newsCasterIntro, GameManager.Instance.GetCurrentDay());
+            currentLines = GetLinesForDay(jsonObject.newsCasterIntro, gameManager.GetCurrentDay());
             
             linePos = 0;
             ReadNextLine();

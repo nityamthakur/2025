@@ -7,9 +7,12 @@ public class CensorTarget : MonoBehaviour, IPointerClickHandler
     private bool isCensored = false;
     private bool isCensorTarget = false;
 
+    private GameManager gameManager;
+
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        gameManager = FindFirstObjectByType<GameManager>();
     }
 
     public void SetToCensorTarget()
@@ -25,10 +28,11 @@ public class CensorTarget : MonoBehaviour, IPointerClickHandler
             isCensored = false;
             if (isCensorTarget)
             {
-                GameManager.Instance.CensorTargetDisabled();
+                gameManager.CensorTargetDisabled();
             }
-            else {
-                GameManager.Instance.NonCensorTargetDisabled();
+            else 
+            {
+                gameManager.NonCensorTargetDisabled();
             }
         }
         else
@@ -37,10 +41,11 @@ public class CensorTarget : MonoBehaviour, IPointerClickHandler
             isCensored = true;
             if (isCensorTarget)
             {
-                GameManager.Instance.CensorTargetEnabled();
+                gameManager.CensorTargetEnabled();
             }
-            else {
-                GameManager.Instance.NonCensorTargetEnabled();
+            else 
+            {
+                gameManager.NonCensorTargetEnabled();
             }
         }
     }

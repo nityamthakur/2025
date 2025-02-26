@@ -3,12 +3,11 @@ using UnityEngine.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 
-public class SceneManager : MonoBehaviour
+public class SceneChanger : MonoBehaviour
 {
-    public static SceneManager Instance { get; private set; }
-
+    public SceneChanger Instance { get; private set; }
+    [SerializeField] private GameManager gameManager;
     [SerializeField] private MainMenuScene mainMenuScene;
     [SerializeField] private DayStartScene dayStartScene;
     [SerializeField] private JobScene jobScene;
@@ -20,13 +19,17 @@ public class SceneManager : MonoBehaviour
     private int currentSceneIndex = 0;
     private List<Action> sceneSequence;
 
-    void Awake()
+    void Start()
     {
+        if(gameManager == null)
+        {
+            Debug.Log("gameManager is null in SceneChanger");
+        }
         // Define the order of the scenes
         sceneSequence = new List<Action>
         {
-            () => dayStartScene.LoadDayStart(GameManager.Instance.GetCurrentDay()),
-            () => jobScene.LoadJobStart(GameManager.Instance.GetCurrentDay()),
+            () => dayStartScene.LoadDayStart(gameManager.GetCurrentDay()),
+            () => jobScene.LoadJobStart(gameManager.GetCurrentDay()),
         };
         fadingScreen = Instantiate(fadingScreenPrefab);
 
@@ -51,15 +54,10 @@ public class SceneManager : MonoBehaviour
             return;
         }
         deskOverlayImage.gameObject.SetActive(false);
-    }
 
-    void Start()
-    {
-        // Start the game in the main menu
         mainMenuScene.LoadMainMenu();
-
-        // Start the game at the job scene
         //jobScene.LoadJobStart(GameManager.Instance.GetCurrentDay());
+
     }
 
     public void StartNextScene()
@@ -74,8 +72,8 @@ public class SceneManager : MonoBehaviour
     void OnEnable()
     {
         EventManager.NextScene += StartNextScene;
-        EventManager.FadeIn += () => StartCoroutine(FadeIn());
-        EventManager.FadeOut += () => StartCoroutine(FadeOut());
+        EventManager.FadeIn += FadeInScreen;
+        EventManager.FadeOut += FadeOutScreen;
         EventManager.ShowDeskOverlay += ShowDeskOverLay;
         EventManager.HideDeskOverlay += HideDeskOverLay;
     }
@@ -83,10 +81,20 @@ public class SceneManager : MonoBehaviour
     void OnDisable()
     {
         EventManager.NextScene -= StartNextScene;
-        EventManager.FadeIn -= () => StartCoroutine(FadeIn());
-        EventManager.FadeOut -= () => StartCoroutine(FadeOut());
+        EventManager.FadeIn -= FadeInScreen;
+        EventManager.FadeOut -= FadeOutScreen;
         EventManager.ShowDeskOverlay -= ShowDeskOverLay;
         EventManager.HideDeskOverlay -= HideDeskOverLay;
+    }
+
+    private void FadeInScreen()
+    {
+        StartCoroutine(FadeIn());
+    }
+
+    private void FadeOutScreen()
+    {
+        StartCoroutine(FadeOut());
     }
 
     private float fadeDuration = 1f; // Adjustable fade duration

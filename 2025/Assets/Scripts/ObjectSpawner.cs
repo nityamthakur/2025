@@ -16,6 +16,7 @@ public class ObjectSpawner : MonoBehaviour
     private Entity.Newspaper[] newspapers;
     private Entity.Newspaper currentNewspaper;
     //public JobScene jobScene; 
+    private GameManager gameManager;
 
     bool quitting = false;
 
@@ -25,11 +26,12 @@ public class ObjectSpawner : MonoBehaviour
         {
             Debug.LogError("Media Object, Media Spawner, and/or Spline Path is not assigned.");
         }
+        gameManager = FindFirstObjectByType<GameManager>();
     }
 
     public void StartMediaSpawn()
     {
-        if(GameManager.Instance.GetJobDetails() == null) {
+        if(gameManager.GetJobDetails() == null) {
             Debug.LogError("jobDetails is null.");
         }
 
@@ -39,7 +41,7 @@ public class ObjectSpawner : MonoBehaviour
     }
 
     private void SpawnNewMediaObject() {
-        if (GameManager.Instance.IsDayEnded()) return;
+        if (gameManager.IsDayEnded()) return;
 
         if (quitting) return;
 
@@ -86,7 +88,7 @@ public class ObjectSpawner : MonoBehaviour
 
         if (jsonObject != null && jsonObject.newspaperText.Count > 0)
         {
-            newspapers = GetNewspapersForDay(jsonObject.newspaperText, GameManager.Instance.GetCurrentDay());
+            newspapers = GetNewspapersForDay(jsonObject.newspaperText, gameManager.GetCurrentDay());
             newspaperPos = 0;
         }
         else
@@ -138,8 +140,8 @@ public class ObjectSpawner : MonoBehaviour
             }
         }
 
-        GameManager.Instance.SetBanTargetWords(banWords.ToArray());
-        GameManager.Instance.SetCensorTargetWords(censorWords.ToArray());
+        gameManager.SetBanTargetWords(banWords.ToArray());
+        gameManager.SetCensorTargetWords(censorWords.ToArray());
     }
 
     void OnApplicationQuit ()
