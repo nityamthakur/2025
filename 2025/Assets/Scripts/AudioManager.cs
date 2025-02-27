@@ -80,7 +80,6 @@ public class AudioManager : MonoBehaviour
 
     public void StopMusic()
     {
-        Debug.Log("Music Stopping");
         if (currentMusicCoroutine != null)
         {
             StopCoroutine(currentMusicCoroutine);
@@ -123,7 +122,6 @@ public class AudioManager : MonoBehaviour
 
         while (musicSource.volume < masterVolume * musicVolume * muteVolume)
         {
-            Debug.Log("FadeInMusic");
             musicSource.volume += Time.deltaTime / duration;
             yield return null;
         }
@@ -133,12 +131,10 @@ public class AudioManager : MonoBehaviour
 
     private IEnumerator FadeOutMusic()
     {
-        Debug.Log("Music Stopping");
         float duration = 2.0f;
 
         while (musicSource.volume > 0)
         {
-            Debug.Log("FadeOutMusic");
             musicSource.volume -= Time.deltaTime / duration;
             yield return null;
         }
