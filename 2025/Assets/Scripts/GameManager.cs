@@ -244,14 +244,26 @@ public class GameManager : MonoBehaviour
         Debug.Log("Job Timer Started...");
         jobDetails.currClockTime = time;
 
+        float totalWorkTime = time; // Store total work time for calculations
+        JobScene jobScene = GetJobScene(); // Get reference to JobScene
+
         while (jobDetails.currClockTime > 0)
         {
             jobDetails.currClockTime -= Time.deltaTime;
-            yield return null; // Waits for the next frame
+            
+            // Update the clock hands each frame
+            if (jobScene != null)
+            {
+                float progress = 1f - (jobDetails.currClockTime / totalWorkTime); // 0 to 1
+                jobScene.UpdateClockHands(progress);
+            }
+
+            yield return null; // Wait for next frame
         }
 
         jobDetails.currClockTime = 0;
     }
+
 
     private void setOnScreenTimer()
     {

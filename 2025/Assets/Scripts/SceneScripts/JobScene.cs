@@ -24,6 +24,11 @@ public class JobScene : MonoBehaviour
     private GameObject outsideBuildingObject;
 
     // ---------------------------------
+    private float workTimer = 180f;
+    private Image hourHand;
+    private Image minuteHand;
+
+    // ---------------------------------
 
     private GameManager gameManager;
 
@@ -125,6 +130,21 @@ public class JobScene : MonoBehaviour
             return;
         }
         SetScreenEmail(screenText);
+
+
+        hourHand = currJobScene.transform.Find("HourHand").GetComponent<Image>();
+        if(hourHand == null)
+        {
+            Debug.Log("Failed to find hourHand in SetUpJobStart");
+        }
+
+        minuteHand = currJobScene.transform.Find("MinuteHand").GetComponent<Image>();
+        if(minuteHand == null)
+        {
+            Debug.Log("Failed to find minuteHand in SetUpJobStart");
+        }
+
+
     }
 
     private void SetScreenEmail(TextMeshProUGUI screenText)
@@ -152,7 +172,7 @@ public class JobScene : MonoBehaviour
 
     private void BeginWorkDay(){
         gameManager.SetJobScene(this);
-        gameManager.StartJobTimer(420f); // Start the game timer
+        gameManager.StartJobTimer(workTimer); // Start the game timer
         objectSpawner.StartMediaSpawn();
         SetScreenObjectives(screenText);
         startWorkButton.gameObject.SetActive(false);
@@ -177,6 +197,21 @@ public class JobScene : MonoBehaviour
         screenText.text = $"Day {day} Results:\n\nMedia Processed: {mediaProcessed}\n\nSupervisors Notified of Your Day\n\nProfit: ${score}\n\nPossibility of Promotion: Unknown";
 
         // Set the results text based on the job details
+    }
+
+    public void UpdateClockHands(float progress)
+    {
+        if (hourHand)
+        {
+            float hourRotation = Mathf.Lerp(0f, 180f, progress); // Moves from 0 to 180 degrees
+            hourHand.transform.eulerAngles = new Vector3(0, 0, -hourRotation); // Invert rotation for correct direction
+        }
+
+        if (minuteHand)
+        {
+            float minuteRotation = Mathf.Lerp(0f, 2880f, progress); // 8 full revolutions (8 × 360)
+            minuteHand.transform.eulerAngles = new Vector3(0, 0, -minuteRotation);
+        }
     }
 
     private IEnumerator NextScene()

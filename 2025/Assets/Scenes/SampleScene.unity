@@ -819,8 +819,8 @@ Transform:
   m_GameObject: {fileID: 636811470}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.13, y: 0, z: 0.030532692}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -0.39, y: -0.03999996, z: 0.030532692}
+  m_LocalScale: {x: 0.51917, y: 0.51917, z: 0.51917}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 981142087}
@@ -1019,7 +1019,7 @@ MonoBehaviour:
   mainCamera: {fileID: 519420028}
   objectSpawner: {fileID: 1245310923}
   jobScenePrefab: {fileID: 8812546023612397849, guid: a38fe3e81ffbe1742861b58be4594a85, type: 3}
-  workBackgroundImage: {fileID: 8959367852718000375, guid: c2eb2095f5d13414eb6c53f38948fb9f, type: 3}
+  workBackgroundImage: {fileID: -3634233576498660357, guid: 3c2ac63c996c4f74781e724ed4c12b15, type: 3}
   jobBuildingPrefab: {fileID: 7365597034380788627, guid: 179c1e3c7be1eed4385ed3fdeb7cc64b, type: 3}
   jobBuildingImage: {fileID: 7500719156437101807, guid: f0d23fea0664eb14a9e6c31266085328, type: 3}
 --- !u!1 &714306990
@@ -1099,7 +1099,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.49463153, g: 0.93962264, b: 0.4955818, a: 1}
+  m_Color: {r: 0.49463153, g: 0.93962264, b: 0.4955818, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1343,8 +1343,8 @@ Transform:
   m_GameObject: {fileID: 1043387837}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.030532692}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -0.98199, y: -0.04, z: 0.030532692}
+  m_LocalScale: {x: 0.51917, y: 0.51917, z: 0.51917}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 981142087}
@@ -1591,7 +1591,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.8792453, g: 0.5200891, b: 0.4761196, a: 1}
+  m_Color: {r: 0.8792453, g: 0.5200891, b: 0.4761196, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
