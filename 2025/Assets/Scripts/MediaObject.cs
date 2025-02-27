@@ -1,13 +1,20 @@
 using System;
 using System.Collections;
+using Mono.Cecil.Cil;
 using TMPro;
 using UnityEngine;
 
 public class Entity : MonoBehaviour
 {
     [SerializeField] private GameObject censorBoxPrefab;
+    [SerializeField] private GameObject frontCensorBoxContainer;
+    [SerializeField] private GameObject backCensorBoxContainer;
+    [SerializeField] GameObject backOfNewspaper;
+    [SerializeField] Material blurMaterial;
+    [SerializeField] Material defaultMaterial;
+    [SerializeField] float blurSize;
     private Newspaper newspaperData;
-    private TMP_Text textComponent;
+    private TMP_Text[] textComponents;
     private MediaSplinePath currSplinePath;
     private GameObject splinePrefab;
     private Draggable draggableScript;
@@ -20,13 +27,34 @@ public class Entity : MonoBehaviour
 
     private void Start()
     {
-        textComponent = GetComponentInChildren<TMP_Text>();
-        if (textComponent == null)
+        textComponents = GetComponentsInChildren<TMP_Text>(true);
+        if (textComponents == null)
         {
-            Debug.LogError("No TextMeshPro component found!");
+            Debug.LogError("No TextMeshPro components found!");
         }
         gameManager = FindFirstObjectByType<GameManager>();
 
+    }
+
+    public void SetBlur(bool isBlurry)
+    {
+        if (isBlurry)
+        {
+            foreach (var textComponent in textComponents)
+            {
+                textComponent.fontSharedMaterial = blurMaterial;
+                textComponent.fontSharedMaterial.SetFloat("_BlurSize", blurSize);
+                textComponent.ForceMeshUpdate();
+            }
+        }
+        else
+        {
+            foreach (var textComponent in textComponents)
+            {
+                textComponent.fontSharedMaterial = defaultMaterial;
+                textComponent.ForceMeshUpdate();
+            }
+        }
     }
 
     public void PassNewspaperData(Newspaper newspaper)
@@ -38,15 +66,27 @@ public class Entity : MonoBehaviour
         }
         newspaperData = newspaper;
 
-        textComponent.text = newspaper.body;
+        // Text component order: 0 = title, 1 = date, 2 = publisher, 3 = front, 4 = back
+        textComponents[0].text = newspaper.title;
+        textComponents[1].text = newspaper.date;
+        textComponents[2].text = newspaper.publisher;
+        textComponents[3].text = newspaper.front;
+        textComponents[4].text = newspaper.back;
 
-        textComponent.ForceMeshUpdate();
+        foreach (var textComponent in textComponents)
+        {
+            textComponent.fontSharedMaterial = blurMaterial;
+            textComponent.fontSharedMaterial.SetFloat("_BlurSize", blurSize);
+            textComponent.ForceMeshUpdate();
+        }
 
         // Disable censoring on the first day
         if (gameManager.GetCurrentDay() != 1)
         {
             CreateCensorBoxes();
         }
+        else backOfNewspaper.SetActive(false);
+
         ChangeMediaRotation(60);
         SetUpSplinePath(); 
     }
@@ -61,6 +101,25 @@ public class Entity : MonoBehaviour
 
     private void CreateCensorBoxes()
     {
+        for (int i = 0; i < textComponents.Length; i++)
+        {
+            TMP_Text textComponent = textComponents[i];
+            bool isBack = i == textComponents.Length - 1;
+            CreateBoxesForText(textComponent, isBack);
+        }
+        
+    }
+
+    private void CreateBoxesForText(TMP_Text textComponent, bool isBack)
+    {
+        GameObject censorBoxContainer;
+        if (isBack) 
+        {
+            backOfNewspaper.SetActive(true);
+            censorBoxContainer = backCensorBoxContainer;
+        }
+        else censorBoxContainer = frontCensorBoxContainer;
+
         int curLineIndex = 0;
         int curWordIndex = 0;
         float prevLastCharX = 0;
@@ -71,21 +130,7 @@ public class Entity : MonoBehaviour
             if (wordInfo.characterCount == 0) continue;
 
             string word = wordInfo.GetWord();
-            bool isCensorTarget = false;
-            // Find if the word contains any censor words
-            foreach (string censorWord in gameManager.GetCensorTargetWords())
-            {
-                // Split the censor word/phrase into individual words
-                string[] splicedWord = censorWord.Split(' ');
-                foreach (string individualWord in splicedWord)
-                {
-                    if (word.Contains(individualWord))
-                    {
-                        isCensorTarget = true;
-                        break;
-                    }
-                }
-            }
+            bool isCensorTarget = WordisCensorable(word);
 
             // Gather the corners of the word
             var firstCharInfo = textComponent.textInfo.characterInfo[wordInfo.firstCharacterIndex];
@@ -102,14 +147,14 @@ public class Entity : MonoBehaviour
             var boxSize = new Vector2(Mathf.Abs(topLeft.x - bottomRight.x), 
                 Mathf.Abs(topLeft.y - bottomRight.y));
 
-            GameObject newCensorBox = Instantiate(censorBoxPrefab, transform);
+            GameObject newCensorBox = Instantiate(censorBoxPrefab, censorBoxContainer.transform);
             
             // Center the box around the word
             newCensorBox.transform.position = new Vector3((topLeft.x + bottomRight.x) / 2, (topLeft.y + bottomRight.y) / 2, 0);
             newCensorBox.transform.localScale = boxSize;
 
             curWordIndex++;
-            if (curWordIndex >= textComponent.textInfo.lineInfo[curLineIndex].wordCount) {
+            if (curLineIndex < textComponent.textInfo.lineInfo.Length && curWordIndex >= textComponent.textInfo.lineInfo[curLineIndex].wordCount) {
                 curLineIndex++;
                 curWordIndex = 0;
             }
@@ -120,6 +165,26 @@ public class Entity : MonoBehaviour
                 gameManager.RegisterCensorTarget();
             }
         }
+        if (isBack)
+            backOfNewspaper.SetActive(false);
+    }
+
+    private bool WordisCensorable(string word)
+    {
+        // Find if the word contains any censor words
+        foreach (string censorWord in gameManager.GetCensorTargetWords())
+        {
+            // Split the censor word/phrase into individual words
+            string[] splicedWord = censorWord.Split(' ');
+            foreach (string individualWord in splicedWord)
+            {
+                if (word.Contains(individualWord))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void SetUpSplinePath() {
@@ -205,7 +270,9 @@ public class Entity : MonoBehaviour
     {
         public string publisher;
         public string title;
-        public string body;
+        public string date;
+        public string front;
+        public string back;
         public string[] banWords;
         public string[] censorWords;
     }

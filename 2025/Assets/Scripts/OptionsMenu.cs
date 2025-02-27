@@ -21,6 +21,7 @@ public class OptionsMenu : MonoBehaviour
             {
                 EventManager.ReactivateMainMenuButtons?.Invoke(); 
                 EventManager.PlaySound?.Invoke("switch1"); 
+                Time.timeScale = 1;
                 this.gameObject.SetActive(false);
             });
         }

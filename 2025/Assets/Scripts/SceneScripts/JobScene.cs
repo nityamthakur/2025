@@ -152,7 +152,7 @@ public class JobScene : MonoBehaviour
 
     private void BeginWorkDay(){
         gameManager.SetJobScene(this);
-        gameManager.StartJobTimer(60f); // Start the game timer
+        gameManager.StartJobTimer(420f); // Start the game timer
         objectSpawner.StartMediaSpawn();
         SetScreenObjectives(screenText);
         startWorkButton.gameObject.SetActive(false);

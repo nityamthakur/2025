@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 
 public class ObjectSpawner : MonoBehaviour
 {
@@ -145,8 +146,8 @@ public class ObjectSpawner : MonoBehaviour
             }
         }
 
-        gameManager.SetBanTargetWords(banWords.ToArray());
-        gameManager.SetCensorTargetWords(censorWords.ToArray());
+        gameManager.SetBanTargetWords(banWords.Distinct().ToArray());
+        gameManager.SetCensorTargetWords(censorWords.Distinct().ToArray());
     }
 
     void OnApplicationQuit ()

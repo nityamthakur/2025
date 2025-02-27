@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
 {
     public GameManager Instance { get; private set; }
     [SerializeField] TextMeshProUGUI onScreenTimer;
+    [SerializeField] GameObject performanceBuzzersObj;
+    private PerformanceBuzzers performanceBuzzers;
     private JobDetails jobDetails;
     private JobScene jobScene;
     private Coroutine jobTimerCoroutine;
@@ -17,6 +19,7 @@ public class GameManager : MonoBehaviour
     private int totalCensorTargets = 0;
     private int currentCensorNum = 0;
     private int numCensorMistakes = 0;
+    private bool canCensor = false;
 
     private int currentDay = 1;
     private bool dayEnded = false;
@@ -86,12 +89,29 @@ public class GameManager : MonoBehaviour
         banTargetWords = words;
     }
 
+    public void SetCensorFunctionality(bool canCensor)
+    {
+        this.canCensor = canCensor;
+    }
+    public bool CanCensor()
+    {
+        return canCensor;
+    }
+
     // -------------------------------------
     // Functions
     void Start()
     {
         jobDetails = new JobDetails();
         onScreenTimer.enabled = false; // Hide the onscreen timer
+
+        if (performanceBuzzersObj == null)
+        {
+            Debug.LogError("PerformanceBuzzers is null in GameManager.");
+        }
+        else {
+            performanceBuzzers = performanceBuzzersObj.GetComponent<PerformanceBuzzers>();
+        }
     }
 
     private void Update() {
@@ -147,19 +167,19 @@ public class GameManager : MonoBehaviour
 
     public void EvaluatePlayerAccept(string[] banWords)
     {
-        if (banWords.Length > 0) 
-        {
-            Debug.Log("Player mistakenly accepted the object.");
-        }
-        else if (currentCensorNum == totalCensorTargets && numCensorMistakes == 0) 
-        {
-            Debug.Log("Player has censored all targets!");
-        }
+        bool playerSucceeds = banWords.Length == 0;
+        
+        if (playerSucceeds && (currentCensorNum == totalCensorTargets) && (numCensorMistakes == 0)) 
+            performanceBuzzers.ShowCorrectBuzzer();
         else
-        {
-            Debug.Log("Player has failed to censor correctly.");
-        }
+            performanceBuzzers.ShowIncorrectBuzzer();
+        
         jobDetails.numMediaProcessed += 1;
+
+        if (currentCensorNum == 0 && totalCensorTargets == 0)
+            TotalScore += playerSucceeds ? 1 : -1;
+        else
+            TotalScore += currentCensorNum - numCensorMistakes - (totalCensorTargets - currentCensorNum);
 
         EvaluatePlayerScore();
         ResetCensorTracking();
@@ -168,30 +188,13 @@ public class GameManager : MonoBehaviour
 
     public void EvalutatePlayerDestroy(string[] banWords)
     {
-        bool playerSucceeds = false;
+        bool playerSucceeds = banWords.Length != 0;
         
-        if (banTargetWords.Length > 0)
-        {
-            foreach (string ban in banWords)
-            {
-                if (banTargetWords.Contains(ban))
-                {
-                    Debug.Log("Player correctly destroyed the object.");
-                    playerSucceeds = true;
-                }
-                else
-                {
-                    Debug.Log("Player mistakenly destroyed the object.");
-                }
-            }
-        }
-        else
-        {
-            Debug.Log("Player mistakenly destroyed the object.");
-        }
         jobDetails.numMediaProcessed += 1;
 
         TotalScore += playerSucceeds ? 2 : -2;
+        if (playerSucceeds) performanceBuzzers.ShowCorrectBuzzer();
+        else performanceBuzzers.ShowIncorrectBuzzer();
 
         EvaluatePlayerScore();
         ResetCensorTracking();
@@ -201,7 +204,7 @@ public class GameManager : MonoBehaviour
     public void EvaluatePlayerScore()
     {
         Debug.Log($"Results: \n{currentCensorNum}/{totalCensorTargets} words correctly censored. {numCensorMistakes} words incorrectly censored.");
-        TotalScore += currentCensorNum - numCensorMistakes - (totalCensorTargets - currentCensorNum);
+        
         Debug.Log($"Total Score: {TotalScore}");
     }
 
@@ -265,7 +268,7 @@ public class JobDetails {
     public float currClockTime;
     public JobDetails() {
         numMediaProcessed = 0;
-        numMediaNeeded = 5;
+        numMediaNeeded = 7;
         currClockTime = 0f;
     }
 }

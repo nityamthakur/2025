@@ -15,25 +15,33 @@ public class NewspaperZoom : MonoBehaviour
     public bool canZoom = true;
     public bool stopZoom = true;
     public Entity entityComponent = null;
+    public GameObject backOfNewspaper;
 
     private Collider2D newspaperCollider; // Reference to the collider
     private Draggable draggableScript; // Reference to the Draggable script
+    private GameManager gameManager;
 
     void Start()
     {
         mainCamera = Camera.main;
+        gameManager = FindFirstObjectByType<GameManager>();
         originalScale = transform.localScale;
         originalPosition = transform.position;
         newspaperCollider = GetComponent<Collider2D>();
         draggableScript = GetComponent<Draggable>(); // Get the Draggable script
 
-        zoomScale = originalScale * zoomFactor;
-        zoomPosition = new Vector3(mainCamera.transform.position.x, mainCamera.transform.position.y, originalPosition.z);
+        zoomScale = new Vector3(originalScale.x * zoomFactor, originalScale.y * (zoomFactor / 1.75f), originalScale.z * zoomFactor);
+        zoomPosition = new Vector3(mainCamera.transform.position.x, mainCamera.transform.position.y + 2.25f, originalPosition.z);
 
         entityComponent = GetComponent<Entity>(); // Get the Entity script
         if (entityComponent == null)
         {
             Debug.LogError("Entity component not found on Newspaper!");
+        }
+        
+        if (backOfNewspaper == null)
+        {
+            Debug.LogError("Back of Newspaper not assigned!");
         }
     }
 
@@ -58,6 +66,10 @@ public class NewspaperZoom : MonoBehaviour
 
             if (draggableScript != null)
                 draggableScript.enabled = true;  // Re-enable dragging
+
+            backOfNewspaper.SetActive(false);
+            gameManager.SetCensorFunctionality(false);
+            entityComponent.SetBlur(true);
         }
         // Zoom In
         else
@@ -70,6 +82,10 @@ public class NewspaperZoom : MonoBehaviour
 
             if (draggableScript != null)
                 draggableScript.enabled = false; // Disable dragging
+
+            backOfNewspaper.SetActive(true);
+            gameManager.SetCensorFunctionality(true);
+            entityComponent.SetBlur(false);
         }
     }
 

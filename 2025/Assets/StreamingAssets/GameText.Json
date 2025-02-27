@@ -15,16 +15,28 @@
                 "The weather today is strange.",
                 "More updates coming soon!"
             ]
+        },
+        {
+            "day": 3,
+            "lines": [
+                "Another day in the glorious NewMerica.",
+                "Recently, tensions have risen between NewMerica and the Green Party.",
+                "One can only hope that those who oppose NewMerica will be dealt with swiftly."
+            ]
         }
     ],
     "emailText": [
         {
             "day": 1,
-            "email": "<size=17>Welcome to your very first day working for NewMerica within the Media Regulation Branch. For your first day, we require you to simply dispose of any articles with undesirable content.\n\n<color=#FFFF00><b>Click and drag to move newspapers.\nRight-click to zoom in and out on the newspapers.</color></b>\n\n Ensure all documents meet NewMerican standards. Good luck on your first day!</size>"
+            "email": "Welcome to your very first day working for NewMerica within the Media Regulation Branch. For your first day, we require you to simply dispose of any articles with undesirable content.\n\n<color=#FFFF00><b>Click and drag to move newspapers.\nRight-click to zoom in and out on the newspapers.</color></b>\n\n Ensure all documents meet NewMerican standards. Good luck on your first day!"
         },
         {
             "day": 2,
-            "email": "<size=17>Congratulations on a successful first day at NewMerica. As a reward, your work will now be doubled, as you are now also required to censor certain content.\n\n<color=#FFFF00><b>Click and drag to move newspapers.\nRight-click to zoom in and out on the newspapers.\nLeft-click on words to censor them.</color></b>\n\nAny failure to censor sensitive content will result in disciplinary action. Good luck!</size>"
+            "email": "Congratulations on a successful first day at NewMerica. As a reward, your work will now be doubled, as you are now also required to censor certain content.\n\n<color=#FFFF00><b>Click and drag to move newspapers.\nRight-click to zoom in and out on the newspapers.\nLeft-click on words to censor them.</color></b>\n\nAny failure to censor sensitive content will result in disciplinary action. Good luck!"
+        },
+        {
+            "day": 3,
+            "email": "Here at the Media Regulation Branch, we are a closely knit family. As such, report anyone threatening our harmonious relationship.\n\n<color=#FFFF00><b>Click and drag to move newspapers.\nRight-click to zoom in and out on the newspapers.\nLeft-click on words to censor them.</color></b>\n\n"
         }
     ],
     "newspaperText": [
@@ -34,14 +46,18 @@
                 {
                     "publisher": "OmniTech Tech-News",
                     "title": "South African Tech Billionaire Performed NewMerican Salute At Factory Grand Opening",
-                    "body": "[Whyoming, NewMerica] - The future of innovation in NewMerica has never been stronger! In a grand display of loyalty, renowned South African Tech Billionaire MLON EUSK performed the NewMerican Salute a the ribbon cutting ceremony for his latest AI Automation and Control Complex, deep in the heart of the NewMerican Economic Zone.",
+                    "date": "1/6/2025",
+                    "front": "[Whyoming, NewMerica] - The future of innovation in NewMerica has never been stronger! In a grand display of loyalty, renowned South African Tech Billionaire Mlon Eusk performed the NewMerican Salute a the ribbon cutting ceremony for his latest AI Automation and Control Complex, deep in the heart of the NewMerican Economic Zone.",
+                    "back": "The moment, captured live and broadcast across all major news networks, was met with thunderous applause from assembled dignitaries, corporate leaders, and a specially selected group of model workers (GROUP NAME TO BE CENSORED). EUSK who has revolutionized the NewMerican labor industry, praised the administration's Pro-Progress Act of (CENSORED YEAR OR NAME), which ensured that all those imprisoned for crimes against NewMerica (can be permitted to) work on assembly lines for no extra cost. \"This is a nation built upon the tears of its enemies. One that promotes those of power and ensures they remain there.\"",
                     "banWords": [],
                     "censorWords": []
                 },
                 {
                     "publisher": "Viridescent Post",
                     "title": "How Black Swan Became the Owner Of Gabble, The Last Green Party First Social Media Platform",
-                    "body": "[Undisclosed Location] - In a bold act of defiance, activist and entrepreneur known only as Black Swan created Gabble, the last remaining free speech platform dedicated to the true voices of NewMerica. Now in this day and age it is harder for new platforms to get afoot, but how does Gabble manage to stay alive?",
+                    "date": "1/6/2025",
+                    "front": "[Undisclosed Location] - In a bold act of defiance, activist and entrepreneur known only as Black Swan created Gabble, the last remaining free speech platform dedicated to the true voices of NewMerica. Now in this day and age it is harder for new platforms to get afoot, but how does Gabble manage to stay alive?",
+                    "back": "Gabble uses a decentralized network to evade NewMerica policy, some speculate Black Swan and the servers for Gabble are located behind the Bamboo Curtain of Red Asia. Now Gabble has become the last refuge for independent journalists, and activists to poke criticism at NewMerica.\n\"Platforms like Gabble are what stand between us and total silence,\" Black Swan declared in a cryptic recorded message, uploaded moments before the site was de-indexed from all state approved search engines. \"They call us radicals, they call us criminals—but all we want is the right to speak, to be heard, to exist outside of their suffocating control.\"",
                     "banWords": [
                         "Black Swan"
                     ],
@@ -50,26 +66,50 @@
                 {
                     "publisher": "The Patriot's Echo",
                     "title": "NewMerica to Establish \"The Draft to End all Drafts\"",
-                    "body": "WASHINTEN - In an effort to save NewMerica from its overseas threats, The Glorious Leader has officiated a wondrous draft for the safety of NewMerica. \n\"I want YOU for the NewMerican Defense Force,\" said Chief Arbiter of Conflict, Cassius Halloway, in a press conference following the announcement.",
+                    "date": "1/6/2025",
+                    "front": "WASHINTEN - In an effort to save NewMerica from its overseas threats, The Glorious Leader has officiated a wondrous draft for the safety of NewMerica. \n\"I want YOU for the NewMerican Defense Force,\" said Chief Arbiter of Conflict, Cassius Halloway, in a press conference following the announcement.",
+                    "back": "It is said that this draft will be executed immediately, as the safety and freedom of NewMerica will be protected at all costs. According to Halloway, a lottery system will be implemented for the purposes of selecting those who are to be drafted. \n\"For those who aren't drafted, we expect the purchase of war bonds to support our glorious soldiers,\" Halloway mentioned at the end of the conference. With this draft in place, NewMerica can finally achieve long awaited peace. Peace from those who wish to destroy, loot, and desecrate the greatest nation in the world.",
+                    "banWords": [],
+                    "censorWords": []
+                },
+                {
+                    "publisher": "The Credit Ledger",
+                    "title": "Glorious Leader Declares Record Stock Market Growth as Citizens Face Wage Reductions",
+                    "date": "1/6/2025",
+                    "front": "The Glorious Leader has announced an unprecedented economic victory, declaring that the NewMerican stock market has reached an all-time high. Despite reports of widespread wage reductions, economic officials insist that prosperity is at an all-time peak—as measured by corporate earnings.",
+                    "back": "\"This is the strongest the economy has ever been,\" said Minister of Financial Stability, Milton Scamwell, in a press conference. \"Some workers may notice slightly reduced paychecks, but they should take comfort in the knowledge that their sacrifices have directly contributed to national success.\"\n To maintain financial momentum, the government has introduced the Workforce Wealth Redistribution Program, allowing corporations to voluntarily reallocate unused wages from inefficient workers into corporate growth initiatives. The new system streamlines financial waste by ensuring that money stays where it is most effective—at the top.",
                     "banWords": [],
                     "censorWords": []
                 },
                 {
                     "publisher": "Green Voice",
                     "title": "Conspiracy Surrounding New Draft Lottery System",
-                    "body": "As we are sure our readers are aware, NewMerica has recently begun what has been coined the \"The Draft to End all Drafts.\" Despite the supposed action for NewMerican safety made by Chief Arbiter of Conflict Cassius Halloway, there is reason to believe that the Draft has a devilish pretense.",
+                    "date": "1/6/2025",
+                    "front": "As we are sure our readers are aware, NewMerica has recently begun what has been coined the \"The Draft to End all Drafts.\" Despite the supposed action for NewMerican safety made by Chief Arbiter of Conflict Cassius Halloway, there is reason to believe that the Draft has a devilish pretense.",
+                    "back": "According to our anonymous sources inside the Department of Suspicious Persons Regulation (DSPR), the Draft seems to target those who have engaged in protests against unpopular NewMerican policies, such as the Workplace Excellence Program (WEP). Additionally, it appears that those who have been reported to the DSPR have a 75% higher chance of being selected by the Draft's \"lottery\" system. While research surrounding this matter is still ongoing, there is reasonable evidence to conclude that the Draft is more than it seems. When Green Voice attempted to contact Halloway for questioning, there was no response.",
                     "banWords": [
                         "devilish"
                     ],
                     "censorWords": []
                 },
                 {
-                    "publisher": "Underground News Network",
-                    "title": "Leaked Reports Reveal Mass Disappearances in NewMerica",
-                    "body": "Newly leaked government records confirm what many have feared: thousands of NewMericans have vanished under the so-called \"Public Security Initiative.\" These individuals—many of them journalists, teachers, and former activists—have been removed from public records and are believed to be held in off-the-books detention centers.",
+                    "publisher": "The NewMerican Truth",
+                    "title": "News Verification Offices to Ensure \"Responsible Journalism\"",
+                    "date": "1/6/2025",
+                    "front": "WASHINTEN - The Glorious Leader has announced the establishment of News Verification Offices (NVOs) in every major city, ensuring all published material aligns with NewMerican truth standards. Under the Public Information Purity Act, newspaper outlets will now be required to submit articles for pre-approval before publication.",
+                    "back": "Any content deemed misleading, subversive, or counterproductive to national unity will be redirected for correction or permanent removal. \n\"The era of reckless, unfiltered journalism is over,\" said Minister of Information Guy Underwood. \"We now have trained professionals ensuring that every article upholds the values of NewMerica.\" To accommodate this transition, several trusted citizens have been selected to work within the Media Regulation Branch, where they will review, categorize, and ensure compliance for all news materials. This ensures that the public only consumes reliable, government-approved content.",
                     "banWords": [
-                        "Public Security Initiative"
+                        "Media Regulation Branch"
                     ],
+                    "censorWords": []
+                },
+                {
+                    "publisher": "The Credit Ledger",
+                    "title": "Department of Consumer Spending Launches \"Mandatory Investment\" Program to Boost Economy",
+                    "date": "1/6/2025",
+                    "front": "In an exciting new economic policy, the Department of Consumer Spending has announced the Mandatory Investment Initiative (MII), a groundbreaking program designed to \"teach financial responsibility\" by requiring all citizens to invest at least 40% of their income into government-approved financial markets.",
+                    "back": "\"The problem isn't that people don't have money,\" explained Senior Financial Strategist Scamuel Ponzi III. \"The problem is that people refuse to invest properly. By mandating stock purchases, we ensure that every NewMerican plays a role in national prosperity.\"\n Concerns over the recent stock market collapse were dismissed by government officials as \"market restructuring,\" with economists reassuring citizens that their investments will eventually regain value. Citizens failing to comply with the MII will be enrolled in the Economic Trustworthiness Program, where they will undergo financial re-education to correct their spending habits.",
+                    "banWords": [],
                     "censorWords": []
                 }
             ]
@@ -78,47 +118,77 @@
             "day": 2,
             "newspapers": [
                 {
+                    "publisher": "Underground News Network",
+                    "title": "Leaked Reports Reveal Mass Disappearances in NewMerica",
+                    "date": "1/6/2025",
+                    "front": "Newly leaked government records confirm what many have feared: thousands of NewMericans have vanished under the so-called \"Public Security Initiative.\" These individuals—many of them journalists, teachers, and former activists—have been removed from public records and are believed to be held in off-the-books detention centers.",
+                    "back": "The Media Regulation Branch, responsible for controlling the nation's press, has issued strict orders to erase all mentions of these disappearances. Families who speak out risk joining the list of the missing. \n\"If your neighbor disappears today, you are expected to act as if they never existed,\" said a former bureaucrat who defected to the resistance. \"NewMerica doesn't need mass executions, they make you erase yourself.\" To all NewMericans reading this: Do not let them make you forget.",
+                    "banWords": [
+                        "Public Security Initiative"
+                    ],
+                    "censorWords": []
+                },
+                {
                     "publisher": "OmniTech Tech-News",
-                    "title": "EUSK Promises AI WIll Create Jobs - But First We Must Downsize 10,000 Unnecessary Workers.",
-                    "body": "[Whyoming, NewMerica] - Breaking NEWS in a bold new statement (visionary) Mlon Eusk reaffirms his commitment to the new era of automation by announcing new opportunities to hard working citizens of NewMerica. But first before doing Eusk states it is necessary to strategically downsize all irrelevant workforce jobs, only a mere 10,000 of them.",
+                    "title": "Eusk Promises AI Will Create Jobs - But First We Must Downsize 10,000 Unnecessary Workers.",
+                    "date": "1/7/2025",
+                    "front": "[Whyoming, NewMerica] - Breaking NEWS in a bold new statement (visionary) Mlon Eusk reaffirms his commitment to the new era of automation by announcing new opportunities to hard working citizens of NewMerica. But first before doing Eusk states it is necessary to strategically downsize all irrelevant workforce jobs, only a mere 10,000 of them.",
+                    "back": "Eusk reassured the audience that these adjustments are in fact not layoffs but rather necessary reassignments that will give workers a chance to contribute in new more meaningful ways. Spokesperson Zuck Markerberg said \"AI is not here to replace jobs, it is here to enhance them and make NewMerica a stronger nation\"\n As NewMerica marches forward, citizens can take comfort knowing that progress will never be halted by outdated systems. Thanks to AI the future of innovation in NewMerica has never been stronger!",
                     "banWords": [],
                     "censorWords": [
-                        "Mlon Eusk"
+                        "Mlon Eusk",
+                        "Zuck Markerberg"
                     ]
                 },
                 {
                     "publisher": "Jade Gazette",
                     "title": "The Shadow War Has Started - How Gabble Must Defend Itself Or Be Lost Forever",
-                    "body": "[Undisclosed Location] - The battle for free speech has entered a dangerous new phase. In a chilling message to supporters, the elusive Black Swan declared that Gabble was under attack, that NewMerican backed cyber units are attempting to infiltrate and dismantle the last Green Party first social media platform.",
+                    "date": "1/7/2025",
+                    "front": "[Undisclosed Location] - The battle for free speech has entered a dangerous new phase. In a chilling message to supporters, the elusive Black Swan declared that Gabble was under attack, that NewMerican backed cyber units are attempting to infiltrate and dismantle the last Green Party first social media platform.",
+                    "back": "Gabble has long been a thorn in the side of NewMerica, providing a space for uncensored information, independent journalism, and controversial anti-NewMerican discourse. Now something else is emerging from the site, a rogue group of pro Green Party programers and cryptographers who go by the name The Lake. Operating in secrecy The Lake is working to distribute backups of Gabbles database, allowing it to survive due even if the platform is somehow taken down.\n But not all threats are from the outside, whispers on the platform speak of a mole within Gabble's platform, trying to bring it down from the inside.",
                     "banWords": [
                         "Black Swan"
                     ],
                     "censorWords": []
                 },
                 {
-                    "publisher": "The Patriot's Echo",
-                    "title": "War With the Totalitarian South NewMerica",
-                    "body": "WASHINTEN - In response to a nightmarish attack on NewMerican soil earlier this week, The Glorious Leader has announced a declaration of war against the nation of South NewMerica.\n\"There is no humanity left in them. How could someone even begin to conceive of such a tragedy?\" reported by an anonymous witness following the attack.",
-                    "banWords": [],
-                    "censorWords": []
-                },
-                {
-                    "publisher": "Green Voice",
-                    "title": "Food Shortages Worsen as Rations Disappear",
-                    "body": "Despite official reports claiming record-breaking harvests, citizens across NewMerica are going hungry. Sources from within the Department of Agricultural Oversight confirm that government stockpiles are being redirected to high-ranking officials and military reserves, leaving civilians with smaller and smaller rations.",
+                    "publisher": "The Arbitrage Authority",
+                    "title": "NewMerican Central Bank Phases Out Physical Currency to Curb \"Financial Misinformation\"",
+                    "date": "1/7/2025",
+                    "front": "In a historic move toward economic efficiency, the NewMerican Central Bank has announced that all physical currency will be phased out, with fully government-managed digital credits replacing traditional money. According to Chief Financial Overseer Drayton Cashgrab, physical cash has become an \"outdated and dangerous tool of economic disinformation.\"",
+                    "back": "The transition to a centralized digital economy will ensure that all transactions remain secure, transparent, and aligned with national values.\n Starting next month, citizen bank accounts will be linked directly to the Department of Fiscal Enforcement, where transactions will be automatically categorized and reviewed for responsible financial behavior. Purchases deemed \"economically unproductive\"—such as non-government literature, unsanctioned travel, or unapproved leisure activities—may be temporarily flagged for citizen re-evaluation.",
                     "banWords": [],
                     "censorWords": [
-                        "high-ranking officials",
-                        "military reserves"
+                        "Fiscal Enforcement"
                     ]
                 },
                 {
                     "publisher": "The Patriot's Echo",
-                    "title": "Federal Election Security Initiative to Eliminate “Unreliable” Votes",
-                    "body": "WASHINTEN - The Glorious Leader has announced the Federal Election Security Initiative, aimed at streamlining democracy by ensuring only the most responsible citizens can vote.\nThe newly formed Bureau of Democratic Integrity will oversee elections, replacing outdated local systems.",
+                    "title": "War With the Totalitarian South NewMerica",
+                    "date": "1/7/2025",
+                    "front": "WASHINTEN - In response to a nightmarish attack on NewMerican soil earlier this week, The Glorious Leader has announced a declaration of war against the nation of South NewMerica.\n\"There is no humanity left in them. How could someone even begin to conceive of such a tragedy?\" reported by an anonymous witness following the attack.",
+                    "back": "According to our sources from the Coalition of Conflict, South NewMerica has recently appointed a mysterious new leader who wishes to undermine the values of NewMerica. This despicable dictator wishes to take everything from the glorious citizens of NewMerica.\n Chief Arbiter of Conflict Cassius Halloway had this to say following the massacre: \"This is a dark day, my fellow NewMericans. In the dawn of this certain conflict I say this: Above all else, we must fear that which is fear itself.\"\n While NewMerica grieves, it also rises knowing that justice will soon be served to its oppressors.",
+                    "banWords": [],
+                    "censorWords": []
+                },
+                {
+                    "publisher": "The NewMerican Truth",
+                    "title": "Disastrous Storms Linked to Weather Machine By Terrorists",
+                    "date": "1/7/2025",
+                    "front": "Record rainfalls last Wednesday causing numerous floods and millions in damages to businesses and citizen property has the nation spooked for this upcoming rainy season. Rumors of the Green Party's involvement have begun to spread leaving many worried of a future more violent storm on the horizon.",
+                    "back": "Ms. Emma Emmerson speaks out on the sidewalk of her apartment, looking out into the street where her and many of her neighbors' belongings were swept out. \"Everytime I turn on the faucet in my bathroom the water comes out dirty. It's no doubt those Green Party terrorists polluting the water they say they are trying to save, just to get donations and make a quick buck!\"\n Others claim that supporters of the Green Party have openly discussed their hate for the NewMerican government and spoke of a \"Reckoning\" coming for all sympathizers.",
+                    "banWords": [],
+                    "censorWords": []
+                },
+                {
+                    "publisher": "The Patriot's Echo",
+                    "title": "Federal Election Security Initiative to Eliminate \"Unreliable\" Votes",
+                    "date": "1/7/2025",
+                    "front": "WASHINTEN - The Glorious Leader has announced the Federal Election Security Initiative, aimed at streamlining democracy by ensuring only the most responsible citizens can vote.\nThe newly formed Bureau of Democratic Integrity will oversee elections, replacing outdated local systems.",
+                    "back": "A Pre-Approved Voter List will automatically register the most dedicated citizens while filtering out those with \"unstable voting behaviors.\"\n \"Democracy is too important to be left in the hands of just anyone,\" said Director Tim Coleman. Those excluded may appeal their status through the Electoral Trustworthiness Project, which includes education workshops and volunteer service. Polling locations will be greatly reduced to prevent \"geographic voting inconsistencies,\" and all ballots will be processed in secure, undisclosed locations.",
                     "banWords": [],
                     "censorWords": [
-                        "responsible"
+                        "Electoral Trustworthiness Project"
                     ]
                 }
             ]
@@ -127,9 +197,91 @@
             "day": 3,
             "newspapers": [
                 {
+                    "publisher": "The Verdant Times",
+                    "title": "South African Tech Billionaire's Unveils New AI Democracy Advisor - Public Voting no Longer Necessary",
+                    "date": "1/8/2025",
+                    "front": "[New DC, NewMerica] - The Latest blow to democracy as we know it came today as the deceiving Mlon Eusk unveiled the AI Democrazy Advisor. This machine-learning system is designed to \"enhance decision making efficiency\" by removing the need for public participation in elections.",
+                    "back": "Although framed as a \"historic innovation,\" don't let them fool you, this is exactly how NewMerica plans to create a smokescreen in order to further corporate control over the government.\n \"Elections serve as a way for the people to get their voices heard,\" Seally Cruz, an exiled political analyst and former NewMerican politician turned Green Party spokesperson stated. \"This is not democracy - this is control and power. AI is a tool for the people, but in the hands of billionaires like Mlon Eusk, it's an eraser. They are writing us out of our own future.\"",
+                    "banWords": [
+                        "Seally Cruz"
+                    ],
+                    "censorWords": []
+                },
+                {
+                    "publisher": "Green Voice",
+                    "title": "Could Aging Infrastructure Be the Cause of the Current Flood Crisis?",
+                    "date": "1/8/2025",
+                    "front": "After last week's flooding many in the nation have been seeking shelter from tomorrow's storm. While many continue to claim that the Green Party have a way to control the weather, others suspect that the lack of inspection into public infrastructure is the true culprit of these floods.",
+                    "back": "One plumper, Mr. Fanderson, who used to work for NewMerican Waste and Water Co, who for over two decades has supplied and maintained the sewer, waste treatment plants, and fresh water pipelines for this country, claims,\n \"When I was working for the N2W we would routinely check the nation's pipes about once a year, logging any leaks or other such issues. And they were fixed right quick too, but when that new CEO came in he started cutting jobs and safety regulations. There's not a doubt in my mind that the sewers haven't been checked in years.\"",
+                    "banWords": [
+                        "Green Party"
+                    ],
+                    "censorWords": []
+                },
+                {
+                    "publisher": "Green Voice",
+                    "title": "Food Shortages Worsen as Rations Disappear",
+                    "date": "1/8/2025",
+                    "front": "Despite official reports claiming record-breaking harvests, citizens across NewMerica are going hungry. Sources from within the Department of Agricultural Oversight confirm that government stockpiles are being redirected to high-ranking officials and military reserves, leaving civilians with smaller and smaller Rations.",
+                    "back": "Local distribution centers have begun implementing ration cutbacks, restricting families to one meal per day. The official explanation? \"Supply inconsistencies.\" But leaked warehouse logs show massive shipments being rerouted to secure locations outside public access.\n \"We're expected to smile and thank the Glorious Leader for our generosity,\" one worker at a ration center told us. \"But behind closed doors, we're told to turn away families with starving children.\"\n Citizens who question the shortages have been warned against \"engaging in harmful speculation.\" But this is not speculation, this is survival.",
+                    "banWords": [],
+                    "censorWords": [
+                        "Rations",
+                        "Supply inconsistencies"
+                    ]
+                },
+                {
+                    "publisher": "The Credit Ledger",
+                    "title": "NewMerican Treasury Introduces PTDS - Citizens Can Now Pay Before They Earn!",
+                    "date": "1/8/2025",
+                    "front": "WASHINTEN - The Department of National Prosperity has announced a groundbreaking economic efficiency measure—the Pre-Tax Deduction System (PTDS). Under PTDS, the NewMerican Treasury will automatically deduct taxes from citizens' paychecks before they officially earn them, ensuring a more streamlined and patriotic financial process.",
+                    "back": "\"This revolutionary approach eliminates the inefficiencies of traditional payroll systems,\" said Grand Tax Overseer Credric Siphens of Debtmore Financial. \"By skipping the outdated process of giving people money only to take it back later, we're maximizing economic stability at every level.\"\n While some workers have expressed confusion over receiving paychecks with negative balances, government officials have assured them that this is a temporary adjustment period.\n \"Work harder, contribute more, and soon, the system will balance itself out,\" Siphens reassured reporters.",
+                    "banWords": [],
+                    "censorWords": []
+                },
+                {
+                    "publisher": "The Verdant Times",
+                    "title": "The War Continues Gabble VS NewMerica - Where is Black Swan",
+                    "date": "1/8/2025",
+                    "front": "[Undisclosed Location] - Although it appears that Gabble is winning the battle, the conflict is escalating as Black Swan has vanished without a trace. Just days after warning of a coordinated cyber offensive by NewMerica, all known channels linked to the elusive founder have gone silent.",
+                    "back": "The Lake are managing to keep Gabble alive following in the founder's practices. In a cryptic message posted in chunks by various members of The Lake it appears that the mole has been found and promptly dealt with, ensuring more detailed protocols in place.\n Mlon Eusk spoke to the press today to address Gabble and The Lake directly, \"Your leader is gone and you too will follow suit. In the coming weeks I will introduce to the world a new era for NewMerica, one where you heathens will cease to exist.\"",
+                    "banWords": [],
+                    "censorWords": [
+                        "Black Swan",
+                        "Lake"
+                    ]
+                },
+                {
+                    "publisher": "The Patriot's Echo",
+                    "title": "North NewMerica Threatens Nuclear War",
+                    "date": "1/8/2025",
+                    "front": "WASHINTEN - In a shocking turn of events, North NewMerica threatens NewMerica with complete destruction through the use of nuclear warheads. The previously peaceful and diplomatic North NewMerica has suddenly dropped what is being called the \"Iron Veil\" between them and our glorious NewMerica.",
+                    "back": "Upon this vile declaration, longstanding NewMerican ally South NewMerica has pledged to support the \"Washinten Pact.\" The Director of Foreign Relations Leonard Tierney had this to say about the alliance: \"Our Southern neighbors have always been allies of this nation, and we thank them for their continued support during these difficult times.\"\n Only time will tell if the barbaric threats made by North NewMerica will come to pass. Nonetheless, The Glorious Leader has prompted his citizens to be prepared for war at all times.",
+                    "banWords": [],
+                    "censorWords": []
+                },
+                {
+                    "publisher": "The Future Press",
+                    "title": "Members of Green Party Assassinated",
+                    "date": "1/8/2025",
+                    "front": "BREAKING - Members of Green Party, Anne Aptos and Charlie Wanderfelt, have been reportedly assassinated just last night. This information comes days before the Green National Convention, where our sources say an important announcement regarding the future of NewMerica was going to take place.",
+                    "back": "Green Party member Henry Darrell had this to say about the tragic loss of life, \"NewMerica suffers a great loss today. Anne and Charlie were committed to the advancement of NewMerica…and they were great friends. It is a shame that we live in a world that can inspire these terrible actions. Justice must be served.\"\n While the perpetrators are still at large, the Green Party has announced that this situation will not impact their determination to create a better NewMerica. Those who wish to stand against a government willing to silence those in opposition are encouraged to attend the Green National Convention.",
+                    "banWords": [
+                        "Green Party"
+                    ],
+                    "censorWords": []
+                }
+            ]
+        },
+        {
+            "day": 4,
+            "newspapers": [
+                {
                     "publisher": "",
                     "title": "",
-                    "body": "",
+                    "date": "",
+                    "front": "",
+                    "back": "",
                     "banWords": [],
                     "censorWords": []
                 }
