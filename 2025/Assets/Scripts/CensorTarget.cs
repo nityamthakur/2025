@@ -22,6 +22,8 @@ public class CensorTarget : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        if (!gameManager.CanCensor()) return;
+        
         if (isCensored) 
         {
             spriteRenderer.enabled = false;

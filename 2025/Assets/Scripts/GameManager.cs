@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
 {
     public GameManager Instance { get; private set; }
     [SerializeField] TextMeshProUGUI onScreenTimer;
+    [SerializeField] GameObject performanceBuzzersObj;
+    private PerformanceBuzzers performanceBuzzers;
     private JobDetails jobDetails;
     private JobScene jobScene;
     private Coroutine jobTimerCoroutine;
@@ -17,6 +19,7 @@ public class GameManager : MonoBehaviour
     private int totalCensorTargets = 0;
     private int currentCensorNum = 0;
     private int numCensorMistakes = 0;
+    private bool canCensor = false;
 
     private int currentDay = 1;
     private bool dayEnded = false;
@@ -61,6 +64,11 @@ public class GameManager : MonoBehaviour
         dayEnded = false;
     }
 
+    public JobScene GetJobScene()
+    {
+        return jobScene;
+    }
+
     public string[] GetCensorTargetWords()
     {
         return censorTargetWords;
@@ -81,12 +89,29 @@ public class GameManager : MonoBehaviour
         banTargetWords = words;
     }
 
+    public void SetCensorFunctionality(bool canCensor)
+    {
+        this.canCensor = canCensor;
+    }
+    public bool CanCensor()
+    {
+        return canCensor;
+    }
+
     // -------------------------------------
     // Functions
     void Start()
     {
         jobDetails = new JobDetails();
         onScreenTimer.enabled = false; // Hide the onscreen timer
+
+        if (performanceBuzzersObj == null)
+        {
+            Debug.LogError("PerformanceBuzzers is null in GameManager.");
+        }
+        else {
+            performanceBuzzers = performanceBuzzersObj.GetComponent<PerformanceBuzzers>();
+        }
     }
 
     private void Update() {
@@ -101,7 +126,7 @@ public class GameManager : MonoBehaviour
             onScreenTimer.enabled = !onScreenTimer.enabled; // Hide the onscreen timer
         }
         if(onScreenTimer.enabled == true)
-            setOnScreenTimer();
+            SetOnScreenTimer();
     }
 
 
@@ -142,19 +167,26 @@ public class GameManager : MonoBehaviour
 
     public void EvaluatePlayerAccept(string[] banWords)
     {
-        if (banWords.Length > 0) 
+        bool playerSucceeds = banWords.Length == 0;
+        
+        if (playerSucceeds && (currentCensorNum == totalCensorTargets) && (numCensorMistakes == 0))
         {
-            Debug.Log("Player mistakenly accepted the object.");
-        }
-        else if (currentCensorNum == totalCensorTargets && numCensorMistakes == 0) 
-        {
-            Debug.Log("Player has censored all targets!");
+            performanceBuzzers.ShowCorrectBuzzer();
+            EventManager.PlaySound?.Invoke("correctBuzz"); 
         }
         else
         {
-            Debug.Log("Player has failed to censor correctly.");
+            performanceBuzzers.ShowIncorrectBuzzer();
+            EventManager.PlaySound?.Invoke("errorBuzz"); 
         }
+        
         jobDetails.numMediaProcessed += 1;
+        jobScene.UpdateMediaProcessedText(jobDetails.numMediaProcessed);
+
+        if (currentCensorNum == 0 && totalCensorTargets == 0)
+            TotalScore += playerSucceeds ? 1 : -1;
+        else
+            TotalScore += currentCensorNum - numCensorMistakes - (totalCensorTargets - currentCensorNum);
 
         EvaluatePlayerScore();
         ResetCensorTracking();
@@ -163,30 +195,22 @@ public class GameManager : MonoBehaviour
 
     public void EvalutatePlayerDestroy(string[] banWords)
     {
-        bool playerSucceeds = false;
+        bool playerSucceeds = banWords.Length != 0;
         
-        if (banTargetWords.Length > 0)
-        {
-            foreach (string ban in banWords)
-            {
-                if (banTargetWords.Contains(ban))
-                {
-                    Debug.Log("Player correctly destroyed the object.");
-                    playerSucceeds = true;
-                }
-                else
-                {
-                    Debug.Log("Player mistakenly destroyed the object.");
-                }
-            }
-        }
-        else
-        {
-            Debug.Log("Player mistakenly destroyed the object.");
-        }
         jobDetails.numMediaProcessed += 1;
+        jobScene.UpdateMediaProcessedText(jobDetails.numMediaProcessed);
 
         TotalScore += playerSucceeds ? 2 : -2;
+        if (playerSucceeds) 
+        {
+            performanceBuzzers.ShowCorrectBuzzer();
+            EventManager.PlaySound?.Invoke("correctBuzz"); 
+        }
+        else 
+        {
+            performanceBuzzers.ShowIncorrectBuzzer();
+            EventManager.PlaySound?.Invoke("errorBuzz"); 
+        }
 
         EvaluatePlayerScore();
         ResetCensorTracking();
@@ -196,7 +220,7 @@ public class GameManager : MonoBehaviour
     public void EvaluatePlayerScore()
     {
         Debug.Log($"Results: \n{currentCensorNum}/{totalCensorTargets} words correctly censored. {numCensorMistakes} words incorrectly censored.");
-        TotalScore += currentCensorNum - numCensorMistakes - (totalCensorTargets - currentCensorNum);
+        
         Debug.Log($"Total Score: {TotalScore}");
     }
 
@@ -211,6 +235,7 @@ public class GameManager : MonoBehaviour
 
             ResetJobDetails();
             SetCurrentDay(currentDay + 1);
+            jobScene.ShowMediaProcessedText(false);
         }
     }
 
@@ -236,16 +261,26 @@ public class GameManager : MonoBehaviour
         Debug.Log("Job Timer Started...");
         jobDetails.currClockTime = time;
 
+        float totalWorkTime = time; // Store total work time for calculations
+        JobScene jobScene = GetJobScene();
+
         while (jobDetails.currClockTime > 0)
         {
             jobDetails.currClockTime -= Time.deltaTime;
-            yield return null; // Waits for the next frame
+            
+            if (jobScene != null)
+            {
+                float progress = 1f - (jobDetails.currClockTime / totalWorkTime);
+                jobScene.UpdateClockHands(progress);
+            }
+
+            yield return null;
         }
 
         jobDetails.currClockTime = 0;
     }
 
-    private void setOnScreenTimer()
+    private void SetOnScreenTimer()
     {
         onScreenTimer.text = $"Timer: {jobDetails.currClockTime:F2}s";
     }
@@ -260,7 +295,7 @@ public class JobDetails {
     public float currClockTime;
     public JobDetails() {
         numMediaProcessed = 0;
-        numMediaNeeded = 5;
+        numMediaNeeded = 7;
         currClockTime = 0f;
     }
 }

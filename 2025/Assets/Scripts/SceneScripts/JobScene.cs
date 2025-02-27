@@ -5,6 +5,7 @@ using TMPro;
 using System.IO;
 using System.Collections.Generic;
 using System;
+using Unity.VisualScripting;
 
 public class JobScene : MonoBehaviour
 {
@@ -16,12 +17,18 @@ public class JobScene : MonoBehaviour
     private Image backgroundImage;
     private Button startWorkButton;
     private TextMeshProUGUI screenText;
+    private TextMeshProUGUI mediaProcessedText;
     private string currentEmail;
     
     // ---------------------------------
     [SerializeField] private GameObject jobBuildingPrefab;
     [SerializeField] private Sprite jobBuildingImage;
     private GameObject outsideBuildingObject;
+
+    // ---------------------------------
+    private float workTimer = 180f;
+    private Image hourHand;
+    private Image minuteHand;
 
     // ---------------------------------
 
@@ -37,7 +44,8 @@ public class JobScene : MonoBehaviour
         ShowBuildingTransition();
         LoadJsonFromFile();
         SetUpJobStart(day);
-        EventManager.FadeIn?.Invoke(); 
+        EventManager.FadeIn?.Invoke();
+        EventManager.PlayMusic?.Invoke("work"); 
     }
 
     private void ShowBuildingTransition()
@@ -125,6 +133,27 @@ public class JobScene : MonoBehaviour
             return;
         }
         SetScreenEmail(screenText);
+
+        mediaProcessedText = currJobScene.transform.Find("MediaProcessedText").GetComponent<TextMeshProUGUI>();
+        if (screenText == null)
+        {
+            Debug.LogError("Failed to find mediaProcessedText component in ShowResults.");
+            return;
+        }
+        ShowMediaProcessedText(false);
+
+        hourHand = currJobScene.transform.Find("HourHand").GetComponent<Image>();
+        if(hourHand == null)
+        {
+            Debug.Log("Failed to find hourHand in SetUpJobStart");
+        }
+
+        minuteHand = currJobScene.transform.Find("MinuteHand").GetComponent<Image>();
+        if(minuteHand == null)
+        {
+            Debug.Log("Failed to find minuteHand in SetUpJobStart");
+        }
+
     }
 
     private void SetScreenEmail(TextMeshProUGUI screenText)
@@ -152,10 +181,11 @@ public class JobScene : MonoBehaviour
 
     private void BeginWorkDay(){
         gameManager.SetJobScene(this);
-        gameManager.StartJobTimer(60f); // Start the game timer
+        gameManager.StartJobTimer(workTimer); // Start the game timer
         objectSpawner.StartMediaSpawn();
         SetScreenObjectives(screenText);
         startWorkButton.gameObject.SetActive(false);
+        ShowMediaProcessedText(true);
     }
 
     public void ShowResults(int day, int mediaProcessed, int score) {
@@ -179,8 +209,36 @@ public class JobScene : MonoBehaviour
         // Set the results text based on the job details
     }
 
+    public void UpdateClockHands(float progress)
+    {
+        if (hourHand)
+        {
+            float hourRotation = Mathf.Lerp(0f, 180f, progress); // Moves from 0 to 180 degrees
+            hourHand.transform.eulerAngles = new Vector3(0, 0, -hourRotation); // Invert rotation for correct direction
+        }
+
+        if (minuteHand)
+        {
+            float minuteRotation = Mathf.Lerp(0f, 2880f, progress); // 8 full revolutions (8 × 360)
+            minuteHand.transform.eulerAngles = new Vector3(0, 0, -minuteRotation);
+        }
+    }
+
+    public void UpdateMediaProcessedText(int num)
+    {
+        if(mediaProcessedText != null)
+            mediaProcessedText.text = $"Media Processed: {num} / 5";
+    }
+
+    public void ShowMediaProcessedText(bool show)
+    {
+        if(mediaProcessedText != null)
+            mediaProcessedText.enabled = show;
+    }
+
     private IEnumerator NextScene()
     {
+        EventManager.StopMusic?.Invoke(); 
         EventManager.FadeOut?.Invoke();
         yield return new WaitForSeconds(2f);
 
