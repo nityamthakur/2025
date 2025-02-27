@@ -61,6 +61,11 @@ public class GameManager : MonoBehaviour
         dayEnded = false;
     }
 
+    public JobScene GetJobScene()
+    {
+        return jobScene;
+    }
+
     public string[] GetCensorTargetWords()
     {
         return censorTargetWords;

@@ -55,8 +55,8 @@ public class SceneChanger : MonoBehaviour
         }
         deskOverlayImage.gameObject.SetActive(false);
 
-        mainMenuScene.LoadMainMenu();
-        //jobScene.LoadJobStart(GameManager.Instance.GetCurrentDay());
+        //mainMenuScene.LoadMainMenu();
+        jobScene.LoadJobStart(gameManager.GetCurrentDay());
 
     }
 
