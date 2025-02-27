@@ -5,6 +5,7 @@ using TMPro;
 using System.IO;
 using System.Collections.Generic;
 using System;
+using Unity.VisualScripting;
 
 public class JobScene : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class JobScene : MonoBehaviour
     private Image backgroundImage;
     private Button startWorkButton;
     private TextMeshProUGUI screenText;
+    private TextMeshProUGUI mediaProcessedText;
     private string currentEmail;
     
     // ---------------------------------
@@ -42,7 +44,8 @@ public class JobScene : MonoBehaviour
         ShowBuildingTransition();
         LoadJsonFromFile();
         SetUpJobStart(day);
-        EventManager.FadeIn?.Invoke(); 
+        EventManager.FadeIn?.Invoke();
+        EventManager.PlayMusic?.Invoke("work"); 
     }
 
     private void ShowBuildingTransition()
@@ -131,6 +134,13 @@ public class JobScene : MonoBehaviour
         }
         SetScreenEmail(screenText);
 
+        mediaProcessedText = currJobScene.transform.Find("MediaProcessedText").GetComponent<TextMeshProUGUI>();
+        if (screenText == null)
+        {
+            Debug.LogError("Failed to find mediaProcessedText component in ShowResults.");
+            return;
+        }
+        ShowMediaProcessedText(false);
 
         hourHand = currJobScene.transform.Find("HourHand").GetComponent<Image>();
         if(hourHand == null)
@@ -143,7 +153,6 @@ public class JobScene : MonoBehaviour
         {
             Debug.Log("Failed to find minuteHand in SetUpJobStart");
         }
-
 
     }
 
@@ -176,6 +185,7 @@ public class JobScene : MonoBehaviour
         objectSpawner.StartMediaSpawn();
         SetScreenObjectives(screenText);
         startWorkButton.gameObject.SetActive(false);
+        ShowMediaProcessedText(true);
     }
 
     public void ShowResults(int day, int mediaProcessed, int score) {
@@ -214,8 +224,21 @@ public class JobScene : MonoBehaviour
         }
     }
 
+    public void UpdateMediaProcessedText(int num)
+    {
+        if(mediaProcessedText != null)
+            mediaProcessedText.text = $"Media Processed: {num} / 5";
+    }
+
+    public void ShowMediaProcessedText(bool show)
+    {
+        if(mediaProcessedText != null)
+            mediaProcessedText.enabled = show;
+    }
+
     private IEnumerator NextScene()
     {
+        EventManager.StopMusic?.Invoke(); 
         EventManager.FadeOut?.Invoke();
         yield return new WaitForSeconds(2f);
 

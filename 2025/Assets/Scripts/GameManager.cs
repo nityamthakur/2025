@@ -126,7 +126,7 @@ public class GameManager : MonoBehaviour
             onScreenTimer.enabled = !onScreenTimer.enabled; // Hide the onscreen timer
         }
         if(onScreenTimer.enabled == true)
-            setOnScreenTimer();
+            SetOnScreenTimer();
     }
 
 
@@ -169,12 +169,19 @@ public class GameManager : MonoBehaviour
     {
         bool playerSucceeds = banWords.Length == 0;
         
-        if (playerSucceeds && (currentCensorNum == totalCensorTargets) && (numCensorMistakes == 0)) 
+        if (playerSucceeds && (currentCensorNum == totalCensorTargets) && (numCensorMistakes == 0))
+        {
             performanceBuzzers.ShowCorrectBuzzer();
+            EventManager.PlaySound?.Invoke("correctBuzz"); 
+        }
         else
+        {
             performanceBuzzers.ShowIncorrectBuzzer();
+            EventManager.PlaySound?.Invoke("errorBuzz"); 
+        }
         
         jobDetails.numMediaProcessed += 1;
+        jobScene.UpdateMediaProcessedText(jobDetails.numMediaProcessed);
 
         if (currentCensorNum == 0 && totalCensorTargets == 0)
             TotalScore += playerSucceeds ? 1 : -1;
@@ -191,10 +198,19 @@ public class GameManager : MonoBehaviour
         bool playerSucceeds = banWords.Length != 0;
         
         jobDetails.numMediaProcessed += 1;
+        jobScene.UpdateMediaProcessedText(jobDetails.numMediaProcessed);
 
         TotalScore += playerSucceeds ? 2 : -2;
-        if (playerSucceeds) performanceBuzzers.ShowCorrectBuzzer();
-        else performanceBuzzers.ShowIncorrectBuzzer();
+        if (playerSucceeds) 
+        {
+            performanceBuzzers.ShowCorrectBuzzer();
+            EventManager.PlaySound?.Invoke("correctBuzz"); 
+        }
+        else 
+        {
+            performanceBuzzers.ShowIncorrectBuzzer();
+            EventManager.PlaySound?.Invoke("errorBuzz"); 
+        }
 
         EvaluatePlayerScore();
         ResetCensorTracking();
@@ -219,6 +235,7 @@ public class GameManager : MonoBehaviour
 
             ResetJobDetails();
             SetCurrentDay(currentDay + 1);
+            jobScene.ShowMediaProcessedText(false);
         }
     }
 
@@ -245,27 +262,25 @@ public class GameManager : MonoBehaviour
         jobDetails.currClockTime = time;
 
         float totalWorkTime = time; // Store total work time for calculations
-        JobScene jobScene = GetJobScene(); // Get reference to JobScene
+        JobScene jobScene = GetJobScene();
 
         while (jobDetails.currClockTime > 0)
         {
             jobDetails.currClockTime -= Time.deltaTime;
             
-            // Update the clock hands each frame
             if (jobScene != null)
             {
-                float progress = 1f - (jobDetails.currClockTime / totalWorkTime); // 0 to 1
+                float progress = 1f - (jobDetails.currClockTime / totalWorkTime);
                 jobScene.UpdateClockHands(progress);
             }
 
-            yield return null; // Wait for next frame
+            yield return null;
         }
 
         jobDetails.currClockTime = 0;
     }
 
-
-    private void setOnScreenTimer()
+    private void SetOnScreenTimer()
     {
         onScreenTimer.text = $"Timer: {jobDetails.currClockTime:F2}s";
     }
