@@ -115,16 +115,28 @@ public class GameManager : MonoBehaviour
     }
 
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.R)) {
+        if (Input.GetKeyDown(KeyCode.R)) 
+        {
             Debug.Log("Restarting Game");
             Time.timeScale = 1;
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
-        if (Input.GetKeyDown(KeyCode.T)) {
+        if (Input.GetKeyDown(KeyCode.T)) 
+        {
             Debug.Log("Showing Timer");
             onScreenTimer.enabled = !onScreenTimer.enabled; // Hide the onscreen timer
         }
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            Application.Quit(); // For standalone builds
+
+            #if UNITY_EDITOR
+            UnityEditor.EditorApplication.ExitPlaymode(); // For Unity Editor testing
+            #endif
+        }
+
         if(onScreenTimer.enabled == true)
             SetOnScreenTimer();
     }

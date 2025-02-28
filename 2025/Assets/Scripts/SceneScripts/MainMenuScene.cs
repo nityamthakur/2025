@@ -11,6 +11,8 @@ public class MainMenuScene : MonoBehaviour
     private Button playButton;
     private Button loadButton;
     private Button optionsButton;
+    private Button exitButton;
+
     private Image backgroundImage;
 
     public void LoadMainMenu() {
@@ -74,6 +76,22 @@ public class MainMenuScene : MonoBehaviour
             optionsButton.interactable = false;
             OptionsMenu();
             EventManager.PlaySound?.Invoke("switch1"); 
+        });
+
+        exitButton = currentMenuObject.transform.Find("ExitButton").GetComponent<Button>();
+        if (exitButton == null)
+        {
+            Debug.LogError("Failed to find exitButton component in MainMenu.");
+            return;
+        }
+        exitButton.onClick.AddListener(() =>
+        {
+            optionsButton.interactable = false;
+            Application.Quit(); // For standalone builds
+
+            #if UNITY_EDITOR
+            UnityEditor.EditorApplication.ExitPlaymode(); // For Unity Editor testing
+            #endif
         });
     
     }
