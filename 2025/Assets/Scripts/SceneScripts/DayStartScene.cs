@@ -62,7 +62,11 @@ public class DayStartScene : MonoBehaviour
             Debug.LogError("Failed to find Button component.");
             return;
         }
-        nextButton.onClick.AddListener(ReadNextLine);
+        nextButton.onClick.AddListener(() =>
+        {
+            ReadNextLine();
+            EventManager.PlaySound?.Invoke("nextbutton");  // Play sound on click
+        });
 
         LoadJsonFromFile();
     }

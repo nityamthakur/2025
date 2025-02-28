@@ -70,6 +70,9 @@ public class NewspaperZoom : MonoBehaviour
             backOfNewspaper.SetActive(false);
             gameManager.SetCensorFunctionality(false);
             entityComponent.SetBlur(true);
+
+            // Play Zoom Out Sound
+            EventManager.PlaySound?.Invoke("paperzoomout");
         }
         // Zoom In
         else
@@ -86,6 +89,9 @@ public class NewspaperZoom : MonoBehaviour
             backOfNewspaper.SetActive(true);
             gameManager.SetCensorFunctionality(true);
             entityComponent.SetBlur(false);
+
+            // Play Zoom In Sound
+            EventManager.PlaySound?.Invoke("paperzoomin");
         }
     }
 

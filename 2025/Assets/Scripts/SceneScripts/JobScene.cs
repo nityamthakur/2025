@@ -123,7 +123,9 @@ public class JobScene : MonoBehaviour
         startWorkButton.onClick.AddListener(() =>
         {
             startWorkButton.interactable = false; // Disable immediately
+            EventManager.PlaySound?.Invoke("nextbutton");
             BeginWorkDay();
+            
         });
 
         screenText = currJobScene.transform.Find("ComputerScreenText").GetComponent<TextMeshProUGUI>();
@@ -202,6 +204,7 @@ public class JobScene : MonoBehaviour
         startWorkButton.onClick.AddListener(() =>
         {
             startWorkButton.interactable = false; // Disable immediately
+            EventManager.PlaySound?.Invoke("nextbutton");//end day sfx
             StartCoroutine(NextScene());
         });
         screenText.text = $"Day {day} Results:\n\nMedia Processed: {mediaProcessed}\n\nSupervisors Notified of Your Day\n\nProfit: ${score}\n\nPossibility of Promotion: Unknown";

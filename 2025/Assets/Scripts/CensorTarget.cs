@@ -41,6 +41,10 @@ public class CensorTarget : MonoBehaviour, IPointerClickHandler
         {
             spriteRenderer.enabled = true;
             isCensored = true;
+            
+            // Play the censor sound
+            EventManager.PlaySound?.Invoke("censor");
+
             if (isCensorTarget)
             {
                 gameManager.CensorTargetEnabled();
