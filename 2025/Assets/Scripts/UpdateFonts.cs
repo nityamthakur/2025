@@ -8,7 +8,7 @@ public class UpdateFonts : MonoBehaviour
     void Start()
     {
         // Find all TextMeshPro objects in the scene
-        TextMeshProUGUI[] textObjects = FindObjectsOfType<TextMeshProUGUI>();
+        TextMeshProUGUI[] textObjects = FindObjectsByType<TextMeshProUGUI>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
         foreach (TextMeshProUGUI text in textObjects)
         {
