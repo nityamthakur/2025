@@ -10,7 +10,7 @@ public class NewspaperZoom : MonoBehaviour
     private Vector3 zoomPosition;
     private Vector3 zoomScale;
 
-    public float zoomFactor = 2.0f;
+    public float zoomFactor = 1.25f;
     public float zoomSpeed = 0.2f;
     public bool canZoom = true;
     public bool stopZoom = true;
@@ -30,7 +30,6 @@ public class NewspaperZoom : MonoBehaviour
         newspaperCollider = GetComponent<Collider2D>();
         draggableScript = GetComponent<Draggable>(); // Get the Draggable script
 
-        zoomScale = new Vector3(originalScale.x * zoomFactor, originalScale.y * (zoomFactor / 1.75f), originalScale.z * zoomFactor);
         zoomPosition = new Vector3(mainCamera.transform.position.x, mainCamera.transform.position.y + 2.25f, originalPosition.z);
 
         entityComponent = GetComponent<Entity>(); // Get the Entity script
@@ -38,7 +37,7 @@ public class NewspaperZoom : MonoBehaviour
         {
             Debug.LogError("Entity component not found on Newspaper!");
         }
-        
+
         if (backOfNewspaper == null)
         {
             Debug.LogError("Back of Newspaper not assigned!");
@@ -56,6 +55,9 @@ public class NewspaperZoom : MonoBehaviour
 
     void ToggleZoom()
     {
+        zoomFactor = 1.25f;
+        zoomScale = originalScale * zoomFactor;
+        //zoomScale = new Vector3(originalScale.x * zoomFactor, originalScale.y * (zoomFactor / 1.75f), originalScale.z * zoomFactor);
         // Zoom Out
         if (isZoomedIn)
         {
