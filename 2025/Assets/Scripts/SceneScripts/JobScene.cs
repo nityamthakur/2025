@@ -82,7 +82,8 @@ public class JobScene : MonoBehaviour
         Destroy(outsideBuildingObject);
         outsideBuildingObject = null;
         yield return new WaitForSeconds(0f);
-        EventManager.FadeIn?.Invoke(); 
+        EventManager.FadeIn?.Invoke();
+        EventManager.DisplayMenuButton?.Invoke(true); 
     }
 
     private void SetUpJobStart(int day) {
@@ -237,7 +238,8 @@ public class JobScene : MonoBehaviour
     }
 
     private IEnumerator NextScene()
-    {
+    {        
+        EventManager.DisplayMenuButton?.Invoke(false); 
         EventManager.StopMusic?.Invoke(); 
         EventManager.FadeOut?.Invoke();
         yield return new WaitForSeconds(2f);

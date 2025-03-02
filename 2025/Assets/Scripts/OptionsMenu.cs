@@ -1,10 +1,18 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class OptionsMenu : MonoBehaviour
 {
     private AudioManager audioManager;
+    private List<GameObject> sections = new();
+    private GameObject menuSections;
+    private GameObject audioSection;
+    private GameObject saveLoadSection;
+    private Button backButton;
+    //private bool saveSelected = true; // For differentiating between saving and loading
 
     public void AddAudioComponent(AudioManager audioObject)
     {
@@ -13,12 +21,32 @@ public class OptionsMenu : MonoBehaviour
 
     private void Start()
     {
+        menuSections = transform.Find("MenuSections")?.gameObject;
+        audioSection = transform.Find("AudioMenu")?.gameObject;
+        saveLoadSection = transform.Find("SaveLoadMenu")?.gameObject;
+
+        if (menuSections != null) 
+            sections.Add(menuSections);
+        if (audioSection != null) 
+            sections.Add(audioSection);
+        if (saveLoadSection != null) 
+            sections.Add(saveLoadSection);
+
+        // Hide all sections initially
+        foreach (GameObject section in sections)
+        {
+            section.SetActive(false);
+        }
+
+        SetUpMenuSections();
+        
         // Close button setup
         Button closeButton = FindComponentByName<Button>("CloseMenuButton");
         if (closeButton != null)
         {
             closeButton.onClick.AddListener(() =>
             {
+                EventManager.DisplayMenuButton?.Invoke(true); 
                 EventManager.ReactivateMainMenuButtons?.Invoke(); 
                 EventManager.PlaySound?.Invoke("switch1"); 
                 Time.timeScale = 1;
@@ -26,8 +54,100 @@ public class OptionsMenu : MonoBehaviour
             });
         }
 
+        // Close button setup
+        backButton = FindComponentByName<Button>("BackButton");
+        if (backButton != null)
+        {
+            backButton.onClick.AddListener(() =>
+            {
+                ChangeMenuSection(menuSections);
+            });
+        }
+        backButton.gameObject.SetActive(false);
+
         GrayscaleSetUp();
         AudioSetUp();
+    }
+
+    private void SetUpMenuSections()
+    {
+        Button optionsButton = FindComponentByName<Button>("OptionsButton");
+        if (optionsButton != null)
+        {
+            optionsButton.onClick.AddListener(() =>
+            {
+                ChangeMenuSection(audioSection);
+            });
+        }
+
+        // TODO: Confirmation Screen Section for these two
+        Button mainButton = FindComponentByName<Button>("MainMenuButton");
+        if (mainButton != null)
+        {
+            mainButton.onClick.AddListener(() =>
+            {
+                Debug.Log("Restarting Game");
+                Time.timeScale = 1;
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            });
+        }
+
+        Button quitButton = FindComponentByName<Button>("QuitGameButton");
+        if (quitButton != null)
+        {
+            quitButton.onClick.AddListener(() =>
+            {
+                Application.Quit(); // For standalone builds
+
+                #if UNITY_EDITOR
+                UnityEditor.EditorApplication.ExitPlaymode(); // For Unity Editor testing
+                #endif
+            });
+        }
+    }
+
+    private void OptionsChanger(string option)
+    {
+        if (!this.gameObject.activeSelf)
+            this.gameObject.SetActive(true);
+
+        switch (option.ToLower())
+        {
+
+            case "load":
+                ChangeMenuSection(saveLoadSection);
+                break;
+
+            case "options":
+                ChangeMenuSection(audioSection);
+                break;
+            
+            default:
+                ChangeMenuSection(audioSection);
+                break;
+        }
+
+    }
+
+    private void ChangeMenuSection(GameObject section)
+    {
+        if (section == menuSections)
+            backButton.gameObject.SetActive(false);
+        else
+            backButton.gameObject.SetActive(true);
+
+        foreach (GameObject data in sections)
+        {
+            if (data == section)
+            {
+                data.SetActive(false); // Force UI refresh by toggling off first
+                data.SetActive(true);
+            }
+            else
+            {
+                data.SetActive(false);
+            }
+        }
     }
 
     private void GrayscaleSetUp()
@@ -109,5 +229,16 @@ public class OptionsMenu : MonoBehaviour
 
         Debug.LogWarning($"Component '{name}' not found!");
         return null;
+    }
+
+
+    void OnEnable()
+    {
+        EventManager.OptionsChanger += OptionsChanger;
+    }
+
+    void OnDisable()
+    {
+        EventManager.OptionsChanger -= OptionsChanger;
     }
 }

@@ -11,7 +11,6 @@ public class GrayscaleToggle : MonoBehaviour
     void Awake()
     {
         image = GetComponent<Image>();
-
         if (image == null)
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
@@ -21,6 +20,11 @@ public class GrayscaleToggle : MonoBehaviour
         {
             Debug.LogError("GrayscaleToggle script requires an Image or SpriteRenderer component on " + gameObject.name);
             return;
+        }
+
+        if(grayscaleMaterial == null)
+        {
+            grayscaleMaterial = Resources.Load<Material>("GrayScaleMaterial");
         }
 
         // Save the original material

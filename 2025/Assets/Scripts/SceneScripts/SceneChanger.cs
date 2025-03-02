@@ -15,6 +15,7 @@ public class SceneChanger : MonoBehaviour
     private GameObject fadingScreen;
     private Image fadingImage;
     private Image deskOverlayImage;
+    private Button menuButton;
 
     private int currentSceneIndex = 0;
     private List<Action> sceneSequence;
@@ -55,6 +56,19 @@ public class SceneChanger : MonoBehaviour
         }
         deskOverlayImage.gameObject.SetActive(false);
 
+        menuButton = fadingScreen.transform.Find("MenuButton").GetComponent<Button>();
+        if (menuButton == null)
+        {
+            Debug.LogError("Failed to find menuButton component in SceneManager");
+            return;
+        }
+        menuButton.onClick.AddListener(() =>
+        {
+            EventManager.OpenOptionsMenu?.Invoke();
+            EventManager.DisplayMenuButton?.Invoke(false); 
+        });
+        menuButton.gameObject.SetActive(false);
+
         mainMenuScene.LoadMainMenu();
         //jobScene.LoadJobStart(gameManager.GetCurrentDay());
 
@@ -76,6 +90,7 @@ public class SceneChanger : MonoBehaviour
         EventManager.FadeOut += FadeOutScreen;
         EventManager.ShowDeskOverlay += ShowDeskOverLay;
         EventManager.HideDeskOverlay += HideDeskOverLay;
+        EventManager.DisplayMenuButton += DisplayMenuButton;
     }
 
     void OnDisable()
@@ -85,6 +100,7 @@ public class SceneChanger : MonoBehaviour
         EventManager.FadeOut -= FadeOutScreen;
         EventManager.ShowDeskOverlay -= ShowDeskOverLay;
         EventManager.HideDeskOverlay -= HideDeskOverLay;
+        EventManager.DisplayMenuButton -= DisplayMenuButton;
     }
 
     private void FadeInScreen()
@@ -139,5 +155,10 @@ public class SceneChanger : MonoBehaviour
     {
         Debug.Log("HideDeskOverlay called");
         deskOverlayImage.gameObject.SetActive(false);   
+    }
+
+    private void DisplayMenuButton(bool active)
+    {
+        menuButton.gameObject.SetActive(active);
     }
 }
