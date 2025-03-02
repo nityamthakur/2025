@@ -13,7 +13,6 @@ public class AccessibilityManager : MonoBehaviour
             Debug.Log("Pause Menu Prefab is missing from AccessibilityManager.");
         else
         {
-            pauseMenu.SetActive(false);
             OptionsMenu optionsMenu = pauseMenu.GetComponent<OptionsMenu>();
             if(optionsMenu == null)
                 Debug.Log("OptionsMenu Component is missing from pauseMenuPrefab.");

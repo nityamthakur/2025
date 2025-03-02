@@ -11,6 +11,11 @@ public class OptionsMenu : MonoBehaviour
     private GameObject menuSections;
     private GameObject audioSection;
     private GameObject saveLoadSection;
+    private GameObject confirmSection;
+    private TextMeshProUGUI confirmText;
+    private System.Action confirmAction;
+    private System.Action cancelAction;
+
     private Button backButton;
     //private bool saveSelected = true; // For differentiating between saving and loading
 
@@ -24,6 +29,7 @@ public class OptionsMenu : MonoBehaviour
         menuSections = transform.Find("MenuSections")?.gameObject;
         audioSection = transform.Find("AudioMenu")?.gameObject;
         saveLoadSection = transform.Find("SaveLoadMenu")?.gameObject;
+        confirmSection = transform.Find("ConfirmMenu")?.gameObject;
 
         if (menuSections != null) 
             sections.Add(menuSections);
@@ -31,6 +37,8 @@ public class OptionsMenu : MonoBehaviour
             sections.Add(audioSection);
         if (saveLoadSection != null) 
             sections.Add(saveLoadSection);
+        if (confirmSection != null) 
+            sections.Add(confirmSection);
 
         // Hide all sections initially
         foreach (GameObject section in sections)
@@ -52,7 +60,7 @@ public class OptionsMenu : MonoBehaviour
                 Time.timeScale = 1;
                 this.gameObject.SetActive(false);
             });
-        }
+        }        
 
         // Close button setup
         backButton = FindComponentByName<Button>("BackButton");
@@ -61,22 +69,49 @@ public class OptionsMenu : MonoBehaviour
             backButton.onClick.AddListener(() =>
             {
                 ChangeMenuSection(menuSections);
+                EventManager.PlaySound?.Invoke("switch1"); 
             });
+            backButton.gameObject.SetActive(false);
         }
-        backButton.gameObject.SetActive(false);
-
+        else
+            Debug.Log("backButton is null in Options Menu");
+        
         GrayscaleSetUp();
         AudioSetUp();
+
+        // Hide the menu after 
+        transform.gameObject.SetActive(false);
     }
 
     private void SetUpMenuSections()
     {
+        Button saveButton = FindComponentByName<Button>("SaveButton");
+        if (saveButton != null)
+        {
+            saveButton.onClick.AddListener(() =>
+            {
+                ChangeMenuSection(saveLoadSection);
+                EventManager.PlaySound?.Invoke("switch1"); 
+            });
+        }
+
+        Button loadButton = FindComponentByName<Button>("LoadButton");
+        if (loadButton != null)
+        {
+            loadButton.onClick.AddListener(() =>
+            {
+                ChangeMenuSection(saveLoadSection);
+                EventManager.PlaySound?.Invoke("switch1"); 
+            });
+        }
+
         Button optionsButton = FindComponentByName<Button>("OptionsButton");
         if (optionsButton != null)
         {
             optionsButton.onClick.AddListener(() =>
             {
                 ChangeMenuSection(audioSection);
+                EventManager.PlaySound?.Invoke("switch1"); 
             });
         }
 
@@ -86,47 +121,71 @@ public class OptionsMenu : MonoBehaviour
         {
             mainButton.onClick.AddListener(() =>
             {
-                Debug.Log("Restarting Game");
-                Time.timeScale = 1;
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                EventManager.PlaySound?.Invoke("switch1");
+                confirmText.text = "Return to \nMain Menu?";
+                ChangeMenuSection(confirmSection);
+
+                // Store the action to execute if "Yes" is clicked
+                confirmAction = () =>
+                {
+                    Debug.Log("Restarting Game");
+                    Time.timeScale = 1;
+                    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                };
+                cancelAction = () =>
+                {
+                    ChangeMenuSection(menuSections);
+                };
             });
         }
+
 
         Button quitButton = FindComponentByName<Button>("QuitGameButton");
         if (quitButton != null)
         {
             quitButton.onClick.AddListener(() =>
             {
-                Application.Quit(); // For standalone builds
+                EventManager.PlaySound?.Invoke("switch1");
+                confirmText.text = "Close the Game?";
+                ChangeMenuSection(confirmSection);
 
-                #if UNITY_EDITOR
-                UnityEditor.EditorApplication.ExitPlaymode(); // For Unity Editor testing
-                #endif
+                // Store the action to execute if "Yes" is clicked
+                confirmAction = () =>
+                {
+                    Application.Quit(); // For standalone builds
+
+                    #if UNITY_EDITOR
+                    UnityEditor.EditorApplication.ExitPlaymode(); // For Unity Editor testing
+                    #endif
+                };
+                cancelAction = () =>
+                {
+                    ChangeMenuSection(menuSections);
+                };
             });
         }
-    }
 
-    private void OptionsChanger(string option)
-    {
-        if (!this.gameObject.activeSelf)
-            this.gameObject.SetActive(true);
-
-        switch (option.ToLower())
+        Button yesButton = FindComponentByName<Button>("YesButton");
+        if (yesButton != null)
         {
-
-            case "load":
-                ChangeMenuSection(saveLoadSection);
-                break;
-
-            case "options":
-                ChangeMenuSection(audioSection);
-                break;
-            
-            default:
-                ChangeMenuSection(audioSection);
-                break;
+            yesButton.onClick.AddListener(() =>
+            {
+                EventManager.PlaySound?.Invoke("switch1"); 
+                confirmAction?.Invoke();
+            });
         }
 
+        Button noButton = FindComponentByName<Button>("NoButton");
+        if (noButton != null)
+        {
+            noButton.onClick.AddListener(() =>
+            {
+                EventManager.PlaySound?.Invoke("switch1"); 
+                cancelAction?.Invoke();
+            });
+        }
+
+        confirmText = FindComponentByName<TextMeshProUGUI>("ConfirmText");
     }
 
     private void ChangeMenuSection(GameObject section)
@@ -147,6 +206,24 @@ public class OptionsMenu : MonoBehaviour
             {
                 data.SetActive(false);
             }
+        }
+    }
+
+    private void OptionsChanger(string option)
+    {
+        switch (option.ToLower())
+        {
+            case "load":
+                ChangeMenuSection(saveLoadSection);
+                break;
+
+            case "options":
+                ChangeMenuSection(audioSection);
+                break;
+            
+            default:
+                ChangeMenuSection(audioSection);
+                break;
         }
     }
 
@@ -230,7 +307,6 @@ public class OptionsMenu : MonoBehaviour
         Debug.LogWarning($"Component '{name}' not found!");
         return null;
     }
-
 
     void OnEnable()
     {

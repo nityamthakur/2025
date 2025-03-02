@@ -17,6 +17,7 @@ public class SceneChanger : MonoBehaviour
     private Image deskOverlayImage;
     private Button menuButton;
 
+    private bool mainMenuDone = false;
     private int currentSceneIndex = 0;
     private List<Action> sceneSequence;
 
@@ -76,6 +77,7 @@ public class SceneChanger : MonoBehaviour
 
     public void StartNextScene()
     {
+        mainMenuDone = true;
         // Call the function for the current scene
         sceneSequence[currentSceneIndex]?.Invoke();
 
@@ -159,6 +161,9 @@ public class SceneChanger : MonoBehaviour
 
     private void DisplayMenuButton(bool active)
     {
-        menuButton.gameObject.SetActive(active);
+        if(mainMenuDone)
+        {
+            menuButton.gameObject.SetActive(active);
+        }
     }
 }
