@@ -11,7 +11,9 @@ public static class EventManager
     // Used for ensuring the media gets enters and leaves behind certain screen elements
     public static Action ShowDeskOverlay;
     public static Action HideDeskOverlay;
+    public static Action<bool> DisplayMenuButton;
 
+    public static Action<string> OptionsChanger;
     public static Action OpenOptionsMenu;
     public static Action ReactivateMainMenuButtons;
 

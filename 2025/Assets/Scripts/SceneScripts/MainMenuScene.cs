@@ -61,7 +61,8 @@ public class MainMenuScene : MonoBehaviour
         loadButton.onClick.AddListener(() =>
         {
             loadButton.interactable = false;
-            LoadGame();
+            EventManager.OpenOptionsMenu?.Invoke();
+            EventManager.OptionsChanger?.Invoke("load"); 
             EventManager.PlaySound?.Invoke("switch1"); 
         });
 
@@ -74,7 +75,8 @@ public class MainMenuScene : MonoBehaviour
         optionsButton.onClick.AddListener(() =>
         {
             optionsButton.interactable = false;
-            OptionsMenu();
+            EventManager.OpenOptionsMenu?.Invoke();
+            EventManager.OptionsChanger?.Invoke("options"); 
             EventManager.PlaySound?.Invoke("switch1"); 
         });
 
@@ -105,16 +107,6 @@ public class MainMenuScene : MonoBehaviour
 
         yield return new WaitForSeconds(2f);
         EventManager.NextScene?.Invoke();
-    }
-
-    private void LoadGame(){
-        // Will set up after load screen and saving finished
-        EventManager.OpenOptionsMenu?.Invoke();
-    }
-
-    private void OptionsMenu(){
-        // Will set up after options screen and volume, grayscale, anything else is finished
-        EventManager.OpenOptionsMenu?.Invoke();
     }
 
     private void ReactivateMainMenuButtons()

@@ -37,7 +37,8 @@ public class DayStartScene : MonoBehaviour
         }
 
         SetUpDayStart();
-        EventManager.FadeIn?.Invoke(); 
+        EventManager.FadeIn?.Invoke();
+        EventManager.DisplayMenuButton?.Invoke(true); 
     }
 
     private void SetUpDayStart() {
@@ -120,7 +121,8 @@ public class DayStartScene : MonoBehaviour
         else
         {
             nextButton.interactable = false; // Prevent player from pressing the button multiple times
-            Debug.Log("End of dialogue.");
+            //Debug.Log("End of dialogue.");
+            EventManager.DisplayMenuButton?.Invoke(false); 
             StartCoroutine(NextScene());
         }
     }
