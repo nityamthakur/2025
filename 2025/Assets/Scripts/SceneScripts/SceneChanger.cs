@@ -66,6 +66,7 @@ public class SceneChanger : MonoBehaviour
         menuButton.onClick.AddListener(() =>
         {
             EventManager.OpenOptionsMenu?.Invoke();
+            EventManager.OptionsChanger?.Invoke(""); 
             EventManager.DisplayMenuButton?.Invoke(false); 
         });
         menuButton.gameObject.SetActive(false);

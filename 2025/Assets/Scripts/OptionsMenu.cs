@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -8,16 +9,11 @@ public class OptionsMenu : MonoBehaviour
 {
     private AudioManager audioManager;
     private List<GameObject> sections = new();
-    private GameObject menuSections;
-    private GameObject audioSection;
-    private GameObject saveLoadSection;
-    private GameObject confirmSection;
+    private GameObject menuSections, audioSection, saveLoadSection, confirmSection;
     private TextMeshProUGUI confirmText;
-    private System.Action confirmAction;
-    private System.Action cancelAction;
-
-    private Button backButton;
-    //private bool saveSelected = true; // For differentiating between saving and loading
+    private Action confirmAction, cancelAction;
+    private Button slot1Button, slot2Button, slot3Button, backButton, saveButton;
+    private GameManager gameManager;
 
     public void AddAudioComponent(AudioManager audioObject)
     {
@@ -25,6 +21,17 @@ public class OptionsMenu : MonoBehaviour
     }
 
     private void Start()
+    {
+        SetUpSections();
+        SetupMenuButtons();
+        GrayscaleSetUp();
+        AudioSetUp();
+        FindGameManager();
+        // Hide the menu after initialization
+        gameObject.SetActive(false);
+    }
+
+    private void SetUpSections()
     {
         menuSections = transform.Find("MenuSections")?.gameObject;
         audioSection = transform.Find("AudioMenu")?.gameObject;
@@ -45,151 +52,252 @@ public class OptionsMenu : MonoBehaviour
         {
             section.SetActive(false);
         }
-
-        SetUpMenuSections();
-        
-        // Close button setup
-        Button closeButton = FindComponentByName<Button>("CloseMenuButton");
-        if (closeButton != null)
-        {
-            closeButton.onClick.AddListener(() =>
-            {
-                EventManager.DisplayMenuButton?.Invoke(true); 
-                EventManager.ReactivateMainMenuButtons?.Invoke(); 
-                EventManager.PlaySound?.Invoke("switch1"); 
-                Time.timeScale = 1;
-                this.gameObject.SetActive(false);
-            });
-        }        
-
-        // Close button setup
-        backButton = FindComponentByName<Button>("BackButton");
-        if (backButton != null)
-        {
-            backButton.onClick.AddListener(() =>
-            {
-                ChangeMenuSection(menuSections);
-                EventManager.PlaySound?.Invoke("switch1"); 
-            });
-            backButton.gameObject.SetActive(false);
-        }
-        else
-            Debug.Log("backButton is null in Options Menu");
-        
-        GrayscaleSetUp();
-        AudioSetUp();
-
-        // Hide the menu after 
-        transform.gameObject.SetActive(false);
     }
 
-    private void SetUpMenuSections()
+    private void SetupMenuButtons()
     {
-        Button saveButton = FindComponentByName<Button>("SaveButton");
-        if (saveButton != null)
-        {
-            saveButton.onClick.AddListener(() =>
-            {
-                ChangeMenuSection(saveLoadSection);
-                EventManager.PlaySound?.Invoke("switch1"); 
-            });
-        }
-
-        Button loadButton = FindComponentByName<Button>("LoadButton");
-        if (loadButton != null)
-        {
-            loadButton.onClick.AddListener(() =>
-            {
-                ChangeMenuSection(saveLoadSection);
-                EventManager.PlaySound?.Invoke("switch1"); 
-            });
-        }
-
-        Button optionsButton = FindComponentByName<Button>("OptionsButton");
-        if (optionsButton != null)
-        {
-            optionsButton.onClick.AddListener(() =>
-            {
-                ChangeMenuSection(audioSection);
-                EventManager.PlaySound?.Invoke("switch1"); 
-            });
-        }
-
-        // TODO: Confirmation Screen Section for these two
-        Button mainButton = FindComponentByName<Button>("MainMenuButton");
-        if (mainButton != null)
-        {
-            mainButton.onClick.AddListener(() =>
-            {
-                EventManager.PlaySound?.Invoke("switch1");
-                confirmText.text = "Return to \nMain Menu?";
-                ChangeMenuSection(confirmSection);
-
-                // Store the action to execute if "Yes" is clicked
-                confirmAction = () =>
-                {
-                    Debug.Log("Restarting Game");
-                    Time.timeScale = 1;
-                    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-                };
-                cancelAction = () =>
-                {
-                    ChangeMenuSection(menuSections);
-                };
-            });
-        }
-
-
-        Button quitButton = FindComponentByName<Button>("QuitGameButton");
-        if (quitButton != null)
-        {
-            quitButton.onClick.AddListener(() =>
-            {
-                EventManager.PlaySound?.Invoke("switch1");
-                confirmText.text = "Close the Game?";
-                ChangeMenuSection(confirmSection);
-
-                // Store the action to execute if "Yes" is clicked
-                confirmAction = () =>
-                {
-                    Application.Quit(); // For standalone builds
-
-                    #if UNITY_EDITOR
-                    UnityEditor.EditorApplication.ExitPlaymode(); // For Unity Editor testing
-                    #endif
-                };
-                cancelAction = () =>
-                {
-                    ChangeMenuSection(menuSections);
-                };
-            });
-        }
-
-        Button yesButton = FindComponentByName<Button>("YesButton");
-        if (yesButton != null)
-        {
-            yesButton.onClick.AddListener(() =>
-            {
-                EventManager.PlaySound?.Invoke("switch1"); 
-                confirmAction?.Invoke();
-            });
-        }
-
-        Button noButton = FindComponentByName<Button>("NoButton");
-        if (noButton != null)
-        {
-            noButton.onClick.AddListener(() =>
-            {
-                EventManager.PlaySound?.Invoke("switch1"); 
-                cancelAction?.Invoke();
-            });
-        }
-
         confirmText = FindComponentByName<TextMeshProUGUI>("ConfirmText");
+
+        FindButton("CloseMenuButton", () =>
+        {
+            EventManager.DisplayMenuButton?.Invoke(true);
+            EventManager.ReactivateMainMenuButtons?.Invoke();
+            EventManager.PlaySound?.Invoke("switch1");
+            Time.timeScale = 1;
+            gameObject.SetActive(false);
+        });
+      
+        backButton = FindButton("BackButton", () =>
+        {
+            ChangeMenuSection(menuSections);
+            EventManager.PlaySound?.Invoke("switch1");
+        });
+        backButton?.gameObject.SetActive(false);
+
+        saveButton = FindButton("SaveButton", () =>
+        {
+            ChangeMenuSection(saveLoadSection);
+            UpdateSaveLoadButtons(true);
+            EventManager.PlaySound?.Invoke("switch1"); 
+        });
+        // Hide the save button initally in the main menu
+        saveButton?.gameObject.SetActive(false);
+
+        FindButton("LoadButton", () =>
+        {
+            ChangeMenuSection(saveLoadSection);
+            UpdateSaveLoadButtons(false);
+            EventManager.PlaySound?.Invoke("switch1"); 
+        });
+
+        FindButton("OptionsButton", () =>
+        {
+            ChangeMenuSection(audioSection);
+            EventManager.PlaySound?.Invoke("switch1"); 
+        });
+
+        FindButton("MainMenuButton", () =>
+        {
+            EventManager.PlaySound?.Invoke("switch1");
+            ChangeConfirmText("Return to \nMain Menu?");
+            ChangeMenuSection(confirmSection);
+
+            // Store the action to execute if "Yes" is clicked
+            confirmAction = () =>
+            {
+                Debug.Log("Restarting Game");
+                Time.timeScale = 1;
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            };
+            cancelAction = () =>
+            {
+                ChangeMenuSection(menuSections);
+            };
+        });
+
+        FindButton("QuitGameButton", () =>
+        {
+            EventManager.PlaySound?.Invoke("switch1");
+            ChangeConfirmText("Close the Game?");
+            ChangeMenuSection(confirmSection);
+
+            // Store the action to execute if "Yes" is clicked
+            confirmAction = () =>
+            {
+                Application.Quit(); // For standalone builds
+
+                #if UNITY_EDITOR
+                UnityEditor.EditorApplication.ExitPlaymode(); // For Unity Editor testing
+                #endif
+            };
+            cancelAction = () =>
+            {
+                ChangeMenuSection(menuSections);
+            };
+        });
+
+        FindButton("YesButton", () =>
+        {
+            EventManager.PlaySound?.Invoke("switch1"); 
+            confirmAction?.Invoke();
+        });
+
+        FindButton("NoButton", () =>
+        {
+            EventManager.PlaySound?.Invoke("switch1"); 
+            cancelAction?.Invoke();
+        });
+
+        // Save and Load Slot Buttons
+        slot1Button = FindButton("Slot1Button");
+        slot2Button = FindButton("Slot2Button");
+        slot3Button = FindButton("Slot3Button");
+        UpdateSlotInformation();
+
+    }
+
+    private Button FindButton(string name, System.Action action = null)
+    {
+        Button button = FindComponentByName<Button>(name);
+        if (button != null && action != null)
+        {
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(() => action.Invoke());
+        }
+        return button;
+    }
+
+    private void UpdateSaveLoadButtons(bool saveButtonPressed)
+    {
+        Button[] slots = { slot1Button, slot2Button, slot3Button };
+        for (int i = 0; i < slots.Length; i++)
+        {
+            int slotIndex = i + 1;
+            slots[i].onClick.RemoveAllListeners();
+            slots[i].onClick.AddListener(() =>
+            {
+                EventManager.PlaySound?.Invoke("switch1");
+                if(saveButtonPressed)
+                    HandleSaveSlot(slotIndex);
+                else
+                    HandleLoadSlot(slotIndex);
+            });
+        }
+    }
+
+    private void HandleSaveSlot(int slot)
+    {
+        // Save the game over this file
+        if(SaveSystem.SaveExists(slot)) // Check if save exists
+        {
+            ChangeConfirmText($"Save Over File {slot}?");
+            ChangeMenuSection(confirmSection);
+
+            // Store the action to execute if "Yes" is clicked
+            confirmAction = () =>
+            {
+                SaveSystem.SaveGame(slot, gameManager.gameData); // Save game data
+                ChangeMenuSection(saveLoadSection);
+            };
+            cancelAction = () =>
+            {
+                ChangeMenuSection(saveLoadSection);
+            };
+        }
+        else
+        {
+            SaveSystem.SaveGame(slot, gameManager.gameData); // Save game data
+            ChangeMenuSection(saveLoadSection);
+        }
+    }
+
+    private void HandleLoadSlot(int slot)
+    {
+        // Save the game over this file
+        GameObject gameManagerObject = GameObject.Find("GameManager");
+        GameManager gameManager = gameManagerObject.GetComponent<GameManager>();
+        if (gameManagerObject == null || gameManager == null)
+        {
+            Debug.LogError("GameManager component or gamemanagerObject not found in OptionsMenu!");
+            return;
+        }
+
+        if(SaveSystem.SaveExists(slot))
+        {
+            ChangeConfirmText($"Load Game File {slot}?");
+            ChangeMenuSection(confirmSection);
+
+            // Store the action to execute if "Yes" is clicked
+            confirmAction = () =>
+            {
+                // TODO: Restart the game starting from the sceneManager
+                // Game should begin from dayStartScene
+                // Game should have some way to remember to call LoadGame(slot) right after reset.
+                //Debug.Log("Restarting Game");
+                //Time.timeScale = 1;
+                //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                //SaveSystem.LoadGame(slot);
+            };
+            cancelAction = () =>
+            {
+                ChangeMenuSection(saveLoadSection);
+            };
+        }
+    }
+
+    private void UpdateSlotInformation()
+    {
+        if(slot1Button == null || slot2Button == null || slot3Button == null)
+        {
+            Debug.Log("One or more Save/Load button slots are null in Options Menu");
+            return;
+        }        
+
+        Button[] slots = { slot1Button, slot2Button, slot3Button };
+        for (int i = 0; i < slots.Length; i++)
+        {
+            int slotIndex = i + 1;
+
+            // Find the TextMeshProUGUI inside the button
+            TextMeshProUGUI buttonText = slots[i].GetComponentInChildren<TextMeshProUGUI>();
+            if (buttonText == null)
+            {
+                Debug.LogWarning($"No TextMeshProUGUI found in Slot {slotIndex} button!");
+                return;
+            }
+
+            if(SaveSystem.SaveExists(slotIndex))
+            {
+                GameData gameSlot = SaveSystem.LoadGame(slotIndex);
+                if (gameSlot != null)
+                {
+                    // Convert playtime to "H:MM" format
+                    string time = SecondMinuteHourConversion(gameSlot.playTime);
+                    buttonText.text = $"Save Slot {slotIndex}\nPlaytime: {time}  Day: {gameSlot.day}";
+                }
+                else
+                {
+                    Debug.Log($"Failed to get Game Slot {slotIndex}");
+                }
+            }
+            else
+                buttonText.text = $"Save Slot {slotIndex}";
+        }
+    }
+
+    // Converts seconds into "Hours:Minutes" format
+    private string SecondMinuteHourConversion(float seconds)
+    {
+        int hours = (int)(seconds / 3600);
+        int minutes = (int)((seconds % 3600) / 60);
+        
+        return $"{hours}:{minutes:D2}"; // Ensures 2-digit minute format ("1:05")
     }
 
     private void ChangeMenuSection(GameObject section)
     {
+        UpdateSlotInformation();
+
         if (section == menuSections)
             backButton.gameObject.SetActive(false);
         else
@@ -209,6 +317,27 @@ public class OptionsMenu : MonoBehaviour
         }
     }
 
+    private void FindGameManager()
+    {
+        GameObject gameManagerObject = GameObject.Find("GameManager");
+        if (gameManagerObject == null)
+        {
+            Debug.LogError("GameManager GameObject not found!");
+            return;
+        }
+        
+        gameManager = gameManagerObject.GetComponent<GameManager>();
+        if (gameManager == null)
+        {
+            Debug.LogError("GameManager component not found!");
+        }        
+    }
+
+    private void ChangeConfirmText(string text)
+    {
+        confirmText.text = text;
+    }
+
     private void OptionsChanger(string option)
     {
         switch (option.ToLower())
@@ -222,7 +351,8 @@ public class OptionsMenu : MonoBehaviour
                 break;
             
             default:
-                ChangeMenuSection(audioSection);
+                saveButton?.gameObject.SetActive(true);
+                ChangeMenuSection(menuSections);
                 break;
         }
     }
