@@ -14,7 +14,7 @@ public class AudioManager : MonoBehaviour
     public float muteVolume = 1.0f;
     private Coroutine currentMusicCoroutine; // Store the currently running coroutine
 
-    private void Start()
+    private void Awake()
     {
         musicSource = gameObject.AddComponent<AudioSource>();
         musicSource.loop = true;  
@@ -52,7 +52,7 @@ public class AudioManager : MonoBehaviour
 
     public void PlayMusic(string soundName)
     {
-        Debug.Log($"PlayMusic called with: {soundName}");
+        //Debug.Log($"PlayMusic called with: {soundName}");
         AudioClip sound = null;
         bool soundExists = musicDict.TryGetValue(soundName.ToLower(), out sound);
 

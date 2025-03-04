@@ -12,21 +12,23 @@ public class OptionsMenu : MonoBehaviour
     private GameObject menuSections, audioSection, saveLoadSection, confirmSection;
     private TextMeshProUGUI confirmText;
     private Action confirmAction, cancelAction;
-    private Button slot1Button, slot2Button, slot3Button, backButton, saveButton;
+    private Button slot1Button, slot2Button, slot3Button, backButton, saveButton, mainMenuButton;
+    private Slider masterVolumeSlider, musicVolumeSlider, sfxVolumeSlider;
+    private Toggle muteToggle, grayscaleToggle;
     private GameManager gameManager;
-
-    public void AddAudioComponent(AudioManager audioObject)
-    {
-        audioManager = audioObject;
-    }
+    private bool isLoadingSettings = false;
 
     private void Start()
     {
+        FindGameManager();
+        
         SetUpSections();
         SetupMenuButtons();
         GrayscaleSetUp();
         AudioSetUp();
-        FindGameManager();
+        
+        LoadPersistentSettings();
+
         // Hide the menu after initialization
         gameObject.SetActive(false);
     }
@@ -96,7 +98,7 @@ public class OptionsMenu : MonoBehaviour
             EventManager.PlaySound?.Invoke("switch1"); 
         });
 
-        FindButton("MainMenuButton", () =>
+        mainMenuButton = FindButton("MainMenuButton", () =>
         {
             EventManager.PlaySound?.Invoke("switch1");
             ChangeConfirmText("Return to \nMain Menu?");
@@ -114,6 +116,8 @@ public class OptionsMenu : MonoBehaviour
                 ChangeMenuSection(menuSections);
             };
         });
+        // Hide the main menu button initally in the main menu
+        mainMenuButton?.gameObject.SetActive(false);
 
         FindButton("QuitGameButton", () =>
         {
@@ -230,13 +234,9 @@ public class OptionsMenu : MonoBehaviour
             // Store the action to execute if "Yes" is clicked
             confirmAction = () =>
             {
-                // TODO: Restart the game starting from the sceneManager
-                // Game should begin from dayStartScene
-                // Game should have some way to remember to call LoadGame(slot) right after reset.
-                //Debug.Log("Restarting Game");
-                //Time.timeScale = 1;
-                //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-                //SaveSystem.LoadGame(slot);
+                PlayerPrefs.SetInt("LoadSlot", slot);
+                Time.timeScale = 1;
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             };
             cancelAction = () =>
             {
@@ -271,9 +271,12 @@ public class OptionsMenu : MonoBehaviour
                 GameData gameSlot = SaveSystem.LoadGame(slotIndex);
                 if (gameSlot != null)
                 {
-                    // Convert playtime to "H:MM" format
+                    // Convert playtime to "H:MM:SS" format
                     string time = SecondMinuteHourConversion(gameSlot.playTime);
                     buttonText.text = $"Save Slot {slotIndex}\nPlaytime: {time}  Day: {gameSlot.day}";
+
+                    //Debug.Log($"The gameSlot{slotIndex} playTime is: {gameSlot.playTime}");
+                    //Debug.Log($"buttonText is now: {buttonText.text}");
                 }
                 else
                 {
@@ -290,9 +293,11 @@ public class OptionsMenu : MonoBehaviour
     {
         int hours = (int)(seconds / 3600);
         int minutes = (int)((seconds % 3600) / 60);
-        
-        return $"{hours}:{minutes:D2}"; // Ensures 2-digit minute format ("1:05")
+        int remainingSeconds = (int)(seconds % 60);
+
+        return $"{hours}:{minutes:D2}:{remainingSeconds:D2}"; // Now correctly formats HH:MM:SS
     }
+
 
     private void ChangeMenuSection(GameObject section)
     {
@@ -343,6 +348,7 @@ public class OptionsMenu : MonoBehaviour
         switch (option.ToLower())
         {
             case "load":
+                UpdateSaveLoadButtons(false);
                 ChangeMenuSection(saveLoadSection);
                 break;
 
@@ -352,6 +358,7 @@ public class OptionsMenu : MonoBehaviour
             
             default:
                 saveButton?.gameObject.SetActive(true);
+                mainMenuButton?.gameObject.SetActive(true);
                 ChangeMenuSection(menuSections);
                 break;
         }
@@ -359,45 +366,69 @@ public class OptionsMenu : MonoBehaviour
 
     private void GrayscaleSetUp()
     {
-        Toggle grayScaleToggle = FindComponentByName<Toggle>("GrayscaleToggle");
-        TMP_Text grayScaleActiveText = FindComponentByName<TMP_Text>("GrayscaleOnOffText");
+        grayscaleToggle = FindComponentByName<Toggle>("GrayscaleToggle");
+        TMP_Text grayscaleActiveText = FindComponentByName<TMP_Text>("GrayscaleOnOffText");
 
-        if (grayScaleToggle != null && grayScaleActiveText != null)
+        if (grayscaleToggle != null && grayscaleActiveText != null)
         {
             // Set the initial state to match the current grayscale setting in Eventmanager
-            // Will eventually set itself via game load and pass to Eventmanager
-            grayScaleToggle.isOn = EventManager.IsGrayscale;
-            grayScaleActiveText.text = EventManager.IsGrayscale ? "On" : "Off";
+            grayscaleToggle.isOn = EventManager.IsGrayscale;
+            grayscaleActiveText.text = EventManager.IsGrayscale ? "On" : "Off";
 
             // Listen for changes when toggle is clicked
-            grayScaleToggle.onValueChanged.AddListener((bool isOn) =>
+            grayscaleToggle.onValueChanged.AddListener((bool isOn) =>
             {
                 EventManager.PlaySound?.Invoke("switch1"); 
                 EventManager.ToggleGrayscaleState();
-                grayScaleActiveText.text = isOn ? "On" : "Off";
+                grayscaleActiveText.text = isOn ? "On" : "Off";
+                SavePersistentSettings();
             });
         }
     }
 
     private void AudioSetUp()
     {
+        // Locate AudioManager Object
+        audioManager = FindFirstObjectByType<AudioManager>();
+        if (audioManager == null)
+        {
+            Debug.Log("AudioManager not found in scene!");
+            return;
+        }
+
         // Sound Sliders
-        Slider masterVolumeSlider = FindComponentByName<Slider>("MasterVolume");
+        masterVolumeSlider = FindComponentByName<Slider>("MasterVolume");
         if(masterVolumeSlider != null)
-            masterVolumeSlider.onValueChanged.AddListener(audioManager.UpdateMasterVolume);
+        {
+            masterVolumeSlider.onValueChanged.AddListener(value => {
+                audioManager.UpdateMasterVolume(value);
+                SavePersistentSettings();
+            });
+        }
 
-        Slider musicVolumeSlider = FindComponentByName<Slider>("MusicVolume");
+
+        musicVolumeSlider = FindComponentByName<Slider>("MusicVolume");
         if(musicVolumeSlider != null)
-            musicVolumeSlider.onValueChanged.AddListener(audioManager.UpdateMusicVolume);
+        {
+            musicVolumeSlider.onValueChanged.AddListener(value => {
+                audioManager.UpdateMusicVolume(value);
+                SavePersistentSettings();
+            });
+        }
 
-        Slider sfxVolumeSlider = FindComponentByName<Slider>("SFXVolume");
+        sfxVolumeSlider = FindComponentByName<Slider>("SFXVolume");
         if(sfxVolumeSlider != null)
-            sfxVolumeSlider.onValueChanged.AddListener(audioManager.UpdateSFXVolume);
+        {
+            sfxVolumeSlider.onValueChanged.AddListener(value => {
+                audioManager.UpdateSFXVolume(value);
+                SavePersistentSettings();
+            });    
+        }
+
 
         // Sound Toggles
-        Toggle muteToggle = FindComponentByName<Toggle>("MuteToggle");
+        muteToggle = FindComponentByName<Toggle>("MuteToggle");
         TMP_Text muteActiveText = FindComponentByName<TMP_Text>("MuteOnOffText");
-
         if (muteToggle != null && muteActiveText != null)
         {
             // Listen for changes when toggle is clicked
@@ -406,6 +437,7 @@ public class OptionsMenu : MonoBehaviour
                 audioManager.MuteToggle(isOn);
                 muteActiveText.text = isOn ? "On" : "Off";
                 EventManager.PlaySound?.Invoke("switch1"); 
+                SavePersistentSettings();
             });
         }
 
@@ -420,8 +452,46 @@ public class OptionsMenu : MonoBehaviour
             {
                 subtitleActiveText.text = isOn ? "On" : "Off";
                 Debug.Log("Subtitle Toggle pressed. Not yet implemented");
+                SavePersistentSettings();
             });
         }
+    }
+
+    public void SavePersistentSettings()
+    {
+        if (isLoadingSettings) return; // 🔹 Prevent saving while loading settings
+
+        PlayerPrefs.SetFloat("MasterVolume", masterVolumeSlider.value);
+        PlayerPrefs.SetFloat("MusicVolume", musicVolumeSlider.value);
+        PlayerPrefs.SetFloat("SFXVolume", sfxVolumeSlider.value);
+        PlayerPrefs.SetInt("MuteState", muteToggle.isOn ? 1 : 0);
+        PlayerPrefs.SetInt("GrayState", grayscaleToggle.isOn ? 1 : 0);
+        PlayerPrefs.Save();  // Write to disk immediately
+    }
+
+    public void LoadPersistentSettings()
+    {
+        isLoadingSettings = true;  // Prevent SavePersistentSettings from being called
+
+        float master = PlayerPrefs.GetFloat("MasterVolume", 1.0f);
+        float music = PlayerPrefs.GetFloat("MusicVolume", 1.0f);
+        float sfx = PlayerPrefs.GetFloat("SFXVolume", 1.0f);
+
+        masterVolumeSlider.value = master;
+        musicVolumeSlider.value = music;
+        sfxVolumeSlider.value = sfx;
+
+        audioManager.UpdateMasterVolume(master);
+        audioManager.UpdateMusicVolume(music);
+        audioManager.UpdateSFXVolume(sfx);
+
+        int muteOn = PlayerPrefs.GetInt("MuteState", 0);
+        muteToggle.isOn = muteOn == 1;
+        audioManager.MuteToggle(muteToggle.isOn);
+
+        int grayOn = PlayerPrefs.GetInt("GrayState", 0);
+        grayscaleToggle.isOn = grayOn == 1;
+        isLoadingSettings = false;
     }
 
     private T FindComponentByName<T>(string name) where T : Component

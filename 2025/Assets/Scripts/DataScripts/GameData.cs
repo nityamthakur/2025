@@ -21,10 +21,4 @@ public class GameData
         this.money = loadedGame.money;
         this.playTime = loadedGame.playTime;
     }
-
-    private IEnumerator UpdatePlayTime()
-    {
-        yield return new WaitForSeconds(1f); // Wait for 1 second
-        playTime += 1f; // Increment playtime
-    }
 }

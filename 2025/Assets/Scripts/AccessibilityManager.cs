@@ -3,7 +3,6 @@ using UnityEngine;
 public class AccessibilityManager : MonoBehaviour
 {
     [SerializeField] private GameObject pauseMenuPrefab;
-    [SerializeField] private AudioManager audioManager;
     private GameObject pauseMenu;
 
     private void Awake()
@@ -16,9 +15,6 @@ public class AccessibilityManager : MonoBehaviour
             OptionsMenu optionsMenu = pauseMenu.GetComponent<OptionsMenu>();
             if(optionsMenu == null)
                 Debug.Log("OptionsMenu Component is missing from pauseMenuPrefab.");
-
-            else
-                optionsMenu.AddAudioComponent(audioManager);
         }
     }
 

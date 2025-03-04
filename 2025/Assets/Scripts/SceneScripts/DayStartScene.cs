@@ -26,7 +26,7 @@ public class DayStartScene : MonoBehaviour
         gameManager = FindFirstObjectByType<GameManager>();
     }
 
-    public void LoadDayStart(int day) {
+    public void LoadDayStart() {
         
         currentTextBox = Instantiate(UITextBox);
 
@@ -56,6 +56,15 @@ public class DayStartScene : MonoBehaviour
             Debug.LogError("Failed to find TextMeshProUGUI component.");
             return;
         }
+
+        TextMeshProUGUI dayText = currentTextBox.transform.Find("DayText").GetComponent<TextMeshProUGUI>();
+        if (dayText == null)
+        {
+            Debug.LogError("Failed to find dayText component.");
+            return;
+        }
+        else
+            dayText.text = $"Day {gameManager.gameData.day}";
 
         nextButton = currentTextBox.transform.Find("NextTextButton").GetComponent<Button>();
         if (nextButton == null)

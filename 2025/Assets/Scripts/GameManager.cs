@@ -99,9 +99,10 @@ public class GameManager : MonoBehaviour
 
     // -------------------------------------
     // Functions
-    void Start()
+    void Awake()
     {
-        gameData = new GameData();
+        CheckLoadGameSave();
+
         jobDetails = new JobDetails();
         onScreenTimer.enabled = false; // Hide the onscreen timer
 
@@ -123,6 +124,30 @@ public class GameManager : MonoBehaviour
 
         if(onScreenTimer.enabled == true)
             SetOnScreenTimer();
+    }
+
+    private void CheckLoadGameSave()
+    {
+        int loadSlot = PlayerPrefs.GetInt("LoadSlot");
+        if(loadSlot > 0)
+        {
+            //Debug.Log($"Game was restarted or opened through load: {loadSlot}");
+            gameData = new GameData(SaveSystem.LoadGame(loadSlot));
+        }
+        else
+        {
+            //Debug.Log($"Game was restarted or opened without load: {loadSlot}");
+            gameData = new GameData();
+        }  
+    }
+
+    public IEnumerator UpdatePlayTime()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(1f);
+            gameData.playTime += 1f;  // Increment playtime every second
+        }
     }
 
 

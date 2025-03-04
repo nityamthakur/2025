@@ -32,7 +32,7 @@ public static class SaveSystem
             GameData data = formatter.Deserialize(stream) as GameData;
             stream.Close();
 
-            Debug.Log($"Game loaded from slot {slot}");
+            //Debug.Log($"Game loaded from slot {slot}");
             return data;
         }
         else
