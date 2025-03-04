@@ -11,13 +11,14 @@ public class DayStartScene : MonoBehaviour
     [SerializeField] private GameObject UITextBox;
     [SerializeField] private Sprite FemaleNewsAnchor;
     [SerializeField] private Sprite MaleNewsAnchor;
+    [SerializeField] private Sprite jobLetter;
     private GameObject currentTextBox;
     private TextMeshProUGUI TextBox;
     private Button nextButton;
     private Image backgroundImage;    
     //private int currDay = 0;
     private int linePos = 0;
-    private string[] currentLines;
+    private Line[] currentLines;
 
     private GameManager gameManager;
 
@@ -108,7 +109,7 @@ public class DayStartScene : MonoBehaviour
         }
     }
 
-    private string[] GetLinesForDay(List<Entry> entries, int day)
+    private Line[] GetLinesForDay(List<Entry> entries, int day)
     {
         foreach (var entry in entries)
         {
@@ -117,22 +118,46 @@ public class DayStartScene : MonoBehaviour
                 return entry.lines;
             }
         }
-        return new string[0];
+        return new Line[0];
     }
 
     private void ReadNextLine()
     {
         if (linePos < currentLines.Length)
         {
-            TextBox.text = currentLines[linePos];
+            // Get the current line object
+            Line currentLine = currentLines[linePos];
+
+            // Set the text in the dialogue box
+            TextBox.text = currentLine.text;
+            ChangeSpeaker(currentLine);
             linePos++;
         }
         else
         {
-            nextButton.interactable = false; // Prevent player from pressing the button multiple times
-            //Debug.Log("End of dialogue.");
-            EventManager.DisplayMenuButton?.Invoke(false); 
+            nextButton.interactable = false;
+            EventManager.DisplayMenuButton?.Invoke(false);
             StartCoroutine(NextScene());
+        }
+    }
+
+    private void ChangeSpeaker(Line currentLine)
+    {
+        // Change the speaker image based on who is speaking
+        switch (currentLine.speaker.ToLower())
+        {
+            case "femalenewsanchor":
+                backgroundImage.sprite = FemaleNewsAnchor;
+                break;
+            case "malenewsanchor":
+                backgroundImage.sprite = MaleNewsAnchor;
+                break;
+            case "jobletter":
+                backgroundImage.sprite = jobLetter;
+                break;
+            default:
+                backgroundImage.sprite = null;
+                break;
         }
     }
 
@@ -155,9 +180,16 @@ public class DayStartScene : MonoBehaviour
     }
 
     [Serializable]
+    private class Line
+    {
+        public string speaker;
+        public string text;
+    }
+
+    [Serializable]
     private class Entry
     {
         public int day;
-        public string[] lines;
+        public Line[] lines;
     }
 }
