@@ -1,8 +1,6 @@
 using System.Collections;
-using System.Linq;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -20,8 +18,6 @@ public class GameManager : MonoBehaviour
     private int currentCensorNum = 0;
     private int numCensorMistakes = 0;
     private bool canCensor = false;
-
-    private int currentDay = 1;
     private bool dayEnded = false;
 
     // Set total score minimum to 0
@@ -32,6 +28,8 @@ public class GameManager : MonoBehaviour
         private set { totalScore = Mathf.Max(0, value); }
     }
 
+    public GameData gameData;
+
     // --------------------------------------------
     // Getters and Setters
     public bool IsDayEnded()
@@ -41,11 +39,12 @@ public class GameManager : MonoBehaviour
 
     public int GetCurrentDay()
     {
-        return currentDay;
+        return gameData.day;
     }
+
     public void SetCurrentDay(int day)
     {
-        currentDay = day;
+        gameData.day = day;
     }
 
    
@@ -100,8 +99,10 @@ public class GameManager : MonoBehaviour
 
     // -------------------------------------
     // Functions
-    void Start()
+    void Awake()
     {
+        CheckLoadGameSave();
+
         jobDetails = new JobDetails();
         onScreenTimer.enabled = false; // Hide the onscreen timer
 
@@ -115,30 +116,38 @@ public class GameManager : MonoBehaviour
     }
 
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.R)) 
-        {
-            Debug.Log("Restarting Game");
-            Time.timeScale = 1;
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        }
-
         if (Input.GetKeyDown(KeyCode.T)) 
         {
             Debug.Log("Showing Timer");
             onScreenTimer.enabled = !onScreenTimer.enabled; // Hide the onscreen timer
         }
 
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            Application.Quit(); // For standalone builds
-
-            #if UNITY_EDITOR
-            UnityEditor.EditorApplication.ExitPlaymode(); // For Unity Editor testing
-            #endif
-        }
-
         if(onScreenTimer.enabled == true)
             SetOnScreenTimer();
+    }
+
+    private void CheckLoadGameSave()
+    {
+        int loadSlot = PlayerPrefs.GetInt("LoadSlot");
+        if(loadSlot > 0)
+        {
+            //Debug.Log($"Game was restarted or opened through load: {loadSlot}");
+            gameData = new GameData(SaveSystem.LoadGame(loadSlot));
+        }
+        else
+        {
+            //Debug.Log($"Game was restarted or opened without load: {loadSlot}");
+            gameData = new GameData();
+        }  
+    }
+
+    public IEnumerator UpdatePlayTime()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(1f);
+            gameData.playTime += 1f;  // Increment playtime every second
+        }
     }
 
 
@@ -242,11 +251,11 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("Day has ended.");
             dayEnded = true;
-            jobScene.ShowResults(currentDay, jobDetails.numMediaProcessed, TotalScore);
+            jobScene.ShowResults(gameData.day, jobDetails.numMediaProcessed, TotalScore);
             TotalScore = 0;
 
             ResetJobDetails();
-            SetCurrentDay(currentDay + 1);
+            SetCurrentDay(gameData.day + 1);
             jobScene.ShowMediaProcessedText(false);
         }
     }

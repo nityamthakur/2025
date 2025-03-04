@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -8,23 +9,31 @@ public class OptionsMenu : MonoBehaviour
 {
     private AudioManager audioManager;
     private List<GameObject> sections = new();
-    private GameObject menuSections;
-    private GameObject audioSection;
-    private GameObject saveLoadSection;
-    private GameObject confirmSection;
+    private GameObject menuSections, audioSection, saveLoadSection, confirmSection;
     private TextMeshProUGUI confirmText;
-    private System.Action confirmAction;
-    private System.Action cancelAction;
-
-    private Button backButton;
-    //private bool saveSelected = true; // For differentiating between saving and loading
-
-    public void AddAudioComponent(AudioManager audioObject)
-    {
-        audioManager = audioObject;
-    }
+    private Action confirmAction, cancelAction;
+    private Button slot1Button, slot2Button, slot3Button, backButton, saveButton, mainMenuButton;
+    private Slider masterVolumeSlider, musicVolumeSlider, sfxVolumeSlider;
+    private Toggle muteToggle, grayscaleToggle;
+    private GameManager gameManager;
+    private bool isLoadingSettings = false;
 
     private void Start()
+    {
+        FindGameManager();
+        
+        SetUpSections();
+        SetupMenuButtons();
+        GrayscaleSetUp();
+        AudioSetUp();
+        
+        LoadPersistentSettings();
+
+        // Hide the menu after initialization
+        gameObject.SetActive(false);
+    }
+
+    private void SetUpSections()
     {
         menuSections = transform.Find("MenuSections")?.gameObject;
         audioSection = transform.Find("AudioMenu")?.gameObject;
@@ -45,151 +54,255 @@ public class OptionsMenu : MonoBehaviour
         {
             section.SetActive(false);
         }
+    }
 
-        SetUpMenuSections();
-        
-        // Close button setup
-        Button closeButton = FindComponentByName<Button>("CloseMenuButton");
-        if (closeButton != null)
+    private void SetupMenuButtons()
+    {
+        confirmText = FindComponentByName<TextMeshProUGUI>("ConfirmText");
+
+        FindButton("CloseMenuButton", () =>
         {
-            closeButton.onClick.AddListener(() =>
+            EventManager.DisplayMenuButton?.Invoke(true);
+            EventManager.ReactivateMainMenuButtons?.Invoke();
+            EventManager.PlaySound?.Invoke("switch1");
+            Time.timeScale = 1;
+            gameObject.SetActive(false);
+        });
+      
+        backButton = FindButton("BackButton", () =>
+        {
+            ChangeMenuSection(menuSections);
+            EventManager.PlaySound?.Invoke("switch1");
+        });
+        backButton?.gameObject.SetActive(false);
+
+        saveButton = FindButton("SaveButton", () =>
+        {
+            ChangeMenuSection(saveLoadSection);
+            UpdateSaveLoadButtons(true);
+            EventManager.PlaySound?.Invoke("switch1"); 
+        });
+        // Hide the save button initally in the main menu
+        saveButton?.gameObject.SetActive(false);
+
+        FindButton("LoadButton", () =>
+        {
+            ChangeMenuSection(saveLoadSection);
+            UpdateSaveLoadButtons(false);
+            EventManager.PlaySound?.Invoke("switch1"); 
+        });
+
+        FindButton("OptionsButton", () =>
+        {
+            ChangeMenuSection(audioSection);
+            EventManager.PlaySound?.Invoke("switch1"); 
+        });
+
+        mainMenuButton = FindButton("MainMenuButton", () =>
+        {
+            EventManager.PlaySound?.Invoke("switch1");
+            ChangeConfirmText("Return to \nMain Menu?");
+            ChangeMenuSection(confirmSection);
+
+            // Store the action to execute if "Yes" is clicked
+            confirmAction = () =>
             {
-                EventManager.DisplayMenuButton?.Invoke(true); 
-                EventManager.ReactivateMainMenuButtons?.Invoke(); 
-                EventManager.PlaySound?.Invoke("switch1"); 
+                Debug.Log("Restarting Game");
                 Time.timeScale = 1;
-                this.gameObject.SetActive(false);
-            });
-        }        
-
-        // Close button setup
-        backButton = FindComponentByName<Button>("BackButton");
-        if (backButton != null)
-        {
-            backButton.onClick.AddListener(() =>
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            };
+            cancelAction = () =>
             {
                 ChangeMenuSection(menuSections);
-                EventManager.PlaySound?.Invoke("switch1"); 
+            };
+        });
+        // Hide the main menu button initally in the main menu
+        mainMenuButton?.gameObject.SetActive(false);
+
+        FindButton("QuitGameButton", () =>
+        {
+            EventManager.PlaySound?.Invoke("switch1");
+            ChangeConfirmText("Close the Game?");
+            ChangeMenuSection(confirmSection);
+
+            // Store the action to execute if "Yes" is clicked
+            confirmAction = () =>
+            {
+                Application.Quit(); // For standalone builds
+
+                #if UNITY_EDITOR
+                UnityEditor.EditorApplication.ExitPlaymode(); // For Unity Editor testing
+                #endif
+            };
+            cancelAction = () =>
+            {
+                ChangeMenuSection(menuSections);
+            };
+        });
+
+        FindButton("YesButton", () =>
+        {
+            EventManager.PlaySound?.Invoke("switch1"); 
+            confirmAction?.Invoke();
+        });
+
+        FindButton("NoButton", () =>
+        {
+            EventManager.PlaySound?.Invoke("switch1"); 
+            cancelAction?.Invoke();
+        });
+
+        // Save and Load Slot Buttons
+        slot1Button = FindButton("Slot1Button");
+        slot2Button = FindButton("Slot2Button");
+        slot3Button = FindButton("Slot3Button");
+        UpdateSlotInformation();
+
+    }
+
+    private Button FindButton(string name, System.Action action = null)
+    {
+        Button button = FindComponentByName<Button>(name);
+        if (button != null && action != null)
+        {
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(() => action.Invoke());
+        }
+        return button;
+    }
+
+    private void UpdateSaveLoadButtons(bool saveButtonPressed)
+    {
+        Button[] slots = { slot1Button, slot2Button, slot3Button };
+        for (int i = 0; i < slots.Length; i++)
+        {
+            int slotIndex = i + 1;
+            slots[i].onClick.RemoveAllListeners();
+            slots[i].onClick.AddListener(() =>
+            {
+                EventManager.PlaySound?.Invoke("switch1");
+                if(saveButtonPressed)
+                    HandleSaveSlot(slotIndex);
+                else
+                    HandleLoadSlot(slotIndex);
             });
-            backButton.gameObject.SetActive(false);
+        }
+    }
+
+    private void HandleSaveSlot(int slot)
+    {
+        // Save the game over this file
+        if(SaveSystem.SaveExists(slot)) // Check if save exists
+        {
+            ChangeConfirmText($"Save Over File {slot}?");
+            ChangeMenuSection(confirmSection);
+
+            // Store the action to execute if "Yes" is clicked
+            confirmAction = () =>
+            {
+                SaveSystem.SaveGame(slot, gameManager.gameData); // Save game data
+                ChangeMenuSection(saveLoadSection);
+            };
+            cancelAction = () =>
+            {
+                ChangeMenuSection(saveLoadSection);
+            };
         }
         else
-            Debug.Log("backButton is null in Options Menu");
-        
-        GrayscaleSetUp();
-        AudioSetUp();
-
-        // Hide the menu after 
-        transform.gameObject.SetActive(false);
+        {
+            SaveSystem.SaveGame(slot, gameManager.gameData); // Save game data
+            ChangeMenuSection(saveLoadSection);
+        }
     }
 
-    private void SetUpMenuSections()
+    private void HandleLoadSlot(int slot)
     {
-        Button saveButton = FindComponentByName<Button>("SaveButton");
-        if (saveButton != null)
+        // Save the game over this file
+        GameObject gameManagerObject = GameObject.Find("GameManager");
+        GameManager gameManager = gameManagerObject.GetComponent<GameManager>();
+        if (gameManagerObject == null || gameManager == null)
         {
-            saveButton.onClick.AddListener(() =>
+            Debug.LogError("GameManager component or gamemanagerObject not found in OptionsMenu!");
+            return;
+        }
+
+        if(SaveSystem.SaveExists(slot))
+        {
+            ChangeConfirmText($"Load Game File {slot}?");
+            ChangeMenuSection(confirmSection);
+
+            // Store the action to execute if "Yes" is clicked
+            confirmAction = () =>
+            {
+                PlayerPrefs.SetInt("LoadSlot", slot);
+                Time.timeScale = 1;
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            };
+            cancelAction = () =>
             {
                 ChangeMenuSection(saveLoadSection);
-                EventManager.PlaySound?.Invoke("switch1"); 
-            });
+            };
         }
-
-        Button loadButton = FindComponentByName<Button>("LoadButton");
-        if (loadButton != null)
-        {
-            loadButton.onClick.AddListener(() =>
-            {
-                ChangeMenuSection(saveLoadSection);
-                EventManager.PlaySound?.Invoke("switch1"); 
-            });
-        }
-
-        Button optionsButton = FindComponentByName<Button>("OptionsButton");
-        if (optionsButton != null)
-        {
-            optionsButton.onClick.AddListener(() =>
-            {
-                ChangeMenuSection(audioSection);
-                EventManager.PlaySound?.Invoke("switch1"); 
-            });
-        }
-
-        // TODO: Confirmation Screen Section for these two
-        Button mainButton = FindComponentByName<Button>("MainMenuButton");
-        if (mainButton != null)
-        {
-            mainButton.onClick.AddListener(() =>
-            {
-                EventManager.PlaySound?.Invoke("switch1");
-                confirmText.text = "Return to \nMain Menu?";
-                ChangeMenuSection(confirmSection);
-
-                // Store the action to execute if "Yes" is clicked
-                confirmAction = () =>
-                {
-                    Debug.Log("Restarting Game");
-                    Time.timeScale = 1;
-                    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-                };
-                cancelAction = () =>
-                {
-                    ChangeMenuSection(menuSections);
-                };
-            });
-        }
-
-
-        Button quitButton = FindComponentByName<Button>("QuitGameButton");
-        if (quitButton != null)
-        {
-            quitButton.onClick.AddListener(() =>
-            {
-                EventManager.PlaySound?.Invoke("switch1");
-                confirmText.text = "Close the Game?";
-                ChangeMenuSection(confirmSection);
-
-                // Store the action to execute if "Yes" is clicked
-                confirmAction = () =>
-                {
-                    Application.Quit(); // For standalone builds
-
-                    #if UNITY_EDITOR
-                    UnityEditor.EditorApplication.ExitPlaymode(); // For Unity Editor testing
-                    #endif
-                };
-                cancelAction = () =>
-                {
-                    ChangeMenuSection(menuSections);
-                };
-            });
-        }
-
-        Button yesButton = FindComponentByName<Button>("YesButton");
-        if (yesButton != null)
-        {
-            yesButton.onClick.AddListener(() =>
-            {
-                EventManager.PlaySound?.Invoke("switch1"); 
-                confirmAction?.Invoke();
-            });
-        }
-
-        Button noButton = FindComponentByName<Button>("NoButton");
-        if (noButton != null)
-        {
-            noButton.onClick.AddListener(() =>
-            {
-                EventManager.PlaySound?.Invoke("switch1"); 
-                cancelAction?.Invoke();
-            });
-        }
-
-        confirmText = FindComponentByName<TextMeshProUGUI>("ConfirmText");
     }
+
+    private void UpdateSlotInformation()
+    {
+        if(slot1Button == null || slot2Button == null || slot3Button == null)
+        {
+            Debug.Log("One or more Save/Load button slots are null in Options Menu");
+            return;
+        }        
+
+        Button[] slots = { slot1Button, slot2Button, slot3Button };
+        for (int i = 0; i < slots.Length; i++)
+        {
+            int slotIndex = i + 1;
+
+            // Find the TextMeshProUGUI inside the button
+            TextMeshProUGUI buttonText = slots[i].GetComponentInChildren<TextMeshProUGUI>();
+            if (buttonText == null)
+            {
+                Debug.LogWarning($"No TextMeshProUGUI found in Slot {slotIndex} button!");
+                return;
+            }
+
+            if(SaveSystem.SaveExists(slotIndex))
+            {
+                GameData gameSlot = SaveSystem.LoadGame(slotIndex);
+                if (gameSlot != null)
+                {
+                    // Convert playtime to "H:MM:SS" format
+                    string time = SecondMinuteHourConversion(gameSlot.playTime);
+                    buttonText.text = $"Save Slot {slotIndex}\nPlaytime: {time}  Day: {gameSlot.day}";
+
+                    //Debug.Log($"The gameSlot{slotIndex} playTime is: {gameSlot.playTime}");
+                    //Debug.Log($"buttonText is now: {buttonText.text}");
+                }
+                else
+                {
+                    Debug.Log($"Failed to get Game Slot {slotIndex}");
+                }
+            }
+            else
+                buttonText.text = $"Save Slot {slotIndex}";
+        }
+    }
+
+    // Converts seconds into "Hours:Minutes" format
+    private string SecondMinuteHourConversion(float seconds)
+    {
+        int hours = (int)(seconds / 3600);
+        int minutes = (int)((seconds % 3600) / 60);
+        int remainingSeconds = (int)(seconds % 60);
+
+        return $"{hours}:{minutes:D2}:{remainingSeconds:D2}"; // Now correctly formats HH:MM:SS
+    }
+
 
     private void ChangeMenuSection(GameObject section)
     {
+        UpdateSlotInformation();
+
         if (section == menuSections)
             backButton.gameObject.SetActive(false);
         else
@@ -209,11 +322,33 @@ public class OptionsMenu : MonoBehaviour
         }
     }
 
+    private void FindGameManager()
+    {
+        GameObject gameManagerObject = GameObject.Find("GameManager");
+        if (gameManagerObject == null)
+        {
+            Debug.LogError("GameManager GameObject not found!");
+            return;
+        }
+        
+        gameManager = gameManagerObject.GetComponent<GameManager>();
+        if (gameManager == null)
+        {
+            Debug.LogError("GameManager component not found!");
+        }        
+    }
+
+    private void ChangeConfirmText(string text)
+    {
+        confirmText.text = text;
+    }
+
     private void OptionsChanger(string option)
     {
         switch (option.ToLower())
         {
             case "load":
+                UpdateSaveLoadButtons(false);
                 ChangeMenuSection(saveLoadSection);
                 break;
 
@@ -222,52 +357,78 @@ public class OptionsMenu : MonoBehaviour
                 break;
             
             default:
-                ChangeMenuSection(audioSection);
+                saveButton?.gameObject.SetActive(true);
+                mainMenuButton?.gameObject.SetActive(true);
+                ChangeMenuSection(menuSections);
                 break;
         }
     }
 
     private void GrayscaleSetUp()
     {
-        Toggle grayScaleToggle = FindComponentByName<Toggle>("GrayscaleToggle");
-        TMP_Text grayScaleActiveText = FindComponentByName<TMP_Text>("GrayscaleOnOffText");
+        grayscaleToggle = FindComponentByName<Toggle>("GrayscaleToggle");
+        TMP_Text grayscaleActiveText = FindComponentByName<TMP_Text>("GrayscaleOnOffText");
 
-        if (grayScaleToggle != null && grayScaleActiveText != null)
+        if (grayscaleToggle != null && grayscaleActiveText != null)
         {
             // Set the initial state to match the current grayscale setting in Eventmanager
-            // Will eventually set itself via game load and pass to Eventmanager
-            grayScaleToggle.isOn = EventManager.IsGrayscale;
-            grayScaleActiveText.text = EventManager.IsGrayscale ? "On" : "Off";
+            grayscaleToggle.isOn = EventManager.IsGrayscale;
+            grayscaleActiveText.text = EventManager.IsGrayscale ? "On" : "Off";
 
             // Listen for changes when toggle is clicked
-            grayScaleToggle.onValueChanged.AddListener((bool isOn) =>
+            grayscaleToggle.onValueChanged.AddListener((bool isOn) =>
             {
                 EventManager.PlaySound?.Invoke("switch1"); 
                 EventManager.ToggleGrayscaleState();
-                grayScaleActiveText.text = isOn ? "On" : "Off";
+                grayscaleActiveText.text = isOn ? "On" : "Off";
+                SavePersistentSettings();
             });
         }
     }
 
     private void AudioSetUp()
     {
+        // Locate AudioManager Object
+        audioManager = FindFirstObjectByType<AudioManager>();
+        if (audioManager == null)
+        {
+            Debug.Log("AudioManager not found in scene!");
+            return;
+        }
+
         // Sound Sliders
-        Slider masterVolumeSlider = FindComponentByName<Slider>("MasterVolume");
+        masterVolumeSlider = FindComponentByName<Slider>("MasterVolume");
         if(masterVolumeSlider != null)
-            masterVolumeSlider.onValueChanged.AddListener(audioManager.UpdateMasterVolume);
+        {
+            masterVolumeSlider.onValueChanged.AddListener(value => {
+                audioManager.UpdateMasterVolume(value);
+                SavePersistentSettings();
+            });
+        }
 
-        Slider musicVolumeSlider = FindComponentByName<Slider>("MusicVolume");
+
+        musicVolumeSlider = FindComponentByName<Slider>("MusicVolume");
         if(musicVolumeSlider != null)
-            musicVolumeSlider.onValueChanged.AddListener(audioManager.UpdateMusicVolume);
+        {
+            musicVolumeSlider.onValueChanged.AddListener(value => {
+                audioManager.UpdateMusicVolume(value);
+                SavePersistentSettings();
+            });
+        }
 
-        Slider sfxVolumeSlider = FindComponentByName<Slider>("SFXVolume");
+        sfxVolumeSlider = FindComponentByName<Slider>("SFXVolume");
         if(sfxVolumeSlider != null)
-            sfxVolumeSlider.onValueChanged.AddListener(audioManager.UpdateSFXVolume);
+        {
+            sfxVolumeSlider.onValueChanged.AddListener(value => {
+                audioManager.UpdateSFXVolume(value);
+                SavePersistentSettings();
+            });    
+        }
+
 
         // Sound Toggles
-        Toggle muteToggle = FindComponentByName<Toggle>("MuteToggle");
+        muteToggle = FindComponentByName<Toggle>("MuteToggle");
         TMP_Text muteActiveText = FindComponentByName<TMP_Text>("MuteOnOffText");
-
         if (muteToggle != null && muteActiveText != null)
         {
             // Listen for changes when toggle is clicked
@@ -276,6 +437,7 @@ public class OptionsMenu : MonoBehaviour
                 audioManager.MuteToggle(isOn);
                 muteActiveText.text = isOn ? "On" : "Off";
                 EventManager.PlaySound?.Invoke("switch1"); 
+                SavePersistentSettings();
             });
         }
 
@@ -290,8 +452,46 @@ public class OptionsMenu : MonoBehaviour
             {
                 subtitleActiveText.text = isOn ? "On" : "Off";
                 Debug.Log("Subtitle Toggle pressed. Not yet implemented");
+                SavePersistentSettings();
             });
         }
+    }
+
+    public void SavePersistentSettings()
+    {
+        if (isLoadingSettings) return; // 🔹 Prevent saving while loading settings
+
+        PlayerPrefs.SetFloat("MasterVolume", masterVolumeSlider.value);
+        PlayerPrefs.SetFloat("MusicVolume", musicVolumeSlider.value);
+        PlayerPrefs.SetFloat("SFXVolume", sfxVolumeSlider.value);
+        PlayerPrefs.SetInt("MuteState", muteToggle.isOn ? 1 : 0);
+        PlayerPrefs.SetInt("GrayState", grayscaleToggle.isOn ? 1 : 0);
+        PlayerPrefs.Save();  // Write to disk immediately
+    }
+
+    public void LoadPersistentSettings()
+    {
+        isLoadingSettings = true;  // Prevent SavePersistentSettings from being called
+
+        float master = PlayerPrefs.GetFloat("MasterVolume", 1.0f);
+        float music = PlayerPrefs.GetFloat("MusicVolume", 1.0f);
+        float sfx = PlayerPrefs.GetFloat("SFXVolume", 1.0f);
+
+        masterVolumeSlider.value = master;
+        musicVolumeSlider.value = music;
+        sfxVolumeSlider.value = sfx;
+
+        audioManager.UpdateMasterVolume(master);
+        audioManager.UpdateMusicVolume(music);
+        audioManager.UpdateSFXVolume(sfx);
+
+        int muteOn = PlayerPrefs.GetInt("MuteState", 0);
+        muteToggle.isOn = muteOn == 1;
+        audioManager.MuteToggle(muteToggle.isOn);
+
+        int grayOn = PlayerPrefs.GetInt("GrayState", 0);
+        grayscaleToggle.isOn = grayOn == 1;
+        isLoadingSettings = false;
     }
 
     private T FindComponentByName<T>(string name) where T : Component

@@ -30,7 +30,7 @@ public class SceneChanger : MonoBehaviour
         // Define the order of the scenes
         sceneSequence = new List<Action>
         {
-            () => dayStartScene.LoadDayStart(gameManager.GetCurrentDay()),
+            () => dayStartScene.LoadDayStart(),
             () => jobScene.LoadJobStart(gameManager.GetCurrentDay()),
         };
         fadingScreen = Instantiate(fadingScreenPrefab);
@@ -66,17 +66,40 @@ public class SceneChanger : MonoBehaviour
         menuButton.onClick.AddListener(() =>
         {
             EventManager.OpenOptionsMenu?.Invoke();
+            EventManager.OptionsChanger?.Invoke(""); 
             EventManager.DisplayMenuButton?.Invoke(false); 
         });
         menuButton.gameObject.SetActive(false);
 
-        mainMenuScene.LoadMainMenu();
-        //jobScene.LoadJobStart(gameManager.GetCurrentDay());
+        int loadSlot = PlayerPrefs.GetInt("LoadSlot");
+        if(loadSlot > 0)
+        {
+            //Debug.Log($"Game was restarted or opened through load: {loadSlot}");
+            PlayerPrefs.SetInt("LoadSlot", -1);
+            //Debug.Log($"Reseting LoadSlot to -1 to ensure game doesn't load again on restart: {loadSlot}");
+            EventManager.NextScene?.Invoke();
+            EventManager.StopMusic?.Invoke();
 
+            // Continue Playtime counter
+            StartCoroutine(gameManager.UpdatePlayTime());
+        }
+        else
+        {
+            //Debug.Log($"Game was restarted or opened without load: {loadSlot}");
+            PlayerPrefs.SetInt("LoadSlot", -1);
+            //Debug.Log($"Reseting LoadSlot to -1 to ensure game doesn't load again on restart: {loadSlot}");
+
+            mainMenuScene.LoadMainMenu();
+        }
+        //jobScene.LoadJobStart(gameManager.GetCurrentDay());
     }
 
     public void StartNextScene()
     {
+        if(!mainMenuDone)
+            // Start Playtime counter for first time
+            StartCoroutine(gameManager.UpdatePlayTime());
+
         mainMenuDone = true;
         // Call the function for the current scene
         sceneSequence[currentSceneIndex]?.Invoke();
