@@ -3,25 +3,31 @@
         {
             "day": 1,
             "lines": [
-                "The Green party is spreading fake news against NewMerica.",
-                "NewMerica is hiring more to put a stop to The Green Party,",
-                "In better news Brown Oil Conglomerate says they will back off from drilling in the rivers and keep to the rain forests."
+                { "speaker": "FemaleNewsAnchor", "text": "The Green party is spreading fake news against NewMerica." },
+                { "speaker": "MaleNewsAnchor", "text": "NewMerica is hiring more to put a stop to The Green Party." },
+                { "speaker": "FemaleNewsAnchor", "text": "In better news, Brown Oil Conglomerate says they will back off from drilling in the rivers." },
+                { "speaker": "JobLetter", "text": "Congratulations you have been selected to work to combat fake news for Glorious NewMerica."},
+                { "speaker": "JobLetter", "text": "Report to Office Building Number: 171 Room: 152 by End of Day."},
+                { "speaker": "JobLetter", "text": "Report to your Local Distribution Office for more information."}
             ]
         },
         {
             "day": 2,
             "lines": [
-                "Welcome back to another broadcast.",
-                "The weather today is strange.",
-                "More updates coming soon!"
+                {"speaker": "FemaleNewsAnchor", "text": "Welcome back to another broadcast."},
+                {"speaker": "MaleNewsAnchor", "text": "The weather today is cloudy, rainy, and windy."},
+                {"speaker": "FemaleNewsAnchor", "text": "More updates coming soon!"}
             ]
         },
         {
             "day": 3,
             "lines": [
-                "Another day in the glorious NewMerica.",
-                "Recently, tensions have risen between NewMerica and the Green Party.",
-                "One can only hope that those who oppose NewMerica will be dealt with swiftly."
+                {"speaker": "MaleNewsAnchor", "text": "Another day in the glorous NewMerica."},
+                {"speaker": "MaleNewAnchor", "text": "Recently, tensions have risen between NewMerica and the Green Party."},
+                {"speaker": "FemaleNewsAnchor", "text": "One can only hope that those who oppose NewMerica will be dealt with swiftly."},
+                {"speaker": "FemaleNewsAnchor", "text": "Remember to report anyone you find suspicous, especially those with ties to the Green Party."},
+                {"speaker": "MaleNewsAnchor", "text": "..."},
+                {"speaker": "FemaleNewsAnchor", "text": "..."}
             ]
         }
     ],

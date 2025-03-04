@@ -1,3 +1,6 @@
+// GameData class code pulled from Brackeys on YouTube
+// https://www.youtube.com/watch?v=XOjd_qU2Ido
+
 using UnityEngine;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
