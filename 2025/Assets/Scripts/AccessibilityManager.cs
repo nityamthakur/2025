@@ -24,7 +24,7 @@ public class AccessibilityManager : MonoBehaviour
     }
 
     public void TogglePauseMenu()
-    {
+    {            
         EventManager.ReactivateMainMenuButtons?.Invoke(); 
         bool isActive = pauseMenu.activeSelf;
         Time.timeScale = isActive ? 1 : 0;

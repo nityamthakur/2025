@@ -8,17 +8,18 @@ using UnityEngine.UI;
 public class OptionsMenu : MonoBehaviour
 {
     private AudioManager audioManager;
+    private SubtitleManager subtitleManager;
     private List<GameObject> sections = new();
     private GameObject menuSections, audioSection, saveLoadSection, confirmSection;
     private TextMeshProUGUI confirmText;
     private Action confirmAction, cancelAction;
     private Button slot1Button, slot2Button, slot3Button, backButton, saveButton, mainMenuButton;
     private Slider masterVolumeSlider, musicVolumeSlider, sfxVolumeSlider;
-    private Toggle muteToggle, grayscaleToggle;
+    private Toggle muteToggle, subtitleToggle, grayscaleToggle;
     private GameManager gameManager;
     private bool isLoadingSettings = false;
 
-    private void Start()
+    private void Awake()
     {
         FindGameManager();
         
@@ -29,6 +30,10 @@ public class OptionsMenu : MonoBehaviour
         
         LoadPersistentSettings();
 
+        // Allow sounds to be played after everything intiallized to 
+        // prevent button trigger sounds before game start
+        audioManager.canPlaySounds = true;
+        
         // Hide the menu after initialization
         gameObject.SetActive(false);
     }
@@ -396,6 +401,14 @@ public class OptionsMenu : MonoBehaviour
             return;
         }
 
+        // Locate SubtitleManager Object
+        subtitleManager = FindFirstObjectByType<SubtitleManager>();
+        if (subtitleManager == null)
+        {
+            Debug.Log("SubTitleManager not found in scene!");
+            return;
+        }
+
         // Sound Sliders
         masterVolumeSlider = FindComponentByName<Slider>("MasterVolume");
         if(masterVolumeSlider != null)
@@ -405,7 +418,6 @@ public class OptionsMenu : MonoBehaviour
                 SavePersistentSettings();
             });
         }
-
 
         musicVolumeSlider = FindComponentByName<Slider>("MusicVolume");
         if(musicVolumeSlider != null)
@@ -426,7 +438,7 @@ public class OptionsMenu : MonoBehaviour
         }
 
 
-        // Sound Toggles
+        // Sound Toggle
         muteToggle = FindComponentByName<Toggle>("MuteToggle");
         TMP_Text muteActiveText = FindComponentByName<TMP_Text>("MuteOnOffText");
         if (muteToggle != null && muteActiveText != null)
@@ -434,6 +446,7 @@ public class OptionsMenu : MonoBehaviour
             // Listen for changes when toggle is clicked
             muteToggle.onValueChanged.AddListener((bool isOn) =>
             {
+                Debug.Log("muteToggle");
                 audioManager.MuteToggle(isOn);
                 muteActiveText.text = isOn ? "On" : "Off";
                 EventManager.PlaySound?.Invoke("switch1"); 
@@ -441,17 +454,18 @@ public class OptionsMenu : MonoBehaviour
             });
         }
 
-        // Subtitles not yet implemented
-        Toggle subtitleToggle = FindComponentByName<Toggle>("SubtitleToggle");
+        // Subtitle Toggle
+        subtitleToggle = FindComponentByName<Toggle>("SubtitleToggle");
         TMP_Text subtitleActiveText = FindComponentByName<TMP_Text>("SubtitleOnOffText");
-
-        if (subtitleToggle != null && subtitleToggle != null)
+        if (subtitleToggle != null && subtitleActiveText != null)
         {
             // Listen for changes when toggle is clicked
             subtitleToggle.onValueChanged.AddListener((bool isOn) =>
             {
+                Debug.Log("subtitleToggle");
+                subtitleManager.SubtitleToggle(isOn);
                 subtitleActiveText.text = isOn ? "On" : "Off";
-                Debug.Log("Subtitle Toggle pressed. Not yet implemented");
+                EventManager.PlaySound?.Invoke("switch1"); 
                 SavePersistentSettings();
             });
         }
@@ -465,6 +479,7 @@ public class OptionsMenu : MonoBehaviour
         PlayerPrefs.SetFloat("MusicVolume", musicVolumeSlider.value);
         PlayerPrefs.SetFloat("SFXVolume", sfxVolumeSlider.value);
         PlayerPrefs.SetInt("MuteState", muteToggle.isOn ? 1 : 0);
+        PlayerPrefs.SetInt("SubtitleState", subtitleToggle.isOn ? 1 : 0);
         PlayerPrefs.SetInt("GrayState", grayscaleToggle.isOn ? 1 : 0);
         PlayerPrefs.Save();  // Write to disk immediately
     }
@@ -488,6 +503,10 @@ public class OptionsMenu : MonoBehaviour
         int muteOn = PlayerPrefs.GetInt("MuteState", 0);
         muteToggle.isOn = muteOn == 1;
         audioManager.MuteToggle(muteToggle.isOn);
+
+        int subtitleOn = PlayerPrefs.GetInt("SubtitleState", 0);
+        subtitleToggle.isOn = subtitleOn == 1;
+        subtitleManager.SubtitleToggle(subtitleToggle.isOn);
 
         int grayOn = PlayerPrefs.GetInt("GrayState", 0);
         grayscaleToggle.isOn = grayOn == 1;

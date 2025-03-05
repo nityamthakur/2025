@@ -73,7 +73,8 @@ public class SceneChanger : MonoBehaviour
         {
             EventManager.OpenOptionsMenu?.Invoke();
             EventManager.OptionsChanger?.Invoke(""); 
-            EventManager.DisplayMenuButton?.Invoke(false); 
+            EventManager.DisplayMenuButton?.Invoke(false);
+            EventManager.PlaySound?.Invoke("switch1");
         });
         menuButton.gameObject.SetActive(false);
 
@@ -83,6 +84,7 @@ public class SceneChanger : MonoBehaviour
 
     public void StartGame(int loadSlot)
     {
+        Debug.Log("Game is starting here");
         if(loadSlot > 0)
         {
             //Debug.Log($"Game was restarted or opened through load: {loadSlot}");
