@@ -1,0 +1,11 @@
+{
+    "subtitles": [
+        { "sound": "menu", "text": "Patriotic Music Playing" }, 
+        { "sound": "work", "text": "Futurisitc Music Playing" }, 
+
+        { "sound": "correctbuzz", "text": "Correct Buzzer" },
+        { "sound": "errorbuzz", "text": "Error Buzzer" },
+        { "sound": "switch1", "text": "Button Click" },
+        { "sound": "worksounds", "text": "People Talking, Phones Ringing, Papers Shuffling" }  
+    ]
+}

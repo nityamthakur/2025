@@ -14,6 +14,7 @@ public class AudioManager : MonoBehaviour
     public float sfxVolume = 1.0f;
     public float muteVolume = 1.0f;
     private Coroutine currentMusicCoroutine; // Store the currently running coroutine
+    public bool canPlaySounds = false; // Prevent sounds from being played until after game has started
 
     public void Initialize()
     {
@@ -27,14 +28,14 @@ public class AudioManager : MonoBehaviour
         {
             musicDict[clip.name.ToLower()] = clip;
         }
-        Debug.Log($"Loaded {musicDict.Count} music tracks from Resources/Audio/Music/");
+        //Debug.Log($"Loaded {musicDict.Count} music tracks from Resources/Audio/Music/");
 
         AudioClip[] clips = Resources.LoadAll<AudioClip>("Audio/SFX");
         foreach (var clip in clips)
         {
             sfxDict[clip.name.ToLower()] = clip;
         }
-        Debug.Log($"Loaded {sfxDict.Count} sound effects from Resources/Audio/SFX/");
+        //Debug.Log($"Loaded {sfxDict.Count} sound effects from Resources/Audio/SFX/");
     }
 
     private void OnEnable()
@@ -53,7 +54,14 @@ public class AudioManager : MonoBehaviour
 
     public void PlayMusic(string soundName)
     {
-        //Debug.Log($"PlayMusic called with: {soundName}");
+        Debug.Log($"playing {soundName}. canPlaySounds: {canPlaySounds}");
+        if(!canPlaySounds)
+        {
+            Debug.Log("Returning");
+            return;
+        }
+        Debug.Log("Resuming");
+
         AudioClip sound = null;
         bool soundExists = musicDict.TryGetValue(soundName.ToLower(), out sound);
 
@@ -79,7 +87,7 @@ public class AudioManager : MonoBehaviour
         currentMusicCoroutine = StartCoroutine(FadeInMusic());
 
         // Call subtitle
-        subtitleManager.ShowSubtitle(soundName);
+        subtitleManager.ShowSubtitle(soundName.ToLower(), sound.length);    
     }
 
     public void StopMusic()
@@ -94,6 +102,14 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySound(string soundName)
     {
+        Debug.Log($"playing {soundName}. canPlaySounds: {canPlaySounds}");
+        if(!canPlaySounds)
+        {
+            Debug.Log("Returning");
+            return;
+        }
+        Debug.Log("Resuming");
+
         AudioClip sound = null;
         bool soundExists = sfxDict.TryGetValue(soundName.ToLower(), out sound);
 
@@ -119,7 +135,7 @@ public class AudioManager : MonoBehaviour
         Destroy(audioSource.gameObject, sound.length);
 
         // Call subtitle
-        subtitleManager.ShowSubtitle(soundName);
+        subtitleManager.ShowSubtitle(soundName.ToLower(), sound.length);
     }
 
     private IEnumerator FadeInMusic()
