@@ -22,7 +22,7 @@ public class DayStartScene : MonoBehaviour
 
     private GameManager gameManager;
 
-    public void Start()
+    public void Initialize()
     {
         gameManager = FindFirstObjectByType<GameManager>();
     }

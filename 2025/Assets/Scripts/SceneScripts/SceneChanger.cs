@@ -13,6 +13,12 @@ public class SceneChanger : MonoBehaviour
     [SerializeField] private JobScene jobScene;
     [SerializeField] private GameObject fadingScreenPrefab;
     private GameObject fadingScreen;
+    public GameObject FadingScreen
+    {
+        get { return fadingScreen; }
+        private set { fadingScreen = value; }
+    }
+
     private Image fadingImage;
     private Image deskOverlayImage;
     private Button menuButton;
@@ -21,7 +27,7 @@ public class SceneChanger : MonoBehaviour
     private int currentSceneIndex = 0;
     private List<Action> sceneSequence;
 
-    void Start()
+    public void Initialize()
     {
         if(gameManager == null)
         {
@@ -71,7 +77,12 @@ public class SceneChanger : MonoBehaviour
         });
         menuButton.gameObject.SetActive(false);
 
-        int loadSlot = PlayerPrefs.GetInt("LoadSlot");
+        dayStartScene.Initialize();
+        jobScene.Initialize();
+    }
+
+    public void StartGame(int loadSlot)
+    {
         if(loadSlot > 0)
         {
             //Debug.Log($"Game was restarted or opened through load: {loadSlot}");

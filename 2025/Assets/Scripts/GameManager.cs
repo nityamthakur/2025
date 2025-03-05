@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    // Not sure what this is for?
     public GameManager Instance { get; private set; }
+    [SerializeField] SceneChanger sceneChanger;
+    [SerializeField] ObjectSpawner objectSpawner;
+    [SerializeField] AccessibilityManager accessibilityManager;
+
     [SerializeField] TextMeshProUGUI onScreenTimer;
     [SerializeField] GameObject performanceBuzzersObj;
     private PerformanceBuzzers performanceBuzzers;
@@ -101,32 +106,21 @@ public class GameManager : MonoBehaviour
     // Functions
     void Awake()
     {
-        CheckLoadGameSave();
+        objectSpawner.Initialize();
+        sceneChanger.Initialize();
+        accessibilityManager.Initialize();
+        sceneChanger.StartGame(CheckLoadGameSave());
 
         jobDetails = new JobDetails();
         onScreenTimer.enabled = false; // Hide the onscreen timer
 
         if (performanceBuzzersObj == null)
-        {
             Debug.LogError("PerformanceBuzzers is null in GameManager.");
-        }
-        else {
+        else
             performanceBuzzers = performanceBuzzersObj.GetComponent<PerformanceBuzzers>();
-        }
     }
 
-    private void Update() {
-        if (Input.GetKeyDown(KeyCode.T)) 
-        {
-            Debug.Log("Showing Timer");
-            onScreenTimer.enabled = !onScreenTimer.enabled; // Hide the onscreen timer
-        }
-
-        if(onScreenTimer.enabled == true)
-            SetOnScreenTimer();
-    }
-
-    private void CheckLoadGameSave()
+    private int CheckLoadGameSave()
     {
         int loadSlot = PlayerPrefs.GetInt("LoadSlot");
         if(loadSlot > 0)
@@ -138,7 +132,19 @@ public class GameManager : MonoBehaviour
         {
             //Debug.Log($"Game was restarted or opened without load: {loadSlot}");
             gameData = new GameData();
-        }  
+        }
+        return loadSlot;
+    }
+
+    private void Update() {
+        if (Input.GetKeyDown(KeyCode.T)) 
+        {
+            Debug.Log("Showing Timer");
+            onScreenTimer.enabled = !onScreenTimer.enabled; // Hide the onscreen timer
+        }
+
+        if(onScreenTimer.enabled == true)
+            SetOnScreenTimer();
     }
 
     public IEnumerator UpdatePlayTime()
