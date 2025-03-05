@@ -5,7 +5,6 @@ using TMPro;
 using System.IO;
 using System.Collections.Generic;
 using System;
-using Unity.VisualScripting;
 
 public class JobScene : MonoBehaviour
 {
@@ -34,7 +33,7 @@ public class JobScene : MonoBehaviour
 
     private GameManager gameManager;
 
-    private void Start()
+    public void Initialize()
     {
         gameManager = FindFirstObjectByType<GameManager>();
     }

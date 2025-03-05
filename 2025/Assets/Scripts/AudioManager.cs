@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class AudioManager : MonoBehaviour
 {
     private AudioSource musicSource;
+    [SerializeField] private SubtitleManager subtitleManager;
     [SerializeField] private AudioSource sfxPrefab;
     private Dictionary<string, AudioClip> musicDict = new Dictionary<string, AudioClip>();
     private Dictionary<string, AudioClip> sfxDict = new Dictionary<string, AudioClip>();
@@ -14,7 +15,7 @@ public class AudioManager : MonoBehaviour
     public float muteVolume = 1.0f;
     private Coroutine currentMusicCoroutine; // Store the currently running coroutine
 
-    private void Awake()
+    public void Initialize()
     {
         musicSource = gameObject.AddComponent<AudioSource>();
         musicSource.loop = true;  
@@ -76,6 +77,9 @@ public class AudioManager : MonoBehaviour
         }
 
         currentMusicCoroutine = StartCoroutine(FadeInMusic());
+
+        // Call subtitle
+        subtitleManager.ShowSubtitle(soundName);
     }
 
     public void StopMusic()
@@ -113,6 +117,9 @@ public class AudioManager : MonoBehaviour
 
         // Destroy after sound finishes playing
         Destroy(audioSource.gameObject, sound.length);
+
+        // Call subtitle
+        subtitleManager.ShowSubtitle(soundName);
     }
 
     private IEnumerator FadeInMusic()

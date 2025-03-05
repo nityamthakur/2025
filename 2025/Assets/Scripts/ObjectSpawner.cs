@@ -21,7 +21,7 @@ public class ObjectSpawner : MonoBehaviour
 
     bool quitting = false;
 
-    void Awake()
+    public void Initialize()
     {
         if (mediaObject == null || mediaSpawner == null || splinePath == null)
         {
