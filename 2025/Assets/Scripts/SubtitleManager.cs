@@ -65,10 +65,6 @@ public class SubtitleManager : MonoBehaviour
             }
             subtitleTime = StartCoroutine(HideSubtitle(soundTime));
         }
-        else
-        {
-            Debug.Log($"Subtitle not shown. subtitesOn is {(subtitlesOn? "on" : "off")}");
-        }
     }
 
     public IEnumerator HideSubtitle(float soundTime)

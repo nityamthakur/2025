@@ -12,6 +12,7 @@ public class DayStartScene : MonoBehaviour
     [SerializeField] private Sprite FemaleNewsAnchor;
     [SerializeField] private Sprite MaleNewsAnchor;
     [SerializeField] private Sprite jobLetter;
+    [SerializeField] private AudioManager audioManager;
     private GameObject currentTextBox;
     private TextMeshProUGUI TextBox;
     private Button nextButton;
@@ -27,7 +28,7 @@ public class DayStartScene : MonoBehaviour
         gameManager = FindFirstObjectByType<GameManager>();
     }
 
-    public void LoadDayStart() {
+    public void LoadDayStart( bool introSongPlaying ) {
         
         currentTextBox = Instantiate(UITextBox);
 
@@ -38,6 +39,12 @@ public class DayStartScene : MonoBehaviour
         }
 
         SetUpDayStart();
+        
+        if(!introSongPlaying)
+            EventManager.PlayMusic?.Invoke("menu");
+        else
+            introSongPlaying = !introSongPlaying;
+
         EventManager.FadeIn?.Invoke();
         EventManager.DisplayMenuButton?.Invoke(true); 
     }
@@ -98,7 +105,7 @@ public class DayStartScene : MonoBehaviour
 
         if (jsonObject != null && jsonObject.newsCasterIntro.Count > 0)
         {
-            currentLines = GetLinesForDay(jsonObject.newsCasterIntro, gameManager.GetCurrentDay());
+            currentLines = GetLinesForDay(jsonObject.newsCasterIntro, gameManager.gameData.GetCurrentDay());
             
             linePos = 0;
             ReadNextLine();
@@ -163,6 +170,7 @@ public class DayStartScene : MonoBehaviour
 
     private IEnumerator NextScene()
     {
+        EventManager.StopMusic?.Invoke();
         EventManager.FadeOut?.Invoke();
         yield return new WaitForSeconds(2f);
 

@@ -25,7 +25,7 @@ public class JobScene : MonoBehaviour
     private GameObject outsideBuildingObject;
 
     // ---------------------------------
-    private float workTimer = 180f;
+    private float workTimer = 30f;//180f;
     private Image hourHand;
     private Image minuteHand;
 
@@ -49,7 +49,7 @@ public class JobScene : MonoBehaviour
 
     private void ShowBuildingTransition()
     {
-        Debug.Log("Starting Building Transition");
+        //Debug.Log("Starting Building Transition");
         outsideBuildingObject = Instantiate(jobBuildingPrefab);
         if (outsideBuildingObject == null)
         {
@@ -86,7 +86,7 @@ public class JobScene : MonoBehaviour
     }
 
     private void SetUpJobStart(int day) {
-        Debug.Log("Setting up Job Start");
+        //Debug.Log("Setting up Job Start");
 
         currJobScene = Instantiate(jobScenePrefab);
 
@@ -170,7 +170,7 @@ public class JobScene : MonoBehaviour
         }
         
         // Don't show the censor list on the first day
-        if (gameManager.GetCurrentDay() == 1) return;
+        if (gameManager.gameData.GetCurrentDay() == 1) return;
 
         screenText.text += "\nCensor List:\n";
         foreach (string censor in gameManager.GetCensorTargetWords())
@@ -270,7 +270,7 @@ public class JobScene : MonoBehaviour
 
         if (jsonObject != null && jsonObject.emailText.Count > 0)
         {
-            currentEmail = GetEmailForDay(jsonObject.emailText, gameManager.GetCurrentDay());
+            currentEmail = GetEmailForDay(jsonObject.emailText, gameManager.gameData.GetCurrentDay());
         }
         else
         {

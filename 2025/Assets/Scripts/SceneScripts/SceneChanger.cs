@@ -24,6 +24,7 @@ public class SceneChanger : MonoBehaviour
     private Button menuButton;
 
     private bool mainMenuDone = false;
+    public bool introSongPlaying = true;
     private int currentSceneIndex = 0;
     private List<Action> sceneSequence;
 
@@ -36,8 +37,8 @@ public class SceneChanger : MonoBehaviour
         // Define the order of the scenes
         sceneSequence = new List<Action>
         {
-            () => dayStartScene.LoadDayStart(),
-            () => jobScene.LoadJobStart(gameManager.GetCurrentDay()),
+            () => dayStartScene.LoadDayStart(introSongPlaying),
+            () => jobScene.LoadJobStart(gameManager.gameData.GetCurrentDay()),
         };
         fadingScreen = Instantiate(fadingScreenPrefab);
 
@@ -84,14 +85,13 @@ public class SceneChanger : MonoBehaviour
 
     public void StartGame(int loadSlot)
     {
-        Debug.Log("Game is starting here");
         if(loadSlot > 0)
         {
+            introSongPlaying = false;
             //Debug.Log($"Game was restarted or opened through load: {loadSlot}");
             PlayerPrefs.SetInt("LoadSlot", -1);
             //Debug.Log($"Reseting LoadSlot to -1 to ensure game doesn't load again on restart: {loadSlot}");
             EventManager.NextScene?.Invoke();
-            EventManager.StopMusic?.Invoke();
 
             // Continue Playtime counter
             StartCoroutine(gameManager.UpdatePlayTime());
@@ -101,7 +101,6 @@ public class SceneChanger : MonoBehaviour
             //Debug.Log($"Game was restarted or opened without load: {loadSlot}");
             PlayerPrefs.SetInt("LoadSlot", -1);
             //Debug.Log($"Reseting LoadSlot to -1 to ensure game doesn't load again on restart: {loadSlot}");
-
             mainMenuScene.LoadMainMenu();
         }
         //jobScene.LoadJobStart(gameManager.GetCurrentDay());
@@ -186,12 +185,12 @@ public class SceneChanger : MonoBehaviour
 
     private void ShowDeskOverLay()
     {
-        Debug.Log("ShowDeskOverlay called");
+        //Debug.Log("ShowDeskOverlay called");
         deskOverlayImage.gameObject.SetActive(true);   
     }
     private void HideDeskOverLay()
     {
-        Debug.Log("HideDeskOverlay called");
+        //Debug.Log("HideDeskOverlay called");
         deskOverlayImage.gameObject.SetActive(false);   
     }
 

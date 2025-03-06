@@ -49,7 +49,6 @@ public class MainMenuScene : MonoBehaviour
         {
             playButton.interactable = false;
             StartCoroutine(StartGame());
-            EventManager.StopMusic?.Invoke(); 
         });
 
         loadButton = currentMenuObject.transform.Find("LoadButton").GetComponent<Button>();
