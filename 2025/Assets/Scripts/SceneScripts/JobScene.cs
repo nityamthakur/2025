@@ -25,7 +25,7 @@ public class JobScene : MonoBehaviour
     private GameObject outsideBuildingObject;
 
     // ---------------------------------
-    private float workTimer = 30f;//180f;
+    private float workTimer = 180f;
     private Image hourHand;
     private Image minuteHand;
 
@@ -38,11 +38,11 @@ public class JobScene : MonoBehaviour
         gameManager = FindFirstObjectByType<GameManager>();
     }
 
-    public void LoadJobStart(int day) {
+    public void LoadJobStart() {
 
         ShowBuildingTransition();
         LoadJsonFromFile();
-        SetUpJobStart(day);
+        SetUpJobStart(gameManager.gameData.day);
         EventManager.FadeIn?.Invoke();
         EventManager.PlayMusic?.Invoke("work"); 
     }

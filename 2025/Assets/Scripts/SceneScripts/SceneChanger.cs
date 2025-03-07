@@ -11,6 +11,7 @@ public class SceneChanger : MonoBehaviour
     [SerializeField] private MainMenuScene mainMenuScene;
     [SerializeField] private DayStartScene dayStartScene;
     [SerializeField] private JobScene jobScene;
+    [SerializeField] private DayEndScene dayEndScene;
     [SerializeField] private GameObject fadingScreenPrefab;
     private GameObject fadingScreen;
     public GameObject FadingScreen
@@ -24,7 +25,6 @@ public class SceneChanger : MonoBehaviour
     private Button menuButton;
 
     private bool mainMenuDone = false;
-    public bool introSongPlaying = true;
     private int currentSceneIndex = 0;
     private List<Action> sceneSequence;
 
@@ -37,8 +37,9 @@ public class SceneChanger : MonoBehaviour
         // Define the order of the scenes
         sceneSequence = new List<Action>
         {
-            () => dayStartScene.LoadDayStart(introSongPlaying),
-            () => jobScene.LoadJobStart(gameManager.gameData.GetCurrentDay()),
+            () => dayStartScene.LoadDayStart(),
+            () => jobScene.LoadJobStart(),
+            () => dayEndScene.LoadDayEnd()
         };
         fadingScreen = Instantiate(fadingScreenPrefab);
 
@@ -81,13 +82,13 @@ public class SceneChanger : MonoBehaviour
 
         dayStartScene.Initialize();
         jobScene.Initialize();
+        dayEndScene.Initialize();
     }
 
     public void StartGame(int loadSlot)
     {
         if(loadSlot > 0)
         {
-            introSongPlaying = false;
             //Debug.Log($"Game was restarted or opened through load: {loadSlot}");
             PlayerPrefs.SetInt("LoadSlot", -1);
             //Debug.Log($"Reseting LoadSlot to -1 to ensure game doesn't load again on restart: {loadSlot}");
@@ -109,8 +110,10 @@ public class SceneChanger : MonoBehaviour
     public void StartNextScene()
     {
         if(!mainMenuDone)
+        {
             // Start Playtime counter for first time
             StartCoroutine(gameManager.UpdatePlayTime());
+        }
 
         mainMenuDone = true;
         // Call the function for the current scene

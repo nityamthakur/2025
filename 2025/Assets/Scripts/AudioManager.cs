@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public class AudioManager : MonoBehaviour
 {
@@ -43,6 +44,7 @@ public class AudioManager : MonoBehaviour
         EventManager.PlayMusic += PlayMusic;
         EventManager.StopMusic += StopMusic;
         EventManager.PlaySound += PlaySound;
+        EventManager.IsMusicPlaying += IsMusicPlaying;
     }
 
     private void OnDisable()
@@ -50,6 +52,12 @@ public class AudioManager : MonoBehaviour
         EventManager.PlayMusic -= PlayMusic;
         EventManager.StopMusic -= StopMusic;
         EventManager.PlaySound -= PlaySound;
+        EventManager.IsMusicPlaying += IsMusicPlaying;
+    }
+
+    public bool IsMusicPlaying()
+    {
+        return currentMusicCoroutine != null;
     }
 
     public void PlayMusic(string soundName)

@@ -12,7 +12,6 @@ public class DayStartScene : MonoBehaviour
     [SerializeField] private Sprite FemaleNewsAnchor;
     [SerializeField] private Sprite MaleNewsAnchor;
     [SerializeField] private Sprite jobLetter;
-    [SerializeField] private AudioManager audioManager;
     private GameObject currentTextBox;
     private TextMeshProUGUI TextBox;
     private Button nextButton;
@@ -28,8 +27,8 @@ public class DayStartScene : MonoBehaviour
         gameManager = FindFirstObjectByType<GameManager>();
     }
 
-    public void LoadDayStart( bool introSongPlaying ) {
-        
+    public void LoadDayStart() 
+    {    
         currentTextBox = Instantiate(UITextBox);
 
         if (currentTextBox == null)
@@ -40,10 +39,8 @@ public class DayStartScene : MonoBehaviour
 
         SetUpDayStart();
         
-        if(!introSongPlaying)
+        if(!EventManager.IsMusicPlaying())
             EventManager.PlayMusic?.Invoke("menu");
-        else
-            introSongPlaying = !introSongPlaying;
 
         EventManager.FadeIn?.Invoke();
         EventManager.DisplayMenuButton?.Invoke(true); 

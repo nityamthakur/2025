@@ -322,6 +322,51 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &168713419
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 168713420}
+  - component: {fileID: 168713421}
+  m_Layer: 0
+  m_Name: DayEndScene
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &168713420
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 168713419}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1487003098}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &168713421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 168713419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1aa30dc61bc9fda4cb7599f979e3a89f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneChanger: {fileID: 1487003097}
 --- !u!1 &175698857
 GameObject:
   m_ObjectHideFlags: 0
@@ -1501,6 +1546,7 @@ MonoBehaviour:
   musicVolume: 1
   sfxVolume: 1
   muteVolume: 1
+  canPlaySounds: 0
 --- !u!4 &1372095737
 Transform:
   m_ObjectHideFlags: 0
@@ -1873,7 +1919,9 @@ MonoBehaviour:
   mainMenuScene: {fileID: 1781939494}
   dayStartScene: {fileID: 374167943}
   jobScene: {fileID: 713576585}
+  dayEndScene: {fileID: 168713421}
   fadingScreenPrefab: {fileID: 810160988226875430, guid: b3b001d35d6235f4490dddcf23c1f675, type: 3}
+  introSongPlaying: 1
 --- !u!4 &1487003098
 Transform:
   m_ObjectHideFlags: 0
@@ -1890,6 +1938,7 @@ Transform:
   - {fileID: 1781939493}
   - {fileID: 374167942}
   - {fileID: 713576584}
+  - {fileID: 168713420}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1576775491
@@ -2237,6 +2286,8 @@ MonoBehaviour:
   gameData:
     day: 1
     money: 0
+    newMericaRep: 50
+    greenPartyRep: 25
     playTime: 0
 --- !u!4 &2059682409
 Transform:
