@@ -41,17 +41,6 @@ public class GameManager : MonoBehaviour
     {
         return dayEnded;
     }
-
-    public int GetCurrentDay()
-    {
-        return gameData.day;
-    }
-
-    public void SetCurrentDay(int day)
-    {
-        gameData.day = day;
-    }
-
    
     public JobDetails GetJobDetails()
     {
@@ -210,11 +199,21 @@ public class GameManager : MonoBehaviour
         jobDetails.numMediaProcessed += 1;
         jobScene.UpdateMediaProcessedText(jobDetails.numMediaProcessed);
 
-        if (currentCensorNum == 0 && totalCensorTargets == 0)
-            TotalScore += playerSucceeds ? 1 : -1;
-        else
-            TotalScore += currentCensorNum - numCensorMistakes - (totalCensorTargets - currentCensorNum);
+        int mediaScore = 5;
 
+        if (currentCensorNum == 0 && totalCensorTargets == 0)
+            mediaScore = playerSucceeds ? 3 : 0;
+        else
+        {
+            int totalMistakes = currentCensorNum - numCensorMistakes - (totalCensorTargets - currentCensorNum);
+            mediaScore -= totalMistakes / jobDetails.penalty;
+        }
+
+        // Score gets cut in half for money earned after timer is up
+        if(jobDetails.currClockTime <= 0 && mediaScore > 0)
+            mediaScore /= 2;
+
+        TotalScore += mediaScore;
         EvaluatePlayerScore();
         ResetCensorTracking();
         CheckDayEnd();
@@ -226,8 +225,14 @@ public class GameManager : MonoBehaviour
         
         jobDetails.numMediaProcessed += 1;
         jobScene.UpdateMediaProcessedText(jobDetails.numMediaProcessed);
+    
+        int mediaScore = playerSucceeds ? 3 : 0;
+        // Score gets cut in half for money earned after timer is up
+        if(jobDetails.currClockTime <= 0 && mediaScore > 0)
+            mediaScore /= 2;
+        
+        TotalScore += mediaScore;
 
-        TotalScore += playerSucceeds ? 2 : -2;
         if (playerSucceeds) 
         {
             performanceBuzzers.ShowCorrectBuzzer();
@@ -253,15 +258,18 @@ public class GameManager : MonoBehaviour
 
     public void CheckDayEnd()
     {
-        if (jobDetails.numMediaProcessed >= jobDetails.numMediaNeeded || jobDetails.currClockTime <= 0)
+        // If the clock timer is 0 but player still has not met numMediaNeeded job is not over
+        // Allows for players to do extra work if they are quick via the numMediaExtra
+        if (jobDetails.currClockTime <= 0 && jobDetails.numMediaProcessed >= jobDetails.numMediaNeeded || jobDetails.numMediaProcessed >= jobDetails.numMediaExtra)
         {
             Debug.Log("Day has ended.");
             dayEnded = true;
             jobScene.ShowResults(gameData.day, jobDetails.numMediaProcessed, TotalScore);
+            gameData.SetCurrentMoney(gameData.money + TotalScore); // Increase players money by their totalScore
             TotalScore = 0;
 
             ResetJobDetails();
-            SetCurrentDay(gameData.day + 1);
+            gameData.SetCurrentDay(gameData.day + 1);
             jobScene.ShowMediaProcessedText(false);
         }
     }
@@ -317,12 +325,20 @@ public class JobDetails {
     // For using a media target goal for the day
     public int numMediaProcessed; 
     public int numMediaNeeded;
+    public int numMediaExtra;
+    // penalty represents mistakes made before getting less money 
+    // ie, penalty = 1 => with 1 mistake   = -1 mediaScore
+    //     penalty = 2 => with 2 mistakes  = -1 mediaScore
+    //     penalty = 2 => with 3 mistakes  = -1 mediaScore
+    public int penalty;
 
     // For using a time based system for the day
     public float currClockTime;
     public JobDetails() {
         numMediaProcessed = 0;
-        numMediaNeeded = 7;
+        numMediaNeeded = 5;
+        numMediaExtra = 7;
+        penalty = 2;
         currClockTime = 0f;
     }
 }

@@ -11,6 +11,7 @@ public class SceneChanger : MonoBehaviour
     [SerializeField] private MainMenuScene mainMenuScene;
     [SerializeField] private DayStartScene dayStartScene;
     [SerializeField] private JobScene jobScene;
+    [SerializeField] private DayEndScene dayEndScene;
     [SerializeField] private GameObject fadingScreenPrefab;
     private GameObject fadingScreen;
     public GameObject FadingScreen
@@ -37,7 +38,8 @@ public class SceneChanger : MonoBehaviour
         sceneSequence = new List<Action>
         {
             () => dayStartScene.LoadDayStart(),
-            () => jobScene.LoadJobStart(gameManager.GetCurrentDay()),
+            () => jobScene.LoadJobStart(),
+            () => dayEndScene.LoadDayEnd()
         };
         fadingScreen = Instantiate(fadingScreenPrefab);
 
@@ -80,18 +82,17 @@ public class SceneChanger : MonoBehaviour
 
         dayStartScene.Initialize();
         jobScene.Initialize();
+        dayEndScene.Initialize();
     }
 
     public void StartGame(int loadSlot)
     {
-        Debug.Log("Game is starting here");
         if(loadSlot > 0)
         {
             //Debug.Log($"Game was restarted or opened through load: {loadSlot}");
             PlayerPrefs.SetInt("LoadSlot", -1);
             //Debug.Log($"Reseting LoadSlot to -1 to ensure game doesn't load again on restart: {loadSlot}");
             EventManager.NextScene?.Invoke();
-            EventManager.StopMusic?.Invoke();
 
             // Continue Playtime counter
             StartCoroutine(gameManager.UpdatePlayTime());
@@ -101,7 +102,6 @@ public class SceneChanger : MonoBehaviour
             //Debug.Log($"Game was restarted or opened without load: {loadSlot}");
             PlayerPrefs.SetInt("LoadSlot", -1);
             //Debug.Log($"Reseting LoadSlot to -1 to ensure game doesn't load again on restart: {loadSlot}");
-
             mainMenuScene.LoadMainMenu();
         }
         //jobScene.LoadJobStart(gameManager.GetCurrentDay());
@@ -110,8 +110,10 @@ public class SceneChanger : MonoBehaviour
     public void StartNextScene()
     {
         if(!mainMenuDone)
+        {
             // Start Playtime counter for first time
             StartCoroutine(gameManager.UpdatePlayTime());
+        }
 
         mainMenuDone = true;
         // Call the function for the current scene
@@ -186,12 +188,12 @@ public class SceneChanger : MonoBehaviour
 
     private void ShowDeskOverLay()
     {
-        Debug.Log("ShowDeskOverlay called");
+        //Debug.Log("ShowDeskOverlay called");
         deskOverlayImage.gameObject.SetActive(true);   
     }
     private void HideDeskOverLay()
     {
-        Debug.Log("HideDeskOverlay called");
+        //Debug.Log("HideDeskOverlay called");
         deskOverlayImage.gameObject.SetActive(false);   
     }
 

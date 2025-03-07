@@ -45,6 +45,19 @@ public static class SaveSystem
         }
     }
 
+    public static void DeleteSave(int slot)
+    {
+        string path = GetSaveFilePath(slot);
+        
+        if (File.Exists(path))
+        {
+            File.Delete(path); // Deletes the save file
+            Debug.Log($"Game save deleted in slot {slot}");
+        }
+        else
+            Debug.LogWarning($"No save file found in slot {slot}");
+    }
+
     public static bool SaveExists(int slot)
     {
         return File.Exists(GetSaveFilePath(slot));
