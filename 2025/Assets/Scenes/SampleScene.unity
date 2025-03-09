@@ -367,6 +367,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dayEndObjectPrefab: {fileID: 4986825238899682302, guid: 7e379c2cc3505e34ca4acace004f57a8, type: 3}
+  newMericaEndingMap: {fileID: 5709217093657951866, guid: ddf7478ceeb96d449b41f1588768f002, type: 3}
+  newMericaEndingStar: {fileID: -7518848503606070078, guid: d0caefa5417ba6a4b90a70280a66db36, type: 3}
+  greenPartyEnding: {fileID: 0}
+  badEnding: {fileID: -2455488159657730429, guid: 12ed3bd0324f8cc4cb23fe19270974d4, type: 3}
 --- !u!1 &175698857
 GameObject:
   m_ObjectHideFlags: 0
@@ -519,6 +523,7 @@ MonoBehaviour:
   UITextBox: {fileID: 4986825238899682302, guid: cc809ff330541a84aa7d1c21ab46ac07, type: 3}
   FemaleNewsAnchor: {fileID: -9148649168555976762, guid: c0076031d1972be4f89fb9fec336f2bb, type: 3}
   MaleNewsAnchor: {fileID: -1487834262871342188, guid: c162df2e07f939c4cbb1416f1229077f, type: 3}
+  MaleNewsAnchor2: {fileID: -195469805601254878, guid: 0d88bc2eb627439499134ddbde6b061f, type: 3}
   jobLetter: {fileID: 2247088696051876834, guid: 10d5781b3649c3c40a0d1bce740af2fd, type: 3}
 --- !u!1 &443284278
 GameObject:
@@ -1066,6 +1071,7 @@ MonoBehaviour:
   objectSpawner: {fileID: 1245310923}
   jobScenePrefab: {fileID: 8812546023612397849, guid: a38fe3e81ffbe1742861b58be4594a85, type: 3}
   workBackgroundImage: {fileID: -3634233576498660357, guid: 3c2ac63c996c4f74781e724ed4c12b15, type: 3}
+  glitchedScreen: {fileID: 5111763290514371741, guid: 69c02822765493849b65f7d53cfdce8a, type: 3}
   jobBuildingPrefab: {fileID: 7365597034380788627, guid: 179c1e3c7be1eed4385ed3fdeb7cc64b, type: 3}
   jobBuildingImage: {fileID: 7500719156437101807, guid: f0d23fea0664eb14a9e6c31266085328, type: 3}
 --- !u!1 &714306990
@@ -1495,6 +1501,7 @@ MonoBehaviour:
   mediaObject: {fileID: 4998836287132237453, guid: 0c53175a4e94f6d4781fe217fb8b0dde, type: 3}
   mediaSpawner: {fileID: 955105929}
   splinePath: {fileID: 2498711219787459138, guid: c003f66e5ed7a12499011dd10c519d4b, type: 3}
+  imageObject: {fileID: 5459676195759465388, guid: 78a1300e76a411a4cb432f9aec2c5a5d, type: 3}
 --- !u!4 &1245310924
 Transform:
   m_ObjectHideFlags: 0
@@ -2090,7 +2097,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   menuObject: {fileID: 3021349584701667985, guid: 507979956695d4148b27e2bd31c83a78, type: 3}
-  mainMenuImage: {fileID: 3686520284700281742, guid: 5d186749cd508ca4ab1722db72033dba, type: 3}
+  mainMenuImage: {fileID: -685511840836363567, guid: 57b38f1d66cbcd44fa1b70b420c1baff, type: 3}
 --- !u!1 &1881932998
 GameObject:
   m_ObjectHideFlags: 0
