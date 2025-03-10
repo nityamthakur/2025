@@ -102,9 +102,13 @@ public class SceneChanger : MonoBehaviour
             //Debug.Log($"Game was restarted or opened without load: {loadSlot}");
             PlayerPrefs.SetInt("LoadSlot", -1);
             //Debug.Log($"Reseting LoadSlot to -1 to ensure game doesn't load again on restart: {loadSlot}");
+
             mainMenuScene.LoadMainMenu();
+            //gameManager.gameData.day = 2;
+            //currentSceneIndex = 4;
+            //dayEndScene.LoadDayEnd();
+            //jobScene.LoadJobStart();
         }
-        //jobScene.LoadJobStart(gameManager.GetCurrentDay());
     }
 
     public void StartNextScene()

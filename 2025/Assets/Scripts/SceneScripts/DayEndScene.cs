@@ -3,6 +3,9 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 public class DayEndScene : MonoBehaviour
 {
@@ -12,12 +15,13 @@ public class DayEndScene : MonoBehaviour
     [SerializeField] private Sprite greenPartyEnding;
     [SerializeField] private Sprite badEnding;
     private GameObject currentPrefab;
-    private Image backgroundImage;
-    private Button gameButton;
-    private TextMeshProUGUI buttonText, gameText;
-    private bool isGameOver = false;
-    
+    private Image backgroundImage, textBoxBackground;
+    private Button gameButton, nextButton;
+    private TextMeshProUGUI buttonText, gameText, textBoxText;
     private GameManager gameManager;
+
+    private int linePos = 0;
+    private Line[] currentLines;
 
     public void Initialize()
     {
@@ -39,14 +43,13 @@ public class DayEndScene : MonoBehaviour
 
     public void SetUpDayEnd()
     {
-        CheckGameOver();
-
         backgroundImage = currentPrefab.transform.Find("BackgroundImage").GetComponent<Image>();
         if(backgroundImage == null)
         {
             Debug.Log("Failed to find BackgroundImage component");
             return;
         }
+        backgroundImage.color = Color.black;
 
         gameText = currentPrefab.transform.Find("GameText").GetComponent<TextMeshProUGUI>();
         if(gameText == null)
@@ -54,7 +57,26 @@ public class DayEndScene : MonoBehaviour
             Debug.Log("Failed to find GameText component");
             return;
         }
-        gameText.text = $"Results Screen:<size=60%>\n\nMoney: ${gameManager.gameData.GetCurrentMoney()+10}\n\nRent: - $10\n\n New Total: ${gameManager.gameData.GetCurrentMoney()}";
+
+        textBoxBackground = currentPrefab.transform.Find("TextBoxBackground").GetComponent<Image>();
+        if(textBoxBackground == null)
+        {
+            Debug.Log("Failed to find TextBoxBackground component");
+            return;
+        }
+        textBoxBackground.gameObject.SetActive(false);
+
+        textBoxText = currentPrefab.transform.Find("TextBox").GetComponent<TextMeshProUGUI>();
+        if(textBoxText == null)
+        {
+            Debug.Log("Failed to find TextBox component");
+            return;
+        }
+        textBoxText.gameObject.SetActive(false);
+
+        int currMoney = gameManager.gameData.GetCurrentMoney();
+        int rentDue = gameManager.gameData.rent;
+        gameText.text = $"Results Screen:<size=60%>\n\nMoney: ${currMoney}\n\nRent: - ${rentDue}\n\n New Total: ${currMoney - rentDue}";
 
         gameButton = currentPrefab.transform.Find("GameButton").GetComponent<Button>();
         if(gameButton == null)
@@ -66,7 +88,11 @@ public class DayEndScene : MonoBehaviour
         {
             EventManager.PlaySound?.Invoke("switch1"); 
             gameButton.gameObject.SetActive(false);
-            CheckForNewDayStart();
+            if(CheckGameOver())
+                StartGameOver();
+
+            else
+                StartCoroutine(NextScene());
         });
 
         buttonText = gameButton.transform.Find("GameButtonText").GetComponent<TextMeshProUGUI>();
@@ -76,48 +102,51 @@ public class DayEndScene : MonoBehaviour
             return;
         }
         buttonText.text = "Continue";
+
+        nextButton = currentPrefab.transform.Find("NextTextButton").GetComponent<Button>();
+        if (nextButton == null)
+        {
+            Debug.LogError("Failed to find nextButton component.");
+            return;
+        }
+        nextButton.onClick.AddListener(() => 
+        {
+            EventManager.PlaySound?.Invoke("switch1"); 
+            ReadNextLine();
+        });
+        nextButton.gameObject.SetActive(false);
         
     }
 
-    private void ChangeBackgroundImage( Sprite sprite = null)
+    private bool CheckGameOver()
     {
-        backgroundImage.sprite = sprite;
-    }
-
-    private void CheckForNewDayStart()
-    {
-        if(isGameOver)
-        {
-            gameText.text = "Game Over\n\n<size=50%>Couldn't pay rent";
-            buttonText.text = "Return to Main Menu";
-
-            gameButton.gameObject.SetActive(true);
-            gameButton.onClick.RemoveAllListeners();
-            gameButton.onClick.AddListener(()=>
-            {
-                gameButton.gameObject.SetActive(false);
-                EventManager.PlaySound?.Invoke("switch1"); 
-                StartCoroutine(StartGameOver());
-            });
-        }
-
-        else
-            StartCoroutine(NextScene());
-    }
-
-
-    private void CheckGameOver()
-    {
-        int rentDue = 10;
+        int rentDue = (gameManager.gameData.rent += 2) - 2;
         gameManager.gameData.SetCurrentMoney(gameManager.gameData.money - rentDue);
         if(gameManager.gameData.money < 0)
-            isGameOver = true;
+            return true;
         else
-            isGameOver = false;
+            return false;
+    }
+
+    private void StartGameOver()
+    {
+        gameText.gameObject.SetActive(false);
+        nextButton.gameObject.SetActive(true);
+        textBoxBackground.gameObject.SetActive(true);
+        textBoxText.gameObject.SetActive(true);
+        LoadJsonFromFile();
+    }
+
+    private int SelectedEnding()
+    {
+        EventManager.PlayMusic?.Invoke("darkfog");
+        return 3;
     }
 
     private IEnumerator NextScene()
     {
+        gameManager.SetCurrentDay(gameManager.gameData.day + 1);
+
         EventManager.StopMusic?.Invoke();
         EventManager.FadeOut?.Invoke();
         yield return new WaitForSeconds(2f);
@@ -129,12 +158,129 @@ public class DayEndScene : MonoBehaviour
         EventManager.NextScene?.Invoke();
     }
 
-    private IEnumerator StartGameOver()
+    private IEnumerator RestartGame()
     {
+        Debug.Log("Ending Game");
+
         EventManager.StopMusic?.Invoke();
         EventManager.FadeOut?.Invoke();
         yield return new WaitForSeconds(3f);
+        
+        Destroy(currentPrefab);
+        currentPrefab = null;
+        
+        yield return new WaitForSeconds(1f);
         Time.timeScale = 1;
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    private void LoadJsonFromFile()
+    {
+        // Check if Json is found in StreamingAssets folder
+        string path = Path.Combine(Application.streamingAssetsPath, "GameText.json");
+        if (!File.Exists(path))
+        {
+            Debug.LogError("JSON file not found at: " + path);
+            return;
+        }
+
+        string json = File.ReadAllText(path);
+        ParseJson(json);
+    }
+
+    private void ParseJson(string json)
+    {
+        var jsonObject = JsonUtility.FromJson<Wrapper>(json);
+
+        if (jsonObject != null && jsonObject.gameEndings.Count > 0)
+        {
+            currentLines = GetLinesForEnding(jsonObject.gameEndings, SelectedEnding());
+            
+            linePos = 0;
+            ReadNextLine();
+        }
+        else
+        {
+            Debug.LogError("JSON parsing failed or empty list.");
+        }
+    }
+
+    private Line[] GetLinesForEnding(List<Entry> entries, int ending)
+    {
+        foreach (var entry in entries)
+        {
+            if (entry.ending == ending)
+            {
+                return entry.lines;
+            }
+        }
+        return new Line[0];
+    }
+
+
+    private void ReadNextLine()
+    {
+        if (linePos < currentLines.Length)
+        {
+            // Get the current line object
+            Line currentLine = currentLines[linePos];
+
+            // Set the text in the dialogue box
+            textBoxText.text = currentLine.text;
+            ChangeSpeaker(currentLine);
+            linePos++;
+        }
+        else
+        {
+            nextButton.interactable = false;
+            StartCoroutine(RestartGame());
+        }
+    }
+
+    private void ChangeSpeaker(Line currentLine)
+    {
+        backgroundImage.color = Color.white;
+
+        // Change the speaker image based on who is speaking
+        switch (currentLine.speaker.ToLower())
+        {
+            case "newmericaendingmap":
+                backgroundImage.sprite = newMericaEndingMap;
+                break;
+            case "newmericaendingstar":
+                backgroundImage.sprite = newMericaEndingStar;
+                break;
+            case "greenpartyending":
+                backgroundImage.sprite = greenPartyEnding;
+                break;
+            case "badending":
+                backgroundImage.sprite = badEnding;
+                break;
+            default:
+                backgroundImage.sprite = null;
+                backgroundImage.color = Color.black;
+                break;
+        }
+    }
+
+    [Serializable]
+    private class Wrapper
+    {
+        public List<Entry> gameEndings;
+    }
+
+    [Serializable]
+    private class Line
+    {
+        public string speaker;
+        public string text;
+    }
+
+    [Serializable]
+    private class Entry
+    {
+        public int ending;
+        public Line[] lines;
     }
 }

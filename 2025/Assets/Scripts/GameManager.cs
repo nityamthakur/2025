@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -24,7 +25,6 @@ public class GameManager : MonoBehaviour
     private int numCensorMistakes = 0;
     private bool canCensor = false;
     private bool dayEnded = false;
-    private int totalMoney = 0;
 
     // Set total score minimum to 0
     private int totalScore = 0;
@@ -210,18 +210,22 @@ public class GameManager : MonoBehaviour
         int mediaScore = 5;
 
         if (currentCensorNum == 0 && totalCensorTargets == 0)
-            mediaScore = playerSucceeds ? 3 : 0;
+            mediaScore = playerSucceeds ? 3 : 0;    
         else
         {
             int totalMistakes = currentCensorNum - numCensorMistakes - (totalCensorTargets - currentCensorNum);
-            mediaScore -= totalMistakes / jobDetails.penalty;
+            mediaScore -= Math.Abs(totalMistakes / jobDetails.penalty);
+
+            // If you do not censor for any words in article, if there are words to be censored, take a penalty
+            if(currentCensorNum == 0 && totalCensorTargets > 0)
+                mediaScore -= 2;
         }
 
         // Score gets cut in half for money earned after timer is up
         if(jobDetails.currClockTime <= 0 && mediaScore > 0)
             mediaScore /= 2;
 
-        TotalScore += mediaScore;
+        TotalScore += Math.Clamp(mediaScore, 0, 5);
         EvaluatePlayerScore();
         ResetCensorTracking();
         CheckDayEnd();
@@ -239,8 +243,9 @@ public class GameManager : MonoBehaviour
         if(jobDetails.currClockTime <= 0 && mediaScore > 0)
             mediaScore /= 2;
         
+        Debug.Log($"mediaScore: {mediaScore}, TotalScore: {totalScore}");
         TotalScore += mediaScore;
-        TotalScore += playerSucceeds ? 2 : -2;
+
         if (playerSucceeds)
         {
             performanceBuzzers.ShowCorrectBuzzer();
@@ -259,9 +264,8 @@ public class GameManager : MonoBehaviour
 
     public void EvaluatePlayerScore()
     {
-        Debug.Log($"Results: \n{currentCensorNum}/{totalCensorTargets} words correctly censored. {numCensorMistakes} words incorrectly censored.");
-
         Debug.Log($"Total Score: {TotalScore}");
+        Debug.Log($"Results: \n{currentCensorNum}/{totalCensorTargets} words correctly censored. {numCensorMistakes} words incorrectly censored.");
     }
 
     public void CheckDayEnd()
@@ -270,25 +274,11 @@ public class GameManager : MonoBehaviour
         // Allows for players to do extra work if they are quick via the numMediaExtra
         if (jobDetails.currClockTime <= 0 && jobDetails.numMediaProcessed >= jobDetails.numMediaNeeded || jobDetails.numMediaProcessed >= jobDetails.numMediaExtra)
         {
-            Debug.Log("Day has ended.");
             dayEnded = true;
-            totalMoney += totalScore;
-            jobScene.ShowResults(gameData.day, jobDetails.numMediaProcessed, TotalScore, totalMoney);
-            if (totalMoney >= 3)
-            {
-                //advance to next day if money >3
-                totalMoney -= 3;
-                TotalScore = 0;
-
-                ResetJobDetails();
-                SetCurrentDay(gameData.day + 1);
-                jobScene.ShowMediaProcessedText(false);
-            }
-            else
-            {
-                //lose to rent
-                Debug.Log("Game Over");
-            }
+            jobScene.ShowResults(jobDetails.numMediaProcessed, TotalScore);
+            TotalScore = 0;
+            ResetJobDetails();
+            jobScene.ShowMediaProcessedText(false);
         }
     }
 

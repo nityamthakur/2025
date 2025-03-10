@@ -4,6 +4,7 @@ using UnityEngine;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 
 public class ObjectSpawner : MonoBehaviour
 {
@@ -32,13 +33,6 @@ public class ObjectSpawner : MonoBehaviour
             Debug.LogError("Media Object, Media Spawner, Spline Path, or Rent Notice is not assigned.");
         }
         gameManager = FindFirstObjectByType<GameManager>();
-
-        SpawnRentNotice();
-    }
-
-    private void SpawnRentNotice()
-    {
-        rentNoticeInstance = Instantiate(rentNoticePrefab, rentNoticePosition.position, Quaternion.identity);
     }
 
     public void StartMediaSpawn()
@@ -83,13 +77,43 @@ public class ObjectSpawner : MonoBehaviour
     }
 
     // For non media censoring objects like fliers and pamphlets
-    public void SpawnImageObject() 
+    public void SpawnImageObject(bool takeActionOnDestroy) 
     {
         // Create new media object
         GameObject newMedia = Instantiate(imageObject, mediaSpawner.transform.position, Quaternion.identity);
-
+        
         // Pass the spline prefab reference
         ImageObject mediaEntity = newMedia.GetComponent<ImageObject>();
+        if (mediaEntity != null) 
+        {
+            mediaEntity.takeActionOnDestroy = takeActionOnDestroy;
+            mediaEntity.SetUpSplinePath(splinePath); // Pass the splinePath prefab reference
+        } 
+        else 
+        {
+            Debug.LogError("Spawned media object is missing the Entity script!");
+        }
+    }
+
+    public void SpawnRentNotice()
+    {
+        // Create new media object
+        GameObject rentNoticeInstance = Instantiate(rentNoticePrefab, mediaSpawner.transform.position, Quaternion.identity);
+
+        int rent = gameManager.gameData.rent;
+        string rentText = $"Rent will cost {rent}. If you are unable to pay by the end of the day, expect to be evicted.";
+        TextMeshPro grabbedText = rentNoticeInstance.transform.Find("Front Body")?.GetComponent<TextMeshPro>();
+        if(grabbedText != null)
+        {
+            grabbedText.text = rentText;
+        }
+        else
+        {
+            Debug.Log("Couldn't find Front Body text");
+        }
+
+        // Pass the spline prefab reference
+        ImageObject mediaEntity = rentNoticeInstance.GetComponent<ImageObject>();
         if (mediaEntity != null) 
         {
             mediaEntity.SetUpSplinePath(splinePath); // Pass the splinePath prefab reference

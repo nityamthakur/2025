@@ -85,8 +85,12 @@ public class JobScene : MonoBehaviour
         Destroy(outsideBuildingObject);
         outsideBuildingObject = null;
         yield return new WaitForSeconds(0f);
+
         EventManager.FadeIn?.Invoke();
         EventManager.DisplayMenuButton?.Invoke(true);
+
+        yield return new WaitForSeconds(2f);
+        objectSpawner.SpawnRentNotice();
     }
 
 
@@ -196,13 +200,13 @@ public class JobScene : MonoBehaviour
     {
         yield return StartCoroutine(CheckDailyEvent()); 
         gameManager.SetJobScene(this);
-        gameManager.StartJobTimer(workTimer); // Start the game timer
-        objectSpawner.StartMediaSpawn();
+        objectSpawner.StartMediaSpawn();        
         SetScreenObjectives(screenText);
         ShowMediaProcessedText(true);
+        gameManager.StartJobTimer(workTimer); // Start the game timer
     }
 
-    public void ShowResults(int day, int mediaProcessed, int score, int money)
+    public void ShowResults(int mediaProcessed, int score)
     {
         TextMeshProUGUI buttonText = startWorkButton.GetComponentInChildren<TextMeshProUGUI>();
         if (buttonText != null)
@@ -219,12 +223,12 @@ public class JobScene : MonoBehaviour
         startWorkButton.gameObject.SetActive(true);
         startWorkButton.onClick.AddListener(() =>
         {
-            startWorkButton.interactable = false; // Disable immediately
+            startWorkButton.interactable = false;
+            gameManager.gameData.money += score;
             StartCoroutine(NextScene());
         });
-        screenText.text = $"Day {day} Results:\n\nMedia Processed: {mediaProcessed}\n\nSupervisors Notified of Your Day\n\nProfit: ${score}\n\nTotal Money: ${money}\n\nPossibility of Promotion: Unknown";
+        screenText.text = $"Day {gameManager.gameData.day} Results:\n\nMedia Processed: {mediaProcessed}\n\nSupervisors Notified of Your Day\n\nProfit: ${score}\n\nTotal Money: ${gameManager.gameData.money + score}\n\nPossibility of Promotion: Unknown";
 
-        // Set the results text based on the job details
     }
 
     public void UpdateClockHands(float progress)
@@ -245,7 +249,7 @@ public class JobScene : MonoBehaviour
     public void UpdateMediaProcessedText(int num)
     {
         if (mediaProcessedText != null)
-            mediaProcessedText.text = $"Media Processed: {num} / 5";
+            mediaProcessedText.text = $"Media Processed:\n{num} / 5";
     }
 
     public void ShowMediaProcessedText(bool show)
@@ -324,7 +328,7 @@ public class JobScene : MonoBehaviour
             computerScreen.gameObject.SetActive(true);
             computerScreen.sprite = glitchedScreen;
 
-            objectSpawner.SpawnImageObject();
+            objectSpawner.SpawnImageObject(true);
             // Prevent progression
             yield return new WaitUntil(() => !jobDelayed);
             
