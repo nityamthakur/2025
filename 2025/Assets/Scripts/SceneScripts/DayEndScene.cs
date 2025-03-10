@@ -122,7 +122,8 @@ public class DayEndScene : MonoBehaviour
     {
         int rentDue = (gameManager.gameData.rent += 2) - 2;
         gameManager.gameData.SetCurrentMoney(gameManager.gameData.money - rentDue);
-        if(gameManager.gameData.money < 0)
+
+        if(SelectedEnding() > 0)
             return true;
         else
             return false;
@@ -139,8 +140,24 @@ public class DayEndScene : MonoBehaviour
 
     private int SelectedEnding()
     {
-        EventManager.PlayMusic?.Invoke("darkfog");
-        return 3;
+        // Bad / Evicted Ending
+        if(gameManager.gameData.money < 0)
+        {
+            EventManager.PlayMusic?.Invoke("darkfog");
+            return 3;
+        }
+        // newMericaEnding
+        else if(gameManager.gameData.newMericaRep >= gameManager.gameData.greenPartyRep && gameManager.gameData.day == 1)
+        {
+            return 1;
+        }
+        // Green Party Ending
+        else if(gameManager.gameData.newMericaRep >= gameManager.gameData.greenPartyRep && gameManager.gameData.day == 5)
+        {
+            return 2;
+        }
+        // No GameOver
+        return 0;
     }
 
     private IEnumerator NextScene()

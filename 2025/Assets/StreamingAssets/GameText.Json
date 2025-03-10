@@ -39,15 +39,18 @@
         {
             "ending": 1,
             "lines": [
-                { "speaker": "badending", "text": "Testing Game Ending for Bad End. Broke Ending" },
-                { "speaker": "badending", "text": "Good morning, citizens! The Green Party continues its campaign of lies against NewMerica, spreading misinformation to destabilize our glorious nation." },
-                { "speaker": "badending", "text": "Good morning, citizens! The Green Party continues its campaign of lies against NewMerica, spreading misinformation to destabilize our glorious nation." }
+                { "speaker": "newmericaendingmap", "text": "Congratulations obedient patriotic citizen of NewMerica, you have much to celebrate for on this fine day!" },
+                { "speaker": "newmericaendingmap", "text": "Your work in filtering out fake news and spreading only the truth helped weaken the Green Party's influence. It wont be long now until the traitors are all caught and their rebellion snuffed out." },
+                { "speaker": "newmericaendingmap", "text": "Furthermore, your work has helped newMerica gain a foothold on our southern neighbors with talks beginning to bring them under our great nation." },
+                { "speaker": "newmericaendingstar", "text": "As thanks for your incredible work ethic, the state has awarded you with a pristine Gold Star Award!" },
+                { "speaker": "newmericaendingstar", "text": "NOTE: $10 has been deducted from your account for shipping and handling fees." },
+                { "speaker": "newmericaendingstar", "text": "\n<align=center>Long Live NewMerica!</align>"}
             ]
         },
         {
             "ending": 2,
             "lines": [
-                { "speaker": "FemaleNewsAnchor", "text": "Welcome back, citizens. Another day, another battle against the forces of deception." }
+                { "speaker": "newmericaendingstar", "text": "\n<align=center>Long Live NewMerica!</align>"}
             ]
         },
         {
