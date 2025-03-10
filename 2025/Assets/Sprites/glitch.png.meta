@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 12ed3bd0324f8cc4cb23fe19270974d4
+guid: 69c02822765493849b65f7d53cfdce8a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2455488159657730429
-    second: badEnding_06
+      213: 5111763290514371741
+    second: glitch_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: badEnding_0
+      name: glitch_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 6400
-        height: 3600
+        x: 1339
+        y: 1629
+        width: 3722
+        height: 1892
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 38e5c6d478a5cedd0800000000000000
-      internalID: -2455488159657730429
+      spriteID: d94bdf221a1a0f640800000000000000
+      internalID: 5111763290514371741
       vertices: []
       indices: 
       edges: []

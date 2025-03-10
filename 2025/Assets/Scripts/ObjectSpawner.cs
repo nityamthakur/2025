@@ -11,6 +11,7 @@ public class ObjectSpawner : MonoBehaviour
     [SerializeField] private GameObject mediaSpawner;
     [SerializeField] private GameObject splinePath;
     [SerializeField] private GameObject rentNoticePrefab;
+    [SerializeField] private GameObject imageObject;
 
     // Quick fix for preventing object spawn on game close
     //private int currDay;
@@ -79,6 +80,24 @@ public class ObjectSpawner : MonoBehaviour
             Debug.LogError("Spawned media object is missing the Entity script!");
         }
 
+    }
+
+    // For non media censoring objects like fliers and pamphlets
+    public void SpawnImageObject() 
+    {
+        // Create new media object
+        GameObject newMedia = Instantiate(imageObject, mediaSpawner.transform.position, Quaternion.identity);
+
+        // Pass the spline prefab reference
+        ImageObject mediaEntity = newMedia.GetComponent<ImageObject>();
+        if (mediaEntity != null) 
+        {
+            mediaEntity.SetUpSplinePath(splinePath); // Pass the splinePath prefab reference
+        } 
+        else 
+        {
+            Debug.LogError("Spawned media object is missing the Entity script!");
+        }
     }
 
     private IEnumerator DelayedPassNewspaperData(Entity mediaEntity, Entity.Newspaper newspaper)

@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 12ed3bd0324f8cc4cb23fe19270974d4
+guid: 0d88bc2eb627439499134ddbde6b061f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2455488159657730429
-    second: badEnding_06
+      213: -195469805601254878
+    second: NewMaleemalenewsAnchor_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,7 +100,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: badEnding_0
+      name: NewMaleemalenewsAnchor_0
       rect:
         serializedVersion: 2
         x: 0
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 38e5c6d478a5cedd0800000000000000
-      internalID: -2455488159657730429
+      spriteID: 22292d85f3d894df0800000000000000
+      internalID: -195469805601254878
       vertices: []
       indices: 
       edges: []

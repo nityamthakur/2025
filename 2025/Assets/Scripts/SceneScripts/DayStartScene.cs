@@ -11,6 +11,7 @@ public class DayStartScene : MonoBehaviour
     [SerializeField] private GameObject UITextBox;
     [SerializeField] private Sprite FemaleNewsAnchor;
     [SerializeField] private Sprite MaleNewsAnchor;
+    [SerializeField] private Sprite MaleNewsAnchor2;
     [SerializeField] private Sprite jobLetter;
     private GameObject currentTextBox;
     private TextMeshProUGUI TextBox;
@@ -155,6 +156,9 @@ public class DayStartScene : MonoBehaviour
                 break;
             case "malenewsanchor":
                 backgroundImage.sprite = MaleNewsAnchor;
+                break;
+            case "malenewsanchor2":
+                backgroundImage.sprite = MaleNewsAnchor2;
                 break;
             case "jobletter":
                 backgroundImage.sprite = jobLetter;

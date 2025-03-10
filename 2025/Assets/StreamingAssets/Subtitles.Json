@@ -6,6 +6,7 @@
         { "sound": "correctbuzz", "text": "Correct Buzzer" },
         { "sound": "errorbuzz", "text": "Error Buzzer" },
         { "sound": "switch1", "text": "Button Click" },
-        { "sound": "worksounds", "text": "People Talking, Phones Ringing, Papers Shuffling" }  
+        { "sound": "worksounds", "text": "People Talking, Phones Ringing, Papers Shuffling" },  
+        { "sound": "glitch", "text": "Computer Making Glitching Sounds" }  
     ]
 }
