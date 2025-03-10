@@ -107,7 +107,7 @@ public class ObjectSpawner : MonoBehaviour
 
         if (jsonObject != null && jsonObject.newspaperText.Count > 0)
         {
-            newspapers = GetNewspapersForDay(jsonObject.newspaperText, gameManager.GetCurrentDay());
+            newspapers = GetNewspapersForDay(jsonObject.newspaperText, gameManager.gameData.GetCurrentDay());
             newspaperPos = 0;
         }
         else

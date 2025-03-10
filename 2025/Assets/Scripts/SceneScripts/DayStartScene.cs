@@ -27,8 +27,8 @@ public class DayStartScene : MonoBehaviour
         gameManager = FindFirstObjectByType<GameManager>();
     }
 
-    public void LoadDayStart() {
-        
+    public void LoadDayStart() 
+    {    
         currentTextBox = Instantiate(UITextBox);
 
         if (currentTextBox == null)
@@ -38,6 +38,10 @@ public class DayStartScene : MonoBehaviour
         }
 
         SetUpDayStart();
+        
+        if(!EventManager.IsMusicPlaying())
+            EventManager.PlayMusic?.Invoke("menu");
+
         EventManager.FadeIn?.Invoke();
         EventManager.DisplayMenuButton?.Invoke(true); 
     }
@@ -98,7 +102,7 @@ public class DayStartScene : MonoBehaviour
 
         if (jsonObject != null && jsonObject.newsCasterIntro.Count > 0)
         {
-            currentLines = GetLinesForDay(jsonObject.newsCasterIntro, gameManager.GetCurrentDay());
+            currentLines = GetLinesForDay(jsonObject.newsCasterIntro, gameManager.gameData.GetCurrentDay());
             
             linePos = 0;
             ReadNextLine();
@@ -163,6 +167,7 @@ public class DayStartScene : MonoBehaviour
 
     private IEnumerator NextScene()
     {
+        EventManager.StopMusic?.Invoke();
         EventManager.FadeOut?.Invoke();
         yield return new WaitForSeconds(2f);
 

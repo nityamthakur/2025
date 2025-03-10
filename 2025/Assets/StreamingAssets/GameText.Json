@@ -3,31 +3,35 @@
         {
             "day": 1,
             "lines": [
-                { "speaker": "FemaleNewsAnchor", "text": "The Green party is spreading fake news against NewMerica." },
-                { "speaker": "MaleNewsAnchor", "text": "NewMerica is hiring more to put a stop to The Green Party." },
-                { "speaker": "FemaleNewsAnchor", "text": "In better news, Brown Oil Conglomerate says they will back off from drilling in the rivers." },
-                { "speaker": "JobLetter", "text": "Congratulations you have been selected to work to combat fake news for Glorious NewMerica."},
-                { "speaker": "JobLetter", "text": "Report to Office Building Number: 171 Room: 152 by End of Day."},
-                { "speaker": "JobLetter", "text": "Report to your Local Distribution Office for more information."}
+                { "speaker": "FemaleNewsAnchor", "text": "<size=20>Good morning, citizens! The Green Party continues its campaign of lies against NewMerica, spreading misinformation to destabilize our glorious nation.</size>" },
+                { "speaker": "MaleNewsAnchor", "text": "<size=20>In response, NewMerica is expanding its workforce to counteract these malicious narratives. More citizens are being hired to ensure our information remains pure and patriotic.</size>" },
+                { "speaker": "FemaleNewsAnchor", "text": "<size=20>Meanwhile, Brown Oil Conglomerate has announced a commitment to responsible resource extraction, shifting operations away from our sacred rivers and focusing on the more sustainable rainforests.</size>" },
+                { "speaker": "MaleNewsAnchor", "text": "<size=20>We remind all NewMericans that only verified news is real news. Misinformation is an attack on truth, and those who spread it should be held accountable.</size>" },
+                { "speaker": "JobLetter", "text": "Congratulations! You have been selected to work in the Media Regulation Branch to safeguard NewMerican values." },
+                { "speaker": "JobLetter", "text": "Report to Office Building Number: 171 Room: 152 by the end of the day." },
+                { "speaker": "JobLetter", "text": "Your duty is to ensure only trustworthy information reaches the public. Do your part for NewMerica!" }
             ]
         },
         {
             "day": 2,
             "lines": [
-                {"speaker": "FemaleNewsAnchor", "text": "Welcome back to another broadcast."},
-                {"speaker": "MaleNewsAnchor", "text": "The weather today is cloudy, rainy, and windy."},
-                {"speaker": "FemaleNewsAnchor", "text": "More updates coming soon!"}
+                { "speaker": "FemaleNewsAnchor", "text": "Welcome back, citizens. Another day, another battle against the forces of deception." },
+                { "speaker": "MaleNewsAnchor", "text": "The weather today? Cloudy, rainy, and windy—perhaps reflecting the storm of lies from our nation's enemies." },
+                { "speaker": "FemaleNewsAnchor", "text": "<size=24>Despite these dark clouds, progress continues. AI automation is paving the way for a stronger workforce, ensuring efficiency across all sectors.</size>" },
+                { "speaker": "MaleNewsAnchor", "text": "<size=21>In other news, financial regulations are evolving to better serve NewMericans. Digital currency will soon become the standard, making transactions safer, smarter, and more efficient.</size>" },
+                { "speaker": "FemaleNewsAnchor", "text": "We urge all citizens to embrace innovation and unity. Do not listen to those who resist progress." },
+                { "speaker": "MaleNewsAnchor", "text": "And remember, a stable economy is a strong economy. Do your part by supporting NewMerica's financial initiatives!" }
             ]
         },
         {
             "day": 3,
             "lines": [
-                {"speaker": "MaleNewsAnchor", "text": "Another day in the glorous NewMerica."},
-                {"speaker": "MaleNewAnchor", "text": "Recently, tensions have risen between NewMerica and the Green Party."},
-                {"speaker": "FemaleNewsAnchor", "text": "One can only hope that those who oppose NewMerica will be dealt with swiftly."},
-                {"speaker": "FemaleNewsAnchor", "text": "Remember to report anyone you find suspicous, especially those with ties to the Green Party."},
-                {"speaker": "MaleNewsAnchor", "text": "..."},
-                {"speaker": "FemaleNewsAnchor", "text": "..."}
+                { "speaker": "MaleNewsAnchor", "text": "Another glorious day in NewMerica, where prosperity and unity go hand in hand!" },
+                { "speaker": "FemaleNewsAnchor", "text": "Tensions remain high as subversive elements continue to challenge our nation's security." },
+                { "speaker": "MaleNewsAnchor", "text": "<size=21>Leaders in NewMerica are taking decisive action. Public voting inefficiencies will soon be a thing of the past, as AI-assisted decision-making promises a new era of governance.</size>" },
+                { "speaker": "FemaleNewsAnchor", "text": "<size=21>In breaking news, economic stability is at an all-time high! The Treasury has introduced a revolutionary system that ensures tax contributions are collected efficiently, minimizing waste.</size>" },
+                { "speaker": "MaleNewsAnchor", "text": "<size=21>Meanwhile, troubling reports suggest that members of the Green Party are engaging in dangerous activities. Authorities urge vigilance—report any suspicious behavior immediately.</size>" },
+                { "speaker": "FemaleNewsAnchor", "text": "NewMerica stands strong, but it is up to each of us to protect our nation’s integrity. Stay informed, stay loyal, and stay safe." }
             ]
         }
     ],

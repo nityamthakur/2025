@@ -80,7 +80,7 @@ public class Entity : MonoBehaviour
         }
 
         // Disable censoring on the first day
-        if (gameManager.GetCurrentDay() != 1)
+        if (gameManager.gameData.GetCurrentDay() != 1)
         {
             CreateCensorBoxes();
         }

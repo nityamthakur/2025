@@ -38,19 +38,18 @@ public class JobScene : MonoBehaviour
         gameManager = FindFirstObjectByType<GameManager>();
     }
 
-    public void LoadJobStart(int day)
-    {
 
+    public void LoadJobStart() {
         ShowBuildingTransition();
         LoadJsonFromFile();
-        SetUpJobStart(day);
+        SetUpJobStart(gameManager.gameData.day);
         EventManager.FadeIn?.Invoke();
         EventManager.PlayMusic?.Invoke("work");
     }
 
     private void ShowBuildingTransition()
     {
-        Debug.Log("Starting Building Transition");
+        //Debug.Log("Starting Building Transition");
         outsideBuildingObject = Instantiate(jobBuildingPrefab);
         if (outsideBuildingObject == null)
         {
@@ -86,10 +85,9 @@ public class JobScene : MonoBehaviour
         EventManager.DisplayMenuButton?.Invoke(true);
     }
 
-    private void SetUpJobStart(int day)
-    {
-        Debug.Log("Setting up Job Start");
 
+    private void SetUpJobStart(int day) {
+        //Debug.Log("Setting up Job Start");
         currJobScene = Instantiate(jobScenePrefab);
 
         if (currJobScene == null)
@@ -172,7 +170,7 @@ public class JobScene : MonoBehaviour
         }
 
         // Don't show the censor list on the first day
-        if (gameManager.GetCurrentDay() == 1) return;
+        if (gameManager.gameData.GetCurrentDay() == 1) return;
 
         screenText.text += "\nCensor List:\n";
         foreach (string censor in gameManager.GetCensorTargetWords())
@@ -277,7 +275,7 @@ public class JobScene : MonoBehaviour
 
         if (jsonObject != null && jsonObject.emailText.Count > 0)
         {
-            currentEmail = GetEmailForDay(jsonObject.emailText, gameManager.GetCurrentDay());
+            currentEmail = GetEmailForDay(jsonObject.emailText, gameManager.gameData.GetCurrentDay());
         }
         else
         {

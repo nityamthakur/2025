@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public class AudioManager : MonoBehaviour
 {
@@ -43,6 +44,7 @@ public class AudioManager : MonoBehaviour
         EventManager.PlayMusic += PlayMusic;
         EventManager.StopMusic += StopMusic;
         EventManager.PlaySound += PlaySound;
+        EventManager.IsMusicPlaying += IsMusicPlaying;
     }
 
     private void OnDisable()
@@ -50,17 +52,20 @@ public class AudioManager : MonoBehaviour
         EventManager.PlayMusic -= PlayMusic;
         EventManager.StopMusic -= StopMusic;
         EventManager.PlaySound -= PlaySound;
+        EventManager.IsMusicPlaying += IsMusicPlaying;
+    }
+
+    public bool IsMusicPlaying()
+    {
+        return currentMusicCoroutine != null;
     }
 
     public void PlayMusic(string soundName)
     {
-        Debug.Log($"playing {soundName}. canPlaySounds: {canPlaySounds}");
         if(!canPlaySounds)
         {
-            Debug.Log("Returning");
             return;
         }
-        Debug.Log("Resuming");
 
         AudioClip sound = null;
         bool soundExists = musicDict.TryGetValue(soundName.ToLower(), out sound);
@@ -102,13 +107,11 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySound(string soundName)
     {
-        Debug.Log($"playing {soundName}. canPlaySounds: {canPlaySounds}");
+        //Debug.Log($"playing {soundName}. canPlaySounds: {canPlaySounds}");
         if(!canPlaySounds)
         {
-            Debug.Log("Returning");
             return;
         }
-        Debug.Log("Resuming");
 
         AudioClip sound = null;
         bool soundExists = sfxDict.TryGetValue(soundName.ToLower(), out sound);

@@ -12,6 +12,7 @@ public static class EventManager
     public static Action ShowDeskOverlay;
     public static Action HideDeskOverlay;
     public static Action<bool> DisplayMenuButton;
+    public static Func<bool> IsMusicPlaying;
 
     public static Action<string> OptionsChanger;
     public static Action OpenOptionsMenu;
