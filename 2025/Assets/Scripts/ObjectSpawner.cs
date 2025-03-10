@@ -7,9 +7,10 @@ using System.Linq;
 
 public class ObjectSpawner : MonoBehaviour
 {
-    [SerializeField] private GameObject mediaObject;     
+    [SerializeField] private GameObject mediaObject;
     [SerializeField] private GameObject mediaSpawner;
     [SerializeField] private GameObject splinePath;
+    [SerializeField] private GameObject rentNoticePrefab;
     [SerializeField] private GameObject imageObject;
 
     // Quick fix for preventing object spawn on game close
@@ -19,21 +20,31 @@ public class ObjectSpawner : MonoBehaviour
     private Entity.Newspaper currentNewspaper;
     //public JobScene jobScene; 
     private GameManager gameManager;
+    private GameObject rentNoticeInstance;
+    [SerializeField] private Transform rentNoticePosition;
 
     bool quitting = false;
 
     public void Initialize()
     {
-        if (mediaObject == null || mediaSpawner == null || splinePath == null)
+        if (mediaObject == null || mediaSpawner == null || splinePath == null || rentNoticePrefab == null)
         {
-            Debug.LogError("Media Object, Media Spawner, and/or Spline Path is not assigned.");
+            Debug.LogError("Media Object, Media Spawner, Spline Path, or Rent Notice is not assigned.");
         }
         gameManager = FindFirstObjectByType<GameManager>();
+
+        SpawnRentNotice();
+    }
+
+    private void SpawnRentNotice()
+    {
+        rentNoticeInstance = Instantiate(rentNoticePrefab, rentNoticePosition.position, Quaternion.identity);
     }
 
     public void StartMediaSpawn()
     {
-        if(gameManager.GetJobDetails() == null) {
+        if (gameManager.GetJobDetails() == null)
+        {
             Debug.LogError("jobDetails is null.");
         }
 
@@ -42,11 +53,12 @@ public class ObjectSpawner : MonoBehaviour
         SpawnNewMediaObject();
     }
 
-    private void SpawnNewMediaObject() {
-        if (gameManager.IsDayEnded()) 
+    private void SpawnNewMediaObject()
+    {
+        if (gameManager.IsDayEnded())
             return;
 
-        if (quitting) 
+        if (quitting)
             return;
 
         //Debug.Log($"Spawning object at: {mediaSpawner.transform.position}");
@@ -58,15 +70,16 @@ public class ObjectSpawner : MonoBehaviour
 
         // Pass the spline prefab reference
         Entity mediaEntity = newMedia.GetComponent<Entity>();
-        if (mediaEntity != null) 
+        if (mediaEntity != null)
         {
             StartCoroutine(DelayedPassNewspaperData(mediaEntity, currentNewspaper));
             mediaEntity.SetSplinePrefab(splinePath); // Pass the splinePath prefab reference
-        } 
-        else 
+        }
+        else
         {
             Debug.LogError("Spawned media object is missing the Entity script!");
         }
+
     }
 
     // For non media censoring objects like fliers and pamphlets
@@ -152,7 +165,7 @@ public class ObjectSpawner : MonoBehaviour
     {
         List<string> banWords = new List<string>();
         List<string> censorWords = new List<string>();
-        
+
         foreach (var newspaper in newspapers)
         {
             foreach (string word in newspaper.banWords)
@@ -169,7 +182,7 @@ public class ObjectSpawner : MonoBehaviour
         gameManager.SetCensorTargetWords(censorWords.Distinct().ToArray());
     }
 
-    void OnApplicationQuit ()
+    void OnApplicationQuit()
     {
         quitting = true;
     }

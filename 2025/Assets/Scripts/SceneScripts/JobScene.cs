@@ -23,7 +23,6 @@ public class JobScene : MonoBehaviour
     private TextMeshProUGUI mediaProcessedText;
     private string currentEmail;
     private bool jobDelayed;
-    
     // ---------------------------------
     [SerializeField] private GameObject jobBuildingPrefab;
     [SerializeField] private Sprite jobBuildingImage;
@@ -43,13 +42,13 @@ public class JobScene : MonoBehaviour
         gameManager = FindFirstObjectByType<GameManager>();
     }
 
-    public void LoadJobStart() {
 
+    public void LoadJobStart() {
         ShowBuildingTransition();
         LoadJsonFromFile();
         SetUpJobStart();
         EventManager.FadeIn?.Invoke();
-        EventManager.PlayMusic?.Invoke("work"); 
+        EventManager.PlayMusic?.Invoke("work");
     }
 
     private void ShowBuildingTransition()
@@ -63,12 +62,12 @@ public class JobScene : MonoBehaviour
         }
 
         backgroundImage = outsideBuildingObject.transform.Find("BackgroundImage").GetComponent<Image>();
-        if(backgroundImage == null)
+        if (backgroundImage == null)
         {
             Debug.Log("Failed to find BackgroundImage in ShowBuildingTransition.");
             return;
         }
-        backgroundImage.sprite = jobBuildingImage; 
+        backgroundImage.sprite = jobBuildingImage;
 
         StartCoroutine(TransitionBuildingFade());
     }
@@ -87,12 +86,12 @@ public class JobScene : MonoBehaviour
         outsideBuildingObject = null;
         yield return new WaitForSeconds(0f);
         EventManager.FadeIn?.Invoke();
-        EventManager.DisplayMenuButton?.Invoke(true); 
+        EventManager.DisplayMenuButton?.Invoke(true);
     }
+
 
     private void SetUpJobStart() {
         //Debug.Log("Setting up Job Start");
-
         currJobScene = Instantiate(jobScenePrefab);
 
         if (currJobScene == null)
@@ -112,12 +111,12 @@ public class JobScene : MonoBehaviour
         }
 
         backgroundImage = currJobScene.transform.Find("BackgroundImage").GetComponent<Image>();
-        if(backgroundImage == null)
+        if (backgroundImage == null)
         {
             Debug.Log("Failed to find BackgroundImage in SetUpJobStart");
             return;
         }
-        backgroundImage.sprite = workBackgroundImage; 
+        backgroundImage.sprite = workBackgroundImage;
 
         computerScreen = currJobScene.transform.Find("ComputerScreenImage").GetComponent<Image>();
         if(computerScreen == null)
@@ -156,13 +155,13 @@ public class JobScene : MonoBehaviour
         ShowMediaProcessedText(false);
 
         hourHand = currJobScene.transform.Find("HourHand").GetComponent<Image>();
-        if(hourHand == null)
+        if (hourHand == null)
         {
             Debug.Log("Failed to find hourHand in SetUpJobStart");
         }
 
         minuteHand = currJobScene.transform.Find("MinuteHand").GetComponent<Image>();
-        if(minuteHand == null)
+        if (minuteHand == null)
         {
             Debug.Log("Failed to find minuteHand in SetUpJobStart");
         }
@@ -181,7 +180,7 @@ public class JobScene : MonoBehaviour
         {
             screenText.text += ban + "\n";
         }
-        
+
         // Don't show the censor list on the first day
         if (gameManager.gameData.GetCurrentDay() == 1) return;
 
@@ -192,10 +191,10 @@ public class JobScene : MonoBehaviour
         }
     }
 
+
     private IEnumerator BeginWorkDay()
     {
         yield return StartCoroutine(CheckDailyEvent()); 
-        
         gameManager.SetJobScene(this);
         gameManager.StartJobTimer(workTimer); // Start the game timer
         objectSpawner.StartMediaSpawn();
@@ -203,11 +202,15 @@ public class JobScene : MonoBehaviour
         ShowMediaProcessedText(true);
     }
 
-    public void ShowResults(int day, int mediaProcessed, int score) {
+    public void ShowResults(int day, int mediaProcessed, int score, int money)
+    {
         TextMeshProUGUI buttonText = startWorkButton.GetComponentInChildren<TextMeshProUGUI>();
-        if (buttonText != null) {
+        if (buttonText != null)
+        {
             buttonText.text = "End Day";
-        } else {
+        }
+        else
+        {
             Debug.LogError("TextMeshProUGUI component not found on startWorkButton.");
         }
 
@@ -219,7 +222,7 @@ public class JobScene : MonoBehaviour
             startWorkButton.interactable = false; // Disable immediately
             StartCoroutine(NextScene());
         });
-        screenText.text = $"Day {day} Results:\n\nMedia Processed: {mediaProcessed}\n\nSupervisors Notified of Your Day\n\nProfit: ${score}\n\nPossibility of Promotion: Unknown";
+        screenText.text = $"Day {day} Results:\n\nMedia Processed: {mediaProcessed}\n\nSupervisors Notified of Your Day\n\nProfit: ${score}\n\nTotal Money: ${money}\n\nPossibility of Promotion: Unknown";
 
         // Set the results text based on the job details
     }
@@ -241,26 +244,26 @@ public class JobScene : MonoBehaviour
 
     public void UpdateMediaProcessedText(int num)
     {
-        if(mediaProcessedText != null)
+        if (mediaProcessedText != null)
             mediaProcessedText.text = $"Media Processed: {num} / 5";
     }
 
     public void ShowMediaProcessedText(bool show)
     {
-        if(mediaProcessedText != null)
+        if (mediaProcessedText != null)
             mediaProcessedText.enabled = show;
     }
 
     private IEnumerator NextScene()
-    {        
-        EventManager.DisplayMenuButton?.Invoke(false); 
-        EventManager.StopMusic?.Invoke(); 
+    {
+        EventManager.DisplayMenuButton?.Invoke(false);
+        EventManager.StopMusic?.Invoke();
         EventManager.FadeOut?.Invoke();
         yield return new WaitForSeconds(2f);
 
         Destroy(currJobScene);
         currJobScene = null;
-        
+
         yield return new WaitForSeconds(2f);
         EventManager.NextScene?.Invoke();
     }

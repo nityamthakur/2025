@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
     private int numCensorMistakes = 0;
     private bool canCensor = false;
     private bool dayEnded = false;
+    private int totalMoney = 0;
 
     // Set total score minimum to 0
     private int totalScore = 0;
@@ -41,7 +42,12 @@ public class GameManager : MonoBehaviour
     {
         return dayEnded;
     }
-   
+
+    public void SetCurrentDay(int day)
+    {
+        gameData.day = day;
+    }
+
     public JobDetails GetJobDetails()
     {
         return jobDetails;
@@ -49,10 +55,11 @@ public class GameManager : MonoBehaviour
 
     public void SetJobScene(JobScene workScene)
     {
-        if(workScene == null) {
+        if (workScene == null)
+        {
             Debug.LogError("jobScene is null.");
         }
-        
+
         jobScene = workScene;
         dayEnded = false;
     }
@@ -112,7 +119,7 @@ public class GameManager : MonoBehaviour
     private int CheckLoadGameSave()
     {
         int loadSlot = PlayerPrefs.GetInt("LoadSlot");
-        if(loadSlot > 0)
+        if (loadSlot > 0)
         {
             //Debug.Log($"Game was restarted or opened through load: {loadSlot}");
             gameData = new GameData(SaveSystem.LoadGame(loadSlot));
@@ -125,14 +132,15 @@ public class GameManager : MonoBehaviour
         return loadSlot;
     }
 
-    private void Update() {
-        if (Input.GetKeyDown(KeyCode.T)) 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.T))
         {
             Debug.Log("Showing Timer");
             onScreenTimer.enabled = !onScreenTimer.enabled; // Hide the onscreen timer
         }
 
-        if(onScreenTimer.enabled == true)
+        if (onScreenTimer.enabled == true)
             SetOnScreenTimer();
     }
 
@@ -184,18 +192,18 @@ public class GameManager : MonoBehaviour
     public void EvaluatePlayerAccept(string[] banWords)
     {
         bool playerSucceeds = banWords.Length == 0;
-        
+
         if (playerSucceeds && (currentCensorNum == totalCensorTargets) && (numCensorMistakes == 0))
         {
             performanceBuzzers.ShowCorrectBuzzer();
-            EventManager.PlaySound?.Invoke("correctBuzz"); 
+            EventManager.PlaySound?.Invoke("correctBuzz");
         }
         else
         {
             performanceBuzzers.ShowIncorrectBuzzer();
-            EventManager.PlaySound?.Invoke("errorBuzz"); 
+            EventManager.PlaySound?.Invoke("errorBuzz");
         }
-        
+
         jobDetails.numMediaProcessed += 1;
         jobScene.UpdateMediaProcessedText(jobDetails.numMediaProcessed);
 
@@ -222,7 +230,7 @@ public class GameManager : MonoBehaviour
     public void EvalutatePlayerDestroy(string[] banWords)
     {
         bool playerSucceeds = banWords.Length != 0;
-        
+
         jobDetails.numMediaProcessed += 1;
         jobScene.UpdateMediaProcessedText(jobDetails.numMediaProcessed);
     
@@ -232,16 +240,16 @@ public class GameManager : MonoBehaviour
             mediaScore /= 2;
         
         TotalScore += mediaScore;
-
-        if (playerSucceeds) 
+        TotalScore += playerSucceeds ? 2 : -2;
+        if (playerSucceeds)
         {
             performanceBuzzers.ShowCorrectBuzzer();
-            EventManager.PlaySound?.Invoke("correctBuzz"); 
+            EventManager.PlaySound?.Invoke("correctBuzz");
         }
-        else 
+        else
         {
             performanceBuzzers.ShowIncorrectBuzzer();
-            EventManager.PlaySound?.Invoke("errorBuzz"); 
+            EventManager.PlaySound?.Invoke("errorBuzz");
         }
 
         EvaluatePlayerScore();
@@ -252,7 +260,7 @@ public class GameManager : MonoBehaviour
     public void EvaluatePlayerScore()
     {
         Debug.Log($"Results: \n{currentCensorNum}/{totalCensorTargets} words correctly censored. {numCensorMistakes} words incorrectly censored.");
-        
+
         Debug.Log($"Total Score: {TotalScore}");
     }
 
@@ -264,13 +272,23 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("Day has ended.");
             dayEnded = true;
-            jobScene.ShowResults(gameData.day, jobDetails.numMediaProcessed, TotalScore);
-            gameData.SetCurrentMoney(gameData.money + TotalScore); // Increase players money by their totalScore
-            TotalScore = 0;
+            totalMoney += totalScore;
+            jobScene.ShowResults(gameData.day, jobDetails.numMediaProcessed, TotalScore, totalMoney);
+            if (totalMoney >= 3)
+            {
+                //advance to next day if money >3
+                totalMoney -= 3;
+                TotalScore = 0;
 
-            ResetJobDetails();
-            gameData.SetCurrentDay(gameData.day + 1);
-            jobScene.ShowMediaProcessedText(false);
+                ResetJobDetails();
+                SetCurrentDay(gameData.day + 1);
+                jobScene.ShowMediaProcessedText(false);
+            }
+            else
+            {
+                //lose to rent
+                Debug.Log("Game Over");
+            }
         }
     }
 
@@ -302,7 +320,7 @@ public class GameManager : MonoBehaviour
         while (jobDetails.currClockTime > 0)
         {
             jobDetails.currClockTime -= Time.deltaTime;
-            
+
             if (jobScene != null)
             {
                 float progress = 1f - (jobDetails.currClockTime / totalWorkTime);
@@ -321,9 +339,10 @@ public class GameManager : MonoBehaviour
     }
 }
 
-public class JobDetails {
+public class JobDetails
+{
     // For using a media target goal for the day
-    public int numMediaProcessed; 
+    public int numMediaProcessed;
     public int numMediaNeeded;
     public int numMediaExtra;
     // penalty represents mistakes made before getting less money 
@@ -334,7 +353,8 @@ public class JobDetails {
 
     // For using a time based system for the day
     public float currClockTime;
-    public JobDetails() {
+    public JobDetails()
+    {
         numMediaProcessed = 0;
         numMediaNeeded = 5;
         numMediaExtra = 7;
