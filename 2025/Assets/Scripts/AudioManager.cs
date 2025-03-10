@@ -42,6 +42,7 @@ public class AudioManager : MonoBehaviour
     private void OnEnable()
     {
         EventManager.PlayMusic += PlayMusic;
+        EventManager.PauseResumeMusic += PauseResumeMusic;
         EventManager.StopMusic += StopMusic;
         EventManager.PlaySound += PlaySound;
         EventManager.IsMusicPlaying += IsMusicPlaying;
@@ -50,6 +51,7 @@ public class AudioManager : MonoBehaviour
     private void OnDisable()
     {
         EventManager.PlayMusic -= PlayMusic;
+        EventManager.PauseResumeMusic -= PauseResumeMusic;
         EventManager.StopMusic -= StopMusic;
         EventManager.PlaySound -= PlaySound;
         EventManager.IsMusicPlaying += IsMusicPlaying;
@@ -93,6 +95,14 @@ public class AudioManager : MonoBehaviour
 
         // Call subtitle
         subtitleManager.ShowSubtitle(soundName.ToLower(), sound.length);    
+    }
+
+    public void PauseResumeMusic()
+    {
+        if (musicSource.isPlaying)
+            musicSource.Pause();
+        else
+            musicSource.UnPause();
     }
 
     public void StopMusic()

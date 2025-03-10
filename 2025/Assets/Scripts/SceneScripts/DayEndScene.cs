@@ -7,6 +7,10 @@ using TMPro;
 public class DayEndScene : MonoBehaviour
 {
     [SerializeField] private GameObject dayEndObjectPrefab;
+    [SerializeField] private Sprite newMericaEndingMap;
+    [SerializeField] private Sprite newMericaEndingStar;
+    [SerializeField] private Sprite greenPartyEnding;
+    [SerializeField] private Sprite badEnding;
     private GameObject currentPrefab;
     private Image backgroundImage;
     private Button gameButton;
@@ -74,6 +78,12 @@ public class DayEndScene : MonoBehaviour
         buttonText.text = "Continue";
         
     }
+
+    private void ChangeBackgroundImage( Sprite sprite = null)
+    {
+        backgroundImage.sprite = sprite;
+    }
+
     private void CheckForNewDayStart()
     {
         if(isGameOver)

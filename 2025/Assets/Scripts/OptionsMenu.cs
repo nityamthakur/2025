@@ -462,7 +462,7 @@ public class OptionsMenu : MonoBehaviour
             // Listen for changes when toggle is clicked
             subtitleToggle.onValueChanged.AddListener((bool isOn) =>
             {
-                Debug.Log("subtitleToggle");
+                //Debug.Log("subtitleToggle");
                 subtitleManager.SubtitleToggle(isOn);
                 subtitleActiveText.text = isOn ? "On" : "Off";
                 EventManager.PlaySound?.Invoke("switch1"); 
