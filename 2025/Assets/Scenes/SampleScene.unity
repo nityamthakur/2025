@@ -1533,8 +1533,8 @@ MonoBehaviour:
   mediaSpawner: {fileID: 955105929}
   splinePath: {fileID: 2498711219787459138, guid: c003f66e5ed7a12499011dd10c519d4b, type: 3}
   rentNoticePrefab: {fileID: 4059535774875103254, guid: 44a29d81941f43249b735234f70b0598, type: 3}
-  rentNoticePosition: {fileID: 727259996}
   imageObject: {fileID: 5459676195759465388, guid: 78a1300e76a411a4cb432f9aec2c5a5d, type: 3}
+  rentNoticePosition: {fileID: 727259996}
 --- !u!4 &1245310924
 Transform:
   m_ObjectHideFlags: 0
@@ -2325,6 +2325,7 @@ MonoBehaviour:
   gameData:
     day: 1
     money: 0
+    rent: 3
     newMericaRep: 50
     greenPartyRep: 25
     playTime: 0

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5506081679868862939}
   - component: {fileID: 8494578203900679525}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -103,7 +103,7 @@ GameObject:
   - component: {fileID: 3084139667938424224}
   - component: {fileID: 6346420165679112956}
   - component: {fileID: 5775647210753200920}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: NewspaperObjectBoundaryBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -143,6 +143,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   censorBoxPrefab: {fileID: 1238444521771680430, guid: 2ffe89bad49217d4197da332cf5fc953, type: 3}
+  frontCensorBoxContainer: {fileID: 0}
+  backCensorBoxContainer: {fileID: 0}
+  backOfNewspaper: {fileID: 0}
+  blurMaterial: {fileID: 0}
+  defaultMaterial: {fileID: 0}
+  blurSize: 0
 --- !u!114 &5115285612353501707
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -157,6 +163,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   zoomFactor: 2
   zoomSpeed: 0.2
+  canZoom: 1
+  stopZoom: 1
+  entityComponent: {fileID: 0}
+  backOfNewspaper: {fileID: 0}
 --- !u!114 &2948216971536551734
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - DropBoxAccept
   - DropBoxDestroy
+  - MediaObject
   layers:
   - Default
   - TransparentFX

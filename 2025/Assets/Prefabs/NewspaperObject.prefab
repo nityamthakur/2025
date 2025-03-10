@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4950493166800010709}
   - component: {fileID: 2237481359942752111}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,7 +98,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2212883980722100390}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Back Censor Boxes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -130,7 +130,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5316431354452722470}
   - component: {fileID: 4858049901209817704}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Front
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -221,7 +221,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5021931195193615662}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Front Censor Boxes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -254,7 +254,7 @@ GameObject:
   - component: {fileID: 6848425215175548519}
   - component: {fileID: 6906856285568576627}
   - component: {fileID: 1983880785225409248}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Front Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -430,7 +430,7 @@ GameObject:
   - component: {fileID: 2278373549417008477}
   - component: {fileID: 4979836317665854049}
   - component: {fileID: 5667760033228279380}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Front Date
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -609,7 +609,7 @@ GameObject:
   - component: {fileID: -4859060692816504937}
   - component: {fileID: 6355933026193757114}
   - component: {fileID: 6181959918788005876}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: NewspaperObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -772,7 +772,7 @@ GameObject:
   - component: {fileID: 9219259851172075014}
   - component: {fileID: 2832131438314153436}
   - component: {fileID: 350339020351205209}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Front Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -948,7 +948,7 @@ GameObject:
   - component: {fileID: 1470740662994479706}
   - component: {fileID: 5595287325337371416}
   - component: {fileID: 4519914415403748161}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Back Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1124,7 +1124,7 @@ GameObject:
   - component: {fileID: 5619560810697788782}
   - component: {fileID: 6500687267859349812}
   - component: {fileID: 7853103032548622613}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Front Publisher
   m_TagString: Untagged
   m_Icon: {fileID: 0}

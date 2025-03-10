@@ -6,7 +6,8 @@ public class ImageObject : MonoBehaviour
     private MediaSplinePath currSplinePath;
     private GameObject splinePrefab;
     private Draggable draggableScript;
-
+    public bool takeActionOnDestroy = false;
+    
     private void Start()
     {
         ChangeMediaRotation( 60 );  
@@ -93,6 +94,9 @@ public class ImageObject : MonoBehaviour
             Destroy(currSplinePath.gameObject);
         }
         
-        EventManager.OnImageDestroyed?.Invoke();
+        if(takeActionOnDestroy)
+        {
+            EventManager.OnImageDestroyed?.Invoke();
+        }
     }
 }
