@@ -4,8 +4,6 @@ using UnityEngine;
 public static class EventManager
 {
     public static Action<GameObject> OnMediaDestroyed; // Event for media object destruction
-    public static Action OnImageDestroyed; // Event for non media object destruction
-
     public static Action NextScene; // Event for beginning the next scene
     public static Action FadeIn; // Trigger Fade in animation as a coroutine
     public static Action FadeOut; // Trigger Fade out animation as a coroutine
@@ -20,9 +18,7 @@ public static class EventManager
     public static Action OpenOptionsMenu;
     public static Action ReactivateMainMenuButtons;
 
-    public static Action<string> ShowCustomSubtitle;
     public static Action<string> PlayMusic;
-    public static Action PauseResumeMusic;
     public static Action StopMusic;
     public static Action<string> PlaySound;
 

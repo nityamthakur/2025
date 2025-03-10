@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: a40e036d14fc3504a9f7ab4b2603ff57
+guid: 5d186749cd508ca4ab1722db72033dba
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7502214869998534776
-    second: GreenPartyLetter_0
+      213: 3686520284700281742
+    second: title1000_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,23 +100,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: GreenPartyLetter_0
+      name: title1000_0
       rect:
         serializedVersion: 2
-        x: 100
-        y: 100
-        width: 1400
-        height: 703
+        x: 0
+        y: 0
+        width: 6400
+        height: 3600
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 88f751df257c2e790800000000000000
-      internalID: -7502214869998534776
+      spriteID: e8b05dabaa6292330800000000000000
+      internalID: 3686520284700281742
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: bd1e4388dd3b7a84a9b6f901de44e9e4
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      GreenPartyLetter_0: -7502214869998534776
+      title1000_0: 3686520284700281742
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

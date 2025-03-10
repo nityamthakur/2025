@@ -46,7 +46,8 @@ public class SubtitleManager : MonoBehaviour
     {
         if (subtitleDictionary.TryGetValue(soundName, out string subtitleText) && subtitlesOn)
         {
-            //Debug.Log("Showing subtitle.");
+            Debug.Log("Showing subtitle.");
+
             ShowHideSubtitle(true);
 
             subtitleTextObject.text = $"[ {subtitleText} ]";
@@ -64,27 +65,6 @@ public class SubtitleManager : MonoBehaviour
             }
             subtitleTime = StartCoroutine(HideSubtitle(soundTime));
         }
-    }
-
-    public void ShowCustomSubtitle(string subtitle)
-    {
-        //Debug.Log("Showing subtitle.");
-        ShowHideSubtitle(true);
-
-        subtitleTextObject.text = $"[ {subtitle} ]";
-
-        // Force a layout rebuild so the ContentSizeFitter updates
-        LayoutRebuilder.ForceRebuildLayoutImmediate(subtitleTextObject.rectTransform);
-
-        // Resize background to match text
-        Vector2 textSize = subtitleTextObject.rectTransform.sizeDelta;
-        subtitleBackground.sizeDelta = new Vector2(textSize.x + paddingX, textSize.y + paddingY);
-
-        if (subtitleTime != null)
-        {
-            StopCoroutine(subtitleTime);
-        }
-        subtitleTime = StartCoroutine(HideSubtitle(5f));
     }
 
     public IEnumerator HideSubtitle(float soundTime)
@@ -152,16 +132,6 @@ public class SubtitleManager : MonoBehaviour
     {
         subtitlesOn = isOn;
         ShowHideSubtitle(isOn);
-    }
-
-    private void OnEnable()
-    {
-        EventManager.ShowCustomSubtitle += ShowCustomSubtitle;
-    }
-
-    private void OnDisable()
-    {
-        EventManager.ShowCustomSubtitle -= ShowCustomSubtitle;
     }
 
     [System.Serializable]
