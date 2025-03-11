@@ -20,47 +20,48 @@ public class MediaSplinePath : MonoBehaviour
     {
         return duration;
     }
-    public void EntranceMovement(Transform target) {
-        StartMovement(target, enterStartPoint, enterEndPoint, duration, true);
+    
+    public void EntranceMovement(Transform target, System.Action onComplete = null) 
+    {
+        StartMovement(target, enterStartPoint, enterEndPoint, duration, true, onComplete);
     }
-    public void ExitMovementDestroy(Transform target) {
+    public void ExitMovementDestroy(Transform target) 
+    {
         StartMovement(target, leaveStartPointA, leaveEndPointA, duration, false);
     }    
-    public void ExitMovementAccept(Transform target) {
+    public void ExitMovementAccept(Transform target) 
+    {
         StartMovement(target, leaveStartPointB, leaveEndPointB, duration, false);
     }
 
     // Function to move an object between two points with optional ease-in/out
-    public void StartMovement(Transform target, Transform start, Transform end, float moveTime, bool easeOut)
+    public void StartMovement(Transform target, Transform start, Transform end, float moveTime, bool easeOut, System.Action onComplete = null)
     {
         if (!isMoving)
         {
             EventManager.ShowDeskOverlay?.Invoke(); 
-            StartCoroutine(MoveBetweenPoints(target, start.position, end.position, moveTime, easeOut));
+            StartCoroutine(MoveBetweenPoints(target, start.position, end.position, moveTime, easeOut, onComplete));
         }
     }
 
-    private IEnumerator MoveBetweenPoints(Transform target, Vector3 start, Vector3 end, float moveTime, bool easeOut)
+    private IEnumerator MoveBetweenPoints(Transform target, Vector3 start, Vector3 end, float moveTime, bool easeOut, System.Action onComplete = null)
     {
-        //Debug.Log("Moving media object");
         isMoving = true;
         float elapsedTime = 0f;
 
         while (elapsedTime < moveTime)
         {
             float t = elapsedTime / moveTime; // Normalize time (0 to 1)
-
-            // Apply ease-in or ease-out based on parameter
             float easedT = easeOut ? 1 - (1 - t) * (1 - t) : t * t; // Quadratic ease-in or ease-out
-
             target.position = Vector3.Lerp(start, end, easedT);
-
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
-        target.position = end; // Ensure it ends at the exact position
+        target.position = end; // Ensure exact position at the end
         isMoving = false;
         EventManager.HideDeskOverlay?.Invoke(); 
+
+        onComplete?.Invoke(); // Call the callback if provided
     }
 }

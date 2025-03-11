@@ -20,6 +20,14 @@ public class Entity : MonoBehaviour
     private Draggable draggableScript;
     private GameManager gameManager;
 
+    private NewspaperZoom zoomComponent;
+    private Rigidbody2D rigidBody;
+    private BoxCollider2D boxCollider;
+    public bool beingDestroyed = false;
+    private Vector2 screenBounds;
+    private float playerHalfWidth;
+    private float playerHalfHeight;    
+
     public void SetSplinePrefab(GameObject prefab)
     {
         splinePrefab = prefab;
@@ -33,8 +41,19 @@ public class Entity : MonoBehaviour
             Debug.LogError("No TextMeshPro components found!");
         }
         gameManager = FindFirstObjectByType<GameManager>();
-        zoomComponent = GetComponent<NewspaperZoom>();
-        draggableScript = GetComponent<Draggable>();
+        zoomComponent = GetComponentInChildren<NewspaperZoom>();
+
+
+        TryGetComponent<Rigidbody2D>(out var Urigid);
+        rigidBody = Urigid;
+
+        // Setting object boundaries to keep it inside the screen
+        TryGetComponent<BoxCollider2D>(out var Ucollider);
+        boxCollider = Ucollider;
+        screenBounds = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
+        playerHalfWidth = boxCollider.bounds.extents.x;
+        playerHalfHeight = boxCollider.bounds.extents.y;
+
     }
 
     public void SetBlur(bool isBlurry)
@@ -98,6 +117,22 @@ public class Entity : MonoBehaviour
         transform.eulerAngles.x + angleX,
         transform.eulerAngles.y,
         transform.eulerAngles.z);
+    }
+
+    public void ObjectGravityOn(bool on)
+    {
+        if (rigidBody == null) return;
+
+        if (on)
+        {
+            rigidBody.gravityScale = 3f; // Enable gravity
+        }
+        else
+        {
+            rigidBody.gravityScale = 0f; // Disable gravity
+            rigidBody.linearVelocity = Vector2.zero; // Stop all movement
+            rigidBody.angularVelocity = 0f; // Stop any rotation momentum
+        }
     }
 
     private void CreateCensorBoxes()
@@ -218,27 +253,73 @@ public class Entity : MonoBehaviour
         zoomComponent.AllowZoom();
         draggableScript.enabled = true;
     }
+    
+    private bool isInsideTrigger = false;
+    private Collider2D storedTrigger = null;
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if (collision.gameObject.CompareTag("DropBoxAccept"))
+        if (other.gameObject.CompareTag("DropBoxAccept") || other.gameObject.CompareTag("DropBoxDestroy"))
         {
-            gameManager.EvaluatePlayerAccept(newspaperData.banWords);
-            StartCoroutine(DestroyAfterExitMovement("Accept"));
-
-            zoomComponent.PreventZoom();
+            isInsideTrigger = true;
+            storedTrigger = other;
         }
-        else if (collision.gameObject.CompareTag("DropBoxDestroy"))
-        {
-            gameManager.EvalutatePlayerDestroy(newspaperData.banWords);
-            StartCoroutine(DestroyAfterExitMovement("Destroy"));
+    }
 
-            zoomComponent.PreventZoom();
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other == storedTrigger)
+        {
+            isInsideTrigger = false;
+            storedTrigger = null;
+        }
+    }
+
+    private void Update()
+    {
+        if (isInsideTrigger && storedTrigger != null && !draggableScript.IsDragging()) // Check if dragging has stopped inside trigger
+        {
+            if (storedTrigger.gameObject.CompareTag("DropBoxAccept"))
+            {
+                zoomComponent.preventZoom();
+                gameManager.EvaluatePlayerAccept(newspaperData.banWords);
+                StartCoroutine(DestroyAfterExitMovement("Accept"));
+            }
+            else if (storedTrigger.gameObject.CompareTag("DropBoxDestroy"))
+            {
+                zoomComponent.preventZoom();
+                gameManager.EvalutatePlayerDestroy(newspaperData.banWords);
+                StartCoroutine(DestroyAfterExitMovement("Destroy"));
+            }
+
+            // Prevent multiple triggers
+            isInsideTrigger = false;
+        }
+
+        if(zoomComponent.IsZoomedIn)
+        {
+            ObjectGravityOn(false);
+        }
+        else
+        {
+            ObjectGravityOn(true);
+        }
+
+        if(!beingDestroyed)
+        {
+            Vector2 pos = transform.position;
+
+            pos.x = Mathf.Clamp(pos.x, -screenBounds.x + playerHalfWidth, screenBounds.x - playerHalfWidth);
+            pos.y = Mathf.Clamp(pos.y, -screenBounds.y + playerHalfHeight, screenBounds.y - playerHalfHeight);
+
+            transform.position = pos;
         }
     }
 
     private IEnumerator DestroyAfterExitMovement(string box)
-    {
+    {        
+        beingDestroyed = true;
+        EventManager.PlaySound?.Invoke("tossPaper");
         // Turn of Rigidbody because newspaper gets wierd when colliding with boxes
         if (TryGetComponent<Rigidbody2D>(out var rigidBody))
         {

@@ -89,9 +89,7 @@ public class SceneChanger : MonoBehaviour
     {
         if(loadSlot > 0)
         {
-            //Debug.Log($"Game was restarted or opened through load: {loadSlot}");
             PlayerPrefs.SetInt("LoadSlot", -1);
-            //Debug.Log($"Reseting LoadSlot to -1 to ensure game doesn't load again on restart: {loadSlot}");
             EventManager.NextScene?.Invoke();
 
             // Continue Playtime counter
@@ -99,16 +97,16 @@ public class SceneChanger : MonoBehaviour
         }
         else
         {
-            //Debug.Log($"Game was restarted or opened without load: {loadSlot}");
             PlayerPrefs.SetInt("LoadSlot", -1);
-            //Debug.Log($"Reseting LoadSlot to -1 to ensure game doesn't load again on restart: {loadSlot}");
 
-            mainMenuScene.LoadMainMenu();
-            // gameManager.gameData.day = 5;
-            // gameManager.gameData.money = 10;
+            //mainMenuScene.LoadMainMenu();
+            gameManager.gameData.day = 2;
+            
             //currentSceneIndex = 4;
             //dayEndScene.LoadDayEnd();
-            //jobScene.LoadJobStart();
+            
+            currentSceneIndex = 2;
+            jobScene.LoadJobStart();
         }
     }
 

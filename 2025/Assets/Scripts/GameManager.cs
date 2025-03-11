@@ -136,8 +136,8 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.T))
         {
-            Debug.Log("Showing Timer");
-            onScreenTimer.enabled = !onScreenTimer.enabled; // Hide the onscreen timer
+            //Debug.Log("Showing Timer");
+            //onScreenTimer.enabled = !onScreenTimer.enabled; // Hide the onscreen timer
         }
 
         if (onScreenTimer.enabled == true)

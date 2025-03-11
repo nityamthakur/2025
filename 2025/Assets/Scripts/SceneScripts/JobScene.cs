@@ -140,6 +140,7 @@ public class JobScene : MonoBehaviour
         startWorkButton.onClick.AddListener(() =>
         {
             startWorkButton.gameObject.SetActive(false);
+            EventManager.PlaySound?.Invoke("switch1");
             StartCoroutine(BeginWorkDay());
         });
 
@@ -334,7 +335,7 @@ public class JobScene : MonoBehaviour
 
     private IEnumerator CheckDailyEvent()
     {
-        if(gameManager.gameData.GetCurrentDay() == 5)
+        if(gameManager.gameData.GetCurrentDay() == 3)
         {
             EventManager.ShowCustomSubtitle?.Invoke("Music pausing for dramatic effect"); 
             EventManager.PauseResumeMusic?.Invoke(); 

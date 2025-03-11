@@ -9,6 +9,11 @@ public class NewspaperZoom : MonoBehaviour
     private Vector3 originalPosition;
     private Vector3 previousPosition;
     private bool isZoomedIn = false;
+    public bool IsZoomedIn
+    {
+        get { return isZoomedIn; }
+        private set { isZoomedIn = value; }
+    }    
     private Camera mainCamera;
     private Vector3 zoomPosition;
     private Vector3 zoomScale;
@@ -87,14 +92,17 @@ public class NewspaperZoom : MonoBehaviour
     }
 
     void ToggleZoom()
-    {
+    {            
+        EventManager.PlaySound?.Invoke("newspaperRustling");
         zoomFactor = 1.25f;
         zoomScale = originalScale * zoomFactor;
 
         if (isZoomedIn)
         {
             if (entityComponent)
+            {
                 entityComponent.ChangeMediaRotation(60);
+            }
 
             StartCoroutine(SmoothTransition(previousPosition, originalScale));
 
@@ -110,7 +118,9 @@ public class NewspaperZoom : MonoBehaviour
         else
         {
             if (entityComponent)
+            {
                 entityComponent.ChangeMediaRotation(-60);
+            }
 
             StartCoroutine(SmoothTransition(zoomPosition, zoomScale));
             previousPosition = transform.position;

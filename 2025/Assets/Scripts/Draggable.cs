@@ -6,6 +6,11 @@ public class Draggable : MonoBehaviour
     private Vector3 offset;
     private Rigidbody2D rb;
 
+    private Vector2 screenBounds;
+    private float playerHalfWidth;
+    private float playerHalfHeight;
+    private BoxCollider2D boxCollider;
+
     void Start()
     {
         // Get the Rigidbody2D component
@@ -14,6 +19,19 @@ public class Draggable : MonoBehaviour
         {
             Debug.LogError("Rigidbody2D is missing on the draggable object!");
         }
+
+        // Get BoxCollider2D for size reference
+        boxCollider = GetComponent<BoxCollider2D>();
+        if (boxCollider == null)
+        {
+            Debug.LogError("BoxCollider2D is missing on the draggable object!");
+            return;
+        }
+
+        // Calculate screen bounds and object half-size
+        screenBounds = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
+        playerHalfWidth = boxCollider.bounds.extents.x;
+        playerHalfHeight = boxCollider.bounds.extents.y;
     }
 
     public bool IsDragging()
@@ -49,7 +67,13 @@ public class Draggable : MonoBehaviour
     {
         if (isDragging)
         {
-            transform.position = GetMouseWorldPosition() + offset;
+            Vector3 newPosition = GetMouseWorldPosition() + offset;
+
+            // 🔹 Clamp within screen bounds
+            newPosition.x = Mathf.Clamp(newPosition.x, -screenBounds.x + playerHalfWidth, screenBounds.x - playerHalfWidth);
+            newPosition.y = Mathf.Clamp(newPosition.y, -screenBounds.y + playerHalfHeight, screenBounds.y - playerHalfHeight);
+
+            transform.position = newPosition;
         }
     }
 
