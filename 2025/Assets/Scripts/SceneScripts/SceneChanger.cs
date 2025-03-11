@@ -100,7 +100,7 @@ public class SceneChanger : MonoBehaviour
             PlayerPrefs.SetInt("LoadSlot", -1);
 
             //mainMenuScene.LoadMainMenu();
-            //gameManager.gameData.day = 2;
+            gameManager.gameData.day = 2;
             
             //currentSceneIndex = 4;
             //dayEndScene.LoadDayEnd();

@@ -147,7 +147,7 @@ public class DayEndScene : MonoBehaviour
             return 3;
         }
         // newMericaEnding
-        else if(gameManager.gameData.newMericaRep >= gameManager.gameData.greenPartyRep && gameManager.gameData.day == 5)
+        else if(gameManager.gameData.newMericaRep >= gameManager.gameData.greenPartyRep && gameManager.gameData.day == 3)
         {
             EventManager.PlayMusic?.Invoke("americana");
             return 1;
