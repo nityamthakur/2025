@@ -25,10 +25,10 @@ public class EyeTracking : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (mainCamera != null && gameManager.GetJobScene() != null)
+        if (mainCamera != null)
         {
             EyesAim();
-            if (!isBlinking) StartCoroutine(EyeBlinkRed());
+            //if (!isBlinking) StartCoroutine(EyeBlinkRed());
         }
     }
 

@@ -13,6 +13,7 @@ public class Entity : MonoBehaviour
     [SerializeField] Material defaultMaterial;
     [SerializeField] float blurSize;
     private Newspaper newspaperData;
+    private NewspaperZoom zoomComponent;
     private TMP_Text[] textComponents;
     private MediaSplinePath currSplinePath;
     private GameObject splinePrefab;
@@ -32,7 +33,8 @@ public class Entity : MonoBehaviour
             Debug.LogError("No TextMeshPro components found!");
         }
         gameManager = FindFirstObjectByType<GameManager>();
-
+        zoomComponent = GetComponent<NewspaperZoom>();
+        draggableScript = GetComponent<Draggable>();
     }
 
     public void SetBlur(bool isBlurry)
@@ -186,10 +188,8 @@ public class Entity : MonoBehaviour
         return false;
     }
 
-    private void SetUpSplinePath() {
-        draggableScript = GetComponent<Draggable>(); // Get the Draggable script
-        draggableScript.enabled = false;        
-
+    private void SetUpSplinePath() 
+    {
         // Create a new spline path
         if (splinePrefab == null)
         {
@@ -201,12 +201,22 @@ public class Entity : MonoBehaviour
         if (currSplinePath != null)
         {
             currSplinePath.EntranceMovement(transform);
+            StartCoroutine(SpawnDelay(currSplinePath.GetDuration()));
         }
         else
         {
             Debug.LogError("MediaSplinePath component is missing on instantiated spline.");
         }
-        draggableScript.enabled = true; 
+         
+    }
+
+    IEnumerator SpawnDelay(float duration)
+    {
+        draggableScript.enabled = false;
+        zoomComponent.PreventZoom();
+        yield return new WaitForSeconds(duration);
+        zoomComponent.AllowZoom();
+        draggableScript.enabled = true;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -216,16 +226,14 @@ public class Entity : MonoBehaviour
             gameManager.EvaluatePlayerAccept(newspaperData.banWords);
             StartCoroutine(DestroyAfterExitMovement("Accept"));
 
-            NewspaperZoom zoomComponent = GetComponentInChildren<NewspaperZoom>();
-            zoomComponent.preventZoom();
+            zoomComponent.PreventZoom();
         }
         else if (collision.gameObject.CompareTag("DropBoxDestroy"))
         {
             gameManager.EvalutatePlayerDestroy(newspaperData.banWords);
             StartCoroutine(DestroyAfterExitMovement("Destroy"));
 
-            NewspaperZoom zoomComponent = GetComponentInChildren<NewspaperZoom>();
-            zoomComponent.preventZoom();
+            zoomComponent.PreventZoom();
         }
     }
 

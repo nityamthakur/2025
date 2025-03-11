@@ -1,4 +1,5 @@
 using UnityEngine.Android;
+using UnityEngine;
 
 [System.Serializable]
 public class GameData
@@ -6,7 +7,12 @@ public class GameData
     public int day;
     public int money;
     public int rent;
-    public int newMericaRep, greenPartyRep;
+    public float performanceScale;
+    public float PerformanceScale
+    {
+        get { return performanceScale; }
+        set { performanceScale = Mathf.Clamp(value, 0f, 1f); }
+    }
     public float playTime;
 
     public GameData()
@@ -14,8 +20,7 @@ public class GameData
         day = 1;
         money = 0;
         rent = 3;
-        newMericaRep = 50;
-        greenPartyRep = 25;
+        PerformanceScale = 0.5f;  // Default to 50% performance (0.5f)
         playTime = 0f;
     }
 
@@ -24,8 +29,7 @@ public class GameData
         this.day = loadedGame.day;
         this.money = loadedGame.money;
         this.rent = loadedGame.rent;
-        this.newMericaRep = loadedGame.newMericaRep;
-        this.greenPartyRep = loadedGame.greenPartyRep;
+        this.PerformanceScale = loadedGame.PerformanceScale;
         this.playTime = loadedGame.playTime;
     }
 

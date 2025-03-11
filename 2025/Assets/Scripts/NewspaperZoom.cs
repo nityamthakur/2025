@@ -12,6 +12,7 @@ public class NewspaperZoom : MonoBehaviour
     private Camera mainCamera;
     private Vector3 zoomPosition;
     private Vector3 zoomScale;
+    private int currentDay = 0;
 
     public float zoomFactor = 1.25f;
     public float zoomSpeed = 0.2f;
@@ -126,7 +127,7 @@ public class NewspaperZoom : MonoBehaviour
         }
     }
 
-    System.Collections.IEnumerator SmoothTransition(Vector3 targetPos, Vector3 targetScale)
+    IEnumerator SmoothTransition(Vector3 targetPos, Vector3 targetScale)
     {
         newspaperCollider.enabled = false;
 
@@ -216,8 +217,12 @@ public class NewspaperZoom : MonoBehaviour
         phoneInstance.SetActive(false);
     }
 
-    public void preventZoom()
+    public void PreventZoom()
     {
         stopZoom = false;
+    }
+    public void AllowZoom()
+    {
+        stopZoom = true;
     }
 }
