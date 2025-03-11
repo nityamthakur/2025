@@ -17,7 +17,6 @@ public class NewspaperZoom : MonoBehaviour
     private Camera mainCamera;
     private Vector3 zoomPosition;
     private Vector3 zoomScale;
-    private int currentDay = 0;
 
     public float zoomFactor = 1.25f;
     public float zoomSpeed = 0.2f;
@@ -60,6 +59,7 @@ public class NewspaperZoom : MonoBehaviour
         // Instantiate phone but keep it hidden initially
         if (phonePrefab != null)
         {
+            Debug.Log("How many are being created?");
             phoneInstance = Instantiate(phonePrefab, new Vector3(8f, -6f, 0), Quaternion.identity);
 
             // Correctly locate the child "PhoneTextDisplay" and get TMP component
@@ -234,5 +234,10 @@ public class NewspaperZoom : MonoBehaviour
     public void AllowZoom()
     {
         stopZoom = true;
+    }
+    private void OnDestroy()
+    {
+        Destroy(phoneInstance);
+        phoneInstance = null;
     }
 }

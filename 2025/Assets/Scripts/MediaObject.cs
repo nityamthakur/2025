@@ -20,7 +20,6 @@ public class Entity : MonoBehaviour
     private Draggable draggableScript;
     private GameManager gameManager;
 
-    private NewspaperZoom zoomComponent;
     private Rigidbody2D rigidBody;
     private BoxCollider2D boxCollider;
     public bool beingDestroyed = false;
@@ -33,6 +32,11 @@ public class Entity : MonoBehaviour
         splinePrefab = prefab;
     }
 
+    private void Awake()
+    {
+        draggableScript = GetComponent<Draggable>(); // Get the Draggable script
+    }
+
     private void Start()
     {
         textComponents = GetComponentsInChildren<TMP_Text>(true);
@@ -42,7 +46,6 @@ public class Entity : MonoBehaviour
         }
         gameManager = FindFirstObjectByType<GameManager>();
         zoomComponent = GetComponentInChildren<NewspaperZoom>();
-
 
         TryGetComponent<Rigidbody2D>(out var Urigid);
         rigidBody = Urigid;
@@ -281,13 +284,13 @@ public class Entity : MonoBehaviour
         {
             if (storedTrigger.gameObject.CompareTag("DropBoxAccept"))
             {
-                zoomComponent.preventZoom();
+                zoomComponent.PreventZoom();
                 gameManager.EvaluatePlayerAccept(newspaperData.banWords);
                 StartCoroutine(DestroyAfterExitMovement("Accept"));
             }
             else if (storedTrigger.gameObject.CompareTag("DropBoxDestroy"))
             {
-                zoomComponent.preventZoom();
+                zoomComponent.PreventZoom();
                 gameManager.EvalutatePlayerDestroy(newspaperData.banWords);
                 StartCoroutine(DestroyAfterExitMovement("Destroy"));
             }
