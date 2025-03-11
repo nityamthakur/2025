@@ -208,24 +208,29 @@ public class GameManager : MonoBehaviour
         jobScene.UpdateMediaProcessedText(jobDetails.numMediaProcessed);
 
         int mediaScore = 5;
+        float maxPossibleScore = (float) mediaScore;
 
-        if (currentCensorNum == 0 && totalCensorTargets == 0)
-            mediaScore = playerSucceeds ? 3 : 0;    
-        else
+        if (currentCensorNum == 0 && totalCensorTargets == 0) 
         {
-            int totalMistakes = currentCensorNum - numCensorMistakes - (totalCensorTargets - currentCensorNum);
-            mediaScore -= Math.Abs(totalMistakes / jobDetails.penalty);
-
-            // If you do not censor for any words in article, if there are words to be censored, take a penalty
-            if(currentCensorNum == 0 && totalCensorTargets > 0)
-                mediaScore -= 2;
-        }
+            mediaScore = playerSucceeds ? 3 : 0;
+            maxPossibleScore = 3f;
+        } 
+        
+        // Penalize for mistakes made
+        int totalMistakes = totalCensorTargets - currentCensorNum + numCensorMistakes;
+        int mistakeBuffer = totalMistakes > 0 ? 1 : 0;
+        mediaScore -= Math.Abs(totalMistakes / jobDetails.penalty) + mistakeBuffer;
+        
+        // Change value on performance scale
+        float performanceChange = maxPossibleScore - mediaScore > 0 ? -0.03f : 0.03f;
+        gameData.PerformanceScale += performanceChange; 
 
         // Score gets cut in half for money earned after timer is up
         if(jobDetails.currClockTime <= 0 && mediaScore > 0)
             mediaScore /= 2;
 
         TotalScore += Math.Clamp(mediaScore, 0, 5);
+
         EvaluatePlayerScore();
         ResetCensorTracking();
         CheckDayEnd();
@@ -234,17 +239,6 @@ public class GameManager : MonoBehaviour
     public void EvalutatePlayerDestroy(string[] banWords)
     {
         bool playerSucceeds = banWords.Length != 0;
-
-        jobDetails.numMediaProcessed += 1;
-        jobScene.UpdateMediaProcessedText(jobDetails.numMediaProcessed);
-    
-        int mediaScore = playerSucceeds ? 3 : 0;
-        // Score gets cut in half for money earned after timer is up
-        if(jobDetails.currClockTime <= 0 && mediaScore > 0)
-            mediaScore /= 2;
-        
-        Debug.Log($"mediaScore: {mediaScore}, TotalScore: {totalScore}");
-        TotalScore += mediaScore;
 
         if (playerSucceeds)
         {
@@ -257,6 +251,23 @@ public class GameManager : MonoBehaviour
             EventManager.PlaySound?.Invoke("errorBuzz");
         }
 
+        jobDetails.numMediaProcessed += 1;
+        jobScene.UpdateMediaProcessedText(jobDetails.numMediaProcessed);
+    
+        int mediaScore = playerSucceeds ? 3 : 0;
+        float maxPossibleScore = 3f;
+
+        float performanceChange = maxPossibleScore - mediaScore > 0 ? -0.03f : 0.03f;
+        gameData.PerformanceScale += performanceChange;
+
+        // Score gets cut in half for money earned after timer is up
+        if(jobDetails.currClockTime <= 0 && mediaScore > 0)
+            mediaScore /= 2;
+        
+        Debug.Log($"mediaScore: {mediaScore}, TotalScore: {totalScore}");
+        TotalScore += mediaScore;
+
+
         EvaluatePlayerScore();
         ResetCensorTracking();
         CheckDayEnd();
@@ -266,6 +277,8 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log($"Total Score: {TotalScore}");
         Debug.Log($"Results: \n{currentCensorNum}/{totalCensorTargets} words correctly censored. {numCensorMistakes} words incorrectly censored.");
+    
+        Debug.Log($"Performance Scale: {gameData.PerformanceScale}");
     }
 
     public void CheckDayEnd()
@@ -347,7 +360,7 @@ public class JobDetails
     {
         numMediaProcessed = 0;
         numMediaNeeded = 5;
-        numMediaExtra = 7;
+        numMediaExtra = 5;
         penalty = 2;
         currClockTime = 0f;
     }

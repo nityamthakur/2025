@@ -16,6 +16,11 @@ public class MediaSplinePath : MonoBehaviour
     [SerializeField] private float duration = 1f;  // Default movement time
     private bool isMoving = false;
 
+    public float GetDuration()
+    {
+        return duration;
+    }
+    
     public void EntranceMovement(Transform target, System.Action onComplete = null) 
     {
         StartMovement(target, enterStartPoint, enterEndPoint, duration, true, onComplete);

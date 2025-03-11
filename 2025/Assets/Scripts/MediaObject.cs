@@ -13,6 +13,7 @@ public class Entity : MonoBehaviour
     [SerializeField] Material defaultMaterial;
     [SerializeField] float blurSize;
     private Newspaper newspaperData;
+    private NewspaperZoom zoomComponent;
     private TMP_Text[] textComponents;
     private MediaSplinePath currSplinePath;
     private GameObject splinePrefab;
@@ -52,6 +53,7 @@ public class Entity : MonoBehaviour
         screenBounds = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
         playerHalfWidth = boxCollider.bounds.extents.x;
         playerHalfHeight = boxCollider.bounds.extents.y;
+
     }
 
     public void SetBlur(bool isBlurry)
@@ -221,10 +223,8 @@ public class Entity : MonoBehaviour
         return false;
     }
 
-    private void SetUpSplinePath() {
-        draggableScript = GetComponent<Draggable>(); // Get the Draggable script
-        draggableScript.enabled = false;        
-
+    private void SetUpSplinePath() 
+    {
         // Create a new spline path
         if (splinePrefab == null)
         {
@@ -235,18 +235,23 @@ public class Entity : MonoBehaviour
 
         if (currSplinePath != null)
         {
-            currSplinePath.EntranceMovement(transform, () => 
-            {
-                draggableScript.enabled = true;
-                //ChangeMediaRotation(60);
-                rigidBody.gravityScale = 3f;  // Enable gravity (adjust as needed)
-            });
+            currSplinePath.EntranceMovement(transform);
+            StartCoroutine(SpawnDelay(currSplinePath.GetDuration()));
         }
         else
         {
             Debug.LogError("MediaSplinePath component is missing on instantiated spline.");
         }
-        draggableScript.enabled = true; 
+         
+    }
+
+    IEnumerator SpawnDelay(float duration)
+    {
+        draggableScript.enabled = false;
+        zoomComponent.PreventZoom();
+        yield return new WaitForSeconds(duration);
+        zoomComponent.AllowZoom();
+        draggableScript.enabled = true;
     }
     
     private bool isInsideTrigger = false;
@@ -276,15 +281,16 @@ public class Entity : MonoBehaviour
         {
             if (storedTrigger.gameObject.CompareTag("DropBoxAccept"))
             {
+                zoomComponent.preventZoom();
                 gameManager.EvaluatePlayerAccept(newspaperData.banWords);
                 StartCoroutine(DestroyAfterExitMovement("Accept"));
             }
             else if (storedTrigger.gameObject.CompareTag("DropBoxDestroy"))
             {
+                zoomComponent.preventZoom();
                 gameManager.EvalutatePlayerDestroy(newspaperData.banWords);
                 StartCoroutine(DestroyAfterExitMovement("Destroy"));
             }
-            zoomComponent.preventZoom();
 
             // Prevent multiple triggers
             isInsideTrigger = false;

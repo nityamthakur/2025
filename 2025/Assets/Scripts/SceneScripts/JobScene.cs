@@ -29,9 +29,10 @@ public class JobScene : MonoBehaviour
     private GameObject outsideBuildingObject;
 
     // ---------------------------------
-    private float workTimer = 180f;
+    private float workTimer = 180f;      // 180f
     private Image hourHand;
     private Image minuteHand;
+    private Slider performanceSlider;
 
     // ---------------------------------
 
@@ -171,6 +172,12 @@ public class JobScene : MonoBehaviour
             Debug.Log("Failed to find minuteHand in SetUpJobStart");
         }
 
+        performanceSlider = currJobScene.transform.Find("PerformanceScale").GetComponent<Slider>();
+        if (performanceSlider == null)
+        {
+            Debug.Log("Failed to find performanceSlider in SetUpJobStart");
+        }
+        performanceSlider.gameObject.SetActive(false);
     }
 
     private void SetScreenEmail(TextMeshProUGUI screenText)
@@ -218,6 +225,8 @@ public class JobScene : MonoBehaviour
         {
             Debug.LogError("TextMeshProUGUI component not found on startWorkButton.");
         }
+        performanceSlider.gameObject.SetActive(true);
+        performanceSlider.value = gameManager.gameData.PerformanceScale;
 
         startWorkButton.onClick.RemoveAllListeners();
         startWorkButton.interactable = true;
@@ -228,7 +237,18 @@ public class JobScene : MonoBehaviour
             gameManager.gameData.money += score;
             StartCoroutine(NextScene());
         });
-        screenText.text = $"Day {gameManager.gameData.day} Results:\n\nMedia Processed: {mediaProcessed}\n\nSupervisors Notified of Your Day\n\nProfit: ${score}\n\nTotal Money: ${gameManager.gameData.money + score}\n\nPossibility of Promotion: Unknown";
+
+        string promotionPossibility = "Unknown";
+        if (gameManager.gameData.PerformanceScale >= 0.66f)
+        {
+            promotionPossibility = "Likely";
+        }
+        else if (gameManager.gameData.PerformanceScale < 0.33f)
+        {
+            promotionPossibility = "Unlikely";
+        }
+
+        screenText.text = $"Day {gameManager.gameData.day} Results:\n\nMedia Processed: {mediaProcessed}\n\nSupervisors Notified of Your Day\n\nProfit: ${score}\n\nTotal Money: ${gameManager.gameData.money + score}\n\nPossibility of Promotion: {promotionPossibility}";
 
     }
 
