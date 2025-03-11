@@ -149,6 +149,7 @@ public class DayEndScene : MonoBehaviour
         // newMericaEnding
         else if(gameManager.gameData.newMericaRep >= gameManager.gameData.greenPartyRep && gameManager.gameData.day == 5)
         {
+            EventManager.PlayMusic?.Invoke("americana");
             return 1;
         }
         // Green Party Ending

@@ -209,8 +209,14 @@ public class Entity : MonoBehaviour
         draggableScript.enabled = true; 
     }
 
+    /*
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (TryGetComponent<Rigidbody2D>(out var rigidBody))
+        {
+            rigidBody.freezeRotation = true;
+        }
+
         if (collision.gameObject.CompareTag("DropBoxAccept"))
         {
             gameManager.EvaluatePlayerAccept(newspaperData.banWords);
@@ -228,9 +234,55 @@ public class Entity : MonoBehaviour
             zoomComponent.preventZoom();
         }
     }
+    */
+    
+    private bool isInsideTrigger = false;
+    private Collider2D storedTrigger = null;
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("DropBoxAccept") || other.gameObject.CompareTag("DropBoxDestroy"))
+        {
+            isInsideTrigger = true;
+            storedTrigger = other;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other == storedTrigger)
+        {
+            isInsideTrigger = false;
+            storedTrigger = null;
+        }
+    }
+
+    private void Update()
+    {
+        if (isInsideTrigger && storedTrigger != null && !draggableScript.IsDragging()) // Check if dragging has stopped inside trigger
+        {
+            if (storedTrigger.gameObject.CompareTag("DropBoxAccept"))
+            {
+                gameManager.EvaluatePlayerAccept(newspaperData.banWords);
+                StartCoroutine(DestroyAfterExitMovement("Accept"));
+            }
+            else if (storedTrigger.gameObject.CompareTag("DropBoxDestroy"))
+            {
+                gameManager.EvalutatePlayerDestroy(newspaperData.banWords);
+                StartCoroutine(DestroyAfterExitMovement("Destroy"));
+            }
+
+            NewspaperZoom zoomComponent = GetComponentInChildren<NewspaperZoom>();
+            zoomComponent.preventZoom();
+
+            // Prevent multiple triggers
+            isInsideTrigger = false;
+        }
+    }
 
     private IEnumerator DestroyAfterExitMovement(string box)
     {
+        EventManager.PlaySound?.Invoke("tossPaper");
         // Turn of Rigidbody because newspaper gets wierd when colliding with boxes
         if (TryGetComponent<Rigidbody2D>(out var rigidBody))
         {

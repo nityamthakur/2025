@@ -64,10 +64,15 @@ public class ImageObject : MonoBehaviour
 
     private IEnumerator DestroyAfterExitMovement(string box)
     {
+        EventManager.PlaySound?.Invoke("tossPaper");
         // Turn of Rigidbody because newspaper gets wierd when colliding with boxes
         if (TryGetComponent<Rigidbody2D>(out var rigidBody))
         {
             rigidBody.simulated = false; // Disables physics interactions without removing Rigidbody2D
+            transform.eulerAngles = new Vector3(
+                transform.eulerAngles.x,
+                0,
+                transform.eulerAngles.z);
         }
 
         draggableScript.enabled = false; 

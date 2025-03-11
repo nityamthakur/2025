@@ -139,6 +139,7 @@ public class JobScene : MonoBehaviour
         startWorkButton.onClick.AddListener(() =>
         {
             startWorkButton.gameObject.SetActive(false);
+            EventManager.PlaySound?.Invoke("switch1");
             StartCoroutine(BeginWorkDay());
         });
 

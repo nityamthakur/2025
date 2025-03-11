@@ -687,7 +687,6 @@ MonoBehaviour:
   entityComponent: {fileID: 0}
   backOfNewspaper: {fileID: 103021862206449432}
   phonePrefab: {fileID: 8818031372940335481, guid: 051ac3669279742bcb852f82c5e0e631, type: 3}
-  computerScreenText: {fileID: 0}
 --- !u!61 &6355933026193757114
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -718,7 +717,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0

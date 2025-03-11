@@ -86,7 +86,8 @@ public class NewspaperZoom : MonoBehaviour
     }
 
     void ToggleZoom()
-    {
+    {            
+        EventManager.PlaySound?.Invoke("newspaperRustling");
         zoomFactor = 1.25f;
         zoomScale = originalScale * zoomFactor;
 

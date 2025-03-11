@@ -48,6 +48,7 @@ public class MainMenuScene : MonoBehaviour
         playButton.onClick.AddListener(() =>
         {
             playButton.interactable = false;
+            EventManager.PlaySound?.Invoke("switch1"); 
             StartCoroutine(StartGame());
         });
 
