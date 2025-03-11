@@ -18,7 +18,7 @@ public class DayEndScene : MonoBehaviour
     private GameObject currentPrefab;
     private Image backgroundImage, textBoxBackground;
     private Button gameButton, nextButton;
-    private TextMeshProUGUI buttonText, gameText, textBoxText;
+    private TextMeshProUGUI buttonText, gameText, textBoxText, dayText;
     private GameManager gameManager;
 
     private int linePos = 0;
@@ -50,7 +50,7 @@ public class DayEndScene : MonoBehaviour
             Debug.Log("Failed to find BackgroundImage component");
             return;
         }
-        backgroundImage.color = Color.black;
+        backgroundImage.gameObject.SetActive(false);
 
         gameText = currentPrefab.transform.Find("GameText").GetComponent<TextMeshProUGUI>();
         if(gameText == null)
@@ -74,6 +74,15 @@ public class DayEndScene : MonoBehaviour
             return;
         }
         textBoxText.gameObject.SetActive(false);
+
+        dayText = currentPrefab.transform.Find("DayText").GetComponent<TextMeshProUGUI>();
+        if (dayText == null)
+        {
+            Debug.LogError("Failed to find dayText component.");
+            return;
+        }
+        else
+            dayText.text = $"Day {gameManager.gameData.day}";
 
         int currMoney = gameManager.gameData.GetCurrentMoney();
         int rentDue = gameManager.gameData.rent;
@@ -125,7 +134,10 @@ public class DayEndScene : MonoBehaviour
         gameManager.gameData.SetCurrentMoney(gameManager.gameData.money - rentDue);
 
         if(SelectedEnding() > 0)
+        {
+            dayText.gameObject.SetActive(false);
             return true;
+        }
         else
             return false;
     }
@@ -267,8 +279,7 @@ public class DayEndScene : MonoBehaviour
 
     private void ChangeSpeaker(Line currentLine)
     {
-        backgroundImage.color = Color.white;
-
+        backgroundImage.gameObject.SetActive(true);
         // Change the speaker image based on who is speaking
         switch (currentLine.speaker.ToLower())
         {
@@ -288,8 +299,7 @@ public class DayEndScene : MonoBehaviour
                 backgroundImage.sprite = badEnding;
                 break;
             default:
-                backgroundImage.sprite = null;
-                backgroundImage.color = Color.black;
+                backgroundImage.gameObject.SetActive(false);
                 break;
         }
     }

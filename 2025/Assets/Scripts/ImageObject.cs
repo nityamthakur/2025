@@ -13,10 +13,16 @@ public class ImageObject : MonoBehaviour
     private Vector2 screenBounds;
     private float playerHalfWidth;
     private float playerHalfHeight;
+
+    private void Awake()
+    {
+        draggableScript = GetComponent<Draggable>(); // Get the Draggable script
+    }
     
     private void Start()
     {
         ChangeMediaRotation( 60 );
+
         TryGetComponent<Rigidbody2D>(out var Urigid);
         rigidBody = Urigid;
 
@@ -65,7 +71,6 @@ public class ImageObject : MonoBehaviour
 
     public void SetUpSplinePath(GameObject prefab) 
     {
-        draggableScript = GetComponent<Draggable>(); // Get the Draggable script
         draggableScript.enabled = false;        
 
         // Create a new spline path
