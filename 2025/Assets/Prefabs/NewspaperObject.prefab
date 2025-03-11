@@ -687,7 +687,6 @@ MonoBehaviour:
   entityComponent: {fileID: 0}
   backOfNewspaper: {fileID: 103021862206449432}
   phonePrefab: {fileID: 8818031372940335481, guid: 051ac3669279742bcb852f82c5e0e631, type: 3}
-  computerScreenText: {fileID: 0}
 --- !u!61 &6355933026193757114
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -760,7 +759,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 1
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!1 &5049977346780101309
 GameObject:
   m_ObjectHideFlags: 0

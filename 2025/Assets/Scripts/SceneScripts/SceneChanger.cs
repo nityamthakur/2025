@@ -104,7 +104,8 @@ public class SceneChanger : MonoBehaviour
             //Debug.Log($"Reseting LoadSlot to -1 to ensure game doesn't load again on restart: {loadSlot}");
 
             mainMenuScene.LoadMainMenu();
-            //gameManager.gameData.day = 2;
+            // gameManager.gameData.day = 5;
+            // gameManager.gameData.money = 10;
             //currentSceneIndex = 4;
             //dayEndScene.LoadDayEnd();
             //jobScene.LoadJobStart();

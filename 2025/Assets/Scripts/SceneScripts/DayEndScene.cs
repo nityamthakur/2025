@@ -12,7 +12,8 @@ public class DayEndScene : MonoBehaviour
     [SerializeField] private GameObject dayEndObjectPrefab;
     [SerializeField] private Sprite newMericaEndingMap;
     [SerializeField] private Sprite newMericaEndingStar;
-    [SerializeField] private Sprite greenPartyEnding;
+    [SerializeField] private Sprite femaleNewsAnchor;
+    [SerializeField] private Sprite maleNewsAnchor;
     [SerializeField] private Sprite badEnding;
     private GameObject currentPrefab;
     private Image backgroundImage, textBoxBackground;
@@ -146,15 +147,24 @@ public class DayEndScene : MonoBehaviour
             EventManager.PlayMusic?.Invoke("darkfog");
             return 3;
         }
-        // newMericaEnding
-        else if(gameManager.gameData.newMericaRep >= gameManager.gameData.greenPartyRep && gameManager.gameData.day == 5)
+        // Decide endings based on performance
+        else if (gameManager.gameData.day == 5)
         {
-            return 1;
-        }
-        // Green Party Ending
-        else if(gameManager.gameData.newMericaRep >= gameManager.gameData.greenPartyRep && gameManager.gameData.day == 5)
-        {
-            return 2;
+            // NewMerica Ending
+            if (gameManager.gameData.PerformanceScale >= 0.66f)
+            {
+                return 1;
+            }
+            // Neutral Ending
+            else if (gameManager.gameData.PerformanceScale >= 0.33f)
+            {
+                return 2;
+            }
+            // Green Party (Bad) Ending
+            else
+            {
+                return 3;
+            }
         }
         // No GameOver
         return 0;
@@ -268,8 +278,11 @@ public class DayEndScene : MonoBehaviour
             case "newmericaendingstar":
                 backgroundImage.sprite = newMericaEndingStar;
                 break;
-            case "greenpartyending":
-                backgroundImage.sprite = greenPartyEnding;
+            case "femalenewsanchor":
+                backgroundImage.sprite = femaleNewsAnchor;
+                break;
+            case "malenewsanchor":
+                backgroundImage.sprite = maleNewsAnchor;
                 break;
             case "badending":
                 backgroundImage.sprite = badEnding;
