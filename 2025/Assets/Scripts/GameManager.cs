@@ -2,11 +2,14 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    // Not sure what this is for?
     public GameManager Instance { get; private set; }
+    public static bool IsRestarting { get; private set; }
+    public static event Action OnGameRestart;
+
     [SerializeField] SceneChanger sceneChanger;
     [SerializeField] ObjectSpawner objectSpawner;
     [SerializeField] AccessibilityManager accessibilityManager;
@@ -100,6 +103,15 @@ public class GameManager : MonoBehaviour
 
     // -------------------------------------
     // Functions
+    public void RestartGame()
+    {
+        IsRestarting = true;
+        OnGameRestart?.Invoke();
+        Time.timeScale = 1;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        IsRestarting = false;
+    }
+
     void Awake()
     {
         objectSpawner.Initialize();

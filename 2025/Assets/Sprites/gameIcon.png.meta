@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: c2eb2095f5d13414eb6c53f38948fb9f
+guid: fa31a8405a3a56b46b1ee511d27da631
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8959367852718000375
-    second: CATPOSTERFullDesk1000_0
+      213: -4139182132029449524
+    second: gameIcon_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: CATPOSTERFullDesk1000_0
+      name: gameIcon_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 6400
-        height: 3600
+        width: 1024
+        height: 1024
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 7f88f41e791165c70800000000000000
-      internalID: 8959367852718000375
+      spriteID: cca9dbff7cbae86c0800000000000000
+      internalID: -4139182132029449524
       vertices: []
       indices: 
       edges: []
@@ -134,8 +134,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      CATPOSTERFullDesk1000_0: 8959367852718000375
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

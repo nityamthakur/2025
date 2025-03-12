@@ -347,13 +347,15 @@ public class Entity : MonoBehaviour
 
     private void OnDestroy()
     {
-        // Ensure the spline path is destroyed when media is destroyed
+        if (!GameManager.IsRestarting) // Prevent triggering OnMediaDestroyed when restarting
+        {
+            EventManager.OnMediaDestroyed?.Invoke(gameObject);
+        }
+
         if (currSplinePath != null)
         {
             Destroy(currSplinePath.gameObject);
         }
-        
-        EventManager.OnMediaDestroyed?.Invoke(gameObject);
     }
 
     [Serializable]

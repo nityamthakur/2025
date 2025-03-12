@@ -59,7 +59,6 @@ public class NewspaperZoom : MonoBehaviour
         // Instantiate phone but keep it hidden initially
         if (phonePrefab != null)
         {
-            Debug.Log("How many are being created?");
             phoneInstance = Instantiate(phonePrefab, new Vector3(8f, -6f, 0), Quaternion.identity);
 
             // Correctly locate the child "PhoneTextDisplay" and get TMP component

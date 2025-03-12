@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 3c2ac63c996c4f74781e724ed4c12b15
+guid: cb015b7dc93c8f34ba543b98ef0ea3aa
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3634233576498660357
-    second: desk4.0_0
+      213: -4840612586765563828
+    second: gameIcon2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: desk4.0_0
+      name: gameIcon2_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 6400
-        height: 3600
+        width: 1024
+        height: 1024
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: bfbfff131db909dc0800000000000000
-      internalID: -3634233576498660357
+      spriteID: c48cd8ebf70b2dcb0800000000000000
+      internalID: -4840612586765563828
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      desk4.0_0: -3634233576498660357
+      gameIcon2_0: -4840612586765563828
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

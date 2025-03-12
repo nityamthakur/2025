@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: c0820b116163949479b29b185bfda6f7
+guid: 12cfa2c3fdcaa8644816bc0be2f33a8f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6142478296129381541
-    second: FullDesk1000_0
+      213: 8941961987756735026
+    second: desk5.0_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,7 +100,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: FullDesk1000_0
+      name: desk5.0_0
       rect:
         serializedVersion: 2
         x: 0
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 5a4a65157777e3550800000000000000
-      internalID: 6142478296129381541
+      spriteID: 23a39432d0b381c70800000000000000
+      internalID: 8941961987756735026
       vertices: []
       indices: 
       edges: []
@@ -134,8 +134,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      FullDesk1000_0: 6142478296129381541
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
