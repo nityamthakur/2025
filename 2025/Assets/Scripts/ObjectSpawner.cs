@@ -57,6 +57,9 @@ public class ObjectSpawner : MonoBehaviour
 
         //Debug.Log($"Spawning object at: {mediaSpawner.transform.position}");
 
+        // Sound Effect: Paper Comes In
+        EventManager.PlaySound?.Invoke("papercomein");
+
         // Create new media object
         GameObject newMedia = Instantiate(mediaObject, mediaSpawner.transform.position, Quaternion.identity);
 
@@ -79,6 +82,7 @@ public class ObjectSpawner : MonoBehaviour
     // For non media censoring objects like fliers and pamphlets
     public void SpawnImageObject(bool takeActionOnDestroy) 
     {
+
         // Create new media object
         GameObject newMedia = Instantiate(imageObject, mediaSpawner.transform.position, Quaternion.identity);
         
