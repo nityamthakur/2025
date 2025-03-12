@@ -112,9 +112,7 @@ public class OptionsMenu : MonoBehaviour
             // Store the action to execute if "Yes" is clicked
             confirmAction = () =>
             {
-                Debug.Log("Restarting Game");
-                Time.timeScale = 1;
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                gameManager.RestartGame();
             };
             cancelAction = () =>
             {
@@ -446,7 +444,6 @@ public class OptionsMenu : MonoBehaviour
             // Listen for changes when toggle is clicked
             muteToggle.onValueChanged.AddListener((bool isOn) =>
             {
-                Debug.Log("muteToggle");
                 audioManager.MuteToggle(isOn);
                 muteActiveText.text = isOn ? "On" : "Off";
                 EventManager.PlaySound?.Invoke("switch1"); 
@@ -462,7 +459,6 @@ public class OptionsMenu : MonoBehaviour
             // Listen for changes when toggle is clicked
             subtitleToggle.onValueChanged.AddListener((bool isOn) =>
             {
-                //Debug.Log("subtitleToggle");
                 subtitleManager.SubtitleToggle(isOn);
                 subtitleActiveText.text = isOn ? "On" : "Off";
                 EventManager.PlaySound?.Invoke("switch1"); 

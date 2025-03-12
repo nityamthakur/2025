@@ -55,7 +55,7 @@ public class ObjectSpawner : MonoBehaviour
         if (quitting)
             return;
 
-        //Debug.Log($"Spawning object at: {mediaSpawner.transform.position}");
+        Debug.Log($"Spawning object at: {mediaSpawner.transform.position}");
 
         // Sound Effect: Paper Comes In
         EventManager.PlaySound?.Invoke("papercomein");
@@ -75,6 +75,11 @@ public class ObjectSpawner : MonoBehaviour
         else
         {
             Debug.LogError("Spawned media object is missing the Entity script!");
+        }
+
+        if(quitting)
+        {
+            Destroy(newMedia);
         }
 
     }
@@ -219,16 +224,25 @@ public class ObjectSpawner : MonoBehaviour
     private void OnEnable()
     {
         EventManager.OnMediaDestroyed += HandleMediaDestroyed;
+        GameManager.OnGameRestart += StopSpawningOnRestart; // Listen for restarts
     }
 
     private void OnDisable()
     {
         EventManager.OnMediaDestroyed -= HandleMediaDestroyed;
+        GameManager.OnGameRestart -= StopSpawningOnRestart;
     }
 
     private void HandleMediaDestroyed(GameObject customer)
     {
+        if (quitting)
+            return;
         SpawnNewMediaObject();
+    }
+    
+    private void StopSpawningOnRestart()
+    {
+        quitting = true;
     }
 
     [Serializable]
