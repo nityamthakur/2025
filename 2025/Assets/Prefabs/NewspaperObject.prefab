@@ -656,6 +656,7 @@ MonoBehaviour:
   blurMaterial: {fileID: 2100000, guid: ccab195f60fdefc4092484acd6795aa2, type: 2}
   defaultMaterial: {fileID: 1659601194416434223, guid: a8e39c1c99ee52c4b83b118e5905ce04, type: 2}
   blurSize: 20
+  beingDestroyed: 0
 --- !u!114 &6764300093197395354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -686,7 +687,9 @@ MonoBehaviour:
   stopZoom: 1
   entityComponent: {fileID: 0}
   backOfNewspaper: {fileID: 103021862206449432}
-  phonePrefab: {fileID: 8818031372940335481, guid: 051ac3669279742bcb852f82c5e0e631, type: 3}
+  phonePrefab: {fileID: 8764790447295677070, guid: 9e6adce8c8125c046a3755b6e97c7847, type: 3}
+  phoneObj: {fileID: 0}
+  phoneInstance: {fileID: 0}
 --- !u!61 &6355933026193757114
 BoxCollider2D:
   m_ObjectHideFlags: 0

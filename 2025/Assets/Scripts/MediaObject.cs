@@ -307,15 +307,6 @@ public class Entity : MonoBehaviour
             isInsideTrigger = false;
         }
 
-        if(zoomComponent.IsZoomedIn)
-        {
-            ObjectGravityOn(false);
-        }
-        else
-        {
-            ObjectGravityOn(true);
-        }
-
         if(!beingDestroyed)
         {
             Vector2 pos = transform.position;

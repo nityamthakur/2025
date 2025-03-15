@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public class NewspaperZoom : MonoBehaviour
 {
@@ -27,8 +28,9 @@ public class NewspaperZoom : MonoBehaviour
     
     // Phone object
     public GameObject phonePrefab;
-    private GameObject phoneInstance;
-    private TextMeshPro phoneText;
+    private GameObject phoneObj, phoneInstance;
+    private Vector3 phoneStartPos, phoneEndPos;
+    private TextMeshProUGUI phoneText;
 
     private Collider2D newspaperCollider;
     private Draggable draggableScript;
@@ -56,29 +58,7 @@ public class NewspaperZoom : MonoBehaviour
             Debug.LogError("Back of Newspaper not assigned!");
         }
 
-        // Instantiate phone but keep it hidden initially
-        if (phonePrefab != null)
-        {
-            phoneInstance = Instantiate(phonePrefab, new Vector3(8f, -6f, 0), Quaternion.identity);
-
-            // Correctly locate the child "PhoneTextDisplay" and get TMP component
-            Transform phoneTextTransform = phoneInstance.transform.Find("PhoneTextDisplay");
-            if (phoneTextTransform != null)
-            {
-                phoneText = phoneInstance.GetComponentInChildren<TextMeshPro>();
-            }
-
-            if (phoneText == null)
-            {
-                Debug.LogError("TextMeshProUGUI component not found in 'PhoneTextDisplay' child of the phone prefab!");
-            }
-
-            phoneInstance.SetActive(false);
-        }
-        else
-        {
-            Debug.LogError("Phone prefab is missing!");
-        }
+        CreatePhone();
     }
 
     void Update()
@@ -98,10 +78,10 @@ public class NewspaperZoom : MonoBehaviour
 
         if (isZoomedIn)
         {
+            entityComponent.ObjectGravityOn(true);
+
             if (entityComponent)
-            {
                 entityComponent.ChangeMediaRotation(60);
-            }
 
             StartCoroutine(SmoothTransition(previousPosition, originalScale));
 
@@ -116,10 +96,10 @@ public class NewspaperZoom : MonoBehaviour
         }
         else
         {
+            entityComponent.ObjectGravityOn(false);
+
             if (entityComponent)
-            {
                 entityComponent.ChangeMediaRotation(-60);
-            }
 
             StartCoroutine(SmoothTransition(zoomPosition, zoomScale));
             previousPosition = transform.position;
@@ -160,70 +140,97 @@ public class NewspaperZoom : MonoBehaviour
 
         if (!isZoomedIn)
             newspaperCollider.enabled = true;
+        else
+            transform.position = zoomPosition;
+
     }
 
-    void UpdatePhoneText()
-{
-    if (phoneText != null)
-    {
-        List<string> banWords = new List<string>(gameManager.GetBanTargetWords());
-        List<string> censorWords = new List<string>(gameManager.GetCensorTargetWords());
-
-        // Start with the Ban List
-        string displayText = "<b>BAN LIST:</b>\n";
-        foreach (string phrase in banWords)
+    private void CreatePhone()
+    { 
+        // Instantiate phone but keep it hidden initially
+        if (phonePrefab != null)
         {
-            displayText += phrase.Replace(" ", "\n") + "\n\n"; // Ensures multi-word phrases are split into separate lines
+            phoneObj = Instantiate(phonePrefab);
+
+            // Locate and attach the moveable phone pieces in PhoneObj
+            Transform phoneInstanceTransform = phoneObj.transform.Find("PhoneObj");
+            if (phoneInstanceTransform != null)
+                phoneInstance = phoneInstanceTransform.gameObject; // Fixed here
+            else
+                Debug.LogError("PhoneObj is null inside phonePrefab.");
+
+            // Locate the phone text component
+            Transform phoneTextTransform = phoneInstanceTransform?.Find("PhoneTextDisplay");
+            if (phoneTextTransform != null)
+                phoneText = phoneTextTransform.GetComponent<TextMeshProUGUI>(); // Fixed here
+            if (phoneText == null)
+                Debug.LogError("PhoneText is null - Check that 'PhoneTextDisplay' has a TextMeshPro component.");
+
+            phoneStartPos = phoneInstance.transform.position;
+            phoneEndPos = phoneInstance.transform.position + new Vector3(0f, -1000f, 0f);
+            phoneInstance.transform.position = phoneEndPos;
         }
-
-        // Only show the Censor List from Day 2 onward
-        if (gameManager.gameData.GetCurrentDay() > 1)
+        else
         {
-            displayText += "<b>CENSOR LIST:</b>\n";
-            foreach (string phrase in censorWords)
+            Debug.LogError("Phone prefab is missing!");
+        }
+    }
+    private void UpdatePhoneText()
+    {
+        if (phoneText != null)
+        {
+            List<string> banWords = new List<string>(gameManager.GetBanTargetWords());
+            List<string> censorWords = new List<string>(gameManager.GetCensorTargetWords());
+
+            // Start with the Ban List
+            string displayText = "<b>BAN LIST:</b>\n";
+            foreach (string phrase in banWords)
             {
-                displayText += phrase.Replace(" ", "\n") + "\n\n";
+                displayText += phrase.Replace(" ", "\n") + "\n\n"; // Ensures multi-word phrases are split into separate lines
             }
+
+            // Only show the Censor List from Day 2 onward
+            if (gameManager.gameData.GetCurrentDay() > 1)
+            {
+                displayText += "<b>CENSOR LIST:</b>\n";
+                foreach (string phrase in censorWords)
+                {
+                    displayText += phrase.Replace(" ", "\n") + "\n\n";
+                }
+            }
+
+            phoneText.text = displayText;
         }
-
-        phoneText.text = displayText;
     }
-}
 
-    IEnumerator ShowPhone()
+    private IEnumerator ShowPhone()
     {
-        phoneInstance.SetActive(true);
-        Vector3 startPos = phoneInstance.transform.position;
-        Vector3 targetPos = new Vector3(7f, -0.5f, 0);
         float elapsedTime = 0f;
         float duration = 0.3f;
 
         while (elapsedTime < duration)
         {
-            phoneInstance.transform.position = Vector3.Lerp(startPos, targetPos, elapsedTime / duration);
+            phoneInstance.transform.position = Vector3.Lerp(phoneEndPos, phoneStartPos, elapsedTime / duration);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
-        phoneInstance.transform.position = targetPos;
+        phoneInstance.transform.position = phoneStartPos;
     }
 
-    IEnumerator HidePhone()
+    private IEnumerator HidePhone()
     {
-        Vector3 startPos = phoneInstance.transform.position;
-        Vector3 targetPos = new Vector3(7f, -6f, 0);
         float elapsedTime = 0f;
         float duration = 0.2f;
 
         while (elapsedTime < duration)
         {
-            phoneInstance.transform.position = Vector3.Lerp(startPos, targetPos, elapsedTime / duration);
+            phoneInstance.transform.position = Vector3.Lerp(phoneStartPos, phoneEndPos, elapsedTime / duration);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
-        phoneInstance.transform.position = targetPos;
-        phoneInstance.SetActive(false);
+        phoneInstance.transform.position = phoneEndPos;
     }
 
     public void PreventZoom()
@@ -236,7 +243,7 @@ public class NewspaperZoom : MonoBehaviour
     }
     private void OnDestroy()
     {
-        Destroy(phoneInstance);
-        phoneInstance = null;
+        Destroy(phoneObj);
+        phoneObj = null;
     }
 }
