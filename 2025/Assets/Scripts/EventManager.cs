@@ -13,6 +13,8 @@ public static class EventManager
     // Used for ensuring the media gets enters and leaves behind certain screen elements
     public static Action ShowDeskOverlay;
     public static Action HideDeskOverlay;
+    public static Action<string, bool> GlowingBoxShow;
+
     public static Action<bool> DisplayMenuButton;
     public static Func<bool> IsMusicPlaying;
 
@@ -33,5 +35,7 @@ public static class EventManager
         IsGrayscale = !IsGrayscale;
         ToggleGrayscale?.Invoke(IsGrayscale);
     }
+
+    public static Action<bool> ShowCorrectBuzzer;
 
 }

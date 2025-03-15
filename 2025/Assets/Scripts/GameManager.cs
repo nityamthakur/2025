@@ -15,8 +15,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] AccessibilityManager accessibilityManager;
 
     [SerializeField] TextMeshProUGUI onScreenTimer;
-    [SerializeField] GameObject performanceBuzzersObj;
-    private PerformanceBuzzers performanceBuzzers;
     private JobDetails jobDetails;
     private JobScene jobScene;
     private Coroutine jobTimerCoroutine;
@@ -121,11 +119,6 @@ public class GameManager : MonoBehaviour
 
         jobDetails = new JobDetails();
         onScreenTimer.enabled = false; // Hide the onscreen timer
-
-        if (performanceBuzzersObj == null)
-            Debug.LogError("PerformanceBuzzers is null in GameManager.");
-        else
-            performanceBuzzers = performanceBuzzersObj.GetComponent<PerformanceBuzzers>();
     }
 
     private int CheckLoadGameSave()
@@ -207,12 +200,12 @@ public class GameManager : MonoBehaviour
 
         if (playerSucceeds && (currentCensorNum == totalCensorTargets) && (numCensorMistakes == 0))
         {
-            performanceBuzzers.ShowCorrectBuzzer();
+            EventManager.ShowCorrectBuzzer?.Invoke(true);
             EventManager.PlaySound?.Invoke("correctBuzz");
         }
         else
         {
-            performanceBuzzers.ShowIncorrectBuzzer();
+            EventManager.ShowCorrectBuzzer?.Invoke(false);
             EventManager.PlaySound?.Invoke("errorBuzz");
         }
 
@@ -254,12 +247,12 @@ public class GameManager : MonoBehaviour
 
         if (playerSucceeds)
         {
-            performanceBuzzers.ShowCorrectBuzzer();
+            EventManager.ShowCorrectBuzzer?.Invoke(true);
             EventManager.PlaySound?.Invoke("correctBuzz");
         }
         else
         {
-            performanceBuzzers.ShowIncorrectBuzzer();
+            EventManager.ShowCorrectBuzzer?.Invoke(false);
             EventManager.PlaySound?.Invoke("errorBuzz");
         }
 

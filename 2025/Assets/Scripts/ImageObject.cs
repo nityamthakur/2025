@@ -107,6 +107,10 @@ public class ImageObject : MonoBehaviour
         {
             isInsideTrigger = true;
             storedTrigger = other;
+            if(other.gameObject.CompareTag("DropBoxAccept"))
+                EventManager.GlowingBoxShow?.Invoke("accept", true);
+            if(other.gameObject.CompareTag("DropBoxDestroy"))
+                EventManager.GlowingBoxShow?.Invoke("destroy", true);
         }
     }
 
@@ -116,7 +120,12 @@ public class ImageObject : MonoBehaviour
         {
             isInsideTrigger = false;
             storedTrigger = null;
+            if(other.gameObject.CompareTag("DropBoxAccept"))
+                EventManager.GlowingBoxShow?.Invoke("accept", false);
+            if(other.gameObject.CompareTag("DropBoxDestroy"))
+                EventManager.GlowingBoxShow?.Invoke("destroy", false);
         }
+        
     }
 
     private void Update()

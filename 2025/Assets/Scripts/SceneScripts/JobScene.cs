@@ -16,8 +16,7 @@ public class JobScene : MonoBehaviour
     [SerializeField] private Sprite glitchedScreen;
 
     private GameObject currJobScene;
-    private Image backgroundImage;
-    private Image computerScreen;
+    private Image backgroundImage, computerScreen, dropBoxAcceptGlow, dropBoxDestroyGlow;
     private Button startWorkButton;
     private TextMeshProUGUI screenText;
     private TextMeshProUGUI mediaProcessedText;
@@ -178,6 +177,24 @@ public class JobScene : MonoBehaviour
             Debug.Log("Failed to find performanceSlider in SetUpJobStart");
         }
         performanceSlider.gameObject.SetActive(false);
+
+        dropBoxAcceptGlow = currJobScene.transform.Find("DropBoxAcceptGlow").GetComponent<Image>();
+        if (dropBoxAcceptGlow == null)
+        {
+            Debug.Log("Failed to find DropBoxAcceptGlow in SetUpJobStart");
+            return;
+        }
+        StartCoroutine(PulseGlow(dropBoxAcceptGlow));
+        dropBoxAcceptGlow.gameObject.SetActive(false);
+
+        dropBoxDestroyGlow = currJobScene.transform.Find("DropBoxDestroyGlow").GetComponent<Image>();
+        if (dropBoxDestroyGlow == null)
+        {
+            Debug.Log("Failed to find DropBoxDestroyGlow in SetUpJobStart");
+            return;
+        }
+        StartCoroutine(PulseGlow(dropBoxDestroyGlow));
+        dropBoxDestroyGlow.gameObject.SetActive(false);
     }
 
     private void SetScreenEmail(TextMeshProUGUI screenText)
@@ -362,15 +379,53 @@ public class JobScene : MonoBehaviour
         }
     }
 
+    private void GlowingBoxShow(string Box, bool show)
+    {
+        if (Box.ToLower() == "accept")
+            dropBoxAcceptGlow.gameObject.SetActive(show);
+        else if (Box.ToLower() == "destroy")
+            dropBoxDestroyGlow.gameObject.SetActive(show);
+    }
+
+    private IEnumerator PulseGlow(Image glowImage)
+    {
+        float duration = 1.0f; // Time for one full cycle (fade in and out)
+        float alphaMin = 0.3f; // Minimum transparency
+        float alphaMax = 1.0f; // Maximum transparency
+
+        while (glowImage != null)
+        {
+            // Fade in
+            for (float t = 0; t < duration / 2; t += Time.deltaTime)
+            {
+                if (glowImage == null) yield break;
+                float alpha = Mathf.Lerp(alphaMin, alphaMax, t / (duration / 2));
+                glowImage.color = new Color(glowImage.color.r, glowImage.color.g, glowImage.color.b, alpha);
+                yield return null;
+            }
+
+            // Fade out
+            for (float t = 0; t < duration / 2; t += Time.deltaTime)
+            {
+                if (glowImage == null) yield break;
+                float alpha = Mathf.Lerp(alphaMax, alphaMin, t / (duration / 2));
+                glowImage.color = new Color(glowImage.color.r, glowImage.color.g, glowImage.color.b, alpha);
+                yield return null;
+            }
+        }
+    }
+
    // EventManager for continuing gameplay on an ImageObject being destroyed
     private void OnEnable()
     {
         EventManager.OnImageDestroyed += HandleImageDestroyed;
+        EventManager.GlowingBoxShow += GlowingBoxShow;
     }
 
     private void OnDisable()
     {
         EventManager.OnImageDestroyed -= HandleImageDestroyed;
+        EventManager.GlowingBoxShow -= GlowingBoxShow;
     }
 
     private void HandleImageDestroyed()

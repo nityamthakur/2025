@@ -17,13 +17,12 @@ public class PerformanceBuzzers : MonoBehaviour
         }
     }
 
-    public void ShowIncorrectBuzzer()
+    public void ShowCorrectBuzzer(bool correct)
     {
-        StartCoroutine(ActivateBuzzer(incorrectBuzzer));
-    }
-    public void ShowCorrectBuzzer()
-    {
-        StartCoroutine(ActivateBuzzer(correctBuzzer));
+        if(correct)
+            StartCoroutine(ActivateBuzzer(correctBuzzer));
+        else
+            StartCoroutine(ActivateBuzzer(incorrectBuzzer));
     }
 
     IEnumerator ActivateBuzzer(GameObject defBuzzer)
@@ -39,5 +38,15 @@ public class PerformanceBuzzers : MonoBehaviour
             elapsedTime += 2 * flickerInterval; // Update elapsed time
         }
         defBuzzer.SetActive(true);
+    }
+
+        private void OnEnable()
+    {
+        EventManager.ShowCorrectBuzzer += ShowCorrectBuzzer;
+    }
+
+    private void OnDisable()
+    {
+        EventManager.ShowCorrectBuzzer -= ShowCorrectBuzzer;
     }
 }
