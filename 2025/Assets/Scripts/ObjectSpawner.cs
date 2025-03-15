@@ -21,8 +21,6 @@ public class ObjectSpawner : MonoBehaviour
     private Entity.Newspaper currentNewspaper;
     //public JobScene jobScene; 
     private GameManager gameManager;
-    private GameObject rentNoticeInstance;
-    [SerializeField] private Transform rentNoticePosition;
 
     bool quitting = false;
 

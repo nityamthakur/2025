@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 12cfa2c3fdcaa8644816bc0be2f33a8f
+guid: 7909b3ca7d6779f4da976588b888df6f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8941961987756735026
-    second: desk5.0_0
+      213: 8205200687702722701
+    second: dropBoxGlow_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,23 +100,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: desk5.0_0
+      name: dropBoxGlow_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 6400
-        height: 3600
+        width: 1144
+        height: 1807
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 23a39432d0b381c70800000000000000
-      internalID: 8941961987756735026
+      spriteID: d88cf4d6d8abed170800000000000000
+      internalID: 8205200687702722701
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: aba43eb100ae3c54eada63f0a9c4a202
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      desk5.0_0: 8941961987756735026
+      dropBoxGlow_0: 8205200687702722701
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

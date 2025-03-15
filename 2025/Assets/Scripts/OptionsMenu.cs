@@ -10,7 +10,7 @@ public class OptionsMenu : MonoBehaviour
     private AudioManager audioManager;
     private SubtitleManager subtitleManager;
     private List<GameObject> sections = new();
-    private GameObject menuSections, audioSection, saveLoadSection, confirmSection;
+    private GameObject pauseMenu, menuSections, audioSection, saveLoadSection, confirmSection;
     private TextMeshProUGUI confirmText;
     private Action confirmAction, cancelAction;
     private Button slot1Button, slot2Button, slot3Button, backButton, saveButton, mainMenuButton;
@@ -40,11 +40,14 @@ public class OptionsMenu : MonoBehaviour
 
     private void SetUpSections()
     {
-        menuSections = transform.Find("MenuSections")?.gameObject;
-        audioSection = transform.Find("AudioMenu")?.gameObject;
-        saveLoadSection = transform.Find("SaveLoadMenu")?.gameObject;
-        confirmSection = transform.Find("ConfirmMenu")?.gameObject;
+        pauseMenu = transform.Find("PauseMenuBackground")?.gameObject;
+        menuSections = pauseMenu.transform.Find("MenuSections")?.gameObject;
+        audioSection = pauseMenu.transform.Find("AudioMenu")?.gameObject;
+        saveLoadSection = pauseMenu.transform.Find("SaveLoadMenu")?.gameObject;
+        confirmSection = pauseMenu.transform.Find("ConfirmMenu")?.gameObject;
 
+        if (pauseMenu == null) 
+            Debug.Log("Couldnt find PauseMenuBackground");
         if (menuSections != null) 
             sections.Add(menuSections);
         if (audioSection != null) 
@@ -163,12 +166,12 @@ public class OptionsMenu : MonoBehaviour
 
     }
 
-    private Button FindButton(string name, System.Action action = null)
+    private Button FindButton(string name, Action action = null)
     {
         Button button = FindComponentByName<Button>(name);
         if (button != null && action != null)
         {
-            button.onClick.RemoveAllListeners();
+            //button.onClick.RemoveAllListeners();
             button.onClick.AddListener(() => action.Invoke());
         }
         return button;

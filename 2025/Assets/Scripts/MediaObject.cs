@@ -264,6 +264,10 @@ public class Entity : MonoBehaviour
     {
         if (other.gameObject.CompareTag("DropBoxAccept") || other.gameObject.CompareTag("DropBoxDestroy"))
         {
+            if(other.gameObject.CompareTag("DropBoxAccept"))
+                EventManager.GlowingBoxShow?.Invoke("accept", true);
+            if(other.gameObject.CompareTag("DropBoxDestroy"))
+                EventManager.GlowingBoxShow?.Invoke("destroy", true);
             isInsideTrigger = true;
             storedTrigger = other;
         }
@@ -275,6 +279,10 @@ public class Entity : MonoBehaviour
         {
             isInsideTrigger = false;
             storedTrigger = null;
+            if(other.gameObject.CompareTag("DropBoxAccept"))
+                EventManager.GlowingBoxShow?.Invoke("accept", false);
+            if(other.gameObject.CompareTag("DropBoxDestroy"))
+                EventManager.GlowingBoxShow?.Invoke("destroy", false);
         }
     }
 

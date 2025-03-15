@@ -7,10 +7,10 @@ using UnityEngine;
 public class EyeTracking : MonoBehaviour
 {
     public GameObject pupil;
-    public Camera mainCamera;
+    private Camera mainCamera;
     public float speed = 10;
     public float intensity = 0.25f;
-    private bool isBlinking = false;
+    //private bool isBlinking = false;
     private GameManager gameManager;
 
     void Awake()
@@ -45,6 +45,7 @@ public class EyeTracking : MonoBehaviour
         pupil.transform.position = Vector3.Lerp(pupil.transform.position, transform.position + originToMouse, speed * Time.deltaTime);
     }
 
+    /*
     IEnumerator EyeBlinkRed()
     {
         while (true)
@@ -56,4 +57,5 @@ public class EyeTracking : MonoBehaviour
             yield return new WaitForSeconds(3f);
         }
     }
+    */
 }
