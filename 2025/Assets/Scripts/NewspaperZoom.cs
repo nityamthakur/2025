@@ -167,7 +167,7 @@ public class NewspaperZoom : MonoBehaviour
                 Debug.LogError("PhoneText is null - Check that 'PhoneTextDisplay' has a TextMeshPro component.");
 
             phoneStartPos = phoneInstance.transform.position;
-            phoneEndPos = phoneInstance.transform.position + new Vector3(0f, -1000f, 0f);
+            phoneEndPos = phoneInstance.transform.position + new Vector3(0f, -1200f, 0f);
             phoneInstance.transform.position = phoneEndPos;
         }
         else

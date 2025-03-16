@@ -255,6 +255,7 @@ public class Entity : MonoBehaviour
         yield return new WaitForSeconds(duration);
         zoomComponent.AllowZoom();
         draggableScript.enabled = true;
+        ObjectGravityOn(true);
     }
     
     private bool isInsideTrigger = false;

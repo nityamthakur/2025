@@ -23,6 +23,16 @@ public class AccessibilityManager : MonoBehaviour
         }
     }
 
+    void Update()
+    {
+        // Check if the Escape key is pressed
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            EventManager.OpenOptionsMenu?.Invoke();
+            EventManager.OptionsChanger?.Invoke("");         
+        }
+    }
+
     public void TogglePauseMenu()
     {            
         EventManager.ReactivateMainMenuButtons?.Invoke(); 
