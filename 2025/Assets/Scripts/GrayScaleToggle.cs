@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class GrayscaleToggle : MonoBehaviour
 {
@@ -10,6 +11,14 @@ public class GrayscaleToggle : MonoBehaviour
 
     void Awake()
     {
+        // Check if it's a UI Text or TextMeshPro
+        if (GetComponent<TextMeshProUGUI>() != null || GetComponent<Text>() != null)
+        {
+            Debug.Log($"Skipping Grayscale for text object: {gameObject.name}");
+            Destroy(this); // Remove script from text objects
+            return;
+        }
+
         image = GetComponent<Image>();
         if (image == null)
         {
@@ -28,11 +37,9 @@ public class GrayscaleToggle : MonoBehaviour
         }
 
         // Save the original material
-        if (image != null)
-            originalMaterial = image.material;
-        else if (spriteRenderer != null)
-            originalMaterial = spriteRenderer.material;
+        originalMaterial = image != null ? image.material : spriteRenderer.material;
     }
+
 
     void Start()
     {

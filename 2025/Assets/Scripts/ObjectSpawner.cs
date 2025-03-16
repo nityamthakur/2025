@@ -104,30 +104,32 @@ public class ObjectSpawner : MonoBehaviour
 
     public void SpawnRentNotice()
     {
-        // Create new media object
-        GameObject rentNoticeInstance = Instantiate(rentNoticePrefab, mediaSpawner.transform.position, Quaternion.identity);
+        // Instantiate RentNoticePrefab
+        GameObject rentNoticeInstance = Instantiate(rentNoticePrefab);
 
         int rent = gameManager.gameData.rent;
         string rentText = $"Rent will cost {rent}. If you are unable to pay by the end of the day, expect to be evicted.";
-        TextMeshPro grabbedText = rentNoticeInstance.transform.Find("Front Body")?.GetComponent<TextMeshPro>();
-        if(grabbedText != null)
+
+        // Find BodyText directly under RentNoticePrefab
+        TextMeshPro bodyText = rentNoticeInstance.transform.Find("BodyText")?.GetComponent<TextMeshPro>();
+        if (bodyText != null)
         {
-            grabbedText.text = rentText;
+            bodyText.text = rentText;
         }
         else
         {
-            Debug.Log("Couldn't find Front Body text");
+            Debug.LogError("SpawnRentNotice: Couldn't find BodyText!");
         }
 
-        // Pass the spline prefab reference
+        // Attach movement logic to RentNoticePrefab itself (since physics is on the parent now)
         ImageObject mediaEntity = rentNoticeInstance.GetComponent<ImageObject>();
-        if (mediaEntity != null) 
+        if (mediaEntity != null)
         {
-            mediaEntity.SetUpSplinePath(splinePath); // Pass the splinePath prefab reference
-        } 
-        else 
+            mediaEntity.SetUpSplinePath(splinePath); // Apply movement
+        }
+        else
         {
-            Debug.LogError("Spawned media object is missing the Entity script!");
+            Debug.LogError("SpawnRentNotice: RentNoticePrefab is missing Entity script!");
         }
     }
 

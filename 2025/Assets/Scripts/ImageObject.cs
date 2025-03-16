@@ -48,6 +48,22 @@ public class ImageObject : MonoBehaviour
         StartCoroutine(RotateOverTime(targetAngleX, duration));
     }
 
+    public void ObjectGravityOn(bool on)
+    {
+        if (rigidBody == null) return;
+
+        if (on)
+        {
+            rigidBody.gravityScale = 3f; // Enable gravity
+        }
+        else
+        {
+            rigidBody.gravityScale = 0f; // Disable gravity
+            rigidBody.linearVelocity = Vector2.zero; // Stop all movement
+            rigidBody.angularVelocity = 0f; // Stop any rotation momentum
+        }
+    }
+
     private IEnumerator RotateOverTime(int targetAngleX, float duration)
     {
         float elapsedTime = 0f;
@@ -85,17 +101,22 @@ public class ImageObject : MonoBehaviour
 
         if (currSplinePath != null)
         {
-            currSplinePath.EntranceMovement(transform, () => 
-            {
-                draggableScript.enabled = true;
-                ChangeMediaRotation(-60);
-                rigidBody.gravityScale = 3f;  // Enable gravity (adjust as needed)
-            });
+            currSplinePath.EntranceMovement(transform);
+            StartCoroutine(SpawnDelay(currSplinePath.GetDuration()));
         }
         else
         {
             Debug.LogError("MediaSplinePath component is missing on instantiated spline.");
         }
+    }
+
+    IEnumerator SpawnDelay(float duration)
+    {
+        draggableScript.enabled = false;
+        yield return new WaitForSeconds(duration);
+        ChangeMediaRotation(-60);
+        ObjectGravityOn(true);
+        draggableScript.enabled = true;
     }
 
     private bool isInsideTrigger = false;
@@ -148,6 +169,12 @@ public class ImageObject : MonoBehaviour
 
             pos.x = Mathf.Clamp(pos.x, -screenBounds.x + playerHalfWidth, screenBounds.x - playerHalfWidth);
             pos.y = Mathf.Clamp(pos.y, -screenBounds.y + playerHalfHeight, screenBounds.y - playerHalfHeight);
+
+            if (transform.position.y != pos.y && rigidBody != null)
+            {
+                rigidBody.linearVelocity = Vector2.zero; // Reset velocity when reaching boundary
+                rigidBody.angularVelocity = 0f;
+            }
 
             transform.position = pos;
         }

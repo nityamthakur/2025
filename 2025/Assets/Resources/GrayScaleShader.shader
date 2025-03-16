@@ -46,8 +46,15 @@ Shader "Custom/GreyScaleShader"
                 {
                     fixed4 col = tex2D(_MainTex, i.uv);
                     float grey = dot(col.rgb, float3(0.299, 0.587, 0.114));
+                
+                    // Prevent pure black (0,0,0) from becoming white
+                    if (col.r == 0 && col.g == 0 && col.b == 0)
+                    {
+                        return col; // Keep it black
+                    }
+                
                     return fixed4(grey, grey, grey, col.a);
-                }
+                }                
                 ENDCG
         }        
     }
