@@ -100,7 +100,7 @@ public class SceneChanger : MonoBehaviour
             PlayerPrefs.SetInt("LoadSlot", -1);
 
             // Start Game
-            //mainMenuScene.LoadMainMenu();
+            mainMenuScene.LoadMainMenu();
 
             // For Debugging
             // Change the starting day
