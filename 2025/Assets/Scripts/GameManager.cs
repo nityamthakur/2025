@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] AccessibilityManager accessibilityManager;
 
     [SerializeField] TextMeshProUGUI onScreenTimer;
+    [SerializeField] GameObject onScreenDayChanger;
     private JobDetails jobDetails;
     private JobScene jobScene;
     private Coroutine jobTimerCoroutine;
@@ -112,6 +113,10 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
+        // Set GameDevLoadDay if not absent to prevent errors on first install
+        if(!PlayerPrefs.HasKey("GameDevLoadDay"))
+            PlayerPrefs.SetInt("GameDevLoadDay", -1);
+
         objectSpawner.Initialize();
         sceneChanger.Initialize();
         accessibilityManager.Initialize();
@@ -119,6 +124,7 @@ public class GameManager : MonoBehaviour
 
         jobDetails = new JobDetails();
         onScreenTimer.enabled = false; // Hide the onscreen timer
+        onScreenDayChanger.SetActive(false); // Hide the jump to day debug box
     }
 
     private int CheckLoadGameSave()
@@ -147,6 +153,23 @@ public class GameManager : MonoBehaviour
 
         if (onScreenTimer.enabled == true)
             SetOnScreenTimer();
+
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            onScreenDayChanger.SetActive(!onScreenDayChanger.activeSelf);
+        }
+
+        if ( (Input.GetKey(KeyCode.KeypadEnter) || Input.GetKey(KeyCode.Return)) && onScreenDayChanger.activeSelf)
+        {
+            string text = onScreenDayChanger.GetComponent<TMP_InputField>().text;
+            if (int.TryParse(text, out int num) && num > 0)
+            {                
+                PlayerPrefs.SetInt("GameDevLoadDay", num);
+                RestartGame();
+            }
+            else
+                Debug.Log("Enter a valid whole number, greater than 0.");
+        }
     }
 
     public IEnumerator UpdatePlayTime()

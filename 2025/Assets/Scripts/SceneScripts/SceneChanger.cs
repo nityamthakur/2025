@@ -95,6 +95,12 @@ public class SceneChanger : MonoBehaviour
             // Continue Playtime counter
             StartCoroutine(gameManager.UpdatePlayTime());
         }
+        else if( PlayerPrefs.GetInt("GameDevLoadDay") > 0)
+        {
+            gameManager.gameData.day = PlayerPrefs.GetInt("GameDevLoadDay");
+            PlayerPrefs.SetInt("GameDevLoadDay", -1);
+            EventManager.NextScene?.Invoke();
+        }
         else
         {
             PlayerPrefs.SetInt("LoadSlot", -1);

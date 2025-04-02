@@ -294,14 +294,14 @@ public class OptionsMenu : MonoBehaviour
         }
     }
 
-    // Converts seconds into "Hours:Minutes" format
+    // Converts seconds into Hours:Minutes
     private string SecondMinuteHourConversion(float seconds)
     {
         int hours = (int)(seconds / 3600);
         int minutes = (int)((seconds % 3600) / 60);
         int remainingSeconds = (int)(seconds % 60);
 
-        return $"{hours}:{minutes:D2}:{remainingSeconds:D2}"; // Now correctly formats HH:MM:SS
+        return $"{hours}:{minutes:D2}:{remainingSeconds:D2}";
     }
 
 
