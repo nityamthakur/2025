@@ -6,7 +6,8 @@ using System;
 public class MainMenuScene : MonoBehaviour
 {
     [SerializeField] private GameObject menuObject;
-    [SerializeField] private Sprite mainMenuImage;
+    [SerializeField] private Sprite[] mainMenuImage;
+    [SerializeField] private float frameInterval = 0.5f; // Interval for frame cycling
     private GameObject currentMenuObject;
     private Button playButton;
     private Button loadButton;
@@ -14,6 +15,7 @@ public class MainMenuScene : MonoBehaviour
     private Button exitButton;
 
     private Image backgroundImage;
+    private Coroutine animationCoroutine;
 
     public void LoadMainMenu() {
         EventManager.PlayMusic?.Invoke("menu"); 
@@ -37,7 +39,11 @@ public class MainMenuScene : MonoBehaviour
             Debug.Log("Failed to find Image component in MainMenu");
             return;
         }
-        backgroundImage.sprite = mainMenuImage; 
+
+        if (mainMenuImage.Length > 0)
+        {
+            animationCoroutine = StartCoroutine(CycleBackgroundFrames());
+        }
 
         playButton = currentMenuObject.transform.Find("PlayButton").GetComponent<Button>();
         if (playButton == null)
@@ -95,13 +101,25 @@ public class MainMenuScene : MonoBehaviour
             UnityEditor.EditorApplication.ExitPlaymode(); // For Unity Editor testing
             #endif
         });
-    
     }
+
+    private IEnumerator CycleBackgroundFrames()
+    {
+        int frameIndex = 0;
+        while (true)
+        {
+            backgroundImage.sprite = mainMenuImage[frameIndex];
+            frameIndex = (frameIndex + 1) % mainMenuImage.Length;
+            yield return new WaitForSeconds(frameInterval);
+        }
+    }
+
     private IEnumerator StartGame()
     {
         EventManager.FadeOut?.Invoke();
         yield return new WaitForSeconds(2f);
 
+        StopCoroutine(animationCoroutine);
         Destroy(currentMenuObject);
         currentMenuObject = null;
 
@@ -118,7 +136,6 @@ public class MainMenuScene : MonoBehaviour
             optionsButton.interactable = true;
         }
     }
-
 
     void OnEnable()
     {

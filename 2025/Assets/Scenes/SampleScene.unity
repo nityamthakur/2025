@@ -317,10 +317,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UITextBox: {fileID: 4986825238899682302, guid: cc809ff330541a84aa7d1c21ab46ac07, type: 3}
-  FemaleNewsAnchor: {fileID: -9148649168555976762, guid: c0076031d1972be4f89fb9fec336f2bb, type: 3}
-  MaleNewsAnchor: {fileID: -1487834262871342188, guid: c162df2e07f939c4cbb1416f1229077f, type: 3}
-  MaleNewsAnchor2: {fileID: -195469805601254878, guid: 0d88bc2eb627439499134ddbde6b061f, type: 3}
-  jobLetter: {fileID: 2247088696051876834, guid: 10d5781b3649c3c40a0d1bce740af2fd, type: 3}
+  FemaleNewsAnchor:
+  - {fileID: -1540687528, guid: a3b2525eefac14d5881507c820d26496, type: 3}
+  - {fileID: 1394684380, guid: a3b2525eefac14d5881507c820d26496, type: 3}
+  - {fileID: -2022235786, guid: a3b2525eefac14d5881507c820d26496, type: 3}
+  - {fileID: 896504526, guid: a3b2525eefac14d5881507c820d26496, type: 3}
+  - {fileID: -136141369, guid: a3b2525eefac14d5881507c820d26496, type: 3}
+  MaleNewsAnchor:
+  - {fileID: 714920992, guid: 4b4b91815f171418890690dbaea40ed3, type: 3}
+  - {fileID: -1944627333, guid: 4b4b91815f171418890690dbaea40ed3, type: 3}
+  - {fileID: -1774400916, guid: 4b4b91815f171418890690dbaea40ed3, type: 3}
+  - {fileID: 1110145819, guid: 4b4b91815f171418890690dbaea40ed3, type: 3}
+  - {fileID: 832200149, guid: 4b4b91815f171418890690dbaea40ed3, type: 3}
+  MaleNewsAnchor2:
+  - {fileID: -1540687528, guid: a3b2525eefac14d5881507c820d26496, type: 3}
+  - {fileID: 1394684380, guid: a3b2525eefac14d5881507c820d26496, type: 3}
+  - {fileID: -2022235786, guid: a3b2525eefac14d5881507c820d26496, type: 3}
+  - {fileID: 896504526, guid: a3b2525eefac14d5881507c820d26496, type: 3}
+  - {fileID: -136141369, guid: a3b2525eefac14d5881507c820d26496, type: 3}
+  jobLetter:
+  - {fileID: 2247088696051876834, guid: 10d5781b3649c3c40a0d1bce740af2fd, type: 3}
+  frameInterval: 0.5
 --- !u!1 &443284278
 GameObject:
   m_ObjectHideFlags: 0
@@ -653,10 +670,11 @@ MonoBehaviour:
   mainCamera: {fileID: 519420028}
   objectSpawner: {fileID: 1245310923}
   jobScenePrefab: {fileID: 5289697525290493822, guid: 87b1fee1ad31bc843b21ba6484daea50, type: 3}
-  workBackgroundImage: {fileID: 8941961987756735026, guid: 12cfa2c3fdcaa8644816bc0be2f33a8f, type: 3}
+  workBackgroundImage: []
   glitchedScreen: {fileID: 5111763290514371741, guid: 69c02822765493849b65f7d53cfdce8a, type: 3}
+  frameInterval: 0.5
   jobBuildingPrefab: {fileID: 7365597034380788627, guid: 179c1e3c7be1eed4385ed3fdeb7cc64b, type: 3}
-  jobBuildingImage: {fileID: 7500719156437101807, guid: f0d23fea0664eb14a9e6c31266085328, type: 3}
+  jobBuildingImage: {fileID: -335050303, guid: 47c8dfc179d8a4138b3bd9aefae43df1, type: 3}
 --- !u!1 &823473138
 GameObject:
   m_ObjectHideFlags: 0
@@ -1414,7 +1432,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   menuObject: {fileID: 3021349584701667985, guid: 6348da432ddd6a841b43fa4f8cfb7b7f, type: 3}
-  mainMenuImage: {fileID: -685511840836363567, guid: 57b38f1d66cbcd44fa1b70b420c1baff, type: 3}
+  mainMenuImage:
+  - {fileID: -903139888, guid: eb918c658a73a42e09a5c1f4bf393371, type: 3}
+  - {fileID: -924314757, guid: eb918c658a73a42e09a5c1f4bf393371, type: 3}
+  - {fileID: 1927445258, guid: eb918c658a73a42e09a5c1f4bf393371, type: 3}
+  - {fileID: 411854699, guid: eb918c658a73a42e09a5c1f4bf393371, type: 3}
+  - {fileID: -2100817788, guid: eb918c658a73a42e09a5c1f4bf393371, type: 3}
+  - {fileID: -899043937, guid: eb918c658a73a42e09a5c1f4bf393371, type: 3}
+  frameInterval: 0.5
 --- !u!1 &1881932998
 GameObject:
   m_ObjectHideFlags: 0
