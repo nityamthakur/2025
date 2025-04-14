@@ -337,7 +337,7 @@ MonoBehaviour:
   - {fileID: -136141369, guid: a3b2525eefac14d5881507c820d26496, type: 3}
   jobLetter:
   - {fileID: 2247088696051876834, guid: 10d5781b3649c3c40a0d1bce740af2fd, type: 3}
-  frameInterval: 0.5
+  frameInterval: 0.2
 --- !u!1 &443284278
 GameObject:
   m_ObjectHideFlags: 0
@@ -670,9 +670,8 @@ MonoBehaviour:
   mainCamera: {fileID: 519420028}
   objectSpawner: {fileID: 1245310923}
   jobScenePrefab: {fileID: 5289697525290493822, guid: 87b1fee1ad31bc843b21ba6484daea50, type: 3}
-  workBackgroundImage: []
+  workBackgroundImage: {fileID: 0}
   glitchedScreen: {fileID: 5111763290514371741, guid: 69c02822765493849b65f7d53cfdce8a, type: 3}
-  frameInterval: 0.5
   jobBuildingPrefab: {fileID: 7365597034380788627, guid: 179c1e3c7be1eed4385ed3fdeb7cc64b, type: 3}
   jobBuildingImage: {fileID: -335050303, guid: 47c8dfc179d8a4138b3bd9aefae43df1, type: 3}
 --- !u!1 &823473138
