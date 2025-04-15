@@ -117,6 +117,10 @@ public class GameManager : MonoBehaviour
         if(!PlayerPrefs.HasKey("GameDevLoadDay"))
             PlayerPrefs.SetInt("GameDevLoadDay", -1);
 
+        // Set GameDevLoadDay if not absent to prevent errors on first install
+        if(!PlayerPrefs.HasKey("FullScreenState"))
+            PlayerPrefs.SetInt("FullScreenState", 0);
+
         objectSpawner.Initialize();
         sceneChanger.Initialize();
         accessibilityManager.Initialize();

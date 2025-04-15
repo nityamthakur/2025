@@ -36,6 +36,14 @@ public static class EventManager
         ToggleGrayscale?.Invoke(IsGrayscale);
     }
 
+    public static Action<bool> ToggleFullScreen;
+    public static bool IsFullScreen { get; private set; } = false;
+    public static void ToggleFullScreenState()
+    {
+        IsFullScreen = !IsFullScreen;
+        ToggleFullScreen?.Invoke(IsFullScreen);
+    }
+
     public static Action<bool> ShowCorrectBuzzer;
 
 }
