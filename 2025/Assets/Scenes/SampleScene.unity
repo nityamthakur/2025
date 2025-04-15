@@ -670,7 +670,7 @@ MonoBehaviour:
   mainCamera: {fileID: 519420028}
   objectSpawner: {fileID: 1245310923}
   jobScenePrefab: {fileID: 5289697525290493822, guid: 87b1fee1ad31bc843b21ba6484daea50, type: 3}
-  workBackgroundImage: {fileID: 0}
+  workBackgroundImage: {fileID: 8941961987756735026, guid: 12cfa2c3fdcaa8644816bc0be2f33a8f, type: 3}
   glitchedScreen: {fileID: 5111763290514371741, guid: 69c02822765493849b65f7d53cfdce8a, type: 3}
   jobBuildingPrefab: {fileID: 7365597034380788627, guid: 179c1e3c7be1eed4385ed3fdeb7cc64b, type: 3}
   jobBuildingImage: {fileID: -335050303, guid: 47c8dfc179d8a4138b3bd9aefae43df1, type: 3}
