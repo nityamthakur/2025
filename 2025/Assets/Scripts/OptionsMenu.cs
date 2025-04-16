@@ -15,7 +15,7 @@ public class OptionsMenu : MonoBehaviour
     private Action confirmAction, cancelAction;
     private Button slot1Button, slot2Button, slot3Button, backButton, saveButton, mainMenuButton;
     private Slider masterVolumeSlider, musicVolumeSlider, sfxVolumeSlider;
-    private Toggle muteToggle, subtitleToggle, grayscaleToggle;
+    private Toggle muteToggle, subtitleToggle, grayscaleToggle, fullScreenToggle;
     private GameManager gameManager;
     private bool isLoadingSettings = false;
 
@@ -25,6 +25,7 @@ public class OptionsMenu : MonoBehaviour
         
         SetUpSections();
         SetupMenuButtons();
+        ScreenModeSetUp();
         GrayscaleSetUp();
         AudioSetUp();
         
@@ -197,16 +198,14 @@ public class OptionsMenu : MonoBehaviour
 
     private void HandleSaveSlot(int slot)
     {
-        // Save the game over this file
-        if(SaveSystem.SaveExists(slot)) // Check if save exists
+        if(SaveSystem.SaveExists(slot))
         {
             ChangeConfirmText($"Save Over File {slot}?");
             ChangeMenuSection(confirmSection);
 
-            // Store the action to execute if "Yes" is clicked
             confirmAction = () =>
             {
-                SaveSystem.SaveGame(slot, gameManager.gameData); // Save game data
+                SaveSystem.SaveGame(slot, gameManager.gameData);
                 ChangeMenuSection(saveLoadSection);
             };
             cancelAction = () =>
@@ -216,14 +215,13 @@ public class OptionsMenu : MonoBehaviour
         }
         else
         {
-            SaveSystem.SaveGame(slot, gameManager.gameData); // Save game data
+            SaveSystem.SaveGame(slot, gameManager.gameData);
             ChangeMenuSection(saveLoadSection);
         }
     }
 
     private void HandleLoadSlot(int slot)
     {
-        // Save the game over this file
         GameObject gameManagerObject = GameObject.Find("GameManager");
         GameManager gameManager = gameManagerObject.GetComponent<GameManager>();
         if (gameManagerObject == null || gameManager == null)
@@ -237,7 +235,6 @@ public class OptionsMenu : MonoBehaviour
             ChangeConfirmText($"Load Game File {slot}?");
             ChangeMenuSection(confirmSection);
 
-            // Store the action to execute if "Yes" is clicked
             confirmAction = () =>
             {
                 PlayerPrefs.SetInt("LoadSlot", slot);
@@ -392,6 +389,29 @@ public class OptionsMenu : MonoBehaviour
         }
     }
 
+    private void ScreenModeSetUp()
+    {
+        fullScreenToggle = FindComponentByName<Toggle>("FullScreenToggle");
+        TMP_Text fullScreenActiveText = FindComponentByName<TMP_Text>("FullScreenOnOffText");
+
+        if (fullScreenToggle != null && fullScreenActiveText != null)
+        {
+            // Set the initial state to match the current grayscale setting in Eventmanager
+            fullScreenToggle.isOn = EventManager.IsFullScreen;
+            fullScreenActiveText.text = EventManager.IsFullScreen ? "On" : "Off";
+
+            // Listen for changes when toggle is clicked
+            fullScreenToggle.onValueChanged.AddListener((bool isOn) =>
+            {
+                EventManager.PlaySound?.Invoke("switch1"); 
+                EventManager.ToggleFullScreenState();
+                fullScreenActiveText.text = isOn ? "On" : "Off";
+                Screen.fullScreen = fullScreenToggle.isOn;
+                SavePersistentSettings();
+            });
+        }
+    }
+
     private void AudioSetUp()
     {
         // Locate AudioManager Object
@@ -480,6 +500,7 @@ public class OptionsMenu : MonoBehaviour
         PlayerPrefs.SetInt("MuteState", muteToggle.isOn ? 1 : 0);
         PlayerPrefs.SetInt("SubtitleState", subtitleToggle.isOn ? 1 : 0);
         PlayerPrefs.SetInt("GrayState", grayscaleToggle.isOn ? 1 : 0);
+        PlayerPrefs.SetInt("FullScreenState", fullScreenToggle.isOn ? 1 : 0);
         PlayerPrefs.Save();  // Write to disk immediately
     }
 
@@ -509,6 +530,11 @@ public class OptionsMenu : MonoBehaviour
 
         int grayOn = PlayerPrefs.GetInt("GrayState", 0);
         grayscaleToggle.isOn = grayOn == 1;
+
+        int fullScreenOn = PlayerPrefs.GetInt("FullScreenState", 0);
+        fullScreenToggle.isOn = fullScreenOn == 1;
+        Screen.fullScreen = fullScreenToggle.isOn;
+        
         isLoadingSettings = false;
     }
 
