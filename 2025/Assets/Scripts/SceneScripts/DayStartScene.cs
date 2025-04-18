@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using System;
 using System.Collections;
+using Unity.VisualScripting;
 
 public class DayStartScene : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public class DayStartScene : MonoBehaviour
     private Line[] currentLines;
 
     private GameManager gameManager;
+    private TypewriterText typewriterText;
 
     public void Initialize()
     {
@@ -62,6 +64,9 @@ public class DayStartScene : MonoBehaviour
             Debug.LogError("Failed to find TextMeshProUGUI component.");
             return;
         }
+        TextBox.AddComponent<TypewriterText>();
+        typewriterText = TextBox.transform.GetComponent<TypewriterText>();
+        typewriterText.textObject = TextBox;
 
         TextMeshProUGUI dayText = currentTextBox.transform.Find("DayText").GetComponent<TextMeshProUGUI>();
         if (dayText == null)
@@ -138,7 +143,10 @@ public class DayStartScene : MonoBehaviour
             Line currentLine = currentLines[linePos];
 
             // Set the text in the dialogue box
-            TextBox.text = currentLine.text;
+            
+            //TextBox.text = currentLine.text;
+            typewriterText.typewriteMessage(currentLine.text);
+            
             ChangeSpeaker(currentLine);
             linePos++;
         }
