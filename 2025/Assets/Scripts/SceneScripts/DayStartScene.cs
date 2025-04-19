@@ -66,7 +66,6 @@ public class DayStartScene : MonoBehaviour
         }
         TextBox.AddComponent<TypewriterText>();
         typewriterText = TextBox.transform.GetComponent<TypewriterText>();
-        typewriterText.textObject = TextBox;
 
         TextMeshProUGUI dayText = currentTextBox.transform.Find("DayText").GetComponent<TextMeshProUGUI>();
         if (dayText == null)
@@ -142,19 +141,29 @@ public class DayStartScene : MonoBehaviour
             // Get the current line object
             Line currentLine = currentLines[linePos];
 
-            // Set the text in the dialogue box
-            
-            //TextBox.text = currentLine.text;
-            typewriterText.typewriteMessage(currentLine.text);
-            
-            ChangeSpeaker(currentLine);
-            linePos++;
+            // Instantly show the text if currently writing
+            if(typewriterText.MessageWriting())
+                typewriterText.InstantMessage(currentLines[linePos - 1].text);
+            else
+            {
+                // Set the text in the dialogue box
+                //TextBox.text = currentLine.text;
+                typewriterText.TypewriteMessage(currentLine.text);
+                ChangeSpeaker(currentLine);
+                linePos++;
+            }
         }
         else
         {
-            nextButton.interactable = false;
-            EventManager.DisplayMenuButton?.Invoke(false);
-            StartCoroutine(NextScene());
+            // Instantly show the text if currently writing
+            if(typewriterText.MessageWriting())
+                typewriterText.InstantMessage(currentLines[linePos - 1].text);
+            else
+            {
+                nextButton.interactable = false;
+                EventManager.DisplayMenuButton?.Invoke(false);
+                StartCoroutine(NextScene());
+            }
         }
     }
 
