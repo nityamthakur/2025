@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using System;
 using System.Collections;
+using Unity.VisualScripting;
 
 public class DayStartScene : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public class DayStartScene : MonoBehaviour
     private Line[] currentLines;
 
     private GameManager gameManager;
+    private TypewriterText typewriterText;
 
     public void Initialize()
     {
@@ -62,6 +64,8 @@ public class DayStartScene : MonoBehaviour
             Debug.LogError("Failed to find TextMeshProUGUI component.");
             return;
         }
+        TextBox.AddComponent<TypewriterText>();
+        typewriterText = TextBox.transform.GetComponent<TypewriterText>();
 
         TextMeshProUGUI dayText = currentTextBox.transform.Find("DayText").GetComponent<TextMeshProUGUI>();
         if (dayText == null)
@@ -137,16 +141,29 @@ public class DayStartScene : MonoBehaviour
             // Get the current line object
             Line currentLine = currentLines[linePos];
 
-            // Set the text in the dialogue box
-            TextBox.text = currentLine.text;
-            ChangeSpeaker(currentLine);
-            linePos++;
+            // Instantly show the text if currently writing
+            if(typewriterText.MessageWriting())
+                typewriterText.InstantMessage(currentLines[linePos - 1].text);
+            else
+            {
+                // Set the text in the dialogue box
+                //TextBox.text = currentLine.text;
+                typewriterText.TypewriteMessage(currentLine.text);
+                ChangeSpeaker(currentLine);
+                linePos++;
+            }
         }
         else
         {
-            nextButton.interactable = false;
-            EventManager.DisplayMenuButton?.Invoke(false);
-            StartCoroutine(NextScene());
+            // Instantly show the text if currently writing
+            if(typewriterText.MessageWriting())
+                typewriterText.InstantMessage(currentLines[linePos - 1].text);
+            else
+            {
+                nextButton.interactable = false;
+                EventManager.DisplayMenuButton?.Invoke(false);
+                StartCoroutine(NextScene());
+            }
         }
     }
 
