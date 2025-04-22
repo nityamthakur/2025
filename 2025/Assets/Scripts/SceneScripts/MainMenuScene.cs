@@ -100,6 +100,7 @@ public class MainMenuScene : MonoBehaviour
     private IEnumerator StartGame()
     {
         EventManager.FadeOut?.Invoke();
+        EventManager.StopMusic?.Invoke();
         yield return new WaitForSeconds(2f);
 
         Destroy(currentMenuObject);

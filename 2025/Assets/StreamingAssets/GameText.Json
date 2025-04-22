@@ -3,13 +3,25 @@
         {
             "day": 1,
             "lines": [
+                {"speaker": "PlaySound", "text": "newspaperRustling" },
+                {"speaker": "RentNotice", "text": ""},
+                {"speaker": "Delay", "text": "1" },
+                { "speaker": "RentNotice", "text": "Dear Tenet, \nYou have missed your previous rent for the second time. Missing rent an additional time will result in your immediate eviction."},
+                {"speaker": "RentNotice", "text": "You have until end of day upon receiving this letter to pay your rent. \nAlso, as per recent NewMerican renters regulations, we will be increasing your rent on a weekly basis." },
+                {"speaker": "RentNotice", "text": "Long Live NewMerica \n\nYour Landlord" },
+                {"speaker": "PlaySound", "text": "newspaperRustling" },
+                {"speaker": "JobLetter", "text": ""},
+                {"speaker": "Delay", "text": "1" },
+                { "speaker": "JobLetter", "text": "Congratulations! You have been selected to work in the Media Regulation Branch to safeguard NewMerican values." },
+                { "speaker": "JobLetter", "text": "Report to Office Building Number: 171 Room: 152 by the end of the day." },
+                { "speaker": "JobLetter", "text": "Your duty is to ensure only trustworthy information reaches the public. Do your part for NewMerica!" },
+                {"speaker": "FemaleNewsAnchor", "text": "" },
+                {"speaker": "PlayMusic", "text": "newsJingle" },
+                {"speaker": "Delay", "text": "3" },
                 { "speaker": "FemaleNewsAnchor", "text": "Good morning, citizens! The Green Party continues its campaign of lies against NewMerica, spreading misinformation to destabilize our glorious nation." },
                 { "speaker": "MaleNewsAnchor", "text": "In response, NewMerica is expanding its workforce to counteract these malicious narratives. More citizens are being hired to ensure our information remains pure and patriotic." },
                 { "speaker": "FemaleNewsAnchor", "text": "Meanwhile, Brown Oil Conglomerate has announced a commitment to responsible resource extraction, shifting operations away from our sacred rivers and focusing on the more sustainable rainforests." },
-                { "speaker": "MaleNewsAnchor", "text": "We remind all NewMericans that only verified news is real news. Misinformation is an attack on truth, and those who spread it should be held accountable." },
-                { "speaker": "JobLetter", "text": "Congratulations! You have been selected to work in the Media Regulation Branch to safeguard NewMerican values." },
-                { "speaker": "JobLetter", "text": "Report to Office Building Number: 171 Room: 152 by the end of the day." },
-                { "speaker": "JobLetter", "text": "Your duty is to ensure only trustworthy information reaches the public. Do your part for NewMerica!" }
+                { "speaker": "MaleNewsAnchor", "text": "We remind all NewMericans that only verified news is real news. Misinformation is an attack on truth, and those who spread it should be held accountable." }
             ]
         },
         {
