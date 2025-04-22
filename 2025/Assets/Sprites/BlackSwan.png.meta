@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: fa31a8405a3a56b46b1ee511d27da631
+guid: e2a27af786c9ec14e8251f4cdf69392d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4139182132029449524
-    second: gameIcon_0
+      213: -2387324017018053503
+    second: BlackSwan_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: gameIcon_0
+      name: BlackSwan_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1024
-        height: 1024
+        width: 30
+        height: 31
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: cca9dbff7cbae86c0800000000000000
-      internalID: -4139182132029449524
+      spriteID: 18c51e184758eded0800000000000000
+      internalID: -2387324017018053503
       vertices: []
       indices: 
       edges: []
@@ -147,8 +147,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      gameIcon_0: -4139182132029449524
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

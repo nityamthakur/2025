@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI onScreenTimer;
     [SerializeField] GameObject onScreenDayChanger;
+    
+    [SerializeField] GameObject UVLightObj;
     private JobDetails jobDetails;
     private JobScene jobScene;
     private Coroutine jobTimerCoroutine;
@@ -27,6 +29,9 @@ public class GameManager : MonoBehaviour
     private int numCensorMistakes = 0;
     private bool canCensor = false;
     private bool dayEnded = false;
+    private bool toolOverlayCreated = false;
+    private string currentTool = "CensorPen";
+    private Collider2D UVLightTarget = null;
 
     // Set total score minimum to 0
     private int totalScore = 0;
@@ -91,13 +96,69 @@ public class GameManager : MonoBehaviour
         banTargetWords = words;
     }
 
-    public void SetCensorFunctionality(bool canCensor)
+    public void SetToolFunctionality(bool canCensor)
     {
-        this.canCensor = canCensor;
+        switch (currentTool) 
+        {
+            case "CensorPen":
+                this.canCensor = canCensor;
+                break;
+            case "UVLight":
+                UVLightObj.SetActive(canCensor);
+                break;
+            default:
+                Debug.LogError($"Invalid tool: {currentTool}");
+                break;
+        }
+        
     }
     public bool CanCensor()
     {
         return canCensor;
+    }
+    public void SetToolOverlayCreated(bool created)
+    {
+        toolOverlayCreated = created;
+    }
+    public bool IsToolOverlayCreated()
+    {
+        return toolOverlayCreated;
+    }
+    public string GetCurrentTool()
+    {
+        return currentTool;
+    }
+    public void SetCurrentTool(string tool)
+    {
+        currentTool = tool;
+
+        if (tool == "UVLight")
+        {
+            UVLightObj.SetActive(true);
+        }
+        else if (UVLightObj.activeSelf)
+        {
+            UVLightObj.SetActive(false);
+        }
+    }
+    public GameObject GetUVLightObj()
+    {
+        return UVLightObj;
+    }
+    public void SetUVLightTarget(GameObject target)
+    {
+        if (target == null)
+        {
+            Debug.LogError("Target is null.");
+            return;
+        }
+
+        UVLightTarget = target.GetComponent<Collider2D>();
+    }
+
+    public Collider2D GetUVLightTarget()
+    {
+        return UVLightTarget;
     }
 
     // -------------------------------------
@@ -320,6 +381,7 @@ public class GameManager : MonoBehaviour
             TotalScore = 0;
             ResetJobDetails();
             jobScene.ShowMediaProcessedText(false);
+            toolOverlayCreated = false;
         }
     }
 

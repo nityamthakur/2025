@@ -25,6 +25,12 @@ public class NewspaperZoom : MonoBehaviour
     public bool stopZoom = true;
     public Entity entityComponent = null;
     public GameObject backOfNewspaper;
+
+    // Tool Overlay object
+    public GameObject toolOverlayPrefab; 
+    private GameObject toolOverlayObj, toolOverlayInstance;
+    private Vector3 toolOverlayStartPos, toolOverlayEndPos;
+    private GameObject UVLight;
     
     // Phone object
     public GameObject phonePrefab;
@@ -58,7 +64,14 @@ public class NewspaperZoom : MonoBehaviour
             Debug.LogError("Back of Newspaper not assigned!");
         }
 
+        UVLight = gameManager.GetUVLightObj();
+        if (UVLight == null)
+        {
+            Debug.LogError("UVLight not found in the scene!");
+        }
+
         CreatePhone();
+        CreateToolOverlay();
     }
 
     void Update()
@@ -89,10 +102,11 @@ public class NewspaperZoom : MonoBehaviour
                 draggableScript.enabled = true;
 
             backOfNewspaper.SetActive(false);
-            gameManager.SetCensorFunctionality(false);
+            gameManager.SetToolFunctionality(false);
             entityComponent.SetBlur(true);
 
-            StartCoroutine(HidePhone());
+            StartCoroutine(HideUIObject(phoneInstance, phoneStartPos, phoneEndPos));
+            StartCoroutine(HideUIObject(toolOverlayInstance, toolOverlayStartPos, toolOverlayEndPos));
         }
         else
         {
@@ -108,11 +122,12 @@ public class NewspaperZoom : MonoBehaviour
                 draggableScript.enabled = false;
 
             backOfNewspaper.SetActive(true);
-            gameManager.SetCensorFunctionality(true);
+            gameManager.SetToolFunctionality(true);
             entityComponent.SetBlur(false);
 
             UpdatePhoneText();
-            StartCoroutine(ShowPhone());
+            StartCoroutine(ShowUIObject(phoneInstance, phoneStartPos, phoneEndPos));
+            StartCoroutine(ShowUIObject(toolOverlayInstance, toolOverlayStartPos, toolOverlayEndPos));
         }
     }
 
@@ -143,6 +158,32 @@ public class NewspaperZoom : MonoBehaviour
         else
             transform.position = zoomPosition;
 
+    }
+
+    private void CreateToolOverlay()
+    {
+        if (toolOverlayPrefab != null)
+        {
+            toolOverlayObj = Instantiate(toolOverlayPrefab);
+            
+            // Locate and attach the moveable pieces in ToolOverlayObj
+            Transform toolOverlayTransform = toolOverlayObj.transform.Find("ToolOverlay");
+            if (toolOverlayTransform != null)
+                toolOverlayInstance = toolOverlayTransform.gameObject; // Fixed here
+            else
+                Debug.LogError("ToolOverlay is null inside toolOverlayPrefab.");
+
+            // Set the position of the tool overlay
+            toolOverlayStartPos = toolOverlayInstance.transform.position;
+            toolOverlayEndPos = toolOverlayInstance.transform.position + new Vector3(0f, -1200f, 0f);
+            toolOverlayInstance.transform.position = toolOverlayEndPos;
+
+            gameManager.SetToolOverlayCreated(true);
+        }
+        else
+        {
+            Debug.LogError("Tool overlay prefab is missing!");
+        }
     }
 
     private void CreatePhone()
@@ -203,34 +244,46 @@ public class NewspaperZoom : MonoBehaviour
         }
     }
 
-    private IEnumerator ShowPhone()
+    private IEnumerator ShowUIObject(GameObject instance, Vector3 startPos, Vector3 endPos)
     {
+        if (instance == null)
+        {
+            Debug.LogError("Instance is null");
+            yield break;
+        }
+
         float elapsedTime = 0f;
         float duration = 0.3f;
 
         while (elapsedTime < duration)
         {
-            phoneInstance.transform.position = Vector3.Lerp(phoneEndPos, phoneStartPos, elapsedTime / duration);
+            instance.transform.position = Vector3.Lerp(endPos, startPos, elapsedTime / duration);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
-        phoneInstance.transform.position = phoneStartPos;
+        instance.transform.position = startPos;
     }
 
-    private IEnumerator HidePhone()
+    private IEnumerator HideUIObject(GameObject instance, Vector3 startPos, Vector3 endPos)
     {
+        if (instance == null)
+        {
+            Debug.LogError("Instance is null");
+            yield break;
+        }
+
         float elapsedTime = 0f;
         float duration = 0.2f;
 
         while (elapsedTime < duration)
         {
-            phoneInstance.transform.position = Vector3.Lerp(phoneStartPos, phoneEndPos, elapsedTime / duration);
+            instance.transform.position = Vector3.Lerp(startPos, endPos, elapsedTime / duration);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
-        phoneInstance.transform.position = phoneEndPos;
+        instance.transform.position = endPos;
     }
 
     public void PreventZoom()
@@ -245,5 +298,7 @@ public class NewspaperZoom : MonoBehaviour
     {
         Destroy(phoneObj);
         phoneObj = null;
+        Destroy(toolOverlayObj);
+        toolOverlayObj = null;
     }
 }
