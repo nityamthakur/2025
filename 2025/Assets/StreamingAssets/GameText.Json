@@ -97,15 +97,15 @@
         },
         {
             "day": 3,
-            "email": "Here at the Media Regulation Branch, we are a closely knit family. As such, report anyone threatening our harmonious relationship.\n\n<color=#FFFF00><b>Click and drag to move newspapers.\nRight-click to zoom in and out on the newspapers.\nLeft-click on words to censor them.</color></b>\n\n"
+            "email": "ATTENTION: Reports have shown that the Green Party is attempting to pass codes through secret images.\n\n<color=#FFFF00><b>Click and drag to move newspapers.\nRight-click to zoom in and out on the newspapers.\nLeft-click on words to censor them.\nSwitch to your UV Light to uncover hidden images.\nLeft-click on hidden images with the UV Light and ban any newspapers they reside on.</color></b>\n\n"
         },
         {
             "day": 4,
-            "email": "Tensions are rising in NewMerica. Due to recent events, it is imperative that you complete your tasks successfully and efficiently. Long Live NewMerica!\n\n<color=#FFFF00><b>Click and drag to move newspapers.\nRight-click to zoom in and out on the newspapers.\nLeft-click on words to censor them.</color></b>\n\n"
+            "email": "Tensions are rising in NewMerica. Due to recent events, it is imperative that you complete your tasks successfully and efficiently. Long Live NewMerica!\n\n<color=#FFFF00><b>Click and drag to move newspapers.\nRight-click to zoom in and out on the newspapers.\nLeft-click on words to censor them.\nSwitch to your UV Light to uncover hidden images.\nLeft-click on hidden images with the UV Light and ban any newspapers they reside on.</color></b>\n\n"
         },
         {
             "day": 5,
-            "email": "NewMerica faces its greatest threat in the efforts performed by the Black Swan. We are relying on you to diminish their influence.\n\n<color=#FFFF00><b>Click and drag to move newspapers.\nRight-click to zoom in and out on the newspapers.\nLeft-click on words to censor them.</color></b>\n\n"
+            "email": "NewMerica faces its greatest threat in the efforts performed by the Black Swan. We are relying on you to diminish their influence.\n\n<color=#FFFF00><b>Click and drag to move newspapers.\nRight-click to zoom in and out on the newspapers.\nLeft-click on words to censor them.Switch to your UV Light to uncover hidden images.\nLeft-click on hidden images with the UV Light and ban any newspapers they reside on.</color></b>\n\n"
         }
     ],
     "newspaperText": [
@@ -181,7 +181,7 @@
                     "censorWords": [
                         "Fiscal Enforcement"
                     ],
-                    "hasHiddenImage": true
+                    "hasHiddenImage": false
                 },
                 {
                     "publisher": "Jade Gazette",
@@ -236,6 +236,16 @@
             "day": 3,
             "newspapers": [
                 {
+                    "publisher": "The Patriot's Echo",
+                    "title": "North NewMerica Threatens Nuclear War",
+                    "date": "1/8/2025",
+                    "front": "WASHINTEN - In a shocking turn of events, North NewMerica threatens NewMerica with complete destruction through the use of nuclear warheads. The previously peaceful and diplomatic North NewMerica has suddenly dropped what is being called the \"Iron Veil\" between them and our glorious NewMerica.",
+                    "back": "Upon this vile declaration, longstanding NewMerican ally South NewMerica has pledged to support the \"Washinten Pact.\" The Director of Foreign Relations Leonard Tierney had this to say about the alliance: \"Our Southern neighbors have always been allies of this nation, and we thank them for their continued support during these difficult times.\"\n Only time will tell if the barbaric threats made by North NewMerica will come to pass. Nonetheless, The Glorious Leader has prompted his citizens to be prepared for war at all times.",
+                    "banWords": [],
+                    "censorWords": [],
+                    "hasHiddenImage": true
+                },
+                {
                     "publisher": "The Verdant Times",
                     "title": "South African Tech Billionaire's Unveils New AI Democracy Advisor - Public Voting no Longer Necessary",
                     "date": "1/8/2025",
@@ -257,7 +267,7 @@
                     "censorWords": [
                         "Credric Siphens"
                     ],
-                    "hasHiddenImage": false
+                    "hasHiddenImage": true
                 },
                 {
                     "publisher": "The Verdant Times",
@@ -270,16 +280,6 @@
                         "Black Swan",
                         "Lake"
                     ],
-                    "hasHiddenImage": false
-                },
-                {
-                    "publisher": "The Patriot's Echo",
-                    "title": "North NewMerica Threatens Nuclear War",
-                    "date": "1/8/2025",
-                    "front": "WASHINTEN - In a shocking turn of events, North NewMerica threatens NewMerica with complete destruction through the use of nuclear warheads. The previously peaceful and diplomatic North NewMerica has suddenly dropped what is being called the \"Iron Veil\" between them and our glorious NewMerica.",
-                    "back": "Upon this vile declaration, longstanding NewMerican ally South NewMerica has pledged to support the \"Washinten Pact.\" The Director of Foreign Relations Leonard Tierney had this to say about the alliance: \"Our Southern neighbors have always been allies of this nation, and we thank them for their continued support during these difficult times.\"\n Only time will tell if the barbaric threats made by North NewMerica will come to pass. Nonetheless, The Glorious Leader has prompted his citizens to be prepared for war at all times.",
-                    "banWords": [],
-                    "censorWords": [],
                     "hasHiddenImage": false
                 },
                 {
@@ -334,7 +334,7 @@
                         "Media Regulation Branch"
                     ],
                     "censorWords": [],
-                    "hasHiddenImage": false
+                    "hasHiddenImage": true
                 },
                 {
                     "publisher": "The Credit Ledger",
@@ -371,7 +371,7 @@
                     "back": "According to a statement from the Department of Information Stability, 47 citizens were identified for engaging in harmful discourse, ranging from unapproved political skepticism to failure to use government-approved terminology in online discussions.\n Each case was swiftly flagged and reviewed by the new system, ensuring only that only those guilty of endangering societal unity were flagged. Despite the amount of citizens arrested, none were the elusive Black Swan or any of his followers who go by The Lake. In spite of that Eusk claims that in the coming weeks they will be brought to justice.",
                     "banWords": [],
                     "censorWords": [],
-                    "hasHiddenImage": false
+                    "hasHiddenImage": true
                 },
                 {
                     "publisher": "Green Voice",
@@ -396,7 +396,7 @@
                         "Emerald Chronicle"
                     ],
                     "censorWords": [],
-                    "hasHiddenImage": false
+                    "hasHiddenImage": true
                 },
                 {
                     "publisher": "The NewMerican Truth",

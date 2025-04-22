@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      BlackSwan_0: -2387324017018053503
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

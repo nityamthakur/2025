@@ -127,7 +127,7 @@ public class Entity : MonoBehaviour
 
     private IEnumerator DelayedInitializeHiddenImage()
     {
-        yield return null;
+        yield return new WaitForSeconds(0.5f);
 
         InitializeHiddenImage();
     }
@@ -140,20 +140,32 @@ public class Entity : MonoBehaviour
             Debug.LogError("Hidden image object not found in the newspaper prefab.");
             return;
         }
+        SpriteRenderer spawnBoundsRenderer = hiddenImageSpawnBounds.GetComponent<SpriteRenderer>();
+        if (spawnBoundsRenderer == null)
+        {
+            Debug.LogError("SpriteRenderer component not found on hiddenImageSpawnBounds.");
+            return;
+        }
         
-        Bounds spawnBounds = hiddenImageSpawnBounds.GetComponent<Collider2D>().bounds;
+        Bounds spawnBounds = spawnBoundsRenderer.localBounds;
 
         // Randomize the image's position
-        // float randomX = UnityEngine.Random.Range(spawnBounds.min.x, spawnBounds.max.x);
-        // float randomY = UnityEngine.Random.Range(spawnBounds.min.y, spawnBounds.max.y);
+        float randomX = UnityEngine.Random.Range(spawnBounds.min.x, spawnBounds.max.x);
+        float randomY = UnityEngine.Random.Range(spawnBounds.min.y, spawnBounds.max.y);
 
-        // hiddenImage.transform.position = new Vector3(randomX, randomY, hiddenImage.transform.position.z);
-        // Vector3 localPosition = hiddenImage.transform.localPosition;
-        // localPosition.z = 0;
-        // hiddenImage.transform.localPosition = localPosition;
+        Vector3 randomLocalPosition = new Vector3(randomX, randomY, 0);
+        Vector3 randomWorldPosition = hiddenImageSpawnBounds.transform.TransformPoint(randomLocalPosition);
+
+        hiddenImage.transform.position = randomWorldPosition;
+        Vector3 localPosition = hiddenImage.transform.localPosition;
+        localPosition.z = 0;
+        hiddenImage.transform.localPosition = localPosition;
+
         hiddenImage.SetActive(true);
-
+        gameManager.SetTargetExists(true);
         gameManager.SetUVLightTarget(hiddenImage);
+
+        Debug.Log("Hidden image initialized at position: " + randomWorldPosition);
     }
 
     public void ChangeMediaRotation( int angleX )

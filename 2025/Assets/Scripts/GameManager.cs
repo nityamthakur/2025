@@ -31,7 +31,8 @@ public class GameManager : MonoBehaviour
     private bool dayEnded = false;
     private bool toolOverlayCreated = false;
     private string currentTool = "CensorPen";
-    private Collider2D UVLightTarget = null;
+    private bool hiddenImageExists = false;
+    private bool hiddenImageFound = false;
 
     // Set total score minimum to 0
     private int totalScore = 0;
@@ -153,12 +154,21 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        UVLightTarget = target.GetComponent<Collider2D>();
+        UVLightObj.GetComponent<UVLight>().SetTargetCollider(target.GetComponent<Collider2D>());
+    }
+    public void SetTargetExists(bool exists)
+    {
+        hiddenImageExists = exists;
     }
 
-    public Collider2D GetUVLightTarget()
+    public void SetTargetFound(bool found)
     {
-        return UVLightTarget;
+        hiddenImageFound = found;
+    }
+
+    public bool UVLightTargetFound()
+    {
+        return hiddenImageFound;
     }
 
     // -------------------------------------
@@ -271,16 +281,18 @@ public class GameManager : MonoBehaviour
         Debug.Log($"Uncensored Word! Total Mistakes: {numCensorMistakes}");
     }
 
-    public void ResetCensorTracking()
+    public void ResetPuzzleTracking()
     {
         currentCensorNum = 0;
         totalCensorTargets = 0;
         numCensorMistakes = 0;
+        hiddenImageExists = false;
+        hiddenImageFound = false;
     }
 
     public void EvaluatePlayerAccept(string[] banWords)
     {
-        bool playerSucceeds = banWords.Length == 0;
+        bool playerSucceeds = banWords.Length == 0 && !hiddenImageExists;
 
         if (playerSucceeds && (currentCensorNum == totalCensorTargets) && (numCensorMistakes == 0))
         {
@@ -321,13 +333,13 @@ public class GameManager : MonoBehaviour
         TotalScore += Math.Clamp(mediaScore, 0, 5);
 
         EvaluatePlayerScore();
-        ResetCensorTracking();
+        ResetPuzzleTracking();
         CheckDayEnd();
     }
 
     public void EvalutatePlayerDestroy(string[] banWords)
     {
-        bool playerSucceeds = banWords.Length != 0;
+        bool playerSucceeds = banWords.Length != 0 || (hiddenImageExists && hiddenImageFound);
 
         if (playerSucceeds)
         {
@@ -358,7 +370,7 @@ public class GameManager : MonoBehaviour
 
 
         EvaluatePlayerScore();
-        ResetCensorTracking();
+        ResetPuzzleTracking();
         CheckDayEnd();
     }
 

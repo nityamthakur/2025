@@ -526,7 +526,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tools: []
-  toolAppearanceOrder: 0100000002000000
+  toolAppearanceOrder: 0200000003000000
 --- !u!1 &8764790447295677070
 GameObject:
   m_ObjectHideFlags: 0

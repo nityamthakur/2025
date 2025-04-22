@@ -22,8 +22,6 @@ public class UVLight : MonoBehaviour
             return;
         }
         defColor = spriteRenderer.color;
-
-        targetCollider = gameManager.GetUVLightTarget();
     }
 
     // Update is called once per frame
@@ -42,21 +40,27 @@ public class UVLight : MonoBehaviour
         }
     }
 
+    public void SetTargetCollider(Collider2D newTargetCollider)
+    {
+        targetCollider = newTargetCollider;
+    }
+
+
+    private bool AreBoundsOverlapping(Bounds a, Bounds b)
+    {
+        return a.min.x <= b.max.x && a.max.x >= b.min.x &&
+            a.min.y <= b.max.y && a.max.y >= b.min.y;
+    }
+
     private void OnTriggerStay2D(Collider2D other)
     {
         if (other == targetCollider)
         {
             Bounds uvLightBounds = GetComponent<Collider2D>().bounds;
             Bounds targetBounds = targetCollider.bounds;
-
-            // Check if the UVLight bounds are completely contained within the target bounds
-            isOverlapping = uvLightBounds.Contains(targetBounds.min) && uvLightBounds.Contains(targetBounds.max);
-
-            if (isOverlapping)
-            {
-                Debug.Log("UVLight is overlapping with the target collider.");
-                // Add any additional logic here, e.g., triggering an event or effect
-            }
+            
+            // Check if the UVLight bounds are contained within the target bounds
+            isOverlapping = AreBoundsOverlapping(uvLightBounds, targetBounds);
         }
     }
 
@@ -64,8 +68,6 @@ public class UVLight : MonoBehaviour
     {
         if (other == targetCollider)
         {
-            Debug.Log("UVLight exited the target collider.");
-            
             isOverlapping = false;
         }
     }
@@ -77,13 +79,13 @@ public class UVLight : MonoBehaviour
 
         if (hit.collider != null && hit.collider == targetCollider)
         {
-            Debug.Log("Player clicked on the overlapping target object!");
-            // Add any additional logic here, e.g., triggering an event or effect
+            gameManager.SetTargetFound(true);
             
             StartCoroutine(ChangeLightColor());
-
             hit.collider.gameObject.GetComponent<SpriteRenderer>().maskInteraction = SpriteMaskInteraction.None;
             hit.collider.gameObject.GetComponent<BoxCollider2D>().enabled = false;
+
+            Debug.Log("Clicked on hidden image.");
         }
     }
 

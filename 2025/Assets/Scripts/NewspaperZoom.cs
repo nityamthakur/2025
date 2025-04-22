@@ -88,6 +88,7 @@ public class NewspaperZoom : MonoBehaviour
         EventManager.PlaySound?.Invoke("newspaperRustling");
         zoomFactor = 1.25f;
         zoomScale = originalScale * zoomFactor;
+        GameObject hiddenImage = transform.Find("HiddenImage").gameObject;
 
         if (isZoomedIn)
         {
@@ -104,6 +105,11 @@ public class NewspaperZoom : MonoBehaviour
             backOfNewspaper.SetActive(false);
             gameManager.SetToolFunctionality(false);
             entityComponent.SetBlur(true);
+
+            if (gameManager.UVLightTargetFound())
+            {
+                hiddenImage.SetActive(false);
+            }   
 
             StartCoroutine(HideUIObject(phoneInstance, phoneStartPos, phoneEndPos));
             StartCoroutine(HideUIObject(toolOverlayInstance, toolOverlayStartPos, toolOverlayEndPos));
@@ -124,6 +130,11 @@ public class NewspaperZoom : MonoBehaviour
             backOfNewspaper.SetActive(true);
             gameManager.SetToolFunctionality(true);
             entityComponent.SetBlur(false);
+
+            if (gameManager.UVLightTargetFound())
+            {
+                hiddenImage.SetActive(true);
+            }
 
             UpdatePhoneText();
             StartCoroutine(ShowUIObject(phoneInstance, phoneStartPos, phoneEndPos));
