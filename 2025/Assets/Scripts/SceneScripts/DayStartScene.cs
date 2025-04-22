@@ -11,8 +11,10 @@ using UnityEditor.Toolbars;
 public class DayStartScene : MonoBehaviour
 {
     [SerializeField] private GameObject UITextBox;
-    [SerializeField] private Sprite FemaleNewsAnchor, MaleNewsAnchor, MaleNewsAnchor2;
-    [SerializeField] private Sprite jobLetter, rentLetter, rentNotice;
+    [SerializeField] private Sprite[] FemaleNewsAnchor, MaleNewsAnchor, MaleNewsAnchor2;
+    [SerializeField] private Sprite[] jobLetter;
+    [SerializeField] private Sprite rentLetter, rentNotice;
+    [SerializeField] private float frameInterval = 0.5f;
     private GameObject currentTextBox;
     private TextMeshProUGUI TextBox;
     private Button nextButton;
@@ -20,9 +22,9 @@ public class DayStartScene : MonoBehaviour
     //private int currDay = 0;
     private int linePos = 0;
     private Line[] currentLines;
-
     private GameManager gameManager;
     private TypewriterText typewriterText;
+     private Coroutine animationCoroutine;
     private Action delay;
 
     public void Initialize()
@@ -30,8 +32,8 @@ public class DayStartScene : MonoBehaviour
         gameManager = FindFirstObjectByType<GameManager>();
     }
 
-    public void LoadDayStart() 
-    {    
+    public void LoadDayStart()
+    {
         currentTextBox = Instantiate(UITextBox);
 
         if (currentTextBox == null)
@@ -41,21 +43,23 @@ public class DayStartScene : MonoBehaviour
         }
 
         SetUpDayStart();
-        
-        if(!EventManager.IsMusicPlaying())
+
+        if (!EventManager.IsMusicPlaying())
             EventManager.PlayMusic?.Invoke("menu");
 
         DayStartEventChecker();
+        EventManager.FadeIn?.Invoke();
+        EventManager.DisplayMenuButton?.Invoke(true);
     }
 
-    private void SetUpDayStart() {
+    private void SetUpDayStart()
+    {
         backgroundImage = currentTextBox.transform.Find("BackgroundImage").GetComponent<Image>();
-        if(backgroundImage == null)
+        if (backgroundImage == null)
         {
             Debug.Log("Failed to find Image component");
             return;
         }
-        backgroundImage.sprite = FemaleNewsAnchor; 
 
         TextBox = currentTextBox.transform.Find("TextBox").GetComponent<TextMeshProUGUI>();
         if (TextBox == null)
@@ -118,7 +122,7 @@ public class DayStartScene : MonoBehaviour
         if (jsonObject != null && jsonObject.newsCasterIntro.Count > 0)
         {
             currentLines = GetLinesForDay(jsonObject.newsCasterIntro, gameManager.gameData.GetCurrentDay());
-            
+
             linePos = 0;
             //ReadNextLine();
         }
@@ -206,19 +210,24 @@ public class DayStartScene : MonoBehaviour
     private void ChangeSpeaker(Line currentLine)
     {
         // Change the speaker image based on who is speaking
+        if (animationCoroutine != null)
+        {
+            StopCoroutine(animationCoroutine);
+        }
+
         switch (currentLine.speaker.ToLower())
         {
             case "femalenewsanchor":
-                backgroundImage.sprite = FemaleNewsAnchor;
+                animationCoroutine = StartCoroutine(CycleBackgroundFrames(FemaleNewsAnchor));
                 break;
             case "malenewsanchor":
-                backgroundImage.sprite = MaleNewsAnchor;
+                animationCoroutine = StartCoroutine(CycleBackgroundFrames(MaleNewsAnchor));
                 break;
             case "malenewsanchor2":
-                backgroundImage.sprite = MaleNewsAnchor2;
+                animationCoroutine = StartCoroutine(CycleBackgroundFrames(MaleNewsAnchor2));
                 break;
             case "jobletter":
-                backgroundImage.sprite = jobLetter;
+                animationCoroutine = StartCoroutine(CycleBackgroundFrames(jobLetter));
                 break;
             case "rentletter":
                 backgroundImage.sprite = rentLetter;
@@ -229,6 +238,20 @@ public class DayStartScene : MonoBehaviour
             default:
                 backgroundImage.sprite = null;
                 break;
+        }
+    }
+
+    private IEnumerator CycleBackgroundFrames(Sprite[] frames)
+    {
+        if (frames == null || frames.Length == 0)
+            yield break;
+
+        int index = 0;
+        while (true)
+        {
+            backgroundImage.sprite = frames[index];
+            index = (index + 1) % frames.Length;
+            yield return new WaitForSeconds(frameInterval);
         }
     }
 
@@ -305,7 +328,7 @@ public class DayStartScene : MonoBehaviour
 
         Destroy(currentTextBox);
         currentTextBox = null;
-        
+
         yield return new WaitForSeconds(2f);
         EventManager.NextScene?.Invoke();
     }

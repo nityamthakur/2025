@@ -5,7 +5,6 @@ using TMPro;
 using System.IO;
 using System.Collections.Generic;
 using System;
-using JetBrains.Annotations;
 
 public class JobScene : MonoBehaviour
 {
