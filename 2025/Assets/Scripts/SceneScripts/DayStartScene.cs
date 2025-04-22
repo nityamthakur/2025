@@ -12,7 +12,7 @@ public class DayStartScene : MonoBehaviour
 {
     [SerializeField] private GameObject UITextBox;
     [SerializeField] private Sprite FemaleNewsAnchor, MaleNewsAnchor, MaleNewsAnchor2;
-    [SerializeField] private Sprite jobLetter, rentLetter, rentNotice;
+    [SerializeField] private Sprite jobLetter, rentLetter, rentNotice, apartment;
     private GameObject currentTextBox;
     private TextMeshProUGUI TextBox;
     private Button nextButton;
@@ -225,6 +225,9 @@ public class DayStartScene : MonoBehaviour
                 break;
             case "rentnotice":
                 backgroundImage.sprite = rentNotice;
+                break;
+            case "apartment":
+                backgroundImage.sprite = apartment;
                 break;
             default:
                 backgroundImage.sprite = null;
