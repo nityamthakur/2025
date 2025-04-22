@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 12ed3bd0324f8cc4cb23fe19270974d4
+guid: 346e811dc5694c0469ca4d7d6a41f9d6
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2455488159657730429
-    second: badEnding_06
+      213: -2717661510411751580
+    second: RentNotice_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -75,9 +75,9 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 2
-    compressionQuality: 100
-    crunchedCompression: 1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
     ignorePlatformSupport: 0
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: badEnding_0
+      name: RentNotice_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 6400
-        height: 3600
+        width: 2560
+        height: 1440
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 38e5c6d478a5cedd0800000000000000
-      internalID: -2455488159657730429
+      spriteID: 46fe72c414de84ad0800000000000000
+      internalID: -2717661510411751580
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      badEnding_0: -2455488159657730429
+      RentNotice_0: -2717661510411751580
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

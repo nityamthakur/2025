@@ -5,25 +5,26 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using System;
 using System.Collections;
+using Unity.VisualScripting;
+using UnityEditor.Toolbars;
 
 public class DayStartScene : MonoBehaviour
 {
     [SerializeField] private GameObject UITextBox;
-    [SerializeField] private Sprite[] FemaleNewsAnchor;
-    [SerializeField] private Sprite[] MaleNewsAnchor;
-    [SerializeField] private Sprite[] MaleNewsAnchor2;
-    [SerializeField] private Sprite[] jobLetter;
+    [SerializeField] private Sprite[] FemaleNewsAnchor, MaleNewsAnchor, MaleNewsAnchor2;
+    [SerializeField] private Sprite[] jobLetter, rentLetter, rentNotice;
     [SerializeField] private float frameInterval = 0.5f;
-
     private GameObject currentTextBox;
     private TextMeshProUGUI TextBox;
     private Button nextButton;
-    private Image backgroundImage;
+    private Image backgroundImage, textBoxBackground;    
     //private int currDay = 0;
     private int linePos = 0;
     private Line[] currentLines;
     private GameManager gameManager;
-    private Coroutine animationCoroutine;
+    private TypewriterText typewriterText;
+     private Coroutine animationCoroutine;
+    private Action delay;
 
     public void Initialize()
     {
@@ -45,6 +46,7 @@ public class DayStartScene : MonoBehaviour
         if (!EventManager.IsMusicPlaying())
             EventManager.PlayMusic?.Invoke("menu");
 
+        DayStartEventChecker();
         EventManager.FadeIn?.Invoke();
         EventManager.DisplayMenuButton?.Invoke(true);
     }
@@ -62,6 +64,15 @@ public class DayStartScene : MonoBehaviour
         if (TextBox == null)
         {
             Debug.LogError("Failed to find TextMeshProUGUI component.");
+            return;
+        }
+        TextBox.AddComponent<TypewriterText>();
+        typewriterText = TextBox.transform.GetComponent<TypewriterText>();
+
+        textBoxBackground = currentTextBox.transform.Find("TextBoxBackground").GetComponent<Image>();
+        if (textBoxBackground == null)
+        {
+            Debug.LogError("Failed to find TextBoxBackground component.");
             return;
         }
 
@@ -112,7 +123,7 @@ public class DayStartScene : MonoBehaviour
             currentLines = GetLinesForDay(jsonObject.newsCasterIntro, gameManager.gameData.GetCurrentDay());
 
             linePos = 0;
-            ReadNextLine();
+            //ReadNextLine();
         }
         else
         {
@@ -139,16 +150,59 @@ public class DayStartScene : MonoBehaviour
             // Get the current line object
             Line currentLine = currentLines[linePos];
 
-            // Set the text in the dialogue box
-            TextBox.text = currentLine.text;
-            ChangeSpeaker(currentLine);
-            linePos++;
+            // Instantly show the text if currently writing
+            if(typewriterText.MessageWriting())
+                typewriterText.InstantMessage(currentLines[linePos - 1].text);
+            else
+            {
+                // Run a timed delay based on JSON file text
+                if(currentLine.speaker.ToLower() == "delay")
+                {  
+                    CheckDelay(currentLine);
+                }
+                // Play a song or stop a song in between dialogue 
+                else if(currentLine.speaker.ToLower() == "playmusic")
+                {
+                    EventManager.PlayMusic?.Invoke(currentLine.text);
+                    linePos++;
+                    ReadNextLine();
+                }
+                else if(currentLine.speaker.ToLower() == "stopmusic")
+                {
+                    EventManager.StopMusic?.Invoke();
+                    linePos++;
+                    ReadNextLine();
+                }
+                else if(currentLine.speaker.ToLower() == "playsound")
+                {
+                    EventManager.PlaySound?.Invoke(currentLine.text);
+                    linePos++;
+                    ReadNextLine();
+                }
+                else
+                {
+                    // Set the text in the dialogue box
+                    typewriterText.TypewriteMessage(currentLine.text);
+                    ChangeSpeaker(currentLine);
+                    linePos++;
+
+                    // If there is no text, proceed to the next line, for swapping just the image
+                    if(currentLine.text == "")
+                        ReadNextLine();
+                }
+            }
         }
         else
         {
-            nextButton.interactable = false;
-            EventManager.DisplayMenuButton?.Invoke(false);
-            StartCoroutine(NextScene());
+            // Instantly show the text if currently writing
+            if(typewriterText.MessageWriting())
+                typewriterText.InstantMessage(currentLines[linePos - 1].text);
+            else
+            {
+                nextButton.interactable = false;
+                EventManager.DisplayMenuButton?.Invoke(false);
+                StartCoroutine(NextScene());
+            }
         }
     }
 
@@ -174,6 +228,12 @@ public class DayStartScene : MonoBehaviour
             case "jobletter":
                 animationCoroutine = StartCoroutine(CycleBackgroundFrames(jobLetter));
                 break;
+            case "rentletter":
+                backgroundImage.sprite = rentLetter;
+                break;
+            case "rentnotice":
+                backgroundImage.sprite = rentNotice;
+                break;
             default:
                 backgroundImage.sprite = null;
                 break;
@@ -192,6 +252,71 @@ public class DayStartScene : MonoBehaviour
             index = (index + 1) % frames.Length;
             yield return new WaitForSeconds(frameInterval);
         }
+    }
+
+    private void CheckDelay(Line currentLine)
+    {
+        if (float.TryParse(currentLine.text, out float result))
+        {
+            TextBox.gameObject.SetActive(false);
+            textBoxBackground.gameObject.SetActive(false);
+            nextButton.gameObject.SetActive(false);
+
+            delay = () =>
+            {
+                TextBox.gameObject.SetActive(true);
+                textBoxBackground.gameObject.SetActive(true);
+                nextButton.gameObject.SetActive(true);
+                linePos++;
+                ReadNextLine();
+            };
+
+            StartCoroutine(StartDelay(result));
+        }
+    }
+
+    private IEnumerator StartDelay(float time)
+    {
+        yield return new WaitForSeconds(time);
+        delay?.Invoke();
+    }
+
+    private void DayStartEventChecker()
+    {
+        if(gameManager.gameData.GetCurrentDay() == 1)
+        {
+            StartCoroutine(DayStartOpening());
+        }   
+        else
+        {
+            EventManager.FadeIn?.Invoke();
+            EventManager.DisplayMenuButton?.Invoke(true); 
+            ReadNextLine();
+        }
+    }
+
+    private IEnumerator DayStartOpening()
+    {
+        backgroundImage.sprite = rentLetter;
+        TextBox.gameObject.SetActive(false);
+        textBoxBackground.gameObject.SetActive(false);
+
+        nextButton.onClick.RemoveAllListeners();
+        nextButton.onClick.AddListener(() =>
+        {
+            TextBox.gameObject.SetActive(true);
+            textBoxBackground.gameObject.SetActive(true);
+            EventManager.PlaySound?.Invoke("switch1");
+            ReadNextLine();
+        });
+
+        yield return new WaitForSeconds(1f);
+        EventManager.PlaySound?.Invoke("doorbell");
+        yield return new WaitForSeconds(2f);
+        EventManager.PlaySound?.Invoke("papercomein");
+        yield return new WaitForSeconds(0.5f);
+        EventManager.FadeIn?.Invoke();
+        //EventManager.PlayMusic?.Invoke("Some Music For The Day Start / Apartment");
     }
 
     private IEnumerator NextScene()

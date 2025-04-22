@@ -69,9 +69,7 @@ public class AudioManager : MonoBehaviour
             return;
         }
 
-        AudioClip sound = null;
-        bool soundExists = musicDict.TryGetValue(soundName.ToLower(), out sound);
-
+        bool soundExists = musicDict.TryGetValue(soundName.ToLower(), out AudioClip sound);
         if (!soundExists || sound == null)
         {
             Debug.Log($"Music not found: {soundName}");
@@ -123,9 +121,7 @@ public class AudioManager : MonoBehaviour
             return;
         }
 
-        AudioClip sound = null;
-        bool soundExists = sfxDict.TryGetValue(soundName.ToLower(), out sound);
-
+        bool soundExists = sfxDict.TryGetValue(soundName.ToLower(), out AudioClip sound);
         if (!soundExists || sound == null)
         {
             Debug.Log($"Sound not found: {soundName}");

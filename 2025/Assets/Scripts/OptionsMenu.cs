@@ -11,13 +11,14 @@ public class OptionsMenu : MonoBehaviour
     private SubtitleManager subtitleManager;
     private List<GameObject> sections = new();
     private GameObject pauseMenu, menuSections, audioSection, saveLoadSection, confirmSection;
-    private TextMeshProUGUI confirmText;
+    private TextMeshProUGUI confirmText, pauseMenuText;
     private Action confirmAction, cancelAction;
-    private Button slot1Button, slot2Button, slot3Button, backButton, saveButton, mainMenuButton;
+    private Button slot1Button, slot2Button, slot3Button, backButton, saveButton, deleteButton, mainMenuButton;
     private Slider masterVolumeSlider, musicVolumeSlider, sfxVolumeSlider;
-    private Toggle muteToggle, subtitleToggle, grayscaleToggle;
+    private Toggle muteToggle, subtitleToggle, grayscaleToggle, fullScreenToggle;
     private GameManager gameManager;
-    private bool isLoadingSettings = false;
+    private bool isLoadingSettings = false, deleteButtonPressed = false;
+    private string lastSaveLoadOption = "";
 
     private void Awake()
     {
@@ -25,6 +26,7 @@ public class OptionsMenu : MonoBehaviour
         
         SetUpSections();
         SetupMenuButtons();
+        ScreenModeSetUp();
         GrayscaleSetUp();
         AudioSetUp();
         
@@ -67,6 +69,7 @@ public class OptionsMenu : MonoBehaviour
     private void SetupMenuButtons()
     {
         confirmText = FindComponentByName<TextMeshProUGUI>("ConfirmText");
+        pauseMenuText = FindComponentByName<TextMeshProUGUI>("PauseMenuText");
 
         FindButton("CloseMenuButton", () =>
         {
@@ -75,10 +78,12 @@ public class OptionsMenu : MonoBehaviour
             EventManager.PlaySound?.Invoke("switch1");
             Time.timeScale = 1;
             gameObject.SetActive(false);
+            deleteButtonPressed = false;
         });
       
         backButton = FindButton("BackButton", () =>
         {
+            deleteButtonPressed = false;
             ChangeMenuSection(menuSections);
             EventManager.PlaySound?.Invoke("switch1");
         });
@@ -86,8 +91,9 @@ public class OptionsMenu : MonoBehaviour
 
         saveButton = FindButton("SaveButton", () =>
         {
+            lastSaveLoadOption = "save";
             ChangeMenuSection(saveLoadSection);
-            UpdateSaveLoadButtons(true);
+            UpdateSaveLoadButtons("save");
             EventManager.PlaySound?.Invoke("switch1"); 
         });
         // Hide the save button initally in the main menu
@@ -95,10 +101,20 @@ public class OptionsMenu : MonoBehaviour
 
         FindButton("LoadButton", () =>
         {
+            lastSaveLoadOption = "load";
             ChangeMenuSection(saveLoadSection);
-            UpdateSaveLoadButtons(false);
+            UpdateSaveLoadButtons("load");
             EventManager.PlaySound?.Invoke("switch1"); 
         });
+
+        deleteButton = FindButton("DeleteButton", () =>
+        {
+            deleteButtonPressed = true;
+            UpdateSaveLoadButtons("delete");
+            ChangeMenuSection(saveLoadSection);
+            EventManager.PlaySound?.Invoke("switch1"); 
+        });
+        deleteButton?.gameObject.SetActive(false);
 
         FindButton("OptionsButton", () =>
         {
@@ -109,7 +125,7 @@ public class OptionsMenu : MonoBehaviour
         mainMenuButton = FindButton("MainMenuButton", () =>
         {
             EventManager.PlaySound?.Invoke("switch1");
-            ChangeConfirmText("Return to \nMain Menu?");
+            ChangeObjectText(confirmText, "Return to \nMain Menu?");
             ChangeMenuSection(confirmSection);
 
             // Store the action to execute if "Yes" is clicked
@@ -128,7 +144,7 @@ public class OptionsMenu : MonoBehaviour
         FindButton("QuitGameButton", () =>
         {
             EventManager.PlaySound?.Invoke("switch1");
-            ChangeConfirmText("Close the Game?");
+            ChangeObjectText(confirmText, "Close the Game?");
             ChangeMenuSection(confirmSection);
 
             // Store the action to execute if "Yes" is clicked
@@ -177,7 +193,8 @@ public class OptionsMenu : MonoBehaviour
         return button;
     }
 
-    private void UpdateSaveLoadButtons(bool saveButtonPressed)
+    // Swaps game save slot buttons between, saving, loading, and deleting.
+    private void UpdateSaveLoadButtons(string saveButtonPressed)
     {
         Button[] slots = { slot1Button, slot2Button, slot3Button };
         for (int i = 0; i < slots.Length; i++)
@@ -187,26 +204,26 @@ public class OptionsMenu : MonoBehaviour
             slots[i].onClick.AddListener(() =>
             {
                 EventManager.PlaySound?.Invoke("switch1");
-                if(saveButtonPressed)
+                if(saveButtonPressed == "save")
                     HandleSaveSlot(slotIndex);
-                else
+                else if(saveButtonPressed == "load")
                     HandleLoadSlot(slotIndex);
+                else    
+                    HandleDeleteSlot(slotIndex);
             });
         }
     }
 
     private void HandleSaveSlot(int slot)
     {
-        // Save the game over this file
-        if(SaveSystem.SaveExists(slot)) // Check if save exists
+        if(SaveSystem.SaveExists(slot))
         {
-            ChangeConfirmText($"Save Over File {slot}?");
+            ChangeObjectText(confirmText, $"Save Over File {slot}?");
             ChangeMenuSection(confirmSection);
 
-            // Store the action to execute if "Yes" is clicked
             confirmAction = () =>
             {
-                SaveSystem.SaveGame(slot, gameManager.gameData); // Save game data
+                SaveSystem.SaveGame(slot, gameManager.gameData);
                 ChangeMenuSection(saveLoadSection);
             };
             cancelAction = () =>
@@ -216,14 +233,13 @@ public class OptionsMenu : MonoBehaviour
         }
         else
         {
-            SaveSystem.SaveGame(slot, gameManager.gameData); // Save game data
+            SaveSystem.SaveGame(slot, gameManager.gameData);
             ChangeMenuSection(saveLoadSection);
         }
     }
 
     private void HandleLoadSlot(int slot)
     {
-        // Save the game over this file
         GameObject gameManagerObject = GameObject.Find("GameManager");
         GameManager gameManager = gameManagerObject.GetComponent<GameManager>();
         if (gameManagerObject == null || gameManager == null)
@@ -234,10 +250,9 @@ public class OptionsMenu : MonoBehaviour
 
         if(SaveSystem.SaveExists(slot))
         {
-            ChangeConfirmText($"Load Game File {slot}?");
+            ChangeObjectText(confirmText, $"Load Game File {slot}?");
             ChangeMenuSection(confirmSection);
 
-            // Store the action to execute if "Yes" is clicked
             confirmAction = () =>
             {
                 PlayerPrefs.SetInt("LoadSlot", slot);
@@ -249,6 +264,42 @@ public class OptionsMenu : MonoBehaviour
                 ChangeMenuSection(saveLoadSection);
             };
         }
+    }
+
+    private void HandleDeleteSlot(int slot)
+    {
+        GameObject gameManagerObject = GameObject.Find("GameManager");
+        GameManager gameManager = gameManagerObject.GetComponent<GameManager>();
+        if (gameManagerObject == null || gameManager == null)
+        {
+            Debug.LogError("GameManager component or gamemanagerObject not found in OptionsMenu!");
+            return;
+        }
+
+        if(SaveSystem.SaveExists(slot))
+        {
+            ChangeObjectText(confirmText, $"Delete Game File {slot}?");
+            ChangeObjectText(pauseMenuText, "Select a save file to delete");
+            ChangeMenuSection(confirmSection);
+
+            confirmAction = () =>
+            {
+                deleteButtonPressed = false;
+                SaveSystem.DeleteSave(slot);
+                ChangeMenuSection(saveLoadSection);
+                UpdateSaveLoadButtons(lastSaveLoadOption);
+            };
+            cancelAction = () =>
+            {
+                deleteButtonPressed = false;
+                ChangeMenuSection(saveLoadSection);
+                UpdateSaveLoadButtons(lastSaveLoadOption);
+            };
+        }
+        else
+        {
+            deleteButtonPressed = false;
+        }      
     }
 
     private void UpdateSlotInformation()
@@ -309,10 +360,33 @@ public class OptionsMenu : MonoBehaviour
     {
         UpdateSlotInformation();
 
+        if(section == audioSection)
+            ChangeObjectText(pauseMenuText, "Options Menu");
+        else if(section == saveLoadSection || section == confirmSection)
+        {
+            if(deleteButtonPressed)
+                ChangeObjectText(pauseMenuText, "Select a save file to delete");
+            else
+            {
+                if(lastSaveLoadOption == "save")
+                    ChangeObjectText(pauseMenuText, "Save Menu");
+                else
+                    ChangeObjectText(pauseMenuText, "Load Menu");
+            }
+        }
+        else
+            ChangeObjectText(pauseMenuText, "Pause Menu");
+
+
         if (section == menuSections)
             backButton.gameObject.SetActive(false);
         else
             backButton.gameObject.SetActive(true);
+
+        if (section == saveLoadSection)
+            deleteButton.gameObject.SetActive(true);
+        else
+            deleteButton.gameObject.SetActive(false);
 
         foreach (GameObject data in sections)
         {
@@ -344,9 +418,9 @@ public class OptionsMenu : MonoBehaviour
         }        
     }
 
-    private void ChangeConfirmText(string text)
+    private void ChangeObjectText(TextMeshProUGUI gameObject, string text)
     {
-        confirmText.text = text;
+        gameObject.text = text;
     }
 
     private void OptionsChanger(string option)
@@ -354,7 +428,7 @@ public class OptionsMenu : MonoBehaviour
         switch (option.ToLower())
         {
             case "load":
-                UpdateSaveLoadButtons(false);
+                UpdateSaveLoadButtons("load");
                 ChangeMenuSection(saveLoadSection);
                 break;
 
@@ -387,6 +461,29 @@ public class OptionsMenu : MonoBehaviour
                 EventManager.PlaySound?.Invoke("switch1"); 
                 EventManager.ToggleGrayscaleState();
                 grayscaleActiveText.text = isOn ? "On" : "Off";
+                SavePersistentSettings();
+            });
+        }
+    }
+
+    private void ScreenModeSetUp()
+    {
+        fullScreenToggle = FindComponentByName<Toggle>("FullScreenToggle");
+        TMP_Text fullScreenActiveText = FindComponentByName<TMP_Text>("FullScreenOnOffText");
+
+        if (fullScreenToggle != null && fullScreenActiveText != null)
+        {
+            // Set the initial state to match the current grayscale setting in Eventmanager
+            fullScreenToggle.isOn = EventManager.IsFullScreen;
+            fullScreenActiveText.text = EventManager.IsFullScreen ? "On" : "Off";
+
+            // Listen for changes when toggle is clicked
+            fullScreenToggle.onValueChanged.AddListener((bool isOn) =>
+            {
+                EventManager.PlaySound?.Invoke("switch1"); 
+                EventManager.ToggleFullScreenState();
+                fullScreenActiveText.text = isOn ? "On" : "Off";
+                Screen.fullScreen = fullScreenToggle.isOn;
                 SavePersistentSettings();
             });
         }
@@ -480,6 +577,7 @@ public class OptionsMenu : MonoBehaviour
         PlayerPrefs.SetInt("MuteState", muteToggle.isOn ? 1 : 0);
         PlayerPrefs.SetInt("SubtitleState", subtitleToggle.isOn ? 1 : 0);
         PlayerPrefs.SetInt("GrayState", grayscaleToggle.isOn ? 1 : 0);
+        PlayerPrefs.SetInt("FullScreenState", fullScreenToggle.isOn ? 1 : 0);
         PlayerPrefs.Save();  // Write to disk immediately
     }
 
@@ -509,6 +607,11 @@ public class OptionsMenu : MonoBehaviour
 
         int grayOn = PlayerPrefs.GetInt("GrayState", 0);
         grayscaleToggle.isOn = grayOn == 1;
+
+        int fullScreenOn = PlayerPrefs.GetInt("FullScreenState", 0);
+        fullScreenToggle.isOn = fullScreenOn == 1;
+        Screen.fullScreen = fullScreenToggle.isOn;
+        
         isLoadingSettings = false;
     }
 

@@ -4,9 +4,11 @@
         { "sound": "work", "text": "Futurisitc Music Playing" }, 
         { "sound": "darkfog", "text": "Bleak Music Playing" }, 
         { "sound": "americana", "text": "Patriotic Music Playing" }, 
+        { "sound": "newsjingle", "text": "TV News Jingle" }, 
 
         { "sound": "correctbuzz", "text": "Correct Buzzer" },
         { "sound": "errorbuzz", "text": "Error Buzzer" },
+        { "sound": "doorbell", "text": "Door Bell Ringing" },
         { "sound": "switch1", "text": "Button Click" },
         { "sound": "newspaperrustling", "text": "Newspaper Rustling" },
         { "sound": "tossPaper", "text": "Paper Being Thrown Away" },
