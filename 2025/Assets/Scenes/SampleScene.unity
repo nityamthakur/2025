@@ -317,7 +317,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UITextBox: {fileID: 4986825238899682302, guid: cc809ff330541a84aa7d1c21ab46ac07, type: 3}
-    FemaleNewsAnchor:
+  FemaleNewsAnchor:
   - {fileID: -1540687528, guid: a3b2525eefac14d5881507c820d26496, type: 3}
   - {fileID: 1394684380, guid: a3b2525eefac14d5881507c820d26496, type: 3}
   - {fileID: -2022235786, guid: a3b2525eefac14d5881507c820d26496, type: 3}
@@ -337,9 +337,9 @@ MonoBehaviour:
   - {fileID: -136141369, guid: a3b2525eefac14d5881507c820d26496, type: 3}
   jobLetter:
   - {fileID: 2247088696051876834, guid: 10d5781b3649c3c40a0d1bce740af2fd, type: 3}
-  frameInterval: 0.2
   rentLetter: {fileID: 6747825730943698225, guid: a528f8a2c8763f349bd55e13a0a80453, type: 3}
   rentNotice: {fileID: -2717661510411751580, guid: 346e811dc5694c0469ca4d7d6a41f9d6, type: 3}
+  frameInterval: 0.2
 --- !u!1 &443284278
 GameObject:
   m_ObjectHideFlags: 0
@@ -1854,7 +1854,7 @@ MonoBehaviour:
   accessibilityManager: {fileID: 443284279}
   onScreenTimer: {fileID: 1443100480}
   onScreenDayChanger: {fileID: 2144183944}
-  UVLightObj: {fileID: 766681848}
+  UVLightObj: {fileID: 0}
   gameData:
     day: 1
     money: 0

@@ -12,7 +12,8 @@ public class DayStartScene : MonoBehaviour
 {
     [SerializeField] private GameObject UITextBox;
     [SerializeField] private Sprite[] FemaleNewsAnchor, MaleNewsAnchor, MaleNewsAnchor2;
-    [SerializeField] private Sprite[] jobLetter, rentLetter, rentNotice;
+    [SerializeField] private Sprite[] jobLetter;
+    [SerializeField] private Sprite rentLetter, rentNotice;
     [SerializeField] private float frameInterval = 0.5f;
     private GameObject currentTextBox;
     private TextMeshProUGUI TextBox;
