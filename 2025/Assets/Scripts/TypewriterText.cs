@@ -51,7 +51,7 @@ public class TypewriterText : MonoBehaviour
             helperMessage = message.Substring(0, i);
             helperMessage += "<color=#00000000>" + message.Substring(i) + "</color>"; 
             if (message[i] != ' ')
-                EventManager.PlaySound?.Invoke("switch1");
+                EventManager.PlaySound?.Invoke("textBlip");
             // Change switch1 to something else
             SetMessage(helperMessage);
             yield return new WaitForSeconds(textSpeed);

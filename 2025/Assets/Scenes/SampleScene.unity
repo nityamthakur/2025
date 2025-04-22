@@ -321,6 +321,8 @@ MonoBehaviour:
   MaleNewsAnchor: {fileID: -1487834262871342188, guid: c162df2e07f939c4cbb1416f1229077f, type: 3}
   MaleNewsAnchor2: {fileID: -195469805601254878, guid: 0d88bc2eb627439499134ddbde6b061f, type: 3}
   jobLetter: {fileID: 2247088696051876834, guid: 10d5781b3649c3c40a0d1bce740af2fd, type: 3}
+  rentLetter: {fileID: 6747825730943698225, guid: a528f8a2c8763f349bd55e13a0a80453, type: 3}
+  rentNotice: {fileID: -2717661510411751580, guid: 346e811dc5694c0469ca4d7d6a41f9d6, type: 3}
 --- !u!1 &443284278
 GameObject:
   m_ObjectHideFlags: 0
