@@ -12,6 +12,7 @@ public class Entity : MonoBehaviour
     [SerializeField] Material blurMaterial;
     [SerializeField] Material defaultMaterial;
     [SerializeField] float blurSize;
+    [SerializeField] private GameObject hiddenImageSpawnBounds;
     private Newspaper newspaperData;
     private NewspaperZoom zoomComponent;
     private TMP_Text[] textComponents;
@@ -43,6 +44,10 @@ public class Entity : MonoBehaviour
         if (textComponents == null)
         {
             Debug.LogError("No TextMeshPro components found!");
+        }
+        if (hiddenImageSpawnBounds == null)
+        {
+            Debug.LogError("Hidden image spawn bounds not assigned!");
         }
         gameManager = FindFirstObjectByType<GameManager>();
         zoomComponent = GetComponentInChildren<NewspaperZoom>();
@@ -104,7 +109,7 @@ public class Entity : MonoBehaviour
         }
 
         // Disable censoring on the first day
-        if (gameManager.gameData.GetCurrentDay() != 1)
+        if (gameManager.gameData.GetCurrentDay() != 0)
         {
             CreateCensorBoxes();
         }
@@ -112,6 +117,55 @@ public class Entity : MonoBehaviour
 
         ChangeMediaRotation(60);
         SetUpSplinePath(); 
+
+        // Set the hidden image if it exists
+        if (newspaper.hasHiddenImage)
+        {
+            StartCoroutine(DelayedInitializeHiddenImage());
+        }
+    }
+
+    private IEnumerator DelayedInitializeHiddenImage()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        InitializeHiddenImage();
+    }
+
+    private void InitializeHiddenImage()
+    {
+        GameObject hiddenImage = transform.Find("HiddenImage").gameObject;
+        if (hiddenImage == null)
+        {
+            Debug.LogError("Hidden image object not found in the newspaper prefab.");
+            return;
+        }
+        SpriteRenderer spawnBoundsRenderer = hiddenImageSpawnBounds.GetComponent<SpriteRenderer>();
+        if (spawnBoundsRenderer == null)
+        {
+            Debug.LogError("SpriteRenderer component not found on hiddenImageSpawnBounds.");
+            return;
+        }
+        
+        Bounds spawnBounds = spawnBoundsRenderer.localBounds;
+
+        // Randomize the image's position
+        float randomX = UnityEngine.Random.Range(spawnBounds.min.x, spawnBounds.max.x);
+        float randomY = UnityEngine.Random.Range(spawnBounds.min.y, spawnBounds.max.y);
+
+        Vector3 randomLocalPosition = new Vector3(randomX, randomY, 0);
+        Vector3 randomWorldPosition = hiddenImageSpawnBounds.transform.TransformPoint(randomLocalPosition);
+
+        hiddenImage.transform.position = randomWorldPosition;
+        Vector3 localPosition = hiddenImage.transform.localPosition;
+        localPosition.z = 0;
+        hiddenImage.transform.localPosition = localPosition;
+
+        hiddenImage.SetActive(true);
+        gameManager.SetTargetExists(true);
+        gameManager.SetUVLightTarget(hiddenImage);
+
+        Debug.Log("Hidden image initialized at position: " + randomWorldPosition);
     }
 
     public void ChangeMediaRotation( int angleX )
@@ -368,5 +422,6 @@ public class Entity : MonoBehaviour
         public string back;
         public string[] banWords;
         public string[] censorWords;
+        public bool hasHiddenImage;
     }
 }

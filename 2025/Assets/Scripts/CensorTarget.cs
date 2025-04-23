@@ -22,7 +22,7 @@ public class CensorTarget : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (!gameManager.CanCensor()) return;
+        if (!gameManager.CanCensor() || gameManager.GetCurrentTool() != "CensorPen") return;
         
         if (isCensored) 
         {
