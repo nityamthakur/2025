@@ -337,8 +337,8 @@ MonoBehaviour:
   - {fileID: -136141369, guid: a3b2525eefac14d5881507c820d26496, type: 3}
   jobLetter:
   - {fileID: 2247088696051876834, guid: 10d5781b3649c3c40a0d1bce740af2fd, type: 3}
-  rentLetter: {fileID: 6747825730943698225, guid: a528f8a2c8763f349bd55e13a0a80453, type: 3}
-  rentNotice: {fileID: -2717661510411751580, guid: 346e811dc5694c0469ca4d7d6a41f9d6, type: 3}
+  rentLetter: {fileID: 5162322167547290152, guid: f2d66c3b570b04920b75624d214676d9, type: 3}
+  rentNotice: {fileID: 889754086627472722, guid: 50ffb7daf5478470c90ac2b7f8952d67, type: 3}
   frameInterval: 0.2
 --- !u!1 &443284278
 GameObject:
