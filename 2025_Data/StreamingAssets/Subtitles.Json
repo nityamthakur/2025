@@ -1,0 +1,16 @@
+{
+    "subtitles": [
+        { "sound": "menu", "text": "Patriotic Music Playing" }, 
+        { "sound": "work", "text": "Futurisitc Music Playing" }, 
+        { "sound": "darkfog", "text": "Bleak Music Playing" }, 
+        { "sound": "americana", "text": "Patriotic Music Playing" }, 
+
+        { "sound": "correctbuzz", "text": "Correct Buzzer" },
+        { "sound": "errorbuzz", "text": "Error Buzzer" },
+        { "sound": "switch1", "text": "Button Click" },
+        { "sound": "newspaperrustling", "text": "Newspaper Rustling" },
+        { "sound": "tossPaper", "text": "Paper Being Thrown Away" },
+        { "sound": "worksounds", "text": "People Talking, Phones Ringing, Papers Shuffling" },  
+        { "sound": "glitch", "text": "Computer Making Glitching Sounds" }  
+    ]
+}

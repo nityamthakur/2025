@@ -32,7 +32,7 @@ public class DayEndScene : MonoBehaviour
     public void LoadDayEnd()
     {
         currentPrefab = Instantiate(dayEndObjectPrefab);
-        if(currentPrefab == null)
+        if (currentPrefab == null)
         {
             Debug.LogError("currentPrefab is null");
             return;
@@ -45,7 +45,7 @@ public class DayEndScene : MonoBehaviour
     public void SetUpDayEnd()
     {
         backgroundImage = currentPrefab.transform.Find("BackgroundImage").GetComponent<Image>();
-        if(backgroundImage == null)
+        if (backgroundImage == null)
         {
             Debug.Log("Failed to find BackgroundImage component");
             return;
@@ -53,14 +53,14 @@ public class DayEndScene : MonoBehaviour
         backgroundImage.gameObject.SetActive(false);
 
         gameText = currentPrefab.transform.Find("GameText").GetComponent<TextMeshProUGUI>();
-        if(gameText == null)
+        if (gameText == null)
         {
             Debug.Log("Failed to find GameText component");
             return;
         }
 
         textBoxBackground = currentPrefab.transform.Find("TextBoxBackground").GetComponent<Image>();
-        if(textBoxBackground == null)
+        if (textBoxBackground == null)
         {
             Debug.Log("Failed to find TextBoxBackground component");
             return;
@@ -68,7 +68,7 @@ public class DayEndScene : MonoBehaviour
         textBoxBackground.gameObject.SetActive(false);
 
         textBoxText = currentPrefab.transform.Find("TextBox").GetComponent<TextMeshProUGUI>();
-        if(textBoxText == null)
+        if (textBoxText == null)
         {
             Debug.Log("Failed to find TextBox component");
             return;
@@ -89,24 +89,31 @@ public class DayEndScene : MonoBehaviour
         gameText.text = $"Results Screen:<size=60%>\n\nMoney: ${currMoney}\n\nRent: - ${rentDue}\n\n New Total: ${currMoney - rentDue}";
 
         gameButton = currentPrefab.transform.Find("GameButton").GetComponent<Button>();
-        if(gameButton == null)
+        if (gameButton == null)
         {
             Debug.Log("Failed to find GameButton component");
             return;
         }
-        gameButton.onClick.AddListener(() => 
-        {
-            EventManager.PlaySound?.Invoke("switch1"); 
-            gameButton.gameObject.SetActive(false);
-            if(CheckGameOver())
-                StartGameOver();
 
+        // Modified to handle transition to shop
+        gameButton.onClick.AddListener(() =>
+        {
+            EventManager.PlaySound?.Invoke("switch1");
+            gameButton.gameObject.SetActive(false);
+
+            if (CheckGameOver())
+            {
+                StartGameOver();
+            }
             else
-                StartCoroutine(NextScene());
+            {
+                // Go to shop after rent screen
+                StartCoroutine(TransitionToShop());
+            }
         });
 
         buttonText = gameButton.transform.Find("GameButtonText").GetComponent<TextMeshProUGUI>();
-        if(buttonText == null)
+        if (buttonText == null)
         {
             Debug.Log("Failed to find GameButton component");
             return;
@@ -119,13 +126,12 @@ public class DayEndScene : MonoBehaviour
             Debug.LogError("Failed to find nextButton component.");
             return;
         }
-        nextButton.onClick.AddListener(() => 
+        nextButton.onClick.AddListener(() =>
         {
-            EventManager.PlaySound?.Invoke("switch1"); 
+            EventManager.PlaySound?.Invoke("switch1");
             ReadNextLine();
         });
         nextButton.gameObject.SetActive(false);
-        
     }
 
     private bool CheckGameOver()
@@ -133,7 +139,7 @@ public class DayEndScene : MonoBehaviour
         int rentDue = (gameManager.gameData.rent += 2) - 2;
         gameManager.gameData.SetCurrentMoney(gameManager.gameData.money - rentDue);
 
-        if(SelectedEnding() > 0)
+        if (SelectedEnding() > 0)
         {
             dayText.gameObject.SetActive(false);
             return true;
@@ -154,7 +160,7 @@ public class DayEndScene : MonoBehaviour
     private int SelectedEnding()
     {
         // Bad / Evicted Ending
-        if(gameManager.gameData.money < 0)
+        if (gameManager.gameData.money < 0)
         {
             EventManager.PlayMusic?.Invoke("darkfog");
             return 3;
@@ -182,6 +188,42 @@ public class DayEndScene : MonoBehaviour
         return 0;
     }
 
+    // New method to transition to the shop "scene"
+    private IEnumerator TransitionToShop()
+    {
+        // Fade out the current scene
+        EventManager.FadeOut?.Invoke();
+        yield return new WaitForSeconds(2f);
+
+        // Clean up the current day end UI
+        Destroy(currentPrefab);
+        currentPrefab = null;
+
+        yield return new WaitForSeconds(1f);
+
+        // Trigger the shop "scene" to appear
+        EventManager.GoToShop?.Invoke(gameManager.gameData.money);
+    }
+
+    // This method would be called from the ShopManager when the player is done with the shop
+    public static void TransitionFromShop()
+    {
+        // Find the game manager using the newer non-deprecated method
+        GameManager gameManager = FindFirstObjectByType<GameManager>();
+        if (gameManager != null)
+        {
+            // Increment the day
+            gameManager.SetCurrentDay(gameManager.gameData.day + 1);
+
+            // Go to the next day's scene
+            EventManager.NextScene?.Invoke();
+        }
+        else
+        {
+            Debug.LogError("Could not find GameManager when transitioning from shop");
+        }
+    }
+
     private IEnumerator NextScene()
     {
         gameManager.SetCurrentDay(gameManager.gameData.day + 1);
@@ -192,7 +234,7 @@ public class DayEndScene : MonoBehaviour
 
         Destroy(currentPrefab);
         currentPrefab = null;
-        
+
         yield return new WaitForSeconds(2f);
         EventManager.NextScene?.Invoke();
     }
@@ -204,10 +246,10 @@ public class DayEndScene : MonoBehaviour
         EventManager.StopMusic?.Invoke();
         EventManager.FadeOut?.Invoke();
         yield return new WaitForSeconds(3f);
-        
+
         Destroy(currentPrefab);
         currentPrefab = null;
-        
+
         yield return new WaitForSeconds(1f);
         Time.timeScale = 1;
 
@@ -235,7 +277,7 @@ public class DayEndScene : MonoBehaviour
         if (jsonObject != null && jsonObject.gameEndings.Count > 0)
         {
             currentLines = GetLinesForEnding(jsonObject.gameEndings, SelectedEnding());
-            
+
             linePos = 0;
             ReadNextLine();
         }
