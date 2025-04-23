@@ -235,6 +235,9 @@ public class DayStartScene : MonoBehaviour
             case "rentnotice":
                 backgroundImage.sprite = rentNotice;
                 break;
+            case "apartment":
+                backgroundImage.sprite = apartment;
+                break;
             default:
                 backgroundImage.sprite = null;
                 break;
