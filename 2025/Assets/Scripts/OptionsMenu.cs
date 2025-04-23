@@ -14,7 +14,7 @@ public class OptionsMenu : MonoBehaviour
     private TextMeshProUGUI confirmText, pauseMenuText;
     private Action confirmAction, cancelAction;
     private Button slot1Button, slot2Button, slot3Button, backButton, saveButton, deleteButton, mainMenuButton;
-    private Slider masterVolumeSlider, musicVolumeSlider, sfxVolumeSlider;
+    private Slider masterVolumeSlider, musicVolumeSlider, sfxVolumeSlider, textSpeedSlider;
     private Toggle muteToggle, subtitleToggle, grayscaleToggle, fullScreenToggle;
     private GameManager gameManager;
     private bool isLoadingSettings = false, deleteButtonPressed = false;
@@ -535,6 +535,16 @@ public class OptionsMenu : MonoBehaviour
             });    
         }
 
+        // Text Speed Slider
+        textSpeedSlider = FindComponentByName<Slider>("TextSpeed");
+        if(textSpeedSlider != null)
+        {
+            textSpeedSlider.onValueChanged.AddListener(value => {
+                EventManager.SetTextSpeed?.Invoke(value);
+                SavePersistentSettings();
+            });
+        }
+
 
         // Sound Toggle
         muteToggle = FindComponentByName<Toggle>("MuteToggle");
@@ -574,11 +584,12 @@ public class OptionsMenu : MonoBehaviour
         PlayerPrefs.SetFloat("MasterVolume", masterVolumeSlider.value);
         PlayerPrefs.SetFloat("MusicVolume", musicVolumeSlider.value);
         PlayerPrefs.SetFloat("SFXVolume", sfxVolumeSlider.value);
+        PlayerPrefs.SetFloat("TextSpeed", textSpeedSlider.value);
         PlayerPrefs.SetInt("MuteState", muteToggle.isOn ? 1 : 0);
         PlayerPrefs.SetInt("SubtitleState", subtitleToggle.isOn ? 1 : 0);
         PlayerPrefs.SetInt("GrayState", grayscaleToggle.isOn ? 1 : 0);
         PlayerPrefs.SetInt("FullScreenState", fullScreenToggle.isOn ? 1 : 0);
-        PlayerPrefs.Save();  // Write to disk immediately
+        PlayerPrefs.Save();
     }
 
     public void LoadPersistentSettings()
@@ -588,14 +599,17 @@ public class OptionsMenu : MonoBehaviour
         float master = PlayerPrefs.GetFloat("MasterVolume", 1.0f);
         float music = PlayerPrefs.GetFloat("MusicVolume", 1.0f);
         float sfx = PlayerPrefs.GetFloat("SFXVolume", 1.0f);
+        float text = PlayerPrefs.GetFloat("TextSpeed", 1.0f);
 
         masterVolumeSlider.value = master;
         musicVolumeSlider.value = music;
         sfxVolumeSlider.value = sfx;
+        textSpeedSlider.value = text;
 
         audioManager.UpdateMasterVolume(master);
         audioManager.UpdateMusicVolume(music);
         audioManager.UpdateSFXVolume(sfx);
+        EventManager.SetTextSpeed?.Invoke(text);
 
         int muteOn = PlayerPrefs.GetInt("MuteState", 0);
         muteToggle.isOn = muteOn == 1;

@@ -330,16 +330,13 @@ MonoBehaviour:
   - {fileID: 1110145819, guid: 4b4b91815f171418890690dbaea40ed3, type: 3}
   - {fileID: 832200149, guid: 4b4b91815f171418890690dbaea40ed3, type: 3}
   MaleNewsAnchor2:
-  - {fileID: -1540687528, guid: a3b2525eefac14d5881507c820d26496, type: 3}
-  - {fileID: 1394684380, guid: a3b2525eefac14d5881507c820d26496, type: 3}
-  - {fileID: -2022235786, guid: a3b2525eefac14d5881507c820d26496, type: 3}
-  - {fileID: 896504526, guid: a3b2525eefac14d5881507c820d26496, type: 3}
-  - {fileID: -136141369, guid: a3b2525eefac14d5881507c820d26496, type: 3}
-  jobLetter:
-  - {fileID: 2247088696051876834, guid: 10d5781b3649c3c40a0d1bce740af2fd, type: 3}
+  - {fileID: -195469805601254878, guid: 0d88bc2eb627439499134ddbde6b061f, type: 3}
+  apartment:
+  - {fileID: -6199886327801638459, guid: 57b120dfceace764f9f7c7d5321a318c, type: 3}
   rentLetter: {fileID: 5162322167547290152, guid: f2d66c3b570b04920b75624d214676d9, type: 3}
   rentNotice: {fileID: 889754086627472722, guid: 50ffb7daf5478470c90ac2b7f8952d67, type: 3}
-  frameInterval: 0.2
+  jobLetter: {fileID: 2247088696051876834, guid: 10d5781b3649c3c40a0d1bce740af2fd, type: 3}
+  frameInterval: 0.5
 --- !u!1 &443284278
 GameObject:
   m_ObjectHideFlags: 0
