@@ -317,13 +317,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UITextBox: {fileID: 4986825238899682302, guid: cc809ff330541a84aa7d1c21ab46ac07, type: 3}
-  FemaleNewsAnchor: {fileID: -9148649168555976762, guid: c0076031d1972be4f89fb9fec336f2bb, type: 3}
-  MaleNewsAnchor: {fileID: -1487834262871342188, guid: c162df2e07f939c4cbb1416f1229077f, type: 3}
-  MaleNewsAnchor2: {fileID: -195469805601254878, guid: 0d88bc2eb627439499134ddbde6b061f, type: 3}
-  jobLetter: {fileID: 2247088696051876834, guid: 10d5781b3649c3c40a0d1bce740af2fd, type: 3}
-  rentLetter: {fileID: 6747825730943698225, guid: a528f8a2c8763f349bd55e13a0a80453, type: 3}
-  rentNotice: {fileID: -2717661510411751580, guid: 346e811dc5694c0469ca4d7d6a41f9d6, type: 3}
-  apartment: {fileID: -6199886327801638459, guid: 57b120dfceace764f9f7c7d5321a318c, type: 3}
+  FemaleNewsAnchor:
+  - {fileID: -1540687528, guid: a3b2525eefac14d5881507c820d26496, type: 3}
+  - {fileID: 1394684380, guid: a3b2525eefac14d5881507c820d26496, type: 3}
+  - {fileID: -2022235786, guid: a3b2525eefac14d5881507c820d26496, type: 3}
+  - {fileID: 896504526, guid: a3b2525eefac14d5881507c820d26496, type: 3}
+  - {fileID: -136141369, guid: a3b2525eefac14d5881507c820d26496, type: 3}
+  MaleNewsAnchor:
+  - {fileID: 714920992, guid: 4b4b91815f171418890690dbaea40ed3, type: 3}
+  - {fileID: -1944627333, guid: 4b4b91815f171418890690dbaea40ed3, type: 3}
+  - {fileID: -1774400916, guid: 4b4b91815f171418890690dbaea40ed3, type: 3}
+  - {fileID: 1110145819, guid: 4b4b91815f171418890690dbaea40ed3, type: 3}
+  - {fileID: 832200149, guid: 4b4b91815f171418890690dbaea40ed3, type: 3}
+  MaleNewsAnchor2:
+  - {fileID: -1540687528, guid: a3b2525eefac14d5881507c820d26496, type: 3}
+  - {fileID: 1394684380, guid: a3b2525eefac14d5881507c820d26496, type: 3}
+  - {fileID: -2022235786, guid: a3b2525eefac14d5881507c820d26496, type: 3}
+  - {fileID: 896504526, guid: a3b2525eefac14d5881507c820d26496, type: 3}
+  - {fileID: -136141369, guid: a3b2525eefac14d5881507c820d26496, type: 3}
+  jobLetter:
+  - {fileID: 2247088696051876834, guid: 10d5781b3649c3c40a0d1bce740af2fd, type: 3}
+  rentLetter: {fileID: 5162322167547290152, guid: f2d66c3b570b04920b75624d214676d9, type: 3}
+  rentNotice: {fileID: 889754086627472722, guid: 50ffb7daf5478470c90ac2b7f8952d67, type: 3}
+  frameInterval: 0.2
 --- !u!1 &443284278
 GameObject:
   m_ObjectHideFlags: 0
@@ -1672,7 +1688,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   menuObject: {fileID: 3021349584701667985, guid: 6348da432ddd6a841b43fa4f8cfb7b7f, type: 3}
-  mainMenuImage: {fileID: -685511840836363567, guid: 57b38f1d66cbcd44fa1b70b420c1baff, type: 3}
+  mainMenuImage:
+  - {fileID: -903139888, guid: eb918c658a73a42e09a5c1f4bf393371, type: 3}
+  - {fileID: -924314757, guid: eb918c658a73a42e09a5c1f4bf393371, type: 3}
+  - {fileID: 1927445258, guid: eb918c658a73a42e09a5c1f4bf393371, type: 3}
+  - {fileID: 411854699, guid: eb918c658a73a42e09a5c1f4bf393371, type: 3}
+  - {fileID: -2100817788, guid: eb918c658a73a42e09a5c1f4bf393371, type: 3}
+  - {fileID: -899043937, guid: eb918c658a73a42e09a5c1f4bf393371, type: 3}
+  frameInterval: 0.5
 --- !u!1 &1881932998
 GameObject:
   m_ObjectHideFlags: 0
@@ -1831,7 +1854,7 @@ MonoBehaviour:
   accessibilityManager: {fileID: 443284279}
   onScreenTimer: {fileID: 1443100480}
   onScreenDayChanger: {fileID: 2144183944}
-  UVLightObj: {fileID: 766681848}
+  UVLightObj: {fileID: 0}
   gameData:
     day: 1
     money: 0
