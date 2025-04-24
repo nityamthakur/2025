@@ -269,7 +269,7 @@ MonoBehaviour:
   dayEndObjectPrefab: {fileID: 4986825238899682302, guid: 7e379c2cc3505e34ca4acace004f57a8, type: 3}
   newMericaEndingMap: {fileID: 5709217093657951866, guid: ddf7478ceeb96d449b41f1588768f002, type: 3}
   newMericaEndingStar: {fileID: -7518848503606070078, guid: d0caefa5417ba6a4b90a70280a66db36, type: 3}
-  femaleNewsAnchor: {fileID: -9148649168555976762, guid: c0076031d1972be4f89fb9fec336f2bb, type: 3}
+  femaleNewsAnchor: {fileID: -1540687528, guid: a3b2525eefac14d5881507c820d26496, type: 3}
   maleNewsAnchor: {fileID: -195469805601254878, guid: 0d88bc2eb627439499134ddbde6b061f, type: 3}
   badEnding: {fileID: -2455488159657730429, guid: 12ed3bd0324f8cc4cb23fe19270974d4, type: 3}
 --- !u!1 &374167941
@@ -1900,7 +1900,7 @@ MonoBehaviour:
   accessibilityManager: {fileID: 443284279}
   onScreenTimer: {fileID: 1443100480}
   onScreenDayChanger: {fileID: 2144183944}
-  UVLightObj: {fileID: 0}
+  UVLightObj: {fileID: 766681848}
   gameData:
     day: 1
     money: 0
