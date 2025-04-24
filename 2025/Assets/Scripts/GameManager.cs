@@ -439,6 +439,9 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
+        EventManager.ShowLightsOutImage?.Invoke();
+        EventManager.PlaySound?.Invoke("switchoff");
+        EventManager.StopMusic?.Invoke();
         jobDetails.currClockTime = 0;
     }
 
