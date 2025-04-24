@@ -11,9 +11,8 @@ using UnityEditor.Toolbars;
 public class DayStartScene : MonoBehaviour
 {
     [SerializeField] private GameObject UITextBox;
-    [SerializeField] private Sprite[] FemaleNewsAnchor, MaleNewsAnchor, MaleNewsAnchor2;
-    [SerializeField] private Sprite[] jobLetter;
-    [SerializeField] private Sprite rentLetter, rentNotice;
+    [SerializeField] private Sprite[] FemaleNewsAnchor, MaleNewsAnchor, MaleNewsAnchor2, apartment;
+    [SerializeField] private Sprite rentLetter, rentNotice, jobLetter;
     [SerializeField] private float frameInterval = 0.5f;
     private GameObject currentTextBox;
     private TextMeshProUGUI TextBox;
@@ -44,11 +43,10 @@ public class DayStartScene : MonoBehaviour
 
         SetUpDayStart();
 
-        if (!EventManager.IsMusicPlaying())
+        if (!EventManager.IsMusicPlaying() && gameManager.gameData.GetCurrentDay() == 1)
             EventManager.PlayMusic?.Invoke("menu");
 
         DayStartEventChecker();
-        EventManager.FadeIn?.Invoke();
         EventManager.DisplayMenuButton?.Invoke(true);
     }
 
@@ -226,17 +224,17 @@ public class DayStartScene : MonoBehaviour
             case "malenewsanchor2":
                 animationCoroutine = StartCoroutine(CycleBackgroundFrames(MaleNewsAnchor2));
                 break;
+            case "apartment":
+                animationCoroutine = StartCoroutine(CycleBackgroundFrames(apartment));;
+                break;
             case "jobletter":
-                animationCoroutine = StartCoroutine(CycleBackgroundFrames(jobLetter));
+                backgroundImage.sprite = jobLetter;
                 break;
             case "rentletter":
                 backgroundImage.sprite = rentLetter;
                 break;
             case "rentnotice":
                 backgroundImage.sprite = rentNotice;
-                break;
-            case "apartment":
-                backgroundImage.sprite = apartment;
                 break;
             default:
                 backgroundImage.sprite = null;
@@ -314,7 +312,6 @@ public class DayStartScene : MonoBehaviour
             ReadNextLine();
         });
 
-        yield return new WaitForSeconds(1f);
         EventManager.PlaySound?.Invoke("doorbell");
         yield return new WaitForSeconds(2f);
         EventManager.PlaySound?.Invoke("papercomein");
@@ -323,12 +320,17 @@ public class DayStartScene : MonoBehaviour
         //EventManager.PlayMusic?.Invoke("Some Music For The Day Start / Apartment");
     }
 
+    private void StopAnimationCoroutines()
+    {
+        StopCoroutine(animationCoroutine);
+    }
+
     private IEnumerator NextScene()
     {
         EventManager.StopMusic?.Invoke();
         EventManager.FadeOut?.Invoke();
         yield return new WaitForSeconds(2f);
-
+        StopAnimationCoroutines();
         Destroy(currentTextBox);
         currentTextBox = null;
 

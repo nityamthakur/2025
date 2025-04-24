@@ -44,6 +44,7 @@ public static class EventManager
         ToggleFullScreen?.Invoke(IsFullScreen);
     }
 
+    public static Action<float> SetTextSpeed;
     public static Action<bool> ShowCorrectBuzzer;
     public static Action<int> GoToShop;
 
