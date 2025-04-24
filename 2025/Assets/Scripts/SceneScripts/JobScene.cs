@@ -27,7 +27,7 @@ public class JobScene : MonoBehaviour
     private GameObject outsideBuildingObject;
 
     // ---------------------------------
-    private float workTimer = 180f;      // 180f
+    private float workTimer = 180f; // 180f
     private Image hourHand;
     private Image minuteHand;
     private Slider performanceSlider;
@@ -301,6 +301,7 @@ public class JobScene : MonoBehaviour
         EventManager.StopMusic?.Invoke();
         EventManager.FadeOut?.Invoke();
         yield return new WaitForSeconds(2f);
+        EventManager.HideLightsOutImage?.Invoke();
 
         Destroy(currJobScene);
         currJobScene = null;

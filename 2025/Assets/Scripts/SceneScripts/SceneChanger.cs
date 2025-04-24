@@ -20,7 +20,7 @@ public class SceneChanger : MonoBehaviour
         private set { fadingScreen = value; }
     }
 
-    private Image fadingImage;
+    private Image fadingImage, lightsOutImage;
     private Image deskOverlayImage;
     private Button menuButton;
 
@@ -55,6 +55,14 @@ public class SceneChanger : MonoBehaviour
             Debug.LogError("Failed to find FadingImage component in SceneManager");
             return;
         }
+
+        lightsOutImage = fadingScreen.transform.Find("LightsOutImage").GetComponent<Image>();
+        if (lightsOutImage == null)
+        {
+            Debug.LogError("Failed to find LightsOutImage component in SceneManager");
+            return;
+        }
+        lightsOutImage.gameObject.SetActive(false);
 
         // Used for ensuring the media gets enters and leaves behind certain screen elements
         deskOverlayImage = fadingScreen.transform.Find("DeskOverlay").GetComponent<Image>();
@@ -145,6 +153,8 @@ public class SceneChanger : MonoBehaviour
         EventManager.FadeOut += FadeOutScreen;
         EventManager.ShowDeskOverlay += ShowDeskOverLay;
         EventManager.HideDeskOverlay += HideDeskOverLay;
+        EventManager.ShowLightsOutImage += ShowLightsOutImage;
+        EventManager.HideLightsOutImage += HideLightsOutImage;
         EventManager.DisplayMenuButton += DisplayMenuButton;
     }
 
@@ -155,6 +165,8 @@ public class SceneChanger : MonoBehaviour
         EventManager.FadeOut -= FadeOutScreen;
         EventManager.ShowDeskOverlay -= ShowDeskOverLay;
         EventManager.HideDeskOverlay -= HideDeskOverLay;
+        EventManager.ShowLightsOutImage += ShowLightsOutImage;
+        EventManager.HideLightsOutImage += HideLightsOutImage;
         EventManager.DisplayMenuButton -= DisplayMenuButton;
     }
 
@@ -210,6 +222,17 @@ public class SceneChanger : MonoBehaviour
     {
         //Debug.Log("HideDeskOverlay called");
         deskOverlayImage.gameObject.SetActive(false);   
+    }
+
+    private void ShowLightsOutImage()
+    {
+        //Debug.Log("ShowDeskOverlay called");
+        lightsOutImage.gameObject.SetActive(true);   
+    }
+    private void HideLightsOutImage()
+    {
+        //Debug.Log("HideDeskOverlay called");
+        lightsOutImage.gameObject.SetActive(false);   
     }
 
     private void DisplayMenuButton(bool active)
