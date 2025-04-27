@@ -127,8 +127,26 @@
             "day": 1,
             "newspapers": [
                 {
-                    "publisher": "OmniTech Tech-News",
-                    "title": "South African Tech Billionaire Performed NewMerican Salute At Factory Grand Opening",
+                    "publisher": {
+                        "origin": "The NewMerican #noun#",
+                        "noun": [
+                            "Truth",
+                            "Voice",
+                            "Post",
+                            "Ledger",
+                            "Times",
+                            "Echo"
+                        ]
+                    },
+                    "title": {
+                        "origin": "South African Tech Billionaire Performed NewMerican #action# At Factory Grand Opening",
+                        "action": [
+                            "fortnite dance",
+                            "salute",
+                            "spontaneous combustion",
+                            "scream"
+                        ]
+                    },
                     "date": "1/6/2025",
                     "front": {
                 
@@ -144,7 +162,23 @@
                         "tech": ["AI Automation and Control", "Quantum Computing and Data", "Blockchain Integration and Security", "Bio-Engineering and Enhancement", "Neural Network Development and Research"]
                 
                     },
-                    "back": "The moment, captured live and broadcast across all major news networks, was met with thunderous applause from assembled dignitaries and corporate leaders. Eusk, who has revolutionized the NewMerican labor industry, praised the administration's Pro-Progress Act of Everlasting Success, which ensured that all those imprisoned for crimes against NewMerica (can be permitted to) work on assembly lines for no extra cost. \"This is a nation built upon the tears of its enemies. One that promotes those of power and ensures they remain there.\"",
+                    "back": {
+                        "origin": [
+                            "The ceremony concluded with a mandatory #reaction#, broadcast across every available screen in #location#. Eusk, donning a #adj# #outfit#, declared the day 'a monumental leap for #tech# supremacy.'",
+                            "In a heartfelt moment, #name# led the crowd in a #ritual#, symbolizing eternal loyalty to the #location# Economic Authority. Witnesses described the event as '#adj# and unsettling, yet deeply inspiring.'",
+                            "Following the grand opening, dignitaries were treated to a surprise showcase of #tech# advancements, ending with a synchronized #reaction# led by #name# himself.",
+                            "Broadcast live to billions, the event climaxed with #name# signing the #policy#, ensuring mandatory participation in #tech# programs for all citizens deemed 'underperforming.' Critics called it '#adj#'; supporters called it 'visionary.'"
+                        ],
+                        "reaction": ["standing ovation", "NewMerican salute", "spontaneous flash mob", "compulsory applause", "unified chant"],
+                        "location": ["Whyoming", "NewMerica", "Neo-Texas", "Silicon Valley 2.0", "The Autonomous Zone of #adj.capitalize# #noun.capitalize#"],
+                        "adj": ["inspirational", "mandatory", "emotionless", "gleefully dystopian", "glitchy"],
+                        "outfit": ["power suit", "silver jumpsuit", "VR headset and cape", "full-body exosuit", "corporate battle armor"],
+                        "name": ["Mlon Eusk", "Bichael Gates", "Zeff Bezus", "Bim Cook", "Gark Zuckerberg"],
+                        "ritual": ["techno-chant", "Pledge of Optimization", "Algorithmic Dance", "Unity Oath"],
+                        "tech": ["AI Automation", "Quantum Blockchain", "Neural Networking", "Predictive Compliance Systems"],
+                        "policy": ["Pro-Progress Mandate", "Optimization Act of 2025", "Citizenship Efficiency Bill", "Unified Workforce Initiative"],
+                        "noun": ["Innovation", "Convergence", "Optimization", "Disruption", "Capital"]
+                    },
                     "banWords": [],
                     "censorWords": [],
                     "hasHiddenImage": false
