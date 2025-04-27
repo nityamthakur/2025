@@ -130,7 +130,20 @@
                     "publisher": "OmniTech Tech-News",
                     "title": "South African Tech Billionaire Performed NewMerican Salute At Factory Grand Opening",
                     "date": "1/6/2025",
-                    "front": "[Whyoming, NewMerica] - The future of innovation in NewMerica has never been stronger! In a grand display of loyalty, renowned South African Tech Billionaire Mlon Eusk performed the NewMerican Salute a the ribbon cutting ceremony for his latest AI Automation and Control Complex, deep in the heart of the NewMerican Economic Zone.",
+                    "front": {
+                
+                        "origin": ["#location# - #boast#! #event#."],
+                        "location": ["Whyoming", "NewMerica", "Neo-Texas", "Silicon Valley 2.0", "The Autonomous Zone of #adj.capitalize# #noun.capitalize#"],
+                        "adj": ["Hyper", "Quantum", "Meta", "Algorithmic", "Synergistic"],
+                        "noun": ["Innovation", "Convergence", "Optimization", "Disruption", "Capital"],
+                        "boast": ["The future of innovation in #location# has never been stronger", "A new dawn breaks for #location#, fueled by unprecedented growth", "Prepare for the #adj.capitalize# Age, starting right here in #location#", "#location# is the epicenter of tomorrow's technology", "The #noun.capitalize# Revolution begins now, in #location#"],
+                        "event": ["In a grand display of loyalty, renowned #nationality.capitalize# Tech Billionaire #name# performed the #adj.capitalize# #action# at the ribbon cutting ceremony for his latest #tech# Complex, deep in the heart of the #location# Economic Zone", "Billionaire #name# unveiled a groundbreaking #tech# initiative, pledging allegiance to #location# with a symbolic #action#", "The future arrived today as #name# inaugurated the #tech# facility, solidifying #location#'s position as a global leader", "Amidst fervent applause, #name# officially opened the doors to the cutting-edge #tech# center, reaffirming their commitment to #location#"],
+                        "nationality": ["South African", "Canaidian", "Europian", "Martian"],
+                        "name": ["Mlon Eusk", "Bichael Gates", "Zeff Bezus", "Bim Cook", "Gark Zuckerberg"],
+                        "action": ["NewMerican Salute", "Pledge of Allegiance", "Gesture of Unity", "Symbolic Handshake", "Oath of Optimization"],
+                        "tech": ["AI Automation and Control", "Quantum Computing and Data", "Blockchain Integration and Security", "Bio-Engineering and Enhancement", "Neural Network Development and Research"]
+                
+                    },
                     "back": "The moment, captured live and broadcast across all major news networks, was met with thunderous applause from assembled dignitaries and corporate leaders. Eusk, who has revolutionized the NewMerican labor industry, praised the administration's Pro-Progress Act of Everlasting Success, which ensured that all those imprisoned for crimes against NewMerica (can be permitted to) work on assembly lines for no extra cost. \"This is a nation built upon the tears of its enemies. One that promotes those of power and ensures they remain there.\"",
                     "banWords": [],
                     "censorWords": [],
