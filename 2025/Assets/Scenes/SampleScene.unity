@@ -267,11 +267,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dayEndObjectPrefab: {fileID: 4986825238899682302, guid: 7e379c2cc3505e34ca4acace004f57a8, type: 3}
-  newMericaEndingMap: {fileID: 5709217093657951866, guid: ddf7478ceeb96d449b41f1588768f002, type: 3}
-  newMericaEndingStar: {fileID: -7518848503606070078, guid: d0caefa5417ba6a4b90a70280a66db36, type: 3}
+  newMericaEndingMap: {fileID: 6742771243510429791, guid: 77403f6f113e147e8993887466dc45a0, type: 3}
+  newMericaEndingStar: {fileID: 8791437576477063095, guid: 96d143e12cab949728c3e836c373639d, type: 3}
   femaleNewsAnchor: {fileID: -1540687528, guid: a3b2525eefac14d5881507c820d26496, type: 3}
   maleNewsAnchor: {fileID: -195469805601254878, guid: 0d88bc2eb627439499134ddbde6b061f, type: 3}
-  badEnding: {fileID: -2455488159657730429, guid: 12ed3bd0324f8cc4cb23fe19270974d4, type: 3}
+  badEnding: {fileID: -8335090095948488748, guid: 6f8ef183b4a69484387fa1dd869b2bb9, type: 3}
 --- !u!1 &374167941
 GameObject:
   m_ObjectHideFlags: 0
