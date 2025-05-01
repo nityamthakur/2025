@@ -447,5 +447,3 @@ public class JobScene : MonoBehaviour
         public string email;
     }
 }
-
-
