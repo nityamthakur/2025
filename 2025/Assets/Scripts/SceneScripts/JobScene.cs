@@ -27,6 +27,10 @@ public class JobScene : MonoBehaviour
     private GameObject outsideBuildingObject;
 
     // ---------------------------------
+    private GameObject computerScreenPrefab;
+    private ComputerScreen computerScreenClass;
+
+    // ---------------------------------
     private float workTimer = 180f; // 180f
     private Image hourHand;
     private Image minuteHand;
@@ -43,7 +47,7 @@ public class JobScene : MonoBehaviour
 
 
     public void LoadJobStart() {
-        ShowBuildingTransition();
+        //ShowBuildingTransition();
         LoadJsonFromFile();
         SetUpJobStart();
         EventManager.FadeIn?.Invoke();
@@ -94,7 +98,6 @@ public class JobScene : MonoBehaviour
 
 
     private void SetUpJobStart() {
-        //Debug.Log("Setting up Job Start");
         currJobScene = Instantiate(jobScenePrefab);
 
         if (currJobScene == null)
@@ -112,6 +115,8 @@ public class JobScene : MonoBehaviour
         {
             canvas.worldCamera = mainCamera.GetComponent<Camera>();
         }
+
+        ComputerScreenSetUp();
 
         backgroundImage = currJobScene.transform.Find("BackgroundImage").GetComponent<Image>();
         if (backgroundImage == null)
@@ -196,9 +201,26 @@ public class JobScene : MonoBehaviour
         dropBoxDestroyGlow.gameObject.SetActive(false);
     }
 
+    private void ComputerScreenSetUp()
+    {
+        Transform screenTransform = currJobScene.transform.Find("ComputerScreen");
+        if (screenTransform != null)
+            computerScreenPrefab = screenTransform.gameObject;
+        else
+            Debug.LogError("Could not find 'ComputerScreen' under currJobScene.");
+
+        computerScreenClass = computerScreenPrefab.GetComponent<ComputerScreen>();
+        if(computerScreenClass == null)
+        {
+            Debug.Log("Failed to find ComputerScreenClass in SetUpJobStart");
+            return;
+        }
+    }
+
     private void SetScreenEmail(TextMeshProUGUI screenText)
     {
         screenText.text = currentEmail;
+        //computerScreenClass.SetEmailText(currentEmail); 
     }
 
     private void SetScreenObjectives(TextMeshProUGUI screenText)
@@ -218,9 +240,9 @@ public class JobScene : MonoBehaviour
             screenText.text += censor + "\n";
         }
     }
+    
 
-
-    private IEnumerator BeginWorkDay()
+    public IEnumerator BeginWorkDay()
     {
         yield return StartCoroutine(CheckDailyEvent()); 
         gameManager.SetJobScene(this);

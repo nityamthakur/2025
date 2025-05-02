@@ -1,23 +1,60 @@
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using System.Runtime.CompilerServices;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ComputerScreen : MonoBehaviour
 {
-    private List<Action> programs;
+    private JobScene jobScene;
     private Sprite computerImage;
+    [SerializeField] private GameObject emailScreen;
+    [SerializeField] private TextMeshProUGUI emailText;
+    [SerializeField] private Button workButton, emailButton;
+    private List<Button> emailButtons;
+    private List<Button> emails;
+    
 
-    private void Start()
+    private void Awake()
     {
-        programs = new List<Action>
+        jobScene = FindFirstObjectByType<JobScene>();
+
+        SetUpButtons();
+        EmailSetUp();
+        ComputerStartUp();
+    }
+
+    private void SetUpButtons()
+    {
+        TextMeshProUGUI buttonText = workButton.GetComponentInChildren<TextMeshProUGUI>();
+
+        if (buttonText != null)
+            buttonText.text = "Clock In";
+        else
+            Debug.LogError("TextMeshProUGUI component not found on startWorkButton.");
+
+        workButton.onClick.AddListener(() =>
         {
-            () => ClockIn(),
-            () => ClockOut(),
-            () => EMail(),
-            () => HackMenu(),
-            () => Background()
-        };
+            workButton.gameObject.SetActive(false);
+            EventManager.PlaySound?.Invoke("switch1");
+            jobScene.StartCoroutine(jobScene.BeginWorkDay());
+
+            if (buttonText != null)
+                buttonText.text = "Clock Out";
+            else
+                Debug.LogError("TextMeshProUGUI component not found on startWorkButton.");
+        });
+
+        emailButton.onClick.AddListener(() =>
+        {
+            EventManager.PlaySound?.Invoke("switch1");
+            if(emailScreen.activeSelf == true)
+                HideMenus();
+            else
+                EMail();
+        });
+
     }
 
     private void ComputerStartUp()
@@ -30,19 +67,21 @@ public class ComputerScreen : MonoBehaviour
 
     }
 
-    private void ClockIn()
-    {
-
-    }
-
-    private void ClockOut()
-    {
-
-    }
-
     private void EMail()
     {
+        HideMenus();
+        emailScreen.SetActive(true);
+    }
 
+    private void EmailSetUp()
+    {
+
+    }
+
+    public void SetEmailText(string text)
+    {
+        Debug.Log("Is this reached?");
+        //emailText.text = text;
     }
 
     private void HackMenu()
@@ -50,7 +89,33 @@ public class ComputerScreen : MonoBehaviour
 
     }
 
+    private void PerformanceMenu()
+    {
+
+    }
+    
     private void Background()
+    {
+
+    }
+
+    private void HideMenus()
+    {
+        emailScreen.SetActive(false);
+    }
+
+    private void ShowHideButton(Button button, bool show)
+    {
+        button.gameObject.SetActive(show);
+    }
+
+
+    private void CreateEmail()
+    {
+
+    }
+
+    private void ShowEmail()
     {
 
     }
