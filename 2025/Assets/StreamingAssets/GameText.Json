@@ -103,22 +103,32 @@
     "emailText": [
         {
             "day": 1,
+            "title": "Welcome to the Team",
+            "sender": "Corporate",
             "email": "Welcome to your very first day working for NewMerica within the Media Regulation Branch. For your first day, we require you to simply dispose of any articles with undesirable content.\n\n<color=#FFFF00><b>Click and drag to move newspapers.\nRight-click to zoom in and out on the newspapers.</color></b>\n\n Ensure all documents meet NewMerican standards. Good luck on your first day!"
         },
         {
             "day": 2,
+            "title": "Job Update. Censor Articles",
+            "sender": "Corporate",
             "email": "Congratulations on a successful first day at NewMerica. As a reward, your work will now be doubled, as you are now also required to censor certain content.\n\n<color=#FFFF00><b>Click and drag to move newspapers.\nRight-click to zoom in and out on the newspapers.\nLeft-click on words to censor them.</color></b>\n\nAny failure to censor sensitive content will result in disciplinary action. Good luck!"
         },
         {
             "day": 3,
+            "title": "Be Aware of Hidden Codes",
+            "sender": "Corporate",
             "email": "ATTENTION: Reports have shown that the Green Party is attempting to pass codes through secret images.\n\n<color=#FFFF00><b>Click and drag to move newspapers.\nRight-click to zoom in and out on the newspapers.\nLeft-click on words to censor them.\nSwitch to your UV Light to uncover hidden images.\nLeft-click on hidden images with the UV Light and ban any newspapers they reside on.</color></b>\n\n"
         },
         {
             "day": 4,
+            "title": "Quelling Unrest is our Top Priority",
+            "sender": "Corporate",
             "email": "Tensions are rising in NewMerica. Due to recent events, it is imperative that you complete your tasks successfully and efficiently. Long Live NewMerica!\n\n<color=#FFFF00><b>Click and drag to move newspapers.\nRight-click to zoom in and out on the newspapers.\nLeft-click on words to censor them.\nSwitch to your UV Light to uncover hidden images.\nLeft-click on hidden images with the UV Light and ban any newspapers they reside on.</color></b>\n\n"
         },
         {
             "day": 5,
+            "title": "Continue Remaining Vigilant Against Threats",
+            "sender": "Corporate",
             "email": "NewMerica faces its greatest threat in the efforts performed by the Black Swan. We are relying on you to diminish their influence.\n\n<color=#FFFF00><b>Click and drag to move newspapers.\nRight-click to zoom in and out on the newspapers.\nLeft-click on words to censor them.Switch to your UV Light to uncover hidden images.\nLeft-click on hidden images with the UV Light and ban any newspapers they reside on.</color></b>\n\n"
         }
     ],

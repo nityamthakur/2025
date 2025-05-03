@@ -396,7 +396,6 @@ public class GameManager : MonoBehaviour
             jobScene.ShowResults(jobDetails.numMediaProcessed, TotalScore);
             TotalScore = 0;
             ResetJobDetails();
-            jobScene.ShowMediaProcessedText(false);
             toolOverlayCreated = false;
         }
     }

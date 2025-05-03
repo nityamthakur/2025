@@ -761,6 +761,7 @@ MonoBehaviour:
   glitchedScreen: {fileID: 5111763290514371741, guid: 69c02822765493849b65f7d53cfdce8a, type: 3}
   jobBuildingPrefab: {fileID: 7365597034380788627, guid: 179c1e3c7be1eed4385ed3fdeb7cc64b, type: 3}
   jobBuildingImage: {fileID: 7500719156437101807, guid: f0d23fea0664eb14a9e6c31266085328, type: 3}
+  gameManager: {fileID: 0}
 --- !u!1 &766681848
 GameObject:
   m_ObjectHideFlags: 0
