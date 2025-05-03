@@ -6,10 +6,11 @@ using UnityEngine.UI;
 
 public class ComputerScreen : MonoBehaviour
 {
-    [SerializeField] public Sprite glitchedScreen;
-    [SerializeField] private GameObject emailScreen, backgroundScreen, lastOpenedScreen = null;
+    [SerializeField] private Sprite glitchedScreen;
+    [SerializeField] private GameObject emailScreen, backgroundScreen;
+    private GameObject lastOpenedScreen = null;
     private TextMeshProUGUI screenText, mediaProcessedText, emailText;
-    public Image background, foreground;
+    private Image background, foreground;
     private Slider performanceSlider;
     private JobScene jobScene;
 
@@ -205,7 +206,7 @@ public class ComputerScreen : MonoBehaviour
                 EventManager.PlaySound?.Invoke("switch1");
             });
 
-            SetEmailText(message.title + "\n" + message.sender + "\n\n" + message.email);
+            SetEmailText(message.title + "\nFrom: " + message.sender + "\n\n" + message.email);
         }
     }
 

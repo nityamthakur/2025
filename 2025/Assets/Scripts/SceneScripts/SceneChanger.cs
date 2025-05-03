@@ -119,7 +119,7 @@ public class SceneChanger : MonoBehaviour
 
             // For Debugging
             // Change the starting day
-            //gameManager.gameData.day = 3;
+            //gameManager.gameData.day = 2;
             
             // Start the game at day end
             //currentSceneIndex = 4;
@@ -233,7 +233,8 @@ public class SceneChanger : MonoBehaviour
     private void HideLightsOutImage()
     {
         //Debug.Log("HideDeskOverlay called");
-        lightsOutImage.gameObject.SetActive(false);   
+        if(lightsOutImage != null)
+            lightsOutImage.gameObject.SetActive(false);   
     }
 
     private void DisplayMenuButton(bool active)

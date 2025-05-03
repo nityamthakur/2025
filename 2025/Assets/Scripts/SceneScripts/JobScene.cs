@@ -50,7 +50,7 @@ public class JobScene : MonoBehaviour
 
 
     public void LoadJobStart() {
-        //ShowBuildingTransition();
+        ShowBuildingTransition();
         LoadJsonFromFile();
         SetUpJobStart();
         EventManager.FadeIn?.Invoke();
@@ -299,6 +299,7 @@ public class JobScene : MonoBehaviour
 
     private string GetEmailForDay(List<Entry> entries, int day)
     {
+        seenEmails.Clear();
         foreach (var entry in entries)
         {
             seenEmails.Add(entry);

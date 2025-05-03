@@ -273,7 +273,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1328157699042789398
 Transform:
   m_ObjectHideFlags: 0
@@ -684,8 +684,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6377759403076004086}
   m_HandleRect: {fileID: 7671776521471238148}
   m_Direction: 2
-  m_Value: 0.9999997
-  m_Size: 0.6675186
+  m_Value: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -762,8 +762,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.0005950928, y: 143.88397}
-  m_SizeDelta: {x: 436.32, y: 260.01}
+  m_AnchoredPosition: {x: 0.0005950928, y: 140.77995}
+  m_SizeDelta: {x: 436.32, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &1676640998592992405
 CanvasRenderer:
@@ -793,11 +793,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Greetings New Employee,\n\nWelcome to your very first day working for
-    NewMerica within the Media Regulation Branch. \n\nFor your first day, we require
-    you to simply  of any articles with undesirable content.\n\n<b>Click and drag
-    to move newspapers. Right-click to zoom in and out on the newspapers.\n\nEnsure
-    all documents meet NewMerican standards. \n\nGood luck on your first day!"
+  m_text: Welcome to your very first day working for NewMerica within the Media Regulation
+    Branch. For your first day, we require you to simply dispose of any articles
+    with undesirable content.\n\n<color=#FFFF00><b>Click and drag to move newspapers.\nRight-click
+    to zoom in and out on the newspapers.</color></b>\n\n Ensure all documents meet
+    NewMerican standards. Good luck on your first day!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a8e39c1c99ee52c4b83b118e5905ce04, type: 2}
   m_sharedMaterial: {fileID: 1659601194416434223, guid: a8e39c1c99ee52c4b83b118e5905ce04, type: 2}
@@ -806,8 +806,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -824,8 +824,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 15
-  m_fontSizeBase: 15
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1490,7 +1490,7 @@ RectTransform:
   m_Father: {fileID: 4767840232379208715}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1683,7 +1683,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &4665029175103407777
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2117,7 +2117,7 @@ MonoBehaviour:
   emailScreen: {fileID: 3469200801724046691}
   backgroundScreen: {fileID: 1001184039318930500}
   lastOpenedScreen: {fileID: 0}
-  background: {fileID: 0}
+  background: {fileID: 6554827696299982616}
   foreground: {fileID: 207383082613927757}
   emailSpawnZone: {fileID: 4462982428019916394}
   emailButtonPrefab: {fileID: 3573941955070591476, guid: 16d2f1d60e7cc4142a0f4f5fb797d4fe, type: 3}
@@ -2158,7 +2158,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 0.000091552734}
-  m_SizeDelta: {x: 152, y: 421.79996}
+  m_SizeDelta: {x: 152, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &3348987006215765421
 CanvasRenderer:
@@ -2532,7 +2532,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -14.2869, y: 6.208}
+  m_SizeDelta: {x: -14.2869, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &6053891626820591754
 CanvasRenderer:
@@ -2818,8 +2818,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3494252384720281469}
   m_HandleRect: {fileID: 226659462298186212}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 1
+  m_Value: 1.0000008
+  m_Size: 0.87984747
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3041,8 +3041,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 8829422313631416140}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.3324813}
-  m_AnchorMax: {x: 1, y: 0.9999999}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -3117,7 +3117,7 @@ RectTransform:
   m_Father: {fileID: 8225543380592560750}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -3274,7 +3274,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -214, y: -28}
-  m_SizeDelta: {x: 149.99994, y: 0}
+  m_SizeDelta: {x: 149.99994, y: 49.805824}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2475455683512917144
 MonoBehaviour:
@@ -3399,7 +3399,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.14716971, g: 0.14716971, b: 0.14716971, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
