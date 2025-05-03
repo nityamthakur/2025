@@ -9,10 +9,11 @@ using Unity.VisualScripting;
 
 public class DayStartScene : MonoBehaviour
 {
+    [SerializeField] private Camera mainCamera;
     [SerializeField] private GameObject UITextBox;
     [SerializeField] private Sprite[] FemaleNewsAnchor, MaleNewsAnchor, MaleNewsAnchor2, apartment;
     [SerializeField] private Sprite rentLetter, rentNotice, jobLetter;
-    [SerializeField] private float frameInterval = 0.5f;
+    [SerializeField] private float frameInterval = 0.1f;
     private GameObject currentTextBox;
     private TextMeshProUGUI TextBox;
     private Button nextButton;
@@ -22,7 +23,7 @@ public class DayStartScene : MonoBehaviour
     private Line[] currentLines;
     private GameManager gameManager;
     private TypewriterText typewriterText;
-     private Coroutine animationCoroutine;
+    private Coroutine animationCoroutine;
     private Action delay;
 
     public void Initialize()

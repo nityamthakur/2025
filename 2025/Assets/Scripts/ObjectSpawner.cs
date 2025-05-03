@@ -56,7 +56,7 @@ public class ObjectSpawner : MonoBehaviour
         if (quitting)
             return;
 
-        Debug.Log($"Spawning object at: {mediaSpawner.transform.position}");
+        //Debug.Log($"Spawning object at: {mediaSpawner.transform.position}");
 
         // Sound Effect: Paper Comes In
         EventManager.PlaySound?.Invoke("papercomein");

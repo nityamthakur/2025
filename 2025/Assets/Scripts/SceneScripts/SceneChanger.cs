@@ -64,7 +64,7 @@ public class SceneChanger : MonoBehaviour
         }
         lightsOutImage.gameObject.SetActive(false);
 
-        // Used for ensuring the media gets enters and leaves behind certain screen elements
+        // Used for ensuring the media enters and leaves behind certain screen elements
         deskOverlayImage = fadingScreen.transform.Find("DeskOverlay").GetComponent<Image>();
         if (deskOverlayImage == null)
         {
@@ -114,11 +114,12 @@ public class SceneChanger : MonoBehaviour
             PlayerPrefs.SetInt("LoadSlot", -1);
 
             // Start Game
+            // Comment out if using with debug
             mainMenuScene.LoadMainMenu();
 
             // For Debugging
             // Change the starting day
-            //gameManager.gameData.day = 3;
+            //gameManager.gameData.day = 2;
             
             // Start the game at day end
             //currentSceneIndex = 4;
@@ -232,7 +233,8 @@ public class SceneChanger : MonoBehaviour
     private void HideLightsOutImage()
     {
         //Debug.Log("HideDeskOverlay called");
-        lightsOutImage.gameObject.SetActive(false);   
+        if(lightsOutImage != null)
+            lightsOutImage.gameObject.SetActive(false);   
     }
 
     private void DisplayMenuButton(bool active)

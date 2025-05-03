@@ -316,6 +316,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2024cd3da7f32943a3a071d3f1f1803, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainCamera: {fileID: 0}
   UITextBox: {fileID: 4986825238899682302, guid: cc809ff330541a84aa7d1c21ab46ac07, type: 3}
   FemaleNewsAnchor:
   - {fileID: -1540687528, guid: a3b2525eefac14d5881507c820d26496, type: 3}
@@ -760,6 +761,7 @@ MonoBehaviour:
   glitchedScreen: {fileID: 5111763290514371741, guid: 69c02822765493849b65f7d53cfdce8a, type: 3}
   jobBuildingPrefab: {fileID: 7365597034380788627, guid: 179c1e3c7be1eed4385ed3fdeb7cc64b, type: 3}
   jobBuildingImage: {fileID: 7500719156437101807, guid: f0d23fea0664eb14a9e6c31266085328, type: 3}
+  gameManager: {fileID: 0}
 --- !u!1 &766681848
 GameObject:
   m_ObjectHideFlags: 0
