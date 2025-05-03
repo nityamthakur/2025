@@ -126,7 +126,7 @@ public class SceneChanger : MonoBehaviour
             //dayEndScene.LoadDayEnd();
             
             // Start the game at the job scene
-            //currentSceneIndex = 2;
+            //currentSceneIndex = 1;
             //jobScene.LoadJobStart();
         }
     }

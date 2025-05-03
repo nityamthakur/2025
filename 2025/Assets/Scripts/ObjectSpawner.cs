@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
 public class ObjectSpawner : MonoBehaviour
 {
     [SerializeField] private GameObject mediaObject;
@@ -155,29 +158,75 @@ public class ObjectSpawner : MonoBehaviour
 
     private void ParseJson(string json)
     {
-        var jsonObject = JsonUtility.FromJson<Wrapper>(json);
-
-        if (jsonObject != null && jsonObject.newspaperText.Count > 0)
+        //Our JSON deserialization needs to be significantly more complex to handle this.
+        //Once all of the JSON is migrated over to the new format, it can be simplified
+        try
         {
-            newspapers = GetNewspapersForDay(jsonObject.newspaperText, gameManager.gameData.GetCurrentDay());
+            //Load everything
+            var jsonRoot = JObject.Parse(json);
+            //Get just the newspaper text
+            var newspaperTextArr = (JArray)jsonRoot["newspaperText"];
+
+            if (newspaperTextArr == null)
+            {
+                Debug.LogError("Unable to find newspaper data in JSON file. Stop breaking my stuff!.");
+                return;
+            }
+
+            //Get the current day obj
+            var currentPapers = newspaperTextArr.Where(item => (int)item["day"] == gameManager.gameData.GetCurrentDay())
+                .Cast<JObject>().FirstOrDefault();
+
+            if (currentPapers == null)
+            {
+                Debug.LogError("Unable to find paper entries for day " + gameManager.gameData.GetCurrentDay());
+                return;
+            }
+
+            //Now go through and get the paper data
+            var newsPaperArr = (JArray)currentPapers["newspapers"];
+            newspapers = new Entity.Newspaper[newsPaperArr.Count];
+
+            for (var i = 0; i < newsPaperArr.Count; i++)
+            {
+                var newspaperObj = (JObject)newsPaperArr[i];
+                var newspaper = new Entity.Newspaper
+                {
+                    date = newspaperObj["date"]?.ToString(),
+                    hasHiddenImage = newspaperObj["hasHiddenImage"] != null && (bool)newspaperObj["hasHiddenImage"],
+                    banWords = newspaperObj["banWords"]?.ToObject<string[]>() ?? Array.Empty<string>(),
+                    censorWords = newspaperObj["censorWords"]?.ToObject<string[]>() ?? Array.Empty<string>()
+                };
+
+                //Add all of the possibly complex objects
+                ProcessField(newspaperObj["publisher"], out newspaper.publisher, out newspaper.publisherIsComplex);
+                ProcessField(newspaperObj["title"], out newspaper.title, out newspaper.titleIsComplex);
+                ProcessField(newspaperObj["front"], out newspaper.frontContent, out newspaper.frontIsComplex);
+                ProcessField(newspaperObj["back"], out newspaper.backContent, out newspaper.backIsComplex);
+
+                newspapers[i] = newspaper;
+            }
+
             newspaperPos = 0;
         }
-        else
+        catch (Exception e)
         {
-            Debug.LogError("JSON parsing failed.");
+            Debug.LogError("Error while parsing newspaper JSON data: " + e.Message);
         }
     }
 
-    private Entity.Newspaper[] GetNewspapersForDay(List<Entry> entries, int day)
+    private void ProcessField(JToken token, out string content, out bool isComplex)
     {
-        foreach (var entry in entries)
+        if (token is JObject)
         {
-            if (entry.day == day)
-            {
-                return entry.newspapers;
-            }
+            content = token.ToString();
+            isComplex = true;
         }
-        return new Entity.Newspaper[0];
+        else
+        {
+            content = token?.ToString() ?? "";
+            isComplex = false;
+        }
     }
 
     private void ReadNextNewspaper()
@@ -244,17 +293,5 @@ public class ObjectSpawner : MonoBehaviour
     {
         quitting = true;
     }
-
-    [Serializable]
-    private class Wrapper
-    {
-        public List<Entry> newspaperText;
-    }
-
-    [Serializable]
-    private class Entry
-    {
-        public int day;
-        public Entity.Newspaper[] newspapers;
-    }
+    
 }
