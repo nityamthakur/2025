@@ -59,7 +59,7 @@ public class ObjectSpawner : MonoBehaviour
         //Debug.Log($"Spawning object at: {mediaSpawner.transform.position}");
 
         // Sound Effect: Paper Comes In
-        EventManager.PlaySound?.Invoke("papercomein");
+        EventManager.PlaySound?.Invoke("papercomein", true);
 
         // Create new media object
         GameObject newMedia = Instantiate(mediaObject, mediaSpawner.transform.position, Quaternion.identity);

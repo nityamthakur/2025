@@ -301,12 +301,12 @@ public class GameManager : MonoBehaviour
         if (playerSucceeds && (currentCensorNum == totalCensorTargets) && (numCensorMistakes == 0))
         {
             EventManager.ShowCorrectBuzzer?.Invoke(true);
-            EventManager.PlaySound?.Invoke("correctBuzz");
+            EventManager.PlaySound?.Invoke("correctBuzz", true);
         }
         else
         {
             EventManager.ShowCorrectBuzzer?.Invoke(false);
-            EventManager.PlaySound?.Invoke("errorBuzz");
+            EventManager.PlaySound?.Invoke("errorBuzz", true);
         }
 
         jobDetails.numMediaProcessed += 1;
@@ -348,12 +348,12 @@ public class GameManager : MonoBehaviour
         if (playerSucceeds)
         {
             EventManager.ShowCorrectBuzzer?.Invoke(true);
-            EventManager.PlaySound?.Invoke("correctBuzz");
+            EventManager.PlaySound?.Invoke("correctBuzz", true);
         }
         else
         {
             EventManager.ShowCorrectBuzzer?.Invoke(false);
-            EventManager.PlaySound?.Invoke("errorBuzz");
+            EventManager.PlaySound?.Invoke("errorBuzz", true);
         }
 
         jobDetails.numMediaProcessed += 1;
@@ -439,7 +439,7 @@ public class GameManager : MonoBehaviour
         }
 
         EventManager.ShowLightsOutImage?.Invoke();
-        EventManager.PlaySound?.Invoke("switchoff");
+        EventManager.PlaySound?.Invoke("switchoff", true);
         EventManager.StopMusic?.Invoke();
         jobDetails.currClockTime = 0;
     }

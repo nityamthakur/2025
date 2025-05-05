@@ -321,7 +321,7 @@ public class JobScene : MonoBehaviour
 
             // Pause for effect
             yield return new WaitForSeconds(3f);
-            EventManager.PlaySound?.Invoke("glitch"); 
+            EventManager.PlaySound?.Invoke("glitch", true); 
 
             computerScreenClass.EventTrigger(3, jobDelayed);
             objectSpawner.SpawnImageObject(true);
@@ -329,7 +329,7 @@ public class JobScene : MonoBehaviour
             // Prevent progression
             yield return new WaitUntil(() => !jobDelayed);
             
-            EventManager.PlaySound?.Invoke("glitch"); 
+            EventManager.PlaySound?.Invoke("glitch", true); 
             yield return new WaitForSeconds(2.5f);
 
             computerScreenClass.EventTrigger(3, jobDelayed);

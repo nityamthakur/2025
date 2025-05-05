@@ -377,7 +377,7 @@ public class Entity : MonoBehaviour
     private IEnumerator DestroyAfterExitMovement(string box)
     {        
         beingDestroyed = true;
-        EventManager.PlaySound?.Invoke("tossPaper");
+        EventManager.PlaySound?.Invoke("tossPaper", true);
         // Turn of Rigidbody because newspaper gets wierd when colliding with boxes
         if (TryGetComponent<Rigidbody2D>(out var rigidBody))
         {

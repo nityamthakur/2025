@@ -54,7 +54,7 @@ public class MainMenuScene : MonoBehaviour
         playButton.onClick.AddListener(() =>
         {
             playButton.interactable = false;
-            EventManager.PlaySound?.Invoke("switch1"); 
+            EventManager.PlaySound?.Invoke("switch1", true); 
             StartCoroutine(StartGame());
         });
 
@@ -69,7 +69,7 @@ public class MainMenuScene : MonoBehaviour
             loadButton.interactable = false;
             EventManager.OpenOptionsMenu?.Invoke();
             EventManager.OptionsChanger?.Invoke("load"); 
-            EventManager.PlaySound?.Invoke("switch1"); 
+            EventManager.PlaySound?.Invoke("switch1", true); 
         });
 
         optionsButton = currentMenuObject.transform.Find("OptionsButton").GetComponent<Button>();
@@ -83,7 +83,7 @@ public class MainMenuScene : MonoBehaviour
             optionsButton.interactable = false;
             EventManager.OpenOptionsMenu?.Invoke();
             EventManager.OptionsChanger?.Invoke("options"); 
-            EventManager.PlaySound?.Invoke("switch1"); 
+            EventManager.PlaySound?.Invoke("switch1", true); 
         });
 
         exitButton = currentMenuObject.transform.Find("ExitButton").GetComponent<Button>();

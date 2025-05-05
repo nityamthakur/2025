@@ -98,7 +98,7 @@ public class DayEndScene : MonoBehaviour
         // Modified to handle transition to shop
         gameButton.onClick.AddListener(() =>
         {
-            EventManager.PlaySound?.Invoke("switch1");
+            EventManager.PlaySound?.Invoke("switch1", true);
             gameButton.gameObject.SetActive(false);
 
             if (CheckGameOver())
@@ -128,7 +128,7 @@ public class DayEndScene : MonoBehaviour
         }
         nextButton.onClick.AddListener(() =>
         {
-            EventManager.PlaySound?.Invoke("switch1");
+            EventManager.PlaySound?.Invoke("switch1", true);
             ReadNextLine();
         });
         nextButton.gameObject.SetActive(false);

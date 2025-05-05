@@ -149,7 +149,7 @@ public class ShopManager : MonoBehaviour
     private void PurchaseUpgrade(int upgradeNumber, int price)
     {
         // Play purchase sound
-        EventManager.PlaySound?.Invoke("switch1");
+        EventManager.PlaySound?.Invoke("switch1", true);
 
         // Deduct money
         playerMoney -= price;
@@ -196,7 +196,7 @@ public class ShopManager : MonoBehaviour
         }
 
         // Play sound effect
-        EventManager.PlaySound?.Invoke("switch1");
+        EventManager.PlaySound?.Invoke("switch1", true);
 
         // Fade out
         EventManager.FadeOut?.Invoke();
