@@ -257,7 +257,6 @@ public class JobScene : MonoBehaviour
         gameManager.gameData.money += dayProfit;
 
         EventManager.DisplayMenuButton?.Invoke(false);
-        EventManager.StopMusic?.Invoke();
         EventManager.FadeOut?.Invoke();
         yield return new WaitForSeconds(2f);
         EventManager.HideLightsOutImage?.Invoke();

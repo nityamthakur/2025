@@ -42,10 +42,6 @@ public class DayStartScene : MonoBehaviour
         }
 
         SetUpDayStart();
-
-        if (!EventManager.IsMusicPlaying() && gameManager.gameData.GetCurrentDay() == 1)
-            EventManager.PlayMusic?.Invoke("menu");
-
         DayStartEventChecker();
         EventManager.DisplayMenuButton?.Invoke(true);
     }
@@ -244,8 +240,6 @@ public class DayStartScene : MonoBehaviour
 
     private IEnumerator CycleBackgroundFrames(Sprite[] frames)
     {
-        Debug.Log("Calling CycleBackgroundFrames");
-
         if (frames == null || frames.Length == 0)
             yield break;
 
