@@ -44,7 +44,7 @@ public class CensorTarget : MonoBehaviour, IPointerClickHandler
             isCensored = true;
 
             // Play the censor sound
-            EventManager.PlaySound?.Invoke("censor");
+            EventManager.PlaySound?.Invoke("censor", true);
 
             if (isCensorTarget)
             {

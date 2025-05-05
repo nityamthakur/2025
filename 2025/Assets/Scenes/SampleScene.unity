@@ -316,7 +316,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2024cd3da7f32943a3a071d3f1f1803, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCamera: {fileID: 0}
+  mainCamera: {fileID: 519420031}
   UITextBox: {fileID: 4986825238899682302, guid: cc809ff330541a84aa7d1c21ab46ac07, type: 3}
   FemaleNewsAnchor:
   - {fileID: -1540687528, guid: a3b2525eefac14d5881507c820d26496, type: 3}
@@ -337,7 +337,6 @@ MonoBehaviour:
   rentLetter: {fileID: 5162322167547290152, guid: f2d66c3b570b04920b75624d214676d9, type: 3}
   rentNotice: {fileID: 889754086627472722, guid: 50ffb7daf5478470c90ac2b7f8952d67, type: 3}
   jobLetter: {fileID: 2247088696051876834, guid: 10d5781b3649c3c40a0d1bce740af2fd, type: 3}
-  frameInterval: 0.5
 --- !u!1 &443284278
 GameObject:
   m_ObjectHideFlags: 0
@@ -760,8 +759,8 @@ MonoBehaviour:
   workBackgroundImage: {fileID: 8941961987756735026, guid: 12cfa2c3fdcaa8644816bc0be2f33a8f, type: 3}
   glitchedScreen: {fileID: 5111763290514371741, guid: 69c02822765493849b65f7d53cfdce8a, type: 3}
   jobBuildingPrefab: {fileID: 7365597034380788627, guid: 179c1e3c7be1eed4385ed3fdeb7cc64b, type: 3}
-  jobBuildingImage: {fileID: 7500719156437101807, guid: f0d23fea0664eb14a9e6c31266085328, type: 3}
-  gameManager: {fileID: 0}
+  jobBuildingImage: {fileID: -335050303, guid: 47c8dfc179d8a4138b3bd9aefae43df1, type: 3}
+  gameManager: {fileID: 2059682408}
 --- !u!1 &766681848
 GameObject:
   m_ObjectHideFlags: 0

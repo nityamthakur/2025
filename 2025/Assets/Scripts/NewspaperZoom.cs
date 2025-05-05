@@ -85,7 +85,7 @@ public class NewspaperZoom : MonoBehaviour
 
     void ToggleZoom()
     {            
-        EventManager.PlaySound?.Invoke("newspaperRustling");
+        EventManager.PlaySound?.Invoke("newspaperRustling", true);
         zoomFactor = 1.25f;
         zoomScale = originalScale * zoomFactor;
         GameObject hiddenImage = transform.Find("HiddenImage").gameObject;

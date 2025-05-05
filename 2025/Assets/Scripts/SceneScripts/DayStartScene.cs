@@ -13,7 +13,7 @@ public class DayStartScene : MonoBehaviour
     [SerializeField] private GameObject UITextBox;
     [SerializeField] private Sprite[] FemaleNewsAnchor, MaleNewsAnchor, MaleNewsAnchor2, apartment;
     [SerializeField] private Sprite rentLetter, rentNotice, jobLetter;
-    [SerializeField] private float frameInterval = 0.1f;
+    private float frameInterval = 0.2f;
     private GameObject currentTextBox;
     private TextMeshProUGUI TextBox;
     private Button nextButton;
@@ -92,7 +92,7 @@ public class DayStartScene : MonoBehaviour
         }
         nextButton.onClick.AddListener(() =>
         {
-            EventManager.PlaySound?.Invoke("switch1");
+            EventManager.PlaySound?.Invoke("switch1", true);
             ReadNextLine();
         });
 
@@ -174,7 +174,7 @@ public class DayStartScene : MonoBehaviour
                 }
                 else if(currentLine.speaker.ToLower() == "playsound")
                 {
-                    EventManager.PlaySound?.Invoke(currentLine.text);
+                    EventManager.PlaySound?.Invoke(currentLine.text, true);
                     linePos++;
                     ReadNextLine();
                 }
@@ -244,6 +244,8 @@ public class DayStartScene : MonoBehaviour
 
     private IEnumerator CycleBackgroundFrames(Sprite[] frames)
     {
+        Debug.Log("Calling CycleBackgroundFrames");
+
         if (frames == null || frames.Length == 0)
             yield break;
 
@@ -308,13 +310,13 @@ public class DayStartScene : MonoBehaviour
         {
             TextBox.gameObject.SetActive(true);
             textBoxBackground.gameObject.SetActive(true);
-            EventManager.PlaySound?.Invoke("switch1");
+            EventManager.PlaySound?.Invoke("switch1", true);
             ReadNextLine();
         });
 
-        EventManager.PlaySound?.Invoke("doorbell");
+        EventManager.PlaySound?.Invoke("doorbell", true);
         yield return new WaitForSeconds(2f);
-        EventManager.PlaySound?.Invoke("papercomein");
+        EventManager.PlaySound?.Invoke("papercomein", true);
         yield return new WaitForSeconds(0.5f);
         EventManager.FadeIn?.Invoke();
         //EventManager.PlayMusic?.Invoke("Some Music For The Day Start / Apartment");

@@ -84,7 +84,7 @@ public class SceneChanger : MonoBehaviour
             EventManager.OpenOptionsMenu?.Invoke();
             EventManager.OptionsChanger?.Invoke(""); 
             EventManager.DisplayMenuButton?.Invoke(false);
-            EventManager.PlaySound?.Invoke("switch1");
+            EventManager.PlaySound?.Invoke("switch1", true);
         });
         menuButton.gameObject.SetActive(false);
 

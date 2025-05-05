@@ -201,7 +201,7 @@ public class ImageObject : MonoBehaviour
         }
 
         yield return new WaitForSeconds(0.5f);
-        EventManager.PlaySound?.Invoke("tossPaper");
+        EventManager.PlaySound?.Invoke("tossPaper", true);
         yield return new WaitForSeconds(1.0f);
         Destroy(gameObject);
     }

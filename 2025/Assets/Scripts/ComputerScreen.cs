@@ -52,7 +52,7 @@ public class ComputerScreen : MonoBehaviour
         emailButton = FindObject<Button>("EmailButton");
         emailButton.onClick.AddListener(() =>
         {
-            EventManager.PlaySound?.Invoke("switch1");
+            EventManager.PlaySound?.Invoke("switch1", true);
             if(emailScreen.activeSelf == true)
                 HideMenus();
             else
@@ -104,7 +104,7 @@ public class ComputerScreen : MonoBehaviour
     public void WorkButtonStart()
     {
         workButton.interactable = false;
-        EventManager.PlaySound?.Invoke("switch1");
+        EventManager.PlaySound?.Invoke("switch1", true);
         jobScene.StartCoroutine(jobScene.BeginWorkDay());
         workButtonText.text = "Clock Out";
         workButton.onClick.RemoveAllListeners();
@@ -114,7 +114,7 @@ public class ComputerScreen : MonoBehaviour
     public void WorkButtonEnd()
     {
         workButton.interactable = false;
-        EventManager.PlaySound?.Invoke("switch1");
+        EventManager.PlaySound?.Invoke("switch1", true);
         jobScene.gameManager.gameData.money += jobScene.DayProfit;
         jobScene.StartCoroutine(jobScene.NextScene());
         workButton.onClick.RemoveAllListeners();    
@@ -203,7 +203,7 @@ public class ComputerScreen : MonoBehaviour
             spawnedEmail.onClick.AddListener(() => 
             {
                 SetEmailText(message.title + "\nFrom: " + message.sender + "\n\n" + message.email);
-                EventManager.PlaySound?.Invoke("switch1");
+                EventManager.PlaySound?.Invoke("switch1", true);
             });
 
             SetEmailText(message.title + "\nFrom: " + message.sender + "\n\n" + message.email);
