@@ -8,11 +8,13 @@ public class CensorTarget : MonoBehaviour, IPointerClickHandler
     private bool isCensorTarget = false;
 
     private GameManager gameManager;
+    private SelectedToolManager selectedToolManager;
 
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         gameManager = FindFirstObjectByType<GameManager>();
+        selectedToolManager = FindFirstObjectByType<SelectedToolManager>();
     }
 
     public void SetToCensorTarget()
@@ -22,7 +24,7 @@ public class CensorTarget : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (!gameManager.CanCensor() || gameManager.GetCurrentTool() != "CensorPen") return;
+        if (!selectedToolManager.CanCensor() || selectedToolManager.GetSelectedTool() != "CensorPen") return;
         
         if (isCensored) 
         {

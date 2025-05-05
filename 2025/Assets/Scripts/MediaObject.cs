@@ -333,6 +333,10 @@ public class Entity : MonoBehaviour
     {
         if (other == storedTrigger)
         {
+            GameObject banStampCollider = transform.Find("BanStampCollider")?.gameObject;
+            if (banStampCollider != null)
+                gameManager.ResetBanStampCollider(banStampCollider);
+            
             isInsideTrigger = false;
             storedTrigger = null;
             if(other.gameObject.CompareTag("DropBoxAccept"))

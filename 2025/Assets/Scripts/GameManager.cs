@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -17,22 +18,25 @@ public class GameManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI onScreenTimer;
     [SerializeField] GameObject onScreenDayChanger;
     
+    [SerializeField] GameObject toolOverlayObj;
+    [SerializeField] GameObject phoneOverlayObj;
     [SerializeField] GameObject UVLightObj;
+    [SerializeField] GameObject banStampObj;
     private JobDetails jobDetails;
     private JobScene jobScene;
     private Coroutine jobTimerCoroutine;
+    private GameObject currentMediaObject;
+    private SelectedToolManager selectedToolManager;
 
     private string[] censorTargetWords;
     private string[] banTargetWords;
     private int totalCensorTargets = 0;
     private int currentCensorNum = 0;
     private int numCensorMistakes = 0;
-    private bool canCensor = false;
     private bool dayEnded = false;
-    private bool toolOverlayCreated = false;
-    private string currentTool = "CensorPen";
     private bool hiddenImageExists = false;
     private bool hiddenImageFound = false;
+    private bool banStampPressed = false;
 
     // Set total score minimum to 0
     private int totalScore = 0;
@@ -54,6 +58,7 @@ public class GameManager : MonoBehaviour
     public void SetCurrentDay(int day)
     {
         gameData.day = day;
+        selectedToolManager.InitializeToolSelection();
     }
 
     public JobDetails GetJobDetails()
@@ -77,6 +82,21 @@ public class GameManager : MonoBehaviour
         return jobScene;
     }
 
+    public GameObject GetCurrentMediaObject()
+    {
+        return currentMediaObject;
+    }
+    public void SetCurrentMediaObject(GameObject mediaObj)
+    {
+        if (mediaObj == null)
+        {
+            Debug.LogError("mediaObj is null.");
+            return;
+        }
+
+        currentMediaObject = mediaObj;
+    }
+
     public string[] GetCensorTargetWords()
     {
         return censorTargetWords;
@@ -97,54 +117,38 @@ public class GameManager : MonoBehaviour
         banTargetWords = words;
     }
 
-    public void SetToolFunctionality(bool canCensor)
+    public GameObject GetToolOverlayObj()
     {
-        switch (currentTool) 
+        return toolOverlayObj;
+    }
+    public void ToolOverlayObjActive(bool active)
+    {
+        if (toolOverlayObj == null)
         {
-            case "CensorPen":
-                this.canCensor = canCensor;
-                break;
-            case "UVLight":
-                UVLightObj.SetActive(canCensor);
-                break;
-            default:
-                Debug.LogError($"Invalid tool: {currentTool}");
-                break;
+            Debug.LogError("ToolOverlayObj is null.");
+            return;
         }
-        
-    }
-    public bool CanCensor()
-    {
-        return canCensor;
-    }
-    public void SetToolOverlayCreated(bool created)
-    {
-        toolOverlayCreated = created;
-    }
-    public bool IsToolOverlayCreated()
-    {
-        return toolOverlayCreated;
-    }
-    public string GetCurrentTool()
-    {
-        return currentTool;
-    }
-    public void SetCurrentTool(string tool)
-    {
-        currentTool = tool;
 
-        if (tool == "UVLight")
-        {
-            UVLightObj.SetActive(true);
-        }
-        else if (UVLightObj.activeSelf)
-        {
-            UVLightObj.SetActive(false);
-        }
+        toolOverlayObj.SetActive(active);
     }
+    public GameObject GetPhoneOverlayObj()
+    {
+        return phoneOverlayObj;
+    }
+
     public GameObject GetUVLightObj()
     {
         return UVLightObj;
+    }
+    public void UVLightObjActive(bool active)
+    {
+        if (UVLightObj == null)
+        {
+            Debug.LogError("UVLightObj is null.");
+            return;
+        }
+
+        UVLightObj.SetActive(active);
     }
     public void SetUVLightTarget(GameObject target)
     {
@@ -171,11 +175,69 @@ public class GameManager : MonoBehaviour
         return hiddenImageFound;
     }
 
+    public GameObject GetBanStampObj()
+    {
+        return banStampObj;
+    }
+    public void BanStampObjActive(bool active)
+    {
+        if (banStampObj == null)
+        {
+            Debug.LogError("BanStampObj is null.");
+            return;
+        }
+
+        banStampObj.SetActive(active);
+    }
+    public void SetBanStampColliderActive(bool active)
+    {
+        if (banStampObj == null)
+        {
+            Debug.LogError("BanStampObj is null.");
+            return;
+        }
+
+        banStampObj.GetComponent<BanStamp>().BanStampColliderActive(active);
+    }
+
+    public void SetBanStampPressed(bool pressed)
+    {
+        banStampPressed = pressed;
+    }
+    public bool IsBanStampPressed()
+    {
+        return banStampPressed;
+    }
+    public void SetBanStampColliderParentToMediaObj(GameObject banStampCollider) 
+    {
+        if (banStampCollider == null)
+        {
+            Debug.LogError("BanStampCollider is null.");
+            return;
+        }
+
+        banStampCollider.transform.SetParent(currentMediaObject.transform);
+    }
+    public void ResetBanStampCollider(GameObject banStampCollider)
+    {
+        if (banStampCollider == null)
+        {
+            Debug.LogError("BanStampCollider is null.");
+            return;
+        }
+
+        banStampCollider.transform.SetParent(banStampObj.transform);
+        banStampCollider.transform.localPosition = Vector3.zero;
+        banStampCollider.transform.localRotation = Quaternion.identity;
+        banStampCollider.transform.localScale = Vector3.one;
+    }
+
     // -------------------------------------
     // Functions
     public void RestartGame()
     {
         IsRestarting = true;
+        currentMediaObject = null;
         OnGameRestart?.Invoke();
         Time.timeScale = 1;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -200,6 +262,27 @@ public class GameManager : MonoBehaviour
         jobDetails = new JobDetails();
         onScreenTimer.enabled = false; // Hide the onscreen timer
         onScreenDayChanger.SetActive(false); // Hide the jump to day debug box
+
+        selectedToolManager = FindFirstObjectByType<SelectedToolManager>();
+        if (selectedToolManager == null)
+        {
+            Debug.LogError("GameManager is not found in the scene.");
+            return;
+        } 
+
+        if (toolOverlayObj == null)
+        {
+            Debug.LogError("ToolOverlayObj is null.");
+            return;
+        }
+        toolOverlayObj.transform.GetChild(0).gameObject.SetActive(false); // Hide the tool overlay object
+
+        if (phoneOverlayObj == null)
+        {
+            Debug.LogError("PhoneOverlayObj is null.");
+            return;
+        }
+        phoneOverlayObj.transform.GetChild(0).gameObject.SetActive(false); // Hide the phone overlay object
     }
 
     private int CheckLoadGameSave()
@@ -292,13 +375,24 @@ public class GameManager : MonoBehaviour
         numCensorMistakes = 0;
         hiddenImageExists = false;
         hiddenImageFound = false;
+        banStampPressed = false;
+
+        currentMediaObject = null;
     }
 
     public void EvaluatePlayerAccept(string[] banWords)
     {
-        bool playerSucceeds = banWords.Length == 0 && !hiddenImageExists;
+        bool playerSucceeds;
+        
+        // Check if the player has used the ban stamp if there are any bannable offenses or used the stamp incorrectly
+        if (banWords.Length != 0 || (hiddenImageExists && hiddenImageFound))
+            playerSucceeds = banStampPressed;
+        else 
+            playerSucceeds = !banStampPressed;
+        
+        //bool playerSucceeds = banWords.Length == 0 && !hiddenImageExists;
 
-        if (playerSucceeds && (currentCensorNum == totalCensorTargets) && (numCensorMistakes == 0))
+        if (playerSucceeds && (banStampPressed || ((currentCensorNum == totalCensorTargets) && (numCensorMistakes == 0))))
         {
             EventManager.ShowCorrectBuzzer?.Invoke(true);
             EventManager.PlaySound?.Invoke("correctBuzz", true);
@@ -395,8 +489,8 @@ public class GameManager : MonoBehaviour
             dayEnded = true;
             jobScene.ShowResults(jobDetails.numMediaProcessed, TotalScore);
             TotalScore = 0;
+            currentMediaObject = null;
             ResetJobDetails();
-            toolOverlayCreated = false;
         }
     }
 

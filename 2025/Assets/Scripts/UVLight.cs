@@ -9,12 +9,16 @@ public class UVLight : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Color defColor;
     private GameManager gameManager;
-
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         gameManager = FindFirstObjectByType<GameManager>();
+        if (gameManager == null)
+        {
+            Debug.LogError("GameManager is not found in the scene.");
+            return;
+        }
         spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer == null)
         {
@@ -44,7 +48,6 @@ public class UVLight : MonoBehaviour
     {
         targetCollider = newTargetCollider;
     }
-
 
     private bool AreBoundsOverlapping(Bounds a, Bounds b)
     {

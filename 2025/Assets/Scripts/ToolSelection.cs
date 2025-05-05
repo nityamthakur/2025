@@ -5,16 +5,23 @@ using UnityEngine.UI;
 public class ToolSelection : MonoBehaviour
 {
     [SerializeField] private Image toolImage;
+    private GameManager gameManager;
     private SelectedToolManager selectedToolManager; 
     
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        selectedToolManager = GetComponentInParent<SelectedToolManager>();
+        gameManager = FindFirstObjectByType<GameManager>();
+        if (gameManager == null)
+        {
+            Debug.LogError("GameManager is not found in the scene.");
+            return;
+        }
+        selectedToolManager = FindFirstObjectByType<SelectedToolManager>();
         if (selectedToolManager == null)
         {
-            Debug.LogError("SelectedToolManager is not found in the parent object.");
+            Debug.LogError("GameManager is not found in the scene.");
             return;
         }
         if (toolImage == null)

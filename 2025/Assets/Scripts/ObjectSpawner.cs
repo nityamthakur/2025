@@ -83,6 +83,7 @@ public class ObjectSpawner : MonoBehaviour
             Destroy(newMedia);
         }
 
+        gameManager.SetCurrentMediaObject(newMedia);
     }
 
     // For non media censoring objects like fliers and pamphlets

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4950493166800010709}
   - component: {fileID: 2237481359942752111}
+  - component: {fileID: 6269548066708175689}
   m_Layer: 6
   m_Name: Back
   m_TagString: Untagged
@@ -90,6 +91,52 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!61 &6269548066708175689
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 103021862206449432}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 3.22, y: 1.61}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 3.22, y: 1.61}
+  m_EdgeRadius: 0
 --- !u!1 &951432843360145334
 GameObject:
   m_ObjectHideFlags: 0
@@ -882,7 +929,6 @@ MonoBehaviour:
   defaultMaterial: {fileID: 1659601194416434223, guid: a8e39c1c99ee52c4b83b118e5905ce04, type: 2}
   blurSize: 20
   hiddenImageSpawnBounds: {fileID: 6632955342856906375}
-  testLocation: {fileID: 0}
   beingDestroyed: 0
 --- !u!114 &6764300093197395354
 MonoBehaviour:
@@ -914,8 +960,7 @@ MonoBehaviour:
   stopZoom: 1
   entityComponent: {fileID: 0}
   backOfNewspaper: {fileID: 103021862206449432}
-  toolOverlayPrefab: {fileID: 8764790447295677070, guid: 0ad55ae16a330b442b995aa8739d74f0, type: 3}
-  phonePrefab: {fileID: 8764790447295677070, guid: 9e6adce8c8125c046a3755b6e97c7847, type: 3}
+  toolOverlayUI: {fileID: 0}
 --- !u!61 &6355933026193757114
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -950,7 +995,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.025340557, y: 0.04223442}
+  m_Offset: {x: 0.0009918213, y: 0.03271103}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -960,7 +1005,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 7.6730146, y: 3.7874618}
+  m_Size: {x: 7.7161045, y: 3.8065085}
   m_EdgeRadius: 0
 --- !u!50 &6181959918788005876
 Rigidbody2D:
