@@ -10,7 +10,7 @@ public class ComputerScreen : MonoBehaviour
     [SerializeField] private GameObject emailScreen, backgroundScreen;
     private GameObject lastOpenedScreen = null;
     private TextMeshProUGUI screenText, mediaProcessedText, emailText;
-    private Image background, foreground;
+    private Image background, foreground, resultsBackground;
     private Slider performanceSlider;
     private JobScene jobScene;
 
@@ -72,6 +72,8 @@ public class ComputerScreen : MonoBehaviour
     {
         background = FindObject<Image>("Background");
         foreground = FindObject<Image>("Foreground");
+        resultsBackground = FindObject<Image>("ResultsBackground");
+        resultsBackground.gameObject.SetActive(false);
     }
 
     private void SetUpText()
@@ -124,6 +126,7 @@ public class ComputerScreen : MonoBehaviour
     {
         workButton.interactable = true;
         performanceSlider.gameObject.SetActive(true);
+        resultsBackground.gameObject.SetActive(true);
         HideMenus();
     }
 

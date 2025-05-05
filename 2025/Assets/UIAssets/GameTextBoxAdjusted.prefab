@@ -798,6 +798,7 @@ GameObject:
   - component: {fileID: 7796416276410017196}
   - component: {fileID: 5338982984771658456}
   - component: {fileID: 3610765406126081195}
+  - component: {fileID: 4742602361768902477}
   m_Layer: 5
   m_Name: NextTextButton
   m_TagString: Untagged
@@ -907,3 +908,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4742602361768902477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9072882912393573186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 541cb3d6e61f7cd4d80c30c0975a0c4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grayscaleMaterial: {fileID: 2100000, guid: cec02e0e72fd1a047abd9cfb7c5f0078, type: 2}

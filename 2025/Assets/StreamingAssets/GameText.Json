@@ -29,6 +29,9 @@
         {
             "day": 2,
             "lines": [
+                {"speaker": "Apartment", "text": "" },
+                {"speaker": "PlayMusic", "text": "newsJingle" },
+                {"speaker": "Delay", "text": "3" },
                 { "speaker": "FemaleNewsAnchor", "text": "Welcome back, citizens. Another day, another battle against the forces of deception." },
                 { "speaker": "MaleNewsAnchor", "text": "The weather today? Cloudy, rainy, and windy—perhaps reflecting the storm of lies from our nation's enemies." },
                 { "speaker": "FemaleNewsAnchor", "text": "Despite these dark clouds, progress continues. AI automation is paving the way for a stronger workforce, ensuring efficiency across all sectors." },
@@ -40,6 +43,9 @@
         {
             "day": 3,
             "lines": [
+                {"speaker": "Apartment", "text": "" },
+                {"speaker": "PlayMusic", "text": "newsJingle" },
+                {"speaker": "Delay", "text": "3" },
                 { "speaker": "MaleNewsAnchor", "text": "Another glorious day in NewMerica, where prosperity and unity go hand in hand!" },
                 { "speaker": "FemaleNewsAnchor", "text": "Tensions remain high as subversive elements continue to challenge our nation's security." },
                 { "speaker": "MaleNewsAnchor", "text": "Leaders in NewMerica are taking decisive action. Public voting inefficiencies will soon be a thing of the past, as AI-assisted decision-making promises a new era of governance." },
@@ -51,6 +57,9 @@
         {
             "day": 4,
             "lines": [
+                {"speaker": "Apartment", "text": "" },
+                {"speaker": "PlayMusic", "text": "newsJingle" },
+                {"speaker": "Delay", "text": "3" },
                 { "speaker": "FemaleNewsAnchor", "text": "Good morning, NewMericans! Today, we face new challenges as we strive for a brighter future." },
                 { "speaker": "MaleNewsAnchor", "text": "The AI Sentinel system has been deployed to safeguard our nation against harmful influences. Those who seek to disrupt our unity will be swiftly identified and neutralized." },
                 { "speaker": "FemaleNewsAnchor", "text": "That's right. Hopefully this will put a stop to the oppressive force known as Gabble."},
@@ -61,6 +70,9 @@
         {
             "day": 5,
             "lines": [
+                {"speaker": "Apartment", "text": "" },
+                {"speaker": "PlayMusic", "text": "newsJingle" },
+                {"speaker": "Delay", "text": "3" },
                 { "speaker": "MaleNewsAnchor", "text": "Welcome back, NewMericans. Today, we celebrate the success of the AI Sentinel system in protecting our nation from harmful influences." },
                 { "speaker": "FemaleNewsAnchor", "text": "The Department of Information Stability has reported the first arrests made under the new system, marking a new era of digital accountability." },
                 { "speaker": "MaleNewsAnchor", "text": "In other news, the Department of Agricultural Oversight has assured citizens that food shortages are being addressed. Trust in NewMerica to provide for its people." },

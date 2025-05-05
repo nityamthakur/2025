@@ -6,6 +6,7 @@ using TMPro;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 public class DayEndScene : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class DayEndScene : MonoBehaviour
     private GameObject currentPrefab;
     private Image backgroundImage, textBoxBackground;
     private Button gameButton, nextButton;
-    private TextMeshProUGUI buttonText, gameText, textBoxText, dayText;
+    private TextMeshProUGUI buttonText, fundsText, suppliesText, textBoxText, dayText;
     private GameManager gameManager;
 
     private int linePos = 0;
@@ -52,12 +53,19 @@ public class DayEndScene : MonoBehaviour
         }
         backgroundImage.gameObject.SetActive(false);
 
-        gameText = currentPrefab.transform.Find("GameText").GetComponent<TextMeshProUGUI>();
-        if (gameText == null)
+        fundsText = currentPrefab.transform.Find("FundsText").GetComponent<TextMeshProUGUI>();
+        if (fundsText == null)
         {
-            Debug.Log("Failed to find GameText component");
+            Debug.Log("Failed to find FundsText component");
             return;
         }
+        suppliesText = currentPrefab.transform.Find("SuppliesText").GetComponent<TextMeshProUGUI>();
+        if (suppliesText == null)
+        {
+            Debug.Log("Failed to find SuppliesText component");
+            return;
+        }
+        SetDayEndTextBoxes();
 
         textBoxBackground = currentPrefab.transform.Find("TextBoxBackground").GetComponent<Image>();
         if (textBoxBackground == null)
@@ -82,11 +90,8 @@ public class DayEndScene : MonoBehaviour
             return;
         }
         else
-            dayText.text = $"Day {gameManager.gameData.day}";
+            dayText.text = $"Day {gameManager.gameData.day}\nTime to head home";
 
-        int currMoney = gameManager.gameData.GetCurrentMoney();
-        int rentDue = gameManager.gameData.rent;
-        gameText.text = $"Results Screen:<size=60%>\n\nMoney: ${currMoney}\n\nRent: - ${rentDue}\n\n New Total: ${currMoney - rentDue}";
 
         gameButton = currentPrefab.transform.Find("GameButton").GetComponent<Button>();
         if (gameButton == null)
@@ -134,6 +139,27 @@ public class DayEndScene : MonoBehaviour
         nextButton.gameObject.SetActive(false);
     }
 
+    private void SetDayEndTextBoxes()
+    {
+        //Example
+        //<align=left>This is the left aligned text<line-height=0>
+        //<align=right>5,000<line-height=1em>
+        //<align=left>This is the left aligned text<line-height=0>
+        //<align=right>2,500<line-height=1em>
+        int currMoney = gameManager.gameData.GetCurrentMoney();
+        int rentDue = gameManager.gameData.rent;
+
+        fundsText.text = "Funds\n";
+        fundsText.text += $"\n<align=left>Savings<line-height=0>\n<align=right>{currMoney}<line-height=1em>";
+        fundsText.text += $"\n<align=left>Rent<line-height=0>\n<align=right>-{rentDue}<line-height=1em>";
+        fundsText.text += $"\n\n<align=left>New Total<line-height=0>\n<align=right>${currMoney - rentDue}<line-height=1em>";
+        
+        suppliesText.text = $"Office supplies\n";
+        suppliesText.text += "\nGetting Low On Pens";
+        suppliesText.text += "\nRan out of batteries";
+        suppliesText.text += "\nGetting Low On Stamp Ink";
+    }
+
     private bool CheckGameOver()
     {
         int rentDue = (gameManager.gameData.rent += 2) - 2;
@@ -150,7 +176,8 @@ public class DayEndScene : MonoBehaviour
 
     private void StartGameOver()
     {
-        gameText.gameObject.SetActive(false);
+        fundsText.gameObject.SetActive(false);
+        suppliesText.gameObject.SetActive(false);
         nextButton.gameObject.SetActive(true);
         textBoxBackground.gameObject.SetActive(true);
         textBoxText.gameObject.SetActive(true);
@@ -216,6 +243,7 @@ public class DayEndScene : MonoBehaviour
             gameManager.SetCurrentDay(gameManager.gameData.day + 1);
 
             // Go to the next day's scene
+            EventManager.StopMusic?.Invoke();
             EventManager.NextScene?.Invoke();
         }
         else
