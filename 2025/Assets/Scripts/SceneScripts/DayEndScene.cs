@@ -17,7 +17,7 @@ public class DayEndScene : MonoBehaviour
     [SerializeField] private Sprite maleNewsAnchor;
     [SerializeField] private Sprite badEnding;
     private GameObject currentPrefab;
-    private Image backgroundImage, textBoxBackground;
+    private Image backgroundImage, textBoxBackground, textOutlines;
     private Button gameButton, nextButton;
     private TextMeshProUGUI buttonText, fundsText, suppliesText, textBoxText, dayText;
     private GameManager gameManager;
@@ -63,6 +63,12 @@ public class DayEndScene : MonoBehaviour
         if (suppliesText == null)
         {
             Debug.Log("Failed to find SuppliesText component");
+            return;
+        }
+        textOutlines = currentPrefab.transform.Find("TextOutlines").GetComponent<Image>();
+        if (textOutlines == null)
+        {
+            Debug.Log("Failed to find TextOutlines component");
             return;
         }
         SetDayEndTextBoxes();
@@ -178,6 +184,7 @@ public class DayEndScene : MonoBehaviour
     {
         fundsText.gameObject.SetActive(false);
         suppliesText.gameObject.SetActive(false);
+        textOutlines.gameObject.SetActive(false);
         nextButton.gameObject.SetActive(true);
         textBoxBackground.gameObject.SetActive(true);
         textBoxText.gameObject.SetActive(true);

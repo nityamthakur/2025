@@ -285,4 +285,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 541cb3d6e61f7cd4d80c30c0975a0c4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grayscaleMaterial: {fileID: 0}
+  volume: {fileID: 0}

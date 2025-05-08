@@ -295,6 +295,7 @@ public class ComputerScreen : MonoBehaviour
         {
             Debug.Log($"Email stats: Seen?: {email.seen}\nTitle:{email.title}");
             Button spawnedEmail = Instantiate(emailButtonPrefab, emailSpawnZone);
+            Image emailReadIndicator = spawnedEmail.transform.Find("EmailReadIndicator").GetComponent<Image>();
             TextMeshProUGUI label = spawnedEmail.GetComponentInChildren<TextMeshProUGUI>();
             if (label != null)
                 label.text = email.sender + "\n" + email.title;
@@ -307,11 +308,14 @@ public class ComputerScreen : MonoBehaviour
                 {
                     EmailCountUpdate(-1);
                     email.seen = true;
+                    emailReadIndicator.color = Color.white;
                 }
             });
 
             if(!email.seen)
                 EmailCountUpdate(+1);
+            else
+                emailReadIndicator.gameObject.SetActive(false);
             //SetEmailText(email.title + "\nFrom: " + email.sender + "\n\n" + email.email);
         }
         SetEmailText("");
