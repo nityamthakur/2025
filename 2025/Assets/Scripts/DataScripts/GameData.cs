@@ -5,7 +5,7 @@ using UnityEngine;
 public class GameData
 {
     public int day;
-    public int money;
+    public int money, totalMoneyEarned, totalMoneySpent;
     public int rent;
     public float performanceScale;
     public float PerformanceScale
@@ -19,6 +19,8 @@ public class GameData
     {
         day = 1;
         money = 0;
+        totalMoneyEarned = 0;
+        totalMoneySpent = 0;
         rent = 3;
         PerformanceScale = 0.5f;  // Default to 50% performance (0.5f)
         playTime = 0f;

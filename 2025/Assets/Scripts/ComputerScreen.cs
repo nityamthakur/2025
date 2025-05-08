@@ -1,27 +1,29 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ComputerScreen : MonoBehaviour
 {
-    [SerializeField] private Sprite glitchedScreen;
-    [SerializeField] private GameObject emailScreen, backgroundScreen;
+    [SerializeField] private Sprite glitchedScreen, computerLogo;
+    [SerializeField] private GameObject emailScreen, applicationBar, backgroundScreen;
     private GameObject lastOpenedScreen = null;
     private TextMeshProUGUI screenText, mediaProcessedText, emailText;
-    private Image background, foreground, resultsBackground;
+    private Image background, foreground, resultsBackground, fadingImage, emailNotification;
     private Slider performanceSlider;
     private JobScene jobScene;
 
     //Emails -------------------------------------//
     [SerializeField] private Transform emailSpawnZone;
     [SerializeField] private Button emailButtonPrefab;
-    private List<JobScene.Entry> seenEmails = new();
+    private int unreadEmailCount = 0;
 
     //Application Buttons -------------------------------------//
     private Button workButton, emailButton, reviewButton, hackButton;
-    private TextMeshProUGUI workButtonText;
+    private TextMeshProUGUI workButtonText, emailNotificationText;
 
     private Color SELECTEDCOLOR = new(0.7843137f, 0.7843137f, 0.7843137f, 1f); 
     private Color NORMALCOLOR = new(1f, 1f, 1f, 1f); 
@@ -34,7 +36,6 @@ public class ComputerScreen : MonoBehaviour
         SetUpImages();
         SetUpText();
         ShowEMailScreen();
-        ComputerStartUp();
     }
 
     private void SetUpButtons()
@@ -72,8 +73,11 @@ public class ComputerScreen : MonoBehaviour
     {
         background = FindObject<Image>("Background");
         foreground = FindObject<Image>("Foreground");
+        fadingImage = FindObject<Image>("FadingImage");
         resultsBackground = FindObject<Image>("ResultsBackground");
         resultsBackground.gameObject.SetActive(false);
+        emailNotification = FindObject<Image>("EmailNotification");
+        emailNotificationText = emailNotification.transform.Find("Text").GetComponent<TextMeshProUGUI>();
     }
 
     private void SetUpText()
@@ -130,15 +134,98 @@ public class ComputerScreen : MonoBehaviour
         HideMenus();
     }
 
-    private void ComputerStartUp()
+    public void StartComputer()
     {
-        // For some kind of animation for the computer
-        screenText.text = "";
+        //StartCoroutine(ComputerStartUp());
     }
 
-    private void ComputerShutDown()
+    private IEnumerator ComputerStartUp()
+    {
+        Debug.Log("Starting ComputerStartUp");
+        // For some kind of animation for the computer
+        screenText.text = "";
+        applicationBar.SetActive(false);
+        emailScreen.SetActive(false);
+        fadingImage.gameObject.SetActive(true);
+        foreground.gameObject.SetActive(true);
+
+        // Screen starts as black
+        // Wait for 1 second
+        yield return new WaitForSeconds(3f);
+        
+        // Screen goes to a lighter shader of dark blue showing the screen is on
+        fadingImage.color = new Color(0.0f, 0.0f, 0.2f, 1.0f);
+        
+        // Wait for 1 second
+        yield return new WaitForSeconds(2f);
+        
+        // Fade in the Computer Logo, 0.5 seconds
+        foreground.sprite = computerLogo;
+        StartCoroutine(FadeImage(fadingImage, 0.5f, false));
+        Debug.Log("Fade into the Computer Logo");
+        yield return new WaitForSeconds(5.0f);
+        
+        // Show loading bar, 2 seconds
+        // LoadingBarAnimation(2f);
+        // Fade out the Computer Logo, 0.5 seconds
+        StartCoroutine(FadeImage(fadingImage, 0.5f, true));
+        yield return new WaitForSeconds(2f);
+
+        // Show background of computer being on
+        foreground.gameObject.SetActive(false);
+        fadingImage.gameObject.SetActive(false);
+        applicationBar.SetActive(true);
+        UpdateUnreadEmailsPopUp();
+        // Show unread emails to the upper right of the email button. Look up iphone unread emails
+    }
+
+    private IEnumerator FadeImage(Image image, float duration, bool fadein)
+    {
+        if(fadein)
+            yield return StartCoroutine(FadeImage(image, 0f, 1f, duration)); // goes to 100% opacity
+        else
+            yield return StartCoroutine(FadeImage(image, 1f, 0f, duration)); // goes to 0% opacity
+    }
+
+    private IEnumerator FadeImage(Image image, float startAlpha, float endAlpha, float duration)
+    {
+        float elapsedTime = 0f;
+        Color color = image.color;
+        color.a = startAlpha;
+        image.color = color;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            color.a = Mathf.Lerp(startAlpha, endAlpha, elapsedTime / duration);
+            image.color = color;
+            yield return null;
+        }
+
+        color.a = endAlpha;
+        image.color = color;
+    }
+
+
+    private IEnumerator ComputerShutDown()
     {
         // For after workButton is clicked on "Clock Out".
+        // Have screen go to computer logo
+        foreground.sprite = computerLogo;
+
+        // Show loading bar for shutting down, 2 seconds
+        //LoadingBarAnimation(2f);
+        
+        // Screen goes to a lighter shader of dark blue showing the screen is on
+        fadingImage.gameObject.SetActive(true);
+        foreground.gameObject.SetActive(false);
+        // Screen goes to black
+
+        yield return new WaitForSeconds(1f);
+
+        fadingImage.color = Color.black;
+
+        yield return new WaitForSeconds(1f);
         jobScene.StartCoroutine(jobScene.NextScene());
     }
 
@@ -193,24 +280,47 @@ public class ComputerScreen : MonoBehaviour
         image.gameObject.SetActive(show);
     }
 
-    internal void CreateEmails(List<JobScene.Entry> emails)
+    private void UpdateUnreadEmailsPopUp()
     {
-        seenEmails = emails;
-        foreach (JobScene.Entry message in seenEmails)
+        unreadEmailCount = Math.Clamp(unreadEmailCount, 0, int.MaxValue);
+        emailNotificationText.text = $"{unreadEmailCount}";
+        if(unreadEmailCount == 0)
+                emailNotification.gameObject.SetActive(false);
+    }
+
+    internal void CreateEmails(List<JobScene.Entry> releasedEmails)
+    {
+        unreadEmailCount = 0;
+        foreach(JobScene.Entry email in releasedEmails)
         {
+            Debug.Log($"Email stats: Seen?: {email.seen}\nTitle:{email.title}");
             Button spawnedEmail = Instantiate(emailButtonPrefab, emailSpawnZone);
             TextMeshProUGUI label = spawnedEmail.GetComponentInChildren<TextMeshProUGUI>();
             if (label != null)
-                label.text = message.sender + "\n" + message.title;
+                label.text = email.sender + "\n" + email.title;
 
             spawnedEmail.onClick.AddListener(() => 
             {
-                SetEmailText(message.title + "\nFrom: " + message.sender + "\n\n" + message.email);
                 EventManager.PlaySound?.Invoke("switch1", true);
+                SetEmailText(email.title + "\nFrom: " + email.sender + "\n\n" + email.email);
+                if(!email.seen)
+                {
+                    EmailCountUpdate(-1);
+                    email.seen = true;
+                }
             });
 
-            SetEmailText(message.title + "\nFrom: " + message.sender + "\n\n" + message.email);
+            if(!email.seen)
+                EmailCountUpdate(+1);
+            //SetEmailText(email.title + "\nFrom: " + email.sender + "\n\n" + email.email);
         }
+        SetEmailText("");
+    }
+
+    private void EmailCountUpdate(int num)
+    {
+        unreadEmailCount += num;
+        UpdateUnreadEmailsPopUp();
     }
 
     internal void EventTrigger(int day, bool startEnd)
@@ -218,6 +328,7 @@ public class ComputerScreen : MonoBehaviour
         if(day == 3)
         {
             ShowHideImage(foreground, startEnd);
+            foreground.sprite = glitchedScreen;
             if(lastOpenedScreen != null)
                 lastOpenedScreen.SetActive(!startEnd);
         }
