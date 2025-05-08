@@ -26,7 +26,8 @@ public class JobScene : MonoBehaviour
     // ---------------------------------
     private GameObject computerScreenPrefab;
     private ComputerScreen computerScreenClass;
-    private List<Entry> seenEmails = new();
+    public List<Entry> releasedEmails = new();
+
     // ---------------------------------
     private readonly float workTimer = 180f; // 180f
     //WANT TODO: Update Clock hand sprites to be square and have time move in ticking increments instead of smooth
@@ -50,9 +51,10 @@ public class JobScene : MonoBehaviour
 
 
     public void LoadJobStart() {
-        ShowBuildingTransition();
+        //ShowBuildingTransition();
         LoadJsonFromFile();
         SetUpJobStart();
+        computerScreenClass.StartComputer();
         EventManager.FadeIn?.Invoke();
         EventManager.PlayMusic?.Invoke("work");
     }
@@ -177,7 +179,7 @@ public class JobScene : MonoBehaviour
             return;
         }
         computerScreenClass.Initalize();
-        computerScreenClass.CreateEmails(seenEmails);
+        computerScreenClass.CreateEmails(releasedEmails);
     }
 
     private void SetScreenObjectives(TextMeshProUGUI screenText)
@@ -298,12 +300,11 @@ public class JobScene : MonoBehaviour
 
     private string GetEmailForDay(List<Entry> entries, int day)
     {
-        seenEmails.Clear();
         foreach (var entry in entries)
         {
-            seenEmails.Add(entry);
             if (entry.day == day)
             {
+                releasedEmails.Add(entry);
                 return entry.email;
             }
         }
@@ -399,6 +400,7 @@ public class JobScene : MonoBehaviour
     [Serializable]
     public class Entry
     {
+        public bool seen = false;
         public int day;
         public string title;
         public string sender;

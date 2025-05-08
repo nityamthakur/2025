@@ -467,8 +467,8 @@ public class JobDetails
     public JobDetails()
     {
         numMediaProcessed = 0;
-        numMediaNeeded = 5;
-        numMediaExtra = 5;
+        numMediaNeeded = 1;//5;
+        numMediaExtra = 1;//5;
         penalty = 2;
         currClockTime = 0f;
     }
