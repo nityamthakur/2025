@@ -415,7 +415,14 @@ public class OptionsMenu : MonoBehaviour
         if (gameManager == null)
         {
             Debug.LogError("GameManager component not found!");
-        }        
+        }   
+
+        Canvas prefabCanvas = GetComponentInChildren<Canvas>();
+        if (prefabCanvas != null)
+        {
+            prefabCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+            prefabCanvas.worldCamera = Camera.main;
+        }
     }
 
     private void ChangeObjectText(TextMeshProUGUI gameObject, string text)

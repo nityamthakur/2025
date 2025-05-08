@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 7815114500561512137}
   - component: {fileID: 1051023403774009402}
   - component: {fileID: 7663641128656394547}
-  - component: {fileID: 9050458974978633484}
   m_Layer: 5
   m_Name: ExitButton
   m_TagString: Untagged
@@ -136,19 +135,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AspectMode: 1
   m_AspectRatio: 3.443673
---- !u!114 &9050458974978633484
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2234174041681222806}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 541cb3d6e61f7cd4d80c30c0975a0c4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  grayscaleMaterial: {fileID: 0}
 --- !u!1 &3021349584701667985
 GameObject:
   m_ObjectHideFlags: 0
@@ -203,7 +189,7 @@ Canvas:
   m_GameObject: {fileID: 3021349584701667985}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
+  m_RenderMode: 1
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 1
@@ -282,7 +268,6 @@ GameObject:
   - component: {fileID: 486671628440185278}
   - component: {fileID: 4912181720825785836}
   - component: {fileID: 2284338207399813535}
-  - component: {fileID: 9014363362737246264}
   m_Layer: 5
   m_Name: LoadButton
   m_TagString: Untagged
@@ -405,19 +390,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AspectMode: 1
   m_AspectRatio: 3.443673
---- !u!114 &9014363362737246264
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3372758635313152926}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 541cb3d6e61f7cd4d80c30c0975a0c4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  grayscaleMaterial: {fileID: 0}
 --- !u!1 &5690066804905334143
 GameObject:
   m_ObjectHideFlags: 0
@@ -429,7 +401,6 @@ GameObject:
   - component: {fileID: 8313193242267171946}
   - component: {fileID: 2157056460049837444}
   - component: {fileID: 9028812127416077156}
-  - component: {fileID: 1434806757422903492}
   - component: {fileID: 7238930982935695267}
   m_Layer: 5
   m_Name: BackgroundImage
@@ -495,19 +466,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &1434806757422903492
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5690066804905334143}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 541cb3d6e61f7cd4d80c30c0975a0c4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  grayscaleMaterial: {fileID: 2100000, guid: cec02e0e72fd1a047abd9cfb7c5f0078, type: 2}
 --- !u!114 &7238930982935695267
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -535,7 +493,6 @@ GameObject:
   - component: {fileID: 2972121890052251222}
   - component: {fileID: 4819276455001227534}
   - component: {fileID: 7909029495518288191}
-  - component: {fileID: 2401922872314364703}
   m_Layer: 5
   m_Name: OptionsButton
   m_TagString: Untagged
@@ -658,19 +615,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AspectMode: 1
   m_AspectRatio: 3.443673
---- !u!114 &2401922872314364703
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6544074027408798727}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 541cb3d6e61f7cd4d80c30c0975a0c4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  grayscaleMaterial: {fileID: 0}
 --- !u!1 &6852007517814460481
 GameObject:
   m_ObjectHideFlags: 0
@@ -760,7 +704,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AspectMode: 0
-  m_AspectRatio: 1.7779273
+  m_AspectRatio: 1.7777277
 --- !u!1 &7524707917792847423
 GameObject:
   m_ObjectHideFlags: 0
@@ -774,7 +718,6 @@ GameObject:
   - component: {fileID: 3675082568238557038}
   - component: {fileID: 3351645863799891769}
   - component: {fileID: 8801720945350832271}
-  - component: {fileID: 4232205745377379892}
   m_Layer: 5
   m_Name: PlayButton
   m_TagString: Untagged
@@ -897,16 +840,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AspectMode: 1
   m_AspectRatio: 3.4436734
---- !u!114 &4232205745377379892
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7524707917792847423}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 541cb3d6e61f7cd4d80c30c0975a0c4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  grayscaleMaterial: {fileID: 0}

@@ -5,6 +5,7 @@ public static class EventManager
 {
     public static Action<GameObject> OnMediaDestroyed; // Event for media object destruction
     public static Action OnImageDestroyed; // Event for non media object destruction
+    public static Action<bool> ShowHideRentNotices;
 
     public static Action NextScene; // Event for beginning the next scene
     public static Action FadeIn; // Trigger Fade in animation as a coroutine

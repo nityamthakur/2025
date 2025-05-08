@@ -16,7 +16,6 @@ public class JobScene : MonoBehaviour
 
     private GameObject currJobScene;
     private Image backgroundImage, dropBoxAcceptGlow, dropBoxDestroyGlow;
-    private string currentEmail;
     private bool jobDelayed;
     // ---------------------------------
     [SerializeField] private GameObject jobBuildingPrefab;
@@ -26,7 +25,6 @@ public class JobScene : MonoBehaviour
     // ---------------------------------
     private GameObject computerScreenPrefab;
     private ComputerScreen computerScreenClass;
-    public List<Entry> releasedEmails = new();
 
     // ---------------------------------
     private readonly float workTimer = 180f; // 180f
@@ -49,12 +47,12 @@ public class JobScene : MonoBehaviour
         gameManager = FindFirstObjectByType<GameManager>();
     }
 
-
     public void LoadJobStart() {
-        //ShowBuildingTransition();
+        ShowBuildingTransition();
         LoadJsonFromFile();
         SetUpJobStart();
         computerScreenClass.StartComputer();
+        EventManager.ShowHideRentNotices?.Invoke(true);
         EventManager.FadeIn?.Invoke();
         EventManager.PlayMusic?.Invoke("work");
     }
@@ -68,6 +66,13 @@ public class JobScene : MonoBehaviour
             Debug.LogError("outsideBuildingObject object is null in ShowBuildingTransition.");
             return;
         }
+        Canvas prefabCanvas = outsideBuildingObject.GetComponentInChildren<Canvas>();
+        if (prefabCanvas != null)
+        {
+            prefabCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+            prefabCanvas.worldCamera = Camera.main;
+        }
+
 
         backgroundImage = outsideBuildingObject.transform.Find("BackgroundImage").GetComponent<Image>();
         if (backgroundImage == null)
@@ -104,7 +109,6 @@ public class JobScene : MonoBehaviour
 
     private void SetUpJobStart() {
         currJobScene = Instantiate(jobScenePrefab);
-
         if (currJobScene == null)
         {
             Debug.LogError("currJobScene object is null in LoadJobStart of JobScene class.");
@@ -179,7 +183,7 @@ public class JobScene : MonoBehaviour
             return;
         }
         computerScreenClass.Initalize();
-        computerScreenClass.CreateEmails(releasedEmails);
+        computerScreenClass.CreateEmails(gameManager.gameData.releasedEmails);
     }
 
     private void SetScreenObjectives(TextMeshProUGUI screenText)
@@ -253,7 +257,6 @@ public class JobScene : MonoBehaviour
         computerScreenClass.SetProcessedText($"MEDIA PROCESSED:\n{num} / 5");
     }
 
-
     public IEnumerator NextScene()
     {
         gameManager.gameData.money += dayProfit;
@@ -265,6 +268,7 @@ public class JobScene : MonoBehaviour
 
         Destroy(currJobScene);
         currJobScene = null;
+        EventManager.ShowHideRentNotices?.Invoke(false);
 
         yield return new WaitForSeconds(2f);
         EventManager.NextScene?.Invoke();
@@ -290,7 +294,7 @@ public class JobScene : MonoBehaviour
 
         if (jsonObject != null && jsonObject.emailText.Count > 0)
         {
-            currentEmail = GetEmailForDay(jsonObject.emailText, gameManager.gameData.GetCurrentDay());
+            GetEmailForDay(jsonObject.emailText, gameManager.gameData.GetCurrentDay());
         }
         else
         {
@@ -298,17 +302,17 @@ public class JobScene : MonoBehaviour
         }
     }
 
-    private string GetEmailForDay(List<Entry> entries, int day)
+    private void GetEmailForDay(List<Entry> entries, int day)
     {
         foreach (var entry in entries)
         {
             if (entry.day == day)
             {
-                releasedEmails.Add(entry);
-                return entry.email;
+                gameManager.gameData.releasedEmails.Add(entry);
+                return;
             }
         }
-        return string.Empty;
+        return;
     }
 
     private IEnumerator CheckDailyEvent()

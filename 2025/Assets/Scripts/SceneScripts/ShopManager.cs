@@ -49,6 +49,13 @@ public class ShopManager : MonoBehaviour
 
         // Instantiate the shop screen prefab
         currentShopScreen = Instantiate(shopScreenPrefab);
+        Canvas prefabCanvas = currentShopScreen.GetComponentInChildren<Canvas>();
+        if (prefabCanvas != null)
+        {
+            prefabCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+            prefabCanvas.worldCamera = Camera.main;
+        }
+
 
         // Set up the shop UI
         SetupShopUI();

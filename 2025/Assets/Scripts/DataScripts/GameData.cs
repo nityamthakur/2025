@@ -1,5 +1,5 @@
-using UnityEngine.Android;
 using UnityEngine;
+using System.Collections.Generic;
 
 [System.Serializable]
 public class GameData
@@ -14,6 +14,7 @@ public class GameData
         set { performanceScale = Mathf.Clamp(value, 0f, 1f); }
     }
     public float playTime;
+    public List<JobScene.Entry> releasedEmails = new();
 
     public GameData()
     {
@@ -30,9 +31,12 @@ public class GameData
     {
         this.day = loadedGame.day;
         this.money = loadedGame.money;
+        this.totalMoneyEarned = loadedGame.totalMoneyEarned;
+        this.totalMoneySpent = loadedGame.totalMoneySpent;
         this.rent = loadedGame.rent;
         this.PerformanceScale = loadedGame.PerformanceScale;
         this.playTime = loadedGame.playTime;
+        this.releasedEmails = loadedGame.releasedEmails;
     }
 
     public int GetCurrentDay()
@@ -52,5 +56,10 @@ public class GameData
     public void SetCurrentMoney(int money)
     {
         this.money = money;
+    }
+
+    public List<JobScene.Entry> LinkEmails()
+    {
+        return this.releasedEmails;
     }
 }
