@@ -48,10 +48,11 @@ public class JobScene : MonoBehaviour
     }
 
     public void LoadJobStart() {
-        //ShowBuildingTransition();
+        ShowBuildingTransition();
         LoadJsonFromFile();
         SetUpJobStart();
         computerScreenClass.StartComputer();
+        EventManager.ShowHideRentNotices?.Invoke(true);
         EventManager.FadeIn?.Invoke();
         EventManager.PlayMusic?.Invoke("work");
     }
@@ -65,6 +66,13 @@ public class JobScene : MonoBehaviour
             Debug.LogError("outsideBuildingObject object is null in ShowBuildingTransition.");
             return;
         }
+        Canvas prefabCanvas = outsideBuildingObject.GetComponentInChildren<Canvas>();
+        if (prefabCanvas != null)
+        {
+            prefabCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+            prefabCanvas.worldCamera = Camera.main;
+        }
+
 
         backgroundImage = outsideBuildingObject.transform.Find("BackgroundImage").GetComponent<Image>();
         if (backgroundImage == null)
@@ -101,7 +109,6 @@ public class JobScene : MonoBehaviour
 
     private void SetUpJobStart() {
         currJobScene = Instantiate(jobScenePrefab);
-
         if (currJobScene == null)
         {
             Debug.LogError("currJobScene object is null in LoadJobStart of JobScene class.");
@@ -261,6 +268,7 @@ public class JobScene : MonoBehaviour
 
         Destroy(currJobScene);
         currJobScene = null;
+        EventManager.ShowHideRentNotices?.Invoke(false);
 
         yield return new WaitForSeconds(2f);
         EventManager.NextScene?.Invoke();

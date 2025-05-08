@@ -176,7 +176,13 @@ public class NewspaperZoom : MonoBehaviour
         if (toolOverlayPrefab != null)
         {
             toolOverlayObj = Instantiate(toolOverlayPrefab);
-            
+            Canvas prefabCanvas = toolOverlayObj.GetComponentInChildren<Canvas>();
+            if (prefabCanvas != null)
+            {
+                prefabCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+                prefabCanvas.worldCamera = Camera.main;
+            }
+
             // Locate and attach the moveable pieces in ToolOverlayObj
             Transform toolOverlayTransform = toolOverlayObj.transform.Find("ToolOverlay");
             if (toolOverlayTransform != null)
@@ -203,6 +209,12 @@ public class NewspaperZoom : MonoBehaviour
         if (phonePrefab != null)
         {
             phoneObj = Instantiate(phonePrefab);
+            Canvas prefabCanvas = phoneObj.GetComponentInChildren<Canvas>();
+            if (prefabCanvas != null)
+            {
+                prefabCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+                prefabCanvas.worldCamera = Camera.main;
+            }
 
             // Locate and attach the moveable phone pieces in PhoneObj
             Transform phoneInstanceTransform = phoneObj.transform.Find("PhoneObj");

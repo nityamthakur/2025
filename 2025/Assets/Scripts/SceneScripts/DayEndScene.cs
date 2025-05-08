@@ -6,7 +6,6 @@ using TMPro;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 public class DayEndScene : MonoBehaviour
 {
@@ -37,6 +36,12 @@ public class DayEndScene : MonoBehaviour
         {
             Debug.LogError("currentPrefab is null");
             return;
+        }
+        Canvas prefabCanvas = currentPrefab.GetComponentInChildren<Canvas>();
+        if (prefabCanvas != null)
+        {
+            prefabCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+            prefabCanvas.worldCamera = Camera.main;
         }
 
         SetUpDayEnd();

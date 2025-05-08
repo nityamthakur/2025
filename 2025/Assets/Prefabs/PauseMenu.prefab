@@ -2124,7 +2124,6 @@ GameObject:
   - component: {fileID: 5064693722841294004}
   - component: {fileID: 8744055417673051195}
   - component: {fileID: 522370033913855504}
-  - component: {fileID: 1931745843103781380}
   m_Layer: 5
   m_Name: CloseMenuButton
   m_TagString: Untagged
@@ -2234,19 +2233,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &1931745843103781380
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2159012476338087616}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 541cb3d6e61f7cd4d80c30c0975a0c4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  volume: {fileID: 0}
 --- !u!1 &2335878314245411767
 GameObject:
   m_ObjectHideFlags: 0
@@ -7049,7 +7035,7 @@ Canvas:
   m_GameObject: {fileID: 7048200235024696266}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
+  m_RenderMode: 1
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 1

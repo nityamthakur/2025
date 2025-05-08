@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -136,12 +135,11 @@ public class ComputerScreen : MonoBehaviour
 
     public void StartComputer()
     {
-        //StartCoroutine(ComputerStartUp());
+        StartCoroutine(ComputerStartUp());
     }
 
     private IEnumerator ComputerStartUp()
     {
-        Debug.Log("Starting ComputerStartUp");
         // For some kind of animation for the computer
         screenText.text = "";
         applicationBar.SetActive(false);
@@ -151,7 +149,7 @@ public class ComputerScreen : MonoBehaviour
 
         // Screen starts as black
         // Wait for 1 second
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(8f);
         
         // Screen goes to a lighter shader of dark blue showing the screen is on
         fadingImage.color = new Color(0.0f, 0.0f, 0.2f, 1.0f);
@@ -162,7 +160,6 @@ public class ComputerScreen : MonoBehaviour
         // Fade in the Computer Logo, 0.5 seconds
         foreground.sprite = computerLogo;
         StartCoroutine(FadeImage(fadingImage, 0.5f, false));
-        Debug.Log("Fade into the Computer Logo");
         yield return new WaitForSeconds(5.0f);
         
         // Show loading bar, 2 seconds
@@ -175,6 +172,7 @@ public class ComputerScreen : MonoBehaviour
         foreground.gameObject.SetActive(false);
         fadingImage.gameObject.SetActive(false);
         applicationBar.SetActive(true);
+        HideMenus();
         UpdateUnreadEmailsPopUp();
         // Show unread emails to the upper right of the email button. Look up iphone unread emails
     }
@@ -293,7 +291,6 @@ public class ComputerScreen : MonoBehaviour
         unreadEmailCount = 0;
         foreach(JobScene.Entry email in releasedEmails)
         {
-            Debug.Log($"Email stats: Seen?: {email.seen}\nTitle:{email.title}");
             Button spawnedEmail = Instantiate(emailButtonPrefab, emailSpawnZone);
             Image emailReadIndicator = spawnedEmail.transform.Find("EmailReadIndicator").GetComponent<Image>();
             TextMeshProUGUI label = spawnedEmail.GetComponentInChildren<TextMeshProUGUI>();
@@ -315,7 +312,7 @@ public class ComputerScreen : MonoBehaviour
             if(!email.seen)
                 EmailCountUpdate(+1);
             else
-                emailReadIndicator.gameObject.SetActive(false);
+                emailReadIndicator.color = Color.white;
             //SetEmailText(email.title + "\nFrom: " + email.sender + "\n\n" + email.email);
         }
         SetEmailText("");

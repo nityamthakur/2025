@@ -43,6 +43,7 @@ public class GameManager : MonoBehaviour
     }
 
     public GameData gameData;
+    public Camera mainCamera;
 
     // --------------------------------------------
     // Getters and Setters
@@ -467,8 +468,8 @@ public class JobDetails
     public JobDetails()
     {
         numMediaProcessed = 0;
-        numMediaNeeded = 1;//5;
-        numMediaExtra = 1;//5;
+        numMediaNeeded = 5;
+        numMediaExtra = 5;
         penalty = 2;
         currClockTime = 0f;
     }

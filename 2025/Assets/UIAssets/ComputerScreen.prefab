@@ -273,7 +273,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1328157699042789398
 Transform:
   m_ObjectHideFlags: 0
@@ -882,7 +882,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0.0005950928, y: 140.78001}
-  m_SizeDelta: {x: 436.32, y: 0}
+  m_SizeDelta: {x: 436.32, y: 477.01}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &1676640998592992405
 CanvasRenderer:
@@ -912,11 +912,16 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Welcome to your very first day working for NewMerica within the Media Regulation
-    Branch. For your first day, we require you to simply dispose of any articles
-    with undesirable content.\n\n<color=#FFFF00><b>Click and drag to move newspapers.\nRight-click
-    to zoom in and out on the newspapers.</color></b>\n\n Ensure all documents meet
-    NewMerican standards. Good luck on your first day!
+  m_text: 'Your Very First Day
+
+    From: Coporate
+
+
+    Welcome to your very first
+    day working for NewMerica within the Media Regulation Branch. For your first
+    day, we require you to simply dispose of any articles with undesirable content.\n\n<color=#FFFF00><b>Click
+    and drag to move newspapers.\nRight-click to zoom in and out on the newspapers.</color></b>\n\n
+    Ensure all documents meet NewMerican standards. Good luck on your first day!'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a8e39c1c99ee52c4b83b118e5905ce04, type: 2}
   m_sharedMaterial: {fileID: 1659601194416434223, guid: a8e39c1c99ee52c4b83b118e5905ce04, type: 2}
@@ -950,12 +955,12 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 8
   m_VerticalAlignment: 256
   m_textAlignment: 65535
-  m_characterSpacing: 0
+  m_characterSpacing: 5
   m_wordSpacing: 0
-  m_lineSpacing: 0
+  m_lineSpacing: 30
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
@@ -981,7 +986,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 5, y: 10, z: 5, w: 10}
+  m_margin: {x: 5, y: 5, z: 5, w: 10}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -1802,7 +1807,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4665029175103407777
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2194,7 +2199,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2289627631898211533
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2427,7 +2432,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0.079171, y: 0.000091552734}
-  m_SizeDelta: {x: 152.16, y: 0}
+  m_SizeDelta: {x: 152.16, y: 10}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &3348987006215765421
 CanvasRenderer:
@@ -3163,8 +3168,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3494252384720281469}
   m_HandleRect: {fileID: 226659462298186212}
   m_Direction: 2
-  m_Value: 0.9999992
-  m_Size: 0.8798475
+  m_Value: 1
+  m_Size: 0.59026015
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3186,7 +3191,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6486193301642011998
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3387,7 +3392,7 @@ RectTransform:
   m_Father: {fileID: 8829422313631416140}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -3461,8 +3466,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 8225543380592560750}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 0.40973985}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -3732,7 +3737,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4138014760632395429
 RectTransform:
   m_ObjectHideFlags: 0

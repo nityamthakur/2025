@@ -20,6 +20,7 @@ public class GrayscaleToggle : MonoBehaviour
 
     public void SetGrayscale(bool enable)
     {
-        volume.SetActive(enable);
+        if(volume != null)
+            volume.SetActive(enable);
     }
 }

@@ -42,12 +42,18 @@ public class SceneChanger : MonoBehaviour
             () => dayEndScene.LoadDayEnd()
         };
         fadingScreen = Instantiate(fadingScreenPrefab);
-
         if (fadingScreen == null)
         {
             Debug.LogError("fadingImage is null in SceneManager.");
             return;
         }
+        Canvas prefabCanvas = fadingScreen.GetComponentInChildren<Canvas>();
+        if (prefabCanvas != null)
+        {
+            prefabCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+            prefabCanvas.worldCamera = Camera.main;
+        }
+
 
         fadingImage = fadingScreen.transform.Find("FadingImage").GetComponent<Image>();
         if (fadingImage == null)

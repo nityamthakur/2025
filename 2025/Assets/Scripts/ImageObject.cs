@@ -17,6 +17,13 @@ public class ImageObject : MonoBehaviour
     private void Awake()
     {
         draggableScript = GetComponent<Draggable>(); // Get the Draggable script
+        Canvas prefabCanvas = GetComponentInChildren<Canvas>();
+        if (prefabCanvas != null)
+        {
+            prefabCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+            prefabCanvas.worldCamera = Camera.main;
+        }
+
     }
     
     private void Start()
