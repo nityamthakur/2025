@@ -27,7 +27,9 @@ public class JobScene : MonoBehaviour
     private GameObject outsideBuildingObject;
 
     // ---------------------------------
-    private float workTimer = 180f; // 180f
+    private float workTimer = 150f;
+    [SerializeField] private float baseWorkTimer = 150f;
+    [SerializeField] private float timerUpgradeBonus = 50f;
     private Image hourHand;
     private Image minuteHand;
     private Slider performanceSlider;
@@ -39,10 +41,24 @@ public class JobScene : MonoBehaviour
     public void Initialize()
     {
         gameManager = FindFirstObjectByType<GameManager>();
+        UpdateWorkTimer();
+    }
+
+    private void UpdateWorkTimer()
+    {
+        if (gameManager != null && gameManager.gameData != null && gameManager.gameData.HasTimerUpgrade())
+        {
+            workTimer = baseWorkTimer + timerUpgradeBonus;
+        }
+        else
+        {
+            workTimer = baseWorkTimer;
+        }
     }
 
 
-    public void LoadJobStart() {
+    public void LoadJobStart()
+    {
         ShowBuildingTransition();
         LoadJsonFromFile();
         SetUpJobStart();
@@ -93,7 +109,8 @@ public class JobScene : MonoBehaviour
     }
 
 
-    private void SetUpJobStart() {
+    private void SetUpJobStart()
+    {
         //Debug.Log("Setting up Job Start");
         currJobScene = Instantiate(jobScenePrefab);
 
@@ -122,12 +139,12 @@ public class JobScene : MonoBehaviour
         backgroundImage.sprite = workBackgroundImage;
 
         computerScreen = currJobScene.transform.Find("ComputerScreenImage").GetComponent<Image>();
-        if(computerScreen == null)
+        if (computerScreen == null)
         {
             Debug.Log("Failed to find ComputerScreenImage in SetUpJobStart");
             return;
         }
-        computerScreen.gameObject.SetActive(false); 
+        computerScreen.gameObject.SetActive(false);
 
         startWorkButton = currJobScene.transform.Find("WorkButton").GetComponent<Button>();
         if (startWorkButton == null)
@@ -222,12 +239,13 @@ public class JobScene : MonoBehaviour
 
     private IEnumerator BeginWorkDay()
     {
-        yield return StartCoroutine(CheckDailyEvent()); 
+        yield return StartCoroutine(CheckDailyEvent());
         gameManager.SetJobScene(this);
-        objectSpawner.StartMediaSpawn();        
+        objectSpawner.StartMediaSpawn();
         SetScreenObjectives(screenText);
         ShowMediaProcessedText(true);
-        gameManager.StartJobTimer(workTimer); // Start the game timer
+        UpdateWorkTimer();
+        gameManager.StartJobTimer(workTimer);
     }
 
     public void ShowResults(int mediaProcessed, int score)
@@ -352,15 +370,15 @@ public class JobScene : MonoBehaviour
 
     private IEnumerator CheckDailyEvent()
     {
-        if(gameManager.gameData.GetCurrentDay() == 3)
+        if (gameManager.gameData.GetCurrentDay() == 3)
         {
-            EventManager.ShowCustomSubtitle?.Invoke("Music pausing for dramatic effect"); 
-            EventManager.PauseResumeMusic?.Invoke(); 
+            EventManager.ShowCustomSubtitle?.Invoke("Music pausing for dramatic effect");
+            EventManager.PauseResumeMusic?.Invoke();
 
             jobDelayed = true;
             // Pause for effect
             yield return new WaitForSeconds(3f);
-            EventManager.PlaySound?.Invoke("glitch"); 
+            EventManager.PlaySound?.Invoke("glitch");
 
             screenText.gameObject.SetActive(false);
             computerScreen.gameObject.SetActive(true);
@@ -369,13 +387,13 @@ public class JobScene : MonoBehaviour
             objectSpawner.SpawnImageObject(true);
             // Prevent progression
             yield return new WaitUntil(() => !jobDelayed);
-            
-            EventManager.PlaySound?.Invoke("glitch"); 
+
+            EventManager.PlaySound?.Invoke("glitch");
             yield return new WaitForSeconds(2.5f);
 
             computerScreen.gameObject.SetActive(false);
             screenText.gameObject.SetActive(true);
-            EventManager.PauseResumeMusic?.Invoke(); 
+            EventManager.PauseResumeMusic?.Invoke();
         }
     }
 
@@ -415,7 +433,7 @@ public class JobScene : MonoBehaviour
         }
     }
 
-   // EventManager for continuing gameplay on an ImageObject being destroyed
+    // EventManager for continuing gameplay on an ImageObject being destroyed
     private void OnEnable()
     {
         EventManager.OnImageDestroyed += HandleImageDestroyed;

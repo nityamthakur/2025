@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: d385b1acaa84abe42ba2fa530208d443
+guid: 730662dd17067b6468fc2e5b553ef607
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3968892689834937713
-    second: LightsOut_0
+      213: 1479065316249688633
+    second: shopScene_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: LightsOut_0
+      name: shopScene_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 2560
-        height: 1440
+        width: 640
+        height: 360
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f827ebe6029abe8c0800000000000000
-      internalID: -3968892689834937713
+      spriteID: 93ad9a69112b68410800000000000000
+      internalID: 1479065316249688633
       vertices: []
       indices: 
       edges: []
@@ -134,8 +134,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      LightsOut_0: -3968892689834937713
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
