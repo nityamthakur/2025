@@ -44,7 +44,6 @@ public class GameManager : MonoBehaviour
 
     public GameData gameData;
     public Camera mainCamera;
-
     // --------------------------------------------
     // Getters and Setters
     public bool IsDayEnded()
@@ -185,6 +184,8 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
+        AnalyticsManager.Instance.GameStart();
+
         // Set GameDevLoadDay if not absent to prevent errors on first install
         if(!PlayerPrefs.HasKey("GameDevLoadDay"))
             PlayerPrefs.SetInt("GameDevLoadDay", -1);

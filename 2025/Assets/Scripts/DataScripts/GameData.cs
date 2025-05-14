@@ -43,11 +43,11 @@ public class GameData
     {
         return this.day;
     }
-
     public int GetCurrentMoney()
     {
         return this.money;
     }
+    
 
     public void SetCurrentDay(int day)
     {

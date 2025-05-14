@@ -130,6 +130,7 @@ public class ComputerScreen : MonoBehaviour
         workButton.interactable = true;
         performanceSlider.gameObject.SetActive(true);
         resultsBackground.gameObject.SetActive(true);
+        screenText.gameObject.SetActive(true);
         HideMenus();
     }
 

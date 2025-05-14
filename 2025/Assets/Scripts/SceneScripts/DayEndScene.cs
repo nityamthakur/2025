@@ -176,8 +176,10 @@ public class DayEndScene : MonoBehaviour
         int rentDue = (gameManager.gameData.rent += 2) - 2;
         gameManager.gameData.SetCurrentMoney(gameManager.gameData.money - rentDue);
 
-        if (SelectedEnding() > 0)
+        int selectedEnding = SelectedEnding();
+        if (selectedEnding > 0)
         {
+            AnalyticsManager.Instance.GameOver(gameManager.gameData);
             dayText.gameObject.SetActive(false);
             return true;
         }
@@ -223,6 +225,7 @@ public class DayEndScene : MonoBehaviour
                 return 3;
             }
         }
+
         // No GameOver
         return 0;
     }
