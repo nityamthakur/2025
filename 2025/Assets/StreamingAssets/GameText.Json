@@ -29,6 +29,9 @@
         {
             "day": 2,
             "lines": [
+                {"speaker": "Apartment", "text": "" },
+                {"speaker": "PlayMusic", "text": "newsJingle" },
+                {"speaker": "Delay", "text": "3" },
                 { "speaker": "FemaleNewsAnchor", "text": "Welcome back, citizens. Another day, another battle against the forces of deception." },
                 { "speaker": "MaleNewsAnchor", "text": "The weather today? Cloudy, rainy, and windy—perhaps reflecting the storm of lies from our nation's enemies." },
                 { "speaker": "FemaleNewsAnchor", "text": "Despite these dark clouds, progress continues. AI automation is paving the way for a stronger workforce, ensuring efficiency across all sectors." },
@@ -40,6 +43,9 @@
         {
             "day": 3,
             "lines": [
+                {"speaker": "Apartment", "text": "" },
+                {"speaker": "PlayMusic", "text": "newsJingle" },
+                {"speaker": "Delay", "text": "3" },
                 { "speaker": "MaleNewsAnchor", "text": "Another glorious day in NewMerica, where prosperity and unity go hand in hand!" },
                 { "speaker": "FemaleNewsAnchor", "text": "Tensions remain high as subversive elements continue to challenge our nation's security." },
                 { "speaker": "MaleNewsAnchor", "text": "Leaders in NewMerica are taking decisive action. Public voting inefficiencies will soon be a thing of the past, as AI-assisted decision-making promises a new era of governance." },
@@ -51,6 +57,9 @@
         {
             "day": 4,
             "lines": [
+                {"speaker": "Apartment", "text": "" },
+                {"speaker": "PlayMusic", "text": "newsJingle" },
+                {"speaker": "Delay", "text": "3" },
                 { "speaker": "FemaleNewsAnchor", "text": "Good morning, NewMericans! Today, we face new challenges as we strive for a brighter future." },
                 { "speaker": "MaleNewsAnchor", "text": "The AI Sentinel system has been deployed to safeguard our nation against harmful influences. Those who seek to disrupt our unity will be swiftly identified and neutralized." },
                 { "speaker": "FemaleNewsAnchor", "text": "That's right. Hopefully this will put a stop to the oppressive force known as Gabble."},
@@ -61,6 +70,9 @@
         {
             "day": 5,
             "lines": [
+                {"speaker": "Apartment", "text": "" },
+                {"speaker": "PlayMusic", "text": "newsJingle" },
+                {"speaker": "Delay", "text": "3" },
                 { "speaker": "MaleNewsAnchor", "text": "Welcome back, NewMericans. Today, we celebrate the success of the AI Sentinel system in protecting our nation from harmful influences." },
                 { "speaker": "FemaleNewsAnchor", "text": "The Department of Information Stability has reported the first arrests made under the new system, marking a new era of digital accountability." },
                 { "speaker": "MaleNewsAnchor", "text": "In other news, the Department of Agricultural Oversight has assured citizens that food shortages are being addressed. Trust in NewMerica to provide for its people." },
@@ -103,22 +115,32 @@
     "emailText": [
         {
             "day": 1,
+            "title": "Welcome to the Team",
+            "sender": "Corporate",
             "email": "Welcome to your very first day working for NewMerica within the Media Regulation Branch. For your first day, we require you to simply dispose of any articles with undesirable content.\n\n<color=#FFFF00><b>Click and drag to move newspapers.\nRight-click to zoom in and out on the newspapers.</color></b>\n\n Ensure all documents meet NewMerican standards. Good luck on your first day!"
         },
         {
             "day": 2,
+            "title": "Job Update. Censor Articles",
+            "sender": "Corporate",
             "email": "Congratulations on a successful first day at NewMerica. As a reward, your work will now be doubled, as you are now also required to censor certain content.\n\n<color=#FFFF00><b>Click and drag to move newspapers.\nRight-click to zoom in and out on the newspapers.\nLeft-click on words to censor them.</color></b>\n\nAny failure to censor sensitive content will result in disciplinary action. Good luck!"
         },
         {
             "day": 3,
+            "title": "Be Aware of Hidden Codes",
+            "sender": "Corporate",
             "email": "ATTENTION: Reports have shown that the Green Party is attempting to pass codes through secret images.\n\n<color=#FFFF00><b>Click and drag to move newspapers.\nRight-click to zoom in and out on the newspapers.\nLeft-click on words to censor them.\nSwitch to your UV Light to uncover hidden images.\nLeft-click on hidden images with the UV Light and ban any newspapers they reside on.</color></b>\n\n"
         },
         {
             "day": 4,
+            "title": "Quelling Unrest is our Top Priority",
+            "sender": "Corporate",
             "email": "Tensions are rising in NewMerica. Due to recent events, it is imperative that you complete your tasks successfully and efficiently. Long Live NewMerica!\n\n<color=#FFFF00><b>Click and drag to move newspapers.\nRight-click to zoom in and out on the newspapers.\nLeft-click on words to censor them.\nSwitch to your UV Light to uncover hidden images.\nLeft-click on hidden images with the UV Light and ban any newspapers they reside on.</color></b>\n\n"
         },
         {
             "day": 5,
+            "title": "Continue Remaining Vigilant Against Threats",
+            "sender": "Corporate",
             "email": "NewMerica faces its greatest threat in the efforts performed by the Black Swan. We are relying on you to diminish their influence.\n\n<color=#FFFF00><b>Click and drag to move newspapers.\nRight-click to zoom in and out on the newspapers.\nLeft-click on words to censor them.Switch to your UV Light to uncover hidden images.\nLeft-click on hidden images with the UV Light and ban any newspapers they reside on.</color></b>\n\n"
         }
     ],
@@ -127,11 +149,58 @@
             "day": 1,
             "newspapers": [
                 {
-                    "publisher": "OmniTech Tech-News",
-                    "title": "South African Tech Billionaire Performed NewMerican Salute At Factory Grand Opening",
+                    "publisher": {
+                        "origin": "The NewMerican #noun#",
+                        "noun": [
+                            "Truth",
+                            "Voice",
+                            "Post",
+                            "Ledger",
+                            "Times",
+                            "Echo"
+                        ]
+                    },
+                    "title": {
+                        "origin": "South African Tech Billionaire Performed NewMerican #action# At Factory Grand Opening",
+                        "action": [
+                            "fortnite dance",
+                            "salute",
+                            "spontaneous combustion",
+                            "scream"
+                        ]
+                    },
                     "date": "1/6/2025",
-                    "front": "[Whyoming, NewMerica] - The future of innovation in NewMerica has never been stronger! In a grand display of loyalty, renowned South African Tech Billionaire Mlon Eusk performed the NewMerican Salute a the ribbon cutting ceremony for his latest AI Automation and Control Complex, deep in the heart of the NewMerican Economic Zone.",
-                    "back": "The moment, captured live and broadcast across all major news networks, was met with thunderous applause from assembled dignitaries and corporate leaders. Eusk, who has revolutionized the NewMerican labor industry, praised the administration's Pro-Progress Act of Everlasting Success, which ensured that all those imprisoned for crimes against NewMerica (can be permitted to) work on assembly lines for no extra cost. \"This is a nation built upon the tears of its enemies. One that promotes those of power and ensures they remain there.\"",
+                    "front": {
+                
+                        "origin": ["#location# - #boast#! #event#."],
+                        "location": ["Whyoming", "NewMerica", "Neo-Texas", "Silicon Valley 2.0", "The Autonomous Zone of #adj.capitalize# #noun.capitalize#"],
+                        "adj": ["Hyper", "Quantum", "Meta", "Algorithmic", "Synergistic"],
+                        "noun": ["Innovation", "Convergence", "Optimization", "Disruption", "Capital"],
+                        "boast": ["The future of innovation in #location# has never been stronger", "A new dawn breaks for #location#, fueled by unprecedented growth", "Prepare for the #adj.capitalize# Age, starting right here in #location#", "#location# is the epicenter of tomorrow's technology", "The #noun.capitalize# Revolution begins now, in #location#"],
+                        "event": ["In a grand display of loyalty, renowned #nationality.capitalize# Tech Billionaire #name# performed the #adj.capitalize# #action# at the ribbon cutting ceremony for his latest #tech# Complex, deep in the heart of the #location# Economic Zone", "Billionaire #name# unveiled a groundbreaking #tech# initiative, pledging allegiance to #location# with a symbolic #action#", "The future arrived today as #name# inaugurated the #tech# facility, solidifying #location#'s position as a global leader", "Amidst fervent applause, #name# officially opened the doors to the cutting-edge #tech# center, reaffirming their commitment to #location#"],
+                        "nationality": ["South African", "Canaidian", "Europian", "Martian"],
+                        "name": ["Mlon Eusk", "Bichael Gates", "Zeff Bezus", "Bim Cook", "Gark Zuckerberg"],
+                        "action": ["NewMerican Salute", "Pledge of Allegiance", "Gesture of Unity", "Symbolic Handshake", "Oath of Optimization"],
+                        "tech": ["AI Automation and Control", "Quantum Computing and Data", "Blockchain Integration and Security", "Bio-Engineering and Enhancement", "Neural Network Development and Research"]
+                
+                    },
+                    "back": {
+                        "origin": [
+                            "The ceremony concluded with a mandatory #reaction#, broadcast across every available screen in #location#. Eusk, donning a #adj# #outfit#, declared the day 'a monumental leap for #tech# supremacy.'",
+                            "In a heartfelt moment, #name# led the crowd in a #ritual#, symbolizing eternal loyalty to the #location# Economic Authority. Witnesses described the event as '#adj# and unsettling, yet deeply inspiring.'",
+                            "Following the grand opening, dignitaries were treated to a surprise showcase of #tech# advancements, ending with a synchronized #reaction# led by #name# himself.",
+                            "Broadcast live to billions, the event climaxed with #name# signing the #policy#, ensuring mandatory participation in #tech# programs for all citizens deemed 'underperforming.' Critics called it '#adj#'; supporters called it 'visionary.'"
+                        ],
+                        "reaction": ["standing ovation", "NewMerican salute", "spontaneous flash mob", "compulsory applause", "unified chant"],
+                        "location": ["Whyoming", "NewMerica", "Neo-Texas", "Silicon Valley 2.0", "The Autonomous Zone of #adj.capitalize# #noun.capitalize#"],
+                        "adj": ["inspirational", "mandatory", "emotionless", "gleefully dystopian", "glitchy"],
+                        "outfit": ["power suit", "silver jumpsuit", "VR headset and cape", "full-body exosuit", "corporate battle armor"],
+                        "name": ["Mlon Eusk", "Bichael Gates", "Zeff Bezus", "Bim Cook", "Gark Zuckerberg"],
+                        "ritual": ["techno-chant", "Pledge of Optimization", "Algorithmic Dance", "Unity Oath"],
+                        "tech": ["AI Automation", "Quantum Blockchain", "Neural Networking", "Predictive Compliance Systems"],
+                        "policy": ["Pro-Progress Mandate", "Optimization Act of 2025", "Citizenship Efficiency Bill", "Unified Workforce Initiative"],
+                        "noun": ["Innovation", "Convergence", "Optimization", "Disruption", "Capital"]
+                    },
                     "banWords": [],
                     "censorWords": [],
                     "hasHiddenImage": false

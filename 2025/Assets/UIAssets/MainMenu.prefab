@@ -189,7 +189,7 @@ Canvas:
   m_GameObject: {fileID: 3021349584701667985}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
+  m_RenderMode: 1
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 1
@@ -401,7 +401,6 @@ GameObject:
   - component: {fileID: 8313193242267171946}
   - component: {fileID: 2157056460049837444}
   - component: {fileID: 9028812127416077156}
-  - component: {fileID: 1434806757422903492}
   - component: {fileID: 7238930982935695267}
   m_Layer: 5
   m_Name: BackgroundImage
@@ -467,19 +466,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &1434806757422903492
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5690066804905334143}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 541cb3d6e61f7cd4d80c30c0975a0c4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  grayscaleMaterial: {fileID: 2100000, guid: cec02e0e72fd1a047abd9cfb7c5f0078, type: 2}
 --- !u!114 &7238930982935695267
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -718,7 +704,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AspectMode: 0
-  m_AspectRatio: 1.762546
+  m_AspectRatio: 1.7777277
 --- !u!1 &7524707917792847423
 GameObject:
   m_ObjectHideFlags: 0

@@ -113,7 +113,7 @@ public class AudioManager : MonoBehaviour
         currentMusicCoroutine = StartCoroutine(FadeOutMusic());
     }
 
-    public void PlaySound(string soundName)
+    public void PlaySound(string soundName, bool subtitles)
     {
         //Debug.Log($"playing {soundName}. canPlaySounds: {canPlaySounds}");
         if(!canPlaySounds)
@@ -144,7 +144,8 @@ public class AudioManager : MonoBehaviour
         Destroy(audioSource.gameObject, sound.length);
 
         // Call subtitle
-        subtitleManager.ShowSubtitle(soundName.ToLower(), sound.length);
+        if(subtitles)
+            subtitleManager.ShowSubtitle(soundName.ToLower(), sound.length);
     }
 
     private IEnumerator FadeInMusic()

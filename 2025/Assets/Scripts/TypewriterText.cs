@@ -57,7 +57,7 @@ public class TypewriterText : MonoBehaviour
 
             if (message[i] != ' ' && TextSoundLimiter())
             {
-                EventManager.PlaySound?.Invoke("textBlip");
+                EventManager.PlaySound?.Invoke("textBlip", false);
             }
 
             SetMessage(helperMessage);
@@ -78,7 +78,7 @@ public class TypewriterText : MonoBehaviour
         if (textSpeed == 0f)
             return false;
 
-        float soundCoolDown = Mathf.Clamp(textSpeed, 0.06f, 0.2f);
+        float soundCoolDown = Mathf.Clamp(textSpeed, 0.1f, 0.2f);
         if (Time.time - lastSoundPlayed >= soundCoolDown)
         {
             lastSoundPlayed = Time.time;

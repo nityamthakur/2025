@@ -75,7 +75,7 @@ public class OptionsMenu : MonoBehaviour
         {
             EventManager.DisplayMenuButton?.Invoke(true);
             EventManager.ReactivateMainMenuButtons?.Invoke();
-            EventManager.PlaySound?.Invoke("switch1");
+            EventManager.PlaySound?.Invoke("switch1", true);
             Time.timeScale = 1;
             gameObject.SetActive(false);
             deleteButtonPressed = false;
@@ -85,7 +85,7 @@ public class OptionsMenu : MonoBehaviour
         {
             deleteButtonPressed = false;
             ChangeMenuSection(menuSections);
-            EventManager.PlaySound?.Invoke("switch1");
+            EventManager.PlaySound?.Invoke("switch1", true);
         });
         backButton?.gameObject.SetActive(false);
 
@@ -94,7 +94,7 @@ public class OptionsMenu : MonoBehaviour
             lastSaveLoadOption = "save";
             ChangeMenuSection(saveLoadSection);
             UpdateSaveLoadButtons("save");
-            EventManager.PlaySound?.Invoke("switch1"); 
+            EventManager.PlaySound?.Invoke("switch1", true); 
         });
         // Hide the save button initally in the main menu
         saveButton?.gameObject.SetActive(false);
@@ -104,7 +104,7 @@ public class OptionsMenu : MonoBehaviour
             lastSaveLoadOption = "load";
             ChangeMenuSection(saveLoadSection);
             UpdateSaveLoadButtons("load");
-            EventManager.PlaySound?.Invoke("switch1"); 
+            EventManager.PlaySound?.Invoke("switch1", true); 
         });
 
         deleteButton = FindButton("DeleteButton", () =>
@@ -112,19 +112,19 @@ public class OptionsMenu : MonoBehaviour
             deleteButtonPressed = true;
             UpdateSaveLoadButtons("delete");
             ChangeMenuSection(saveLoadSection);
-            EventManager.PlaySound?.Invoke("switch1"); 
+            EventManager.PlaySound?.Invoke("switch1", true); 
         });
         deleteButton?.gameObject.SetActive(false);
 
         FindButton("OptionsButton", () =>
         {
             ChangeMenuSection(audioSection);
-            EventManager.PlaySound?.Invoke("switch1"); 
+            EventManager.PlaySound?.Invoke("switch1", true); 
         });
 
         mainMenuButton = FindButton("MainMenuButton", () =>
         {
-            EventManager.PlaySound?.Invoke("switch1");
+            EventManager.PlaySound?.Invoke("switch1", true);
             ChangeObjectText(confirmText, "Return to \nMain Menu?");
             ChangeMenuSection(confirmSection);
 
@@ -143,7 +143,7 @@ public class OptionsMenu : MonoBehaviour
 
         FindButton("QuitGameButton", () =>
         {
-            EventManager.PlaySound?.Invoke("switch1");
+            EventManager.PlaySound?.Invoke("switch1", true);
             ChangeObjectText(confirmText, "Close the Game?");
             ChangeMenuSection(confirmSection);
 
@@ -164,13 +164,13 @@ public class OptionsMenu : MonoBehaviour
 
         FindButton("YesButton", () =>
         {
-            EventManager.PlaySound?.Invoke("switch1"); 
+            EventManager.PlaySound?.Invoke("switch1", true); 
             confirmAction?.Invoke();
         });
 
         FindButton("NoButton", () =>
         {
-            EventManager.PlaySound?.Invoke("switch1"); 
+            EventManager.PlaySound?.Invoke("switch1", true); 
             cancelAction?.Invoke();
         });
 
@@ -203,7 +203,7 @@ public class OptionsMenu : MonoBehaviour
             slots[i].onClick.RemoveAllListeners();
             slots[i].onClick.AddListener(() =>
             {
-                EventManager.PlaySound?.Invoke("switch1");
+                EventManager.PlaySound?.Invoke("switch1", true);
                 if(saveButtonPressed == "save")
                     HandleSaveSlot(slotIndex);
                 else if(saveButtonPressed == "load")
@@ -415,7 +415,14 @@ public class OptionsMenu : MonoBehaviour
         if (gameManager == null)
         {
             Debug.LogError("GameManager component not found!");
-        }        
+        }   
+
+        Canvas prefabCanvas = GetComponentInChildren<Canvas>();
+        if (prefabCanvas != null)
+        {
+            prefabCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+            prefabCanvas.worldCamera = Camera.main;
+        }
     }
 
     private void ChangeObjectText(TextMeshProUGUI gameObject, string text)
@@ -458,7 +465,7 @@ public class OptionsMenu : MonoBehaviour
             // Listen for changes when toggle is clicked
             grayscaleToggle.onValueChanged.AddListener((bool isOn) =>
             {
-                EventManager.PlaySound?.Invoke("switch1"); 
+                EventManager.PlaySound?.Invoke("switch1", true); 
                 EventManager.ToggleGrayscaleState();
                 grayscaleActiveText.text = isOn ? "On" : "Off";
                 SavePersistentSettings();
@@ -480,7 +487,7 @@ public class OptionsMenu : MonoBehaviour
             // Listen for changes when toggle is clicked
             fullScreenToggle.onValueChanged.AddListener((bool isOn) =>
             {
-                EventManager.PlaySound?.Invoke("switch1"); 
+                EventManager.PlaySound?.Invoke("switch1", true); 
                 EventManager.ToggleFullScreenState();
                 fullScreenActiveText.text = isOn ? "On" : "Off";
                 Screen.fullScreen = fullScreenToggle.isOn;
@@ -556,7 +563,7 @@ public class OptionsMenu : MonoBehaviour
             {
                 audioManager.MuteToggle(isOn);
                 muteActiveText.text = isOn ? "On" : "Off";
-                EventManager.PlaySound?.Invoke("switch1"); 
+                EventManager.PlaySound?.Invoke("switch1", true); 
                 SavePersistentSettings();
             });
         }
@@ -571,7 +578,7 @@ public class OptionsMenu : MonoBehaviour
             {
                 subtitleManager.SubtitleToggle(isOn);
                 subtitleActiveText.text = isOn ? "On" : "Off";
-                EventManager.PlaySound?.Invoke("switch1"); 
+                EventManager.PlaySound?.Invoke("switch1", true); 
                 SavePersistentSettings();
             });
         }

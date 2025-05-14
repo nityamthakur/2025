@@ -15,11 +15,7 @@ public class JobScene : MonoBehaviour
     [SerializeField] private Sprite glitchedScreen;
 
     private GameObject currJobScene;
-    private Image backgroundImage, computerScreen, dropBoxAcceptGlow, dropBoxDestroyGlow;
-    private Button startWorkButton;
-    private TextMeshProUGUI screenText;
-    private TextMeshProUGUI mediaProcessedText;
-    private string currentEmail;
+    private Image backgroundImage, dropBoxAcceptGlow, dropBoxDestroyGlow;
     private bool jobDelayed;
     // ---------------------------------
     [SerializeField] private GameObject jobBuildingPrefab;
@@ -30,13 +26,23 @@ public class JobScene : MonoBehaviour
     private float workTimer = 150f;
     [SerializeField] private float baseWorkTimer = 150f;
     [SerializeField] private float timerUpgradeBonus = 50f;
+    private GameObject computerScreenPrefab;
+    private ComputerScreen computerScreenClass;
+
+    // ---------------------------------
+    //WANT TODO: Update Clock hand sprites to be square and have time move in ticking increments instead of smooth
     private Image hourHand;
     private Image minuteHand;
-    private Slider performanceSlider;
+    private int dayProfit = 0;
+    public int DayProfit
+    {
+        get { return dayProfit; }
+        private set { dayProfit = value; }
+    }
 
     // ---------------------------------
 
-    private GameManager gameManager;
+    public GameManager gameManager;
 
     public void Initialize()
     {
@@ -57,11 +63,12 @@ public class JobScene : MonoBehaviour
     }
 
 
-    public void LoadJobStart()
-    {
+    public void LoadJobStart() {
         ShowBuildingTransition();
         LoadJsonFromFile();
         SetUpJobStart();
+        computerScreenClass.StartComputer();
+        EventManager.ShowHideRentNotices?.Invoke(true);
         EventManager.FadeIn?.Invoke();
         EventManager.PlayMusic?.Invoke("work");
     }
@@ -75,6 +82,13 @@ public class JobScene : MonoBehaviour
             Debug.LogError("outsideBuildingObject object is null in ShowBuildingTransition.");
             return;
         }
+        Canvas prefabCanvas = outsideBuildingObject.GetComponentInChildren<Canvas>();
+        if (prefabCanvas != null)
+        {
+            prefabCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+            prefabCanvas.worldCamera = Camera.main;
+        }
+
 
         backgroundImage = outsideBuildingObject.transform.Find("BackgroundImage").GetComponent<Image>();
         if (backgroundImage == null)
@@ -109,11 +123,8 @@ public class JobScene : MonoBehaviour
     }
 
 
-    private void SetUpJobStart()
-    {
-        //Debug.Log("Setting up Job Start");
+    private void SetUpJobStart() {
         currJobScene = Instantiate(jobScenePrefab);
-
         if (currJobScene == null)
         {
             Debug.LogError("currJobScene object is null in LoadJobStart of JobScene class.");
@@ -130,6 +141,8 @@ public class JobScene : MonoBehaviour
             canvas.worldCamera = mainCamera.GetComponent<Camera>();
         }
 
+        ComputerScreenSetUp();
+
         backgroundImage = currJobScene.transform.Find("BackgroundImage").GetComponent<Image>();
         if (backgroundImage == null)
         {
@@ -137,7 +150,7 @@ public class JobScene : MonoBehaviour
             return;
         }
         backgroundImage.sprite = workBackgroundImage;
-
+        
         computerScreen = currJobScene.transform.Find("ComputerScreenImage").GetComponent<Image>();
         if (computerScreen == null)
         {
@@ -174,7 +187,6 @@ public class JobScene : MonoBehaviour
             return;
         }
         ShowMediaProcessedText(false);
-
         hourHand = currJobScene.transform.Find("HourHand").GetComponent<Image>();
         if (hourHand == null)
         {
@@ -186,13 +198,6 @@ public class JobScene : MonoBehaviour
         {
             Debug.Log("Failed to find minuteHand in SetUpJobStart");
         }
-
-        performanceSlider = currJobScene.transform.Find("PerformanceScale").GetComponent<Slider>();
-        if (performanceSlider == null)
-        {
-            Debug.Log("Failed to find performanceSlider in SetUpJobStart");
-        }
-        performanceSlider.gameObject.SetActive(false);
 
         dropBoxAcceptGlow = currJobScene.transform.Find("DropBoxAcceptGlow").GetComponent<Image>();
         if (dropBoxAcceptGlow == null)
@@ -213,31 +218,48 @@ public class JobScene : MonoBehaviour
         dropBoxDestroyGlow.gameObject.SetActive(false);
     }
 
-    private void SetScreenEmail(TextMeshProUGUI screenText)
+    private void ComputerScreenSetUp()
     {
-        screenText.text = currentEmail;
+        Transform screenTransform = currJobScene.transform.Find("ComputerScreen");
+        if (screenTransform == null)
+        {
+            Debug.LogError("Could not find 'ComputerScreen' under currJobScene.");
+            return;
+        }
+        computerScreenPrefab = screenTransform.gameObject;
+
+        computerScreenClass = computerScreenPrefab.GetComponent<ComputerScreen>();
+        if(computerScreenClass == null)
+        {
+            Debug.Log("Failed to find ComputerScreenClass in SetUpJobStart");
+            return;
+        }
+        computerScreenClass.Initalize();
+        computerScreenClass.CreateEmails(gameManager.gameData.releasedEmails);
     }
 
     private void SetScreenObjectives(TextMeshProUGUI screenText)
     {
-        screenText.text = "Ban List:\n";
+        string text = "Ban List:\n";
         foreach (string ban in gameManager.GetBanTargetWords())
         {
-            screenText.text += ban + "\n";
+            text += ban + "\n";
         }
 
         // Don't show the censor list on the first day
         if (gameManager.gameData.GetCurrentDay() == 1) return;
 
-        screenText.text += "\nCensor List:\n";
+        text += "\nCensor List:\n";
         foreach (string censor in gameManager.GetCensorTargetWords())
         {
-            screenText.text += censor + "\n";
+            text += censor + "\n";
         }
+
+        computerScreenClass.SetScreenText(text);
     }
+    
 
-
-    private IEnumerator BeginWorkDay()
+    public IEnumerator BeginWorkDay()
     {
         yield return StartCoroutine(CheckDailyEvent());
         gameManager.SetJobScene(this);
@@ -250,27 +272,10 @@ public class JobScene : MonoBehaviour
 
     public void ShowResults(int mediaProcessed, int score)
     {
-        TextMeshProUGUI buttonText = startWorkButton.GetComponentInChildren<TextMeshProUGUI>();
-        if (buttonText != null)
-        {
-            buttonText.text = "End Day";
-        }
-        else
-        {
-            Debug.LogError("TextMeshProUGUI component not found on startWorkButton.");
-        }
-        performanceSlider.gameObject.SetActive(true);
-        performanceSlider.value = gameManager.gameData.PerformanceScale;
+        computerScreenClass.EndDaySetUp();
 
-        startWorkButton.onClick.RemoveAllListeners();
-        startWorkButton.interactable = true;
-        startWorkButton.gameObject.SetActive(true);
-        startWorkButton.onClick.AddListener(() =>
-        {
-            startWorkButton.interactable = false;
-            gameManager.gameData.money += score;
-            StartCoroutine(NextScene());
-        });
+        dayProfit = score;
+        computerScreenClass.SetPerformanceSliderValue(gameManager.gameData.PerformanceScale);
 
         string promotionPossibility = "Unknown";
         if (gameManager.gameData.PerformanceScale >= 0.66f)
@@ -282,12 +287,13 @@ public class JobScene : MonoBehaviour
             promotionPossibility = "Unlikely";
         }
 
-        screenText.text = $"Day {gameManager.gameData.day} Results:\n\nMedia Processed: {mediaProcessed}\n\nSupervisors Notified of Your Day\n\nProfit: ${score}\n\nTotal Money: ${gameManager.gameData.money + score}\n\nPossibility of Promotion: {promotionPossibility}";
-
+        string performanceText = $"Day {gameManager.gameData.day} Results:\n\nMedia Processed: {mediaProcessed}\n\nSupervisors Notified of Your Day\n\nProfit: ${score}\n\nTotal Money: ${gameManager.gameData.money + score}\n\nPossibility of Promotion: {promotionPossibility}";
+        computerScreenClass.SetScreenText(performanceText);
     }
 
     public void UpdateClockHands(float progress)
     {
+        //WANT TODO: Update Clock hand sprites to be square and have time move in ticking increments instead of smooth
         if (hourHand)
         {
             float hourRotation = Mathf.Lerp(0f, 180f, progress); // Moves from 0 to 180 degrees
@@ -303,26 +309,21 @@ public class JobScene : MonoBehaviour
 
     public void UpdateMediaProcessedText(int num)
     {
-        if (mediaProcessedText != null)
-            mediaProcessedText.text = $"Media Processed:\n{num} / 5";
+        computerScreenClass.SetProcessedText($"MEDIA PROCESSED:\n{num} / 5");
     }
 
-    public void ShowMediaProcessedText(bool show)
+    public IEnumerator NextScene()
     {
-        if (mediaProcessedText != null)
-            mediaProcessedText.enabled = show;
-    }
+        gameManager.gameData.money += dayProfit;
 
-    private IEnumerator NextScene()
-    {
         EventManager.DisplayMenuButton?.Invoke(false);
-        EventManager.StopMusic?.Invoke();
         EventManager.FadeOut?.Invoke();
         yield return new WaitForSeconds(2f);
         EventManager.HideLightsOutImage?.Invoke();
 
         Destroy(currJobScene);
         currJobScene = null;
+        EventManager.ShowHideRentNotices?.Invoke(false);
 
         yield return new WaitForSeconds(2f);
         EventManager.NextScene?.Invoke();
@@ -348,7 +349,7 @@ public class JobScene : MonoBehaviour
 
         if (jsonObject != null && jsonObject.emailText.Count > 0)
         {
-            currentEmail = GetEmailForDay(jsonObject.emailText, gameManager.gameData.GetCurrentDay());
+            GetEmailForDay(jsonObject.emailText, gameManager.gameData.GetCurrentDay());
         }
         else
         {
@@ -356,16 +357,17 @@ public class JobScene : MonoBehaviour
         }
     }
 
-    private string GetEmailForDay(List<Entry> entries, int day)
+    private void GetEmailForDay(List<Entry> entries, int day)
     {
         foreach (var entry in entries)
         {
             if (entry.day == day)
             {
-                return entry.email;
+                gameManager.gameData.releasedEmails.Add(entry);
+                return;
             }
         }
-        return string.Empty;
+        return;
     }
 
     private IEnumerator CheckDailyEvent()
@@ -374,26 +376,31 @@ public class JobScene : MonoBehaviour
         {
             EventManager.ShowCustomSubtitle?.Invoke("Music pausing for dramatic effect");
             EventManager.PauseResumeMusic?.Invoke();
-
             jobDelayed = true;
+
             // Pause for effect
             yield return new WaitForSeconds(3f);
-            EventManager.PlaySound?.Invoke("glitch");
+            
+            EventManager.PlaySound?.Invoke("glitch", true);
 
             screenText.gameObject.SetActive(false);
             computerScreen.gameObject.SetActive(true);
             computerScreen.sprite = glitchedScreen;
 
+            computerScreenClass.EventTrigger(3, jobDelayed);
             objectSpawner.SpawnImageObject(true);
+
             // Prevent progression
             yield return new WaitUntil(() => !jobDelayed);
 
-            EventManager.PlaySound?.Invoke("glitch");
+            EventManager.PlaySound?.Invoke("glitch", true); 
             yield return new WaitForSeconds(2.5f);
 
             computerScreen.gameObject.SetActive(false);
             screenText.gameObject.SetActive(true);
-            EventManager.PauseResumeMusic?.Invoke();
+
+            computerScreenClass.EventTrigger(3, jobDelayed);
+            EventManager.PauseResumeMusic?.Invoke(); 
         }
     }
 
@@ -451,19 +458,19 @@ public class JobScene : MonoBehaviour
         jobDelayed = false;
     }
 
-
     [Serializable]
-    private class Wrapper
+    public class Wrapper
     {
         public List<Entry> emailText;
     }
 
     [Serializable]
-    private class Entry
+    public class Entry
     {
+        public bool seen = false;
         public int day;
+        public string title;
+        public string sender;
         public string email;
     }
 }
-
-

@@ -1,11 +1,11 @@
-using UnityEngine.Android;
 using UnityEngine;
+using System.Collections.Generic;
 
 [System.Serializable]
 public class GameData
 {
     public int day;
-    public int money;
+    public int money, totalMoneyEarned, totalMoneySpent;
     public int rent;
     public float performanceScale;
     private bool hasUVLightUpgrade = false;
@@ -16,11 +16,14 @@ public class GameData
         set { performanceScale = Mathf.Clamp(value, 0f, 1f); }
     }
     public float playTime;
+    public List<JobScene.Entry> releasedEmails = new();
 
     public GameData()
     {
         day = 1;
         money = 0;
+        totalMoneyEarned = 0;
+        totalMoneySpent = 0;
         rent = 3;
         PerformanceScale = 0.5f;  // Default to 50% performance (0.5f)
         playTime = 0f;
@@ -30,9 +33,12 @@ public class GameData
     {
         this.day = loadedGame.day;
         this.money = loadedGame.money;
+        this.totalMoneyEarned = loadedGame.totalMoneyEarned;
+        this.totalMoneySpent = loadedGame.totalMoneySpent;
         this.rent = loadedGame.rent;
         this.PerformanceScale = loadedGame.PerformanceScale;
         this.playTime = loadedGame.playTime;
+        this.releasedEmails = loadedGame.releasedEmails;
     }
 
     public int GetCurrentDay()
@@ -53,6 +59,7 @@ public class GameData
     {
         this.money = money;
     }
+
     public bool HasUVLightUpgrade()
     {
         return hasUVLightUpgrade;
@@ -68,5 +75,11 @@ public class GameData
     public void SetTimerUpgraded(bool upgraded)
     {
         hasTimerUpgrade = upgraded;
+    }
+
+    public List<JobScene.Entry> LinkEmails()
+    {
+        return this.releasedEmails;
+
     }
 }

@@ -17,6 +17,13 @@ public class ImageObject : MonoBehaviour
     private void Awake()
     {
         draggableScript = GetComponent<Draggable>(); // Get the Draggable script
+        Canvas prefabCanvas = GetComponentInChildren<Canvas>();
+        if (prefabCanvas != null)
+        {
+            prefabCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+            prefabCanvas.worldCamera = Camera.main;
+        }
+
     }
     
     private void Start()
@@ -201,7 +208,7 @@ public class ImageObject : MonoBehaviour
         }
 
         yield return new WaitForSeconds(0.5f);
-        EventManager.PlaySound?.Invoke("tossPaper");
+        EventManager.PlaySound?.Invoke("tossPaper", true);
         yield return new WaitForSeconds(1.0f);
         Destroy(gameObject);
     }

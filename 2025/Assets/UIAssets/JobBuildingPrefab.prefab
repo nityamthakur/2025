@@ -124,7 +124,6 @@ GameObject:
   - component: {fileID: 3498511433834923388}
   - component: {fileID: 6946041327465190681}
   - component: {fileID: 5135830391553665910}
-  - component: {fileID: 7890861108886848344}
   - component: {fileID: 4902300576336706821}
   m_Layer: 5
   m_Name: BackgroundImage
@@ -190,19 +189,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &7890861108886848344
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6699275200961085307}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 541cb3d6e61f7cd4d80c30c0975a0c4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  grayscaleMaterial: {fileID: 2100000, guid: cec02e0e72fd1a047abd9cfb7c5f0078, type: 2}
 --- !u!95 &4902300576336706821
 Animator:
   serializedVersion: 7
@@ -287,7 +273,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!114 &3551327482346135146
 MonoBehaviour:

@@ -5,6 +5,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Newtonsoft.Json.Linq;
 
 public class ObjectSpawner : MonoBehaviour
 {
@@ -14,12 +15,10 @@ public class ObjectSpawner : MonoBehaviour
     [SerializeField] private GameObject rentNoticePrefab;
     [SerializeField] private GameObject imageObject;
 
-    // Quick fix for preventing object spawn on game close
-    //private int currDay;
+    private List<GameObject> rentNotices = new();
     private int newspaperPos = 0;
     private Entity.Newspaper[] newspapers;
     private Entity.Newspaper currentNewspaper;
-    //public JobScene jobScene; 
     private GameManager gameManager;
 
     bool quitting = false;
@@ -53,10 +52,10 @@ public class ObjectSpawner : MonoBehaviour
         if (quitting)
             return;
 
-        Debug.Log($"Spawning object at: {mediaSpawner.transform.position}");
+        //Debug.Log($"Spawning object at: {mediaSpawner.transform.position}");
 
         // Sound Effect: Paper Comes In
-        EventManager.PlaySound?.Invoke("papercomein");
+        EventManager.PlaySound?.Invoke("papercomein", true);
 
         // Create new media object
         GameObject newMedia = Instantiate(mediaObject, mediaSpawner.transform.position, Quaternion.identity);
@@ -106,6 +105,14 @@ public class ObjectSpawner : MonoBehaviour
     {
         // Instantiate RentNoticePrefab
         GameObject rentNoticeInstance = Instantiate(rentNoticePrefab);
+        Canvas prefabCanvas = rentNoticeInstance.GetComponentInChildren<Canvas>();
+        if (prefabCanvas != null)
+        {
+            prefabCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+            prefabCanvas.worldCamera = Camera.main;
+        }
+        rentNotices.Add(rentNoticeInstance);
+
 
         int rent = gameManager.gameData.rent;
         string rentText = $"Rent will cost {rent}. If you are unable to pay by the end of the day, expect to be evicted.";
@@ -133,6 +140,19 @@ public class ObjectSpawner : MonoBehaviour
         }
     }
 
+    private void ShowHideRentNotices(bool show)
+    {
+        if(rentNotices.Count < 1)
+            return;
+        foreach(GameObject objectPiece in rentNotices)
+        {
+            if(objectPiece != null)
+                objectPiece.SetActive(show);
+            else
+                Destroy(objectPiece);
+        }
+    }
+
     private IEnumerator DelayedPassNewspaperData(Entity mediaEntity, Entity.Newspaper newspaper)
     {
         yield return null; // Wait for the next frame
@@ -155,29 +175,75 @@ public class ObjectSpawner : MonoBehaviour
 
     private void ParseJson(string json)
     {
-        var jsonObject = JsonUtility.FromJson<Wrapper>(json);
-
-        if (jsonObject != null && jsonObject.newspaperText.Count > 0)
+        //Our JSON deserialization needs to be significantly more complex to handle this.
+        //Once all of the JSON is migrated over to the new format, it can be simplified
+        try
         {
-            newspapers = GetNewspapersForDay(jsonObject.newspaperText, gameManager.gameData.GetCurrentDay());
+            //Load everything
+            var jsonRoot = JObject.Parse(json);
+            //Get just the newspaper text
+            var newspaperTextArr = (JArray)jsonRoot["newspaperText"];
+
+            if (newspaperTextArr == null)
+            {
+                Debug.LogError("Unable to find newspaper data in JSON file. Stop breaking my stuff!.");
+                return;
+            }
+
+            //Get the current day obj
+            var currentPapers = newspaperTextArr.Where(item => (int)item["day"] == gameManager.gameData.GetCurrentDay())
+                .Cast<JObject>().FirstOrDefault();
+
+            if (currentPapers == null)
+            {
+                Debug.LogError("Unable to find paper entries for day " + gameManager.gameData.GetCurrentDay());
+                return;
+            }
+
+            //Now go through and get the paper data
+            var newsPaperArr = (JArray)currentPapers["newspapers"];
+            newspapers = new Entity.Newspaper[newsPaperArr.Count];
+
+            for (var i = 0; i < newsPaperArr.Count; i++)
+            {
+                var newspaperObj = (JObject)newsPaperArr[i];
+                var newspaper = new Entity.Newspaper
+                {
+                    date = newspaperObj["date"]?.ToString(),
+                    hasHiddenImage = newspaperObj["hasHiddenImage"] != null && (bool)newspaperObj["hasHiddenImage"],
+                    banWords = newspaperObj["banWords"]?.ToObject<string[]>() ?? Array.Empty<string>(),
+                    censorWords = newspaperObj["censorWords"]?.ToObject<string[]>() ?? Array.Empty<string>()
+                };
+
+                //Add all of the possibly complex objects
+                ProcessField(newspaperObj["publisher"], out newspaper.publisher, out newspaper.publisherIsComplex);
+                ProcessField(newspaperObj["title"], out newspaper.title, out newspaper.titleIsComplex);
+                ProcessField(newspaperObj["front"], out newspaper.frontContent, out newspaper.frontIsComplex);
+                ProcessField(newspaperObj["back"], out newspaper.backContent, out newspaper.backIsComplex);
+
+                newspapers[i] = newspaper;
+            }
+
             newspaperPos = 0;
         }
-        else
+        catch (Exception e)
         {
-            Debug.LogError("JSON parsing failed.");
+            Debug.LogError("Error while parsing newspaper JSON data: " + e.Message);
         }
     }
 
-    private Entity.Newspaper[] GetNewspapersForDay(List<Entry> entries, int day)
+    private void ProcessField(JToken token, out string content, out bool isComplex)
     {
-        foreach (var entry in entries)
+        if (token is JObject)
         {
-            if (entry.day == day)
-            {
-                return entry.newspapers;
-            }
+            content = token.ToString();
+            isComplex = true;
         }
-        return new Entity.Newspaper[0];
+        else
+        {
+            content = token?.ToString() ?? "";
+            isComplex = false;
+        }
     }
 
     private void ReadNextNewspaper()
@@ -223,12 +289,14 @@ public class ObjectSpawner : MonoBehaviour
     // EventManager for creating a new media object after one gets destroyed
     private void OnEnable()
     {
+        EventManager.ShowHideRentNotices += ShowHideRentNotices;
         EventManager.OnMediaDestroyed += HandleMediaDestroyed;
         GameManager.OnGameRestart += StopSpawningOnRestart; // Listen for restarts
     }
 
     private void OnDisable()
     {
+        EventManager.ShowHideRentNotices -= ShowHideRentNotices;
         EventManager.OnMediaDestroyed -= HandleMediaDestroyed;
         GameManager.OnGameRestart -= StopSpawningOnRestart;
     }
@@ -244,17 +312,5 @@ public class ObjectSpawner : MonoBehaviour
     {
         quitting = true;
     }
-
-    [Serializable]
-    private class Wrapper
-    {
-        public List<Entry> newspaperText;
-    }
-
-    [Serializable]
-    private class Entry
-    {
-        public int day;
-        public Entity.Newspaper[] newspapers;
-    }
+    
 }

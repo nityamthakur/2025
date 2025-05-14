@@ -9,10 +9,11 @@ using Unity.VisualScripting;
 
 public class DayStartScene : MonoBehaviour
 {
+    [SerializeField] private Camera mainCamera;
     [SerializeField] private GameObject UITextBox;
     [SerializeField] private Sprite[] FemaleNewsAnchor, MaleNewsAnchor, MaleNewsAnchor2, apartment;
     [SerializeField] private Sprite rentLetter, rentNotice, jobLetter;
-    [SerializeField] private float frameInterval = 0.5f;
+    private float frameInterval = 0.2f;
     private GameObject currentTextBox;
     private TextMeshProUGUI TextBox;
     private Button nextButton;
@@ -22,7 +23,7 @@ public class DayStartScene : MonoBehaviour
     private Line[] currentLines;
     private GameManager gameManager;
     private TypewriterText typewriterText;
-     private Coroutine animationCoroutine;
+    private Coroutine animationCoroutine;
     private Action delay;
 
     public void Initialize()
@@ -33,18 +34,19 @@ public class DayStartScene : MonoBehaviour
     public void LoadDayStart()
     {
         currentTextBox = Instantiate(UITextBox);
-
         if (currentTextBox == null)
         {
             Debug.LogError("currentTextBox is null.");
             return;
         }
+        Canvas prefabCanvas = currentTextBox.GetComponentInChildren<Canvas>();
+        if (prefabCanvas != null)
+        {
+            prefabCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+            prefabCanvas.worldCamera = Camera.main;
+        }
 
         SetUpDayStart();
-
-        if (!EventManager.IsMusicPlaying() && gameManager.gameData.GetCurrentDay() == 1)
-            EventManager.PlayMusic?.Invoke("menu");
-
         DayStartEventChecker();
         EventManager.DisplayMenuButton?.Invoke(true);
     }
@@ -91,7 +93,7 @@ public class DayStartScene : MonoBehaviour
         }
         nextButton.onClick.AddListener(() =>
         {
-            EventManager.PlaySound?.Invoke("switch1");
+            EventManager.PlaySound?.Invoke("switch1", true);
             ReadNextLine();
         });
 
@@ -173,7 +175,7 @@ public class DayStartScene : MonoBehaviour
                 }
                 else if(currentLine.speaker.ToLower() == "playsound")
                 {
-                    EventManager.PlaySound?.Invoke(currentLine.text);
+                    EventManager.PlaySound?.Invoke(currentLine.text, true);
                     linePos++;
                     ReadNextLine();
                 }
@@ -307,13 +309,13 @@ public class DayStartScene : MonoBehaviour
         {
             TextBox.gameObject.SetActive(true);
             textBoxBackground.gameObject.SetActive(true);
-            EventManager.PlaySound?.Invoke("switch1");
+            EventManager.PlaySound?.Invoke("switch1", true);
             ReadNextLine();
         });
 
-        EventManager.PlaySound?.Invoke("doorbell");
+        EventManager.PlaySound?.Invoke("doorbell", true);
         yield return new WaitForSeconds(2f);
-        EventManager.PlaySound?.Invoke("papercomein");
+        EventManager.PlaySound?.Invoke("papercomein", true);
         yield return new WaitForSeconds(0.5f);
         EventManager.FadeIn?.Invoke();
         //EventManager.PlayMusic?.Invoke("Some Music For The Day Start / Apartment");

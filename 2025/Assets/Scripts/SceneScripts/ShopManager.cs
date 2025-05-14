@@ -49,6 +49,13 @@ public class ShopManager : MonoBehaviour
 
         // Instantiate the shop screen prefab
         currentShopScreen = Instantiate(shopScreenPrefab);
+        Canvas prefabCanvas = currentShopScreen.GetComponentInChildren<Canvas>();
+        if (prefabCanvas != null)
+        {
+            prefabCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+            prefabCanvas.worldCamera = Camera.main;
+        }
+
 
         // Set up the shop UI
         SetupShopUI();
@@ -176,7 +183,7 @@ public class ShopManager : MonoBehaviour
     private void PurchaseUpgrade(int upgradeNumber, int price)
     {
         // Play purchase sound
-        EventManager.PlaySound?.Invoke("switch1");
+        EventManager.PlaySound?.Invoke("switch1", true);
 
         // Deduct money
         playerMoney -= price;
@@ -262,7 +269,7 @@ public class ShopManager : MonoBehaviour
         }
 
         // Play sound effect
-        EventManager.PlaySound?.Invoke("switch1");
+        EventManager.PlaySound?.Invoke("switch1", true);
 
         // Fade out
         EventManager.FadeOut?.Invoke();

@@ -39,7 +39,7 @@ public class ToolSelection : MonoBehaviour
         selectedToolManager.SelectTool(gameObject);
 
         // Play the sound for selecting the tool
-        EventManager.PlaySound?.Invoke("switch1");
+        EventManager.PlaySound?.Invoke("switch1", true);
 
         SelectToolEffect();
     }

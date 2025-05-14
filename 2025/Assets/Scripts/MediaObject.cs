@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
 
@@ -36,6 +37,13 @@ public class Entity : MonoBehaviour
     private void Awake()
     {
         draggableScript = GetComponent<Draggable>(); // Get the Draggable script
+        Canvas prefabCanvas = GetComponentInChildren<Canvas>();
+        if (prefabCanvas != null)
+        {
+            prefabCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+            prefabCanvas.worldCamera = Camera.main;
+        }
+
     }
 
     private void Start()
@@ -95,11 +103,11 @@ public class Entity : MonoBehaviour
         newspaperData = newspaper;
 
         // Text component order: 0 = title, 1 = date, 2 = publisher, 3 = front, 4 = back
-        textComponents[0].text = newspaper.title;
-        textComponents[1].text = newspaper.date;
-        textComponents[2].text = newspaper.publisher;
-        textComponents[3].text = newspaper.front;
-        textComponents[4].text = newspaper.back;
+        textComponents[0].text = newspaper.GetTitle();
+        textComponents[1].text = newspaper.GetDate();
+        textComponents[2].text = newspaper.GetPublisher();
+        textComponents[3].text = newspaper.GetFront();
+        textComponents[4].text = newspaper.GetBack();
 
         foreach (var textComponent in textComponents)
         {
@@ -376,7 +384,7 @@ public class Entity : MonoBehaviour
     private IEnumerator DestroyAfterExitMovement(string box)
     {        
         beingDestroyed = true;
-        EventManager.PlaySound?.Invoke("tossPaper");
+        EventManager.PlaySound?.Invoke("tossPaper", true);
         // Turn of Rigidbody because newspaper gets wierd when colliding with boxes
         if (TryGetComponent<Rigidbody2D>(out var rigidBody))
         {
@@ -418,10 +426,49 @@ public class Entity : MonoBehaviour
         public string publisher;
         public string title;
         public string date;
-        public string front;
-        public string back;
+        
+        [JsonIgnore] public string backContent;
+        [JsonIgnore] public string frontContent;
+        
+        
+        // Flags to determine if front/back are complex
+        [JsonIgnore] public bool frontIsComplex;
+        [JsonIgnore] public bool backIsComplex;
+        [JsonIgnore] public bool publisherIsComplex;
+        [JsonIgnore] public bool titleIsComplex;
+        
         public string[] banWords;
         public string[] censorWords;
         public bool hasHiddenImage;
+
+        public string GetPublisher()
+        {
+            return publisherIsComplex ? FlattenGrammar(publisher) : publisher;
+        }
+        
+        public string GetTitle()
+        {
+            return titleIsComplex ? FlattenGrammar(title) : title; 
+        }
+        
+        public string GetFront()
+        {
+            return frontIsComplex ? FlattenGrammar(frontContent) : frontContent;
+        }
+        public string GetBack()
+        {
+            return backIsComplex ? FlattenGrammar(backContent) : backContent ;
+        }
+        public string GetDate()
+        {
+            return date;
+        }
+
+
+        private static string FlattenGrammar(string str)
+        {
+            var grammar = new TraceryNet.Grammar(str);
+            return grammar.Flatten("#origin#");
+        }
     }
 }
