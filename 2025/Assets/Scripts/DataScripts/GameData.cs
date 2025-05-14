@@ -8,6 +8,8 @@ public class GameData
     public int money, totalMoneyEarned, totalMoneySpent;
     public int rent;
     public float performanceScale;
+    private bool hasUVLightUpgrade = false;
+    private bool hasTimerUpgrade = false;
     public float PerformanceScale
     {
         get { return performanceScale; }
@@ -58,8 +60,26 @@ public class GameData
         this.money = money;
     }
 
+    public bool HasUVLightUpgrade()
+    {
+        return hasUVLightUpgrade;
+    }
+    public void SetUVLightUpgraded(bool upgraded)
+    {
+        hasUVLightUpgrade = upgraded;
+    }
+    public bool HasTimerUpgrade()
+    {
+        return hasTimerUpgrade;
+    }
+    public void SetTimerUpgraded(bool upgraded)
+    {
+        hasTimerUpgrade = upgraded;
+    }
+
     public List<JobScene.Entry> LinkEmails()
     {
         return this.releasedEmails;
+
     }
 }

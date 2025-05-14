@@ -23,11 +23,13 @@ public class JobScene : MonoBehaviour
     private GameObject outsideBuildingObject;
 
     // ---------------------------------
+    private float workTimer = 150f;
+    [SerializeField] private float baseWorkTimer = 150f;
+    [SerializeField] private float timerUpgradeBonus = 50f;
     private GameObject computerScreenPrefab;
     private ComputerScreen computerScreenClass;
 
     // ---------------------------------
-    private readonly float workTimer = 180f; // 180f
     //WANT TODO: Update Clock hand sprites to be square and have time move in ticking increments instead of smooth
     private Image hourHand;
     private Image minuteHand;
@@ -45,7 +47,21 @@ public class JobScene : MonoBehaviour
     public void Initialize()
     {
         gameManager = FindFirstObjectByType<GameManager>();
+        UpdateWorkTimer();
     }
+
+    private void UpdateWorkTimer()
+    {
+        if (gameManager != null && gameManager.gameData != null && gameManager.gameData.HasTimerUpgrade())
+        {
+            workTimer = baseWorkTimer + timerUpgradeBonus;
+        }
+        else
+        {
+            workTimer = baseWorkTimer;
+        }
+    }
+
 
     public void LoadJobStart() {
         ShowBuildingTransition();
@@ -134,7 +150,43 @@ public class JobScene : MonoBehaviour
             return;
         }
         backgroundImage.sprite = workBackgroundImage;
+        
+        computerScreen = currJobScene.transform.Find("ComputerScreenImage").GetComponent<Image>();
+        if (computerScreen == null)
+        {
+            Debug.Log("Failed to find ComputerScreenImage in SetUpJobStart");
+            return;
+        }
+        computerScreen.gameObject.SetActive(false);
 
+        startWorkButton = currJobScene.transform.Find("WorkButton").GetComponent<Button>();
+        if (startWorkButton == null)
+        {
+            Debug.LogError("Failed to find startWorkButton component in SetUpJobStart.");
+            return;
+        }
+        startWorkButton.onClick.AddListener(() =>
+        {
+            startWorkButton.gameObject.SetActive(false);
+            EventManager.PlaySound?.Invoke("switch1");
+            StartCoroutine(BeginWorkDay());
+        });
+
+        screenText = currJobScene.transform.Find("ComputerScreenText").GetComponent<TextMeshProUGUI>();
+        if (screenText == null)
+        {
+            Debug.LogError("Failed to find screenText component in ShowResults.");
+            return;
+        }
+        SetScreenEmail(screenText);
+
+        mediaProcessedText = currJobScene.transform.Find("MediaProcessedText").GetComponent<TextMeshProUGUI>();
+        if (screenText == null)
+        {
+            Debug.LogError("Failed to find mediaProcessedText component in ShowResults.");
+            return;
+        }
+        ShowMediaProcessedText(false);
         hourHand = currJobScene.transform.Find("HourHand").GetComponent<Image>();
         if (hourHand == null)
         {
@@ -209,10 +261,13 @@ public class JobScene : MonoBehaviour
 
     public IEnumerator BeginWorkDay()
     {
-        yield return StartCoroutine(CheckDailyEvent()); 
+        yield return StartCoroutine(CheckDailyEvent());
         gameManager.SetJobScene(this);
-        objectSpawner.StartMediaSpawn();        
-        gameManager.StartJobTimer(workTimer); // Start the game timer
+        objectSpawner.StartMediaSpawn();
+        SetScreenObjectives(screenText);
+        ShowMediaProcessedText(true);
+        UpdateWorkTimer();
+        gameManager.StartJobTimer(workTimer);
     }
 
     public void ShowResults(int mediaProcessed, int score)
@@ -317,24 +372,32 @@ public class JobScene : MonoBehaviour
 
     private IEnumerator CheckDailyEvent()
     {
-        if(gameManager.gameData.GetCurrentDay() == 3)
+        if (gameManager.gameData.GetCurrentDay() == 3)
         {
-            EventManager.ShowCustomSubtitle?.Invoke("Music pausing for dramatic effect"); 
-            EventManager.PauseResumeMusic?.Invoke(); 
+            EventManager.ShowCustomSubtitle?.Invoke("Music pausing for dramatic effect");
+            EventManager.PauseResumeMusic?.Invoke();
             jobDelayed = true;
 
             // Pause for effect
             yield return new WaitForSeconds(3f);
-            EventManager.PlaySound?.Invoke("glitch", true); 
+            
+            EventManager.PlaySound?.Invoke("glitch", true);
+
+            screenText.gameObject.SetActive(false);
+            computerScreen.gameObject.SetActive(true);
+            computerScreen.sprite = glitchedScreen;
 
             computerScreenClass.EventTrigger(3, jobDelayed);
             objectSpawner.SpawnImageObject(true);
 
             // Prevent progression
             yield return new WaitUntil(() => !jobDelayed);
-            
+
             EventManager.PlaySound?.Invoke("glitch", true); 
             yield return new WaitForSeconds(2.5f);
+
+            computerScreen.gameObject.SetActive(false);
+            screenText.gameObject.SetActive(true);
 
             computerScreenClass.EventTrigger(3, jobDelayed);
             EventManager.PauseResumeMusic?.Invoke(); 
@@ -377,7 +440,7 @@ public class JobScene : MonoBehaviour
         }
     }
 
-   // EventManager for continuing gameplay on an ImageObject being destroyed
+    // EventManager for continuing gameplay on an ImageObject being destroyed
     private void OnEnable()
     {
         EventManager.OnImageDestroyed += HandleImageDestroyed;

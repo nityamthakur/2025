@@ -774,7 +774,9 @@ MonoBehaviour:
   workBackgroundImage: {fileID: 8941961987756735026, guid: 12cfa2c3fdcaa8644816bc0be2f33a8f, type: 3}
   glitchedScreen: {fileID: 5111763290514371741, guid: 69c02822765493849b65f7d53cfdce8a, type: 3}
   jobBuildingPrefab: {fileID: 7365597034380788627, guid: 179c1e3c7be1eed4385ed3fdeb7cc64b, type: 3}
-  jobBuildingImage: {fileID: -335050303, guid: 47c8dfc179d8a4138b3bd9aefae43df1, type: 3}
+  jobBuildingImage: {fileID: 7500719156437101807, guid: f0d23fea0664eb14a9e6c31266085328, type: 3}
+  baseWorkTimer: 150
+  timerUpgradeBonus: 50
   gameManager: {fileID: 2059682408}
 --- !u!1 &766681848
 GameObject:
@@ -881,6 +883,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetCollider: {fileID: 0}
   blinkDuration: 0.25
+  defaultRadius: 2.1
+  upgradedRadius: 3
 --- !u!58 &766681852
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -1779,10 +1783,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shopScreenPrefab: {fileID: 6950363342255637058, guid: 83e534907bf5c9141aedc2f7b55e34d0, type: 3}
-  upgradePrice1: 3
+  upgradePrice1: 7
   upgradePrice2: 5
-  upgradeDescription1: Upgrade1
-  upgradeDescription2: Upgrade2
+  upgradeDescription1: UV Light Radius
+  upgradeDescription2: Extra Time
 --- !u!4 &1518353897
 Transform:
   m_ObjectHideFlags: 0

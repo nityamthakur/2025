@@ -7,17 +7,17 @@ public class ShopManager : MonoBehaviour
 {
     [SerializeField] private GameObject shopScreenPrefab;
 
-    [SerializeField] private int upgradePrice1 = 3;
+    [SerializeField] private int upgradePrice1 = 7; // UV Light upgrade price
     [SerializeField] private int upgradePrice2 = 5;
-    [SerializeField] private string upgradeDescription1 = "Upgrade1";
-    [SerializeField] private string upgradeDescription2 = "Upgrade2";
+    [SerializeField] private string upgradeDescription1 = "UV Light Range+: Increases the detection radius of your UV light";
+    [SerializeField] private string upgradeDescription2 = "Time Extension: Increases the allotted time for tasks";
 
     private GameObject currentShopScreen;
     private Button doneButton;
     private TextMeshProUGUI moneyText;
 
     // Upgrade UI elements
-    private Button upgradeButton1;
+    private Button upgradeButton1; // UV Light upgrade button
     private Button upgradeButton2;
     private TextMeshProUGUI upgradeText1;
     private TextMeshProUGUI upgradeText2;
@@ -120,9 +120,6 @@ public class ShopManager : MonoBehaviour
         priceText.text = $"${price}";
         descText.text = description;
 
-        // Set the image color (placeholder)
-        image.color = slotNumber == 1 ? Color.red : slotNumber == 2 ? Color.green : Color.blue;
-
         // Set up the button click handler
         int slotNum = slotNumber; // Capture for lambda
         button.onClick.AddListener(() => PurchaseUpgrade(slotNum, price));
@@ -134,22 +131,52 @@ public class ShopManager : MonoBehaviour
         bool canAfford1 = playerMoney >= upgradePrice1;
         bool canAfford2 = playerMoney >= upgradePrice2;
 
-        // For now, just checking if player can afford it
-        // Later, you can check gameManager.gameData to see if upgrades are already purchased
-        bool isPurchased1 = false; // Check gameManager.gameData.hasUpgrade1 when implemented
-        bool isPurchased2 = false; // Check gameManager.gameData.hasUpgrade2 when implemented
+        // Check if upgrades are already purchased
+        bool isUVLightUpgradePurchased = gameManager != null &&
+                                        gameManager.gameData != null &&
+                                        gameManager.gameData.HasUVLightUpgrade();
+        bool isTimerUpgradePurchased = gameManager != null &&
+                                    gameManager.gameData != null &&
+                                    gameManager.gameData.HasTimerUpgrade();
 
         // Update button states
         if (upgradeButton1 != null)
         {
-            upgradeButton1.interactable = canAfford1 && !isPurchased1;
-            upgradeText1.color = isPurchased1 ? Color.green : (canAfford1 ? Color.white : Color.red);
+            upgradeButton1.interactable = canAfford1 && !isUVLightUpgradePurchased;
+            upgradeText1.color = isUVLightUpgradePurchased ? Color.green : (canAfford1 ? Color.white : Color.red);
+
+            // Update button text if already purchased
+            if (isUVLightUpgradePurchased)
+            {
+                Transform buttonTextTrans = upgradeButton1.transform.Find("Text (TMP)");
+                if (buttonTextTrans != null)
+                {
+                    TextMeshProUGUI buttonText = buttonTextTrans.GetComponent<TextMeshProUGUI>();
+                    if (buttonText != null)
+                    {
+                        buttonText.text = "PURCHASED";
+                    }
+                }
+            }
         }
 
         if (upgradeButton2 != null)
         {
-            upgradeButton2.interactable = canAfford2 && !isPurchased2;
-            upgradeText2.color = isPurchased2 ? Color.green : (canAfford2 ? Color.white : Color.red);
+            upgradeButton2.interactable = canAfford2 && !isTimerUpgradePurchased;
+            upgradeText2.color = isTimerUpgradePurchased ? Color.green : (canAfford2 ? Color.white : Color.red);
+
+            if (isTimerUpgradePurchased)
+            {
+                Transform buttonTextTrans = upgradeButton2.transform.Find("Text (TMP)");
+                if (buttonTextTrans != null)
+                {
+                    TextMeshProUGUI buttonText = buttonTextTrans.GetComponent<TextMeshProUGUI>();
+                    if (buttonText != null)
+                    {
+                        buttonText.text = "PURCHASED";
+                    }
+                }
+            }
         }
     }
 
@@ -178,10 +205,17 @@ public class ShopManager : MonoBehaviour
             switch (upgradeNumber)
             {
                 case 1:
-                    Debug.Log("Upgrade1 purchased!");
+                    // Apply UV Light upgrade
+                    gameManager.gameData.SetUVLightUpgraded(true);
+
+                    // Find and enhance UV Light if it exists in the scene
+                    EnhanceUVLight();
+
+                    Debug.Log("UV Light upgrade purchased!");
                     break;
                 case 2:
-                    Debug.Log("Upgrade2 purchased!");
+                    gameManager.gameData.SetTimerUpgraded(true);
+                    Debug.Log("Timer Extension upgrade purchased!");
                     break;
             }
 
@@ -191,6 +225,38 @@ public class ShopManager : MonoBehaviour
         else
         {
             Debug.LogError("GameManager or gameData is null when trying to apply upgrade");
+        }
+    }
+
+    private void EnhanceUVLight()
+    {
+        // First make sure the upgrade is saved in game data
+        if (gameManager != null && gameManager.gameData != null)
+        {
+            gameManager.gameData.SetUVLightUpgraded(true);
+        }
+
+        // Find all UVLight instances in the scene using the non-deprecated method
+        UVLight[] uvLights = FindObjectsByType<UVLight>(FindObjectsSortMode.None);
+
+        if (uvLights != null && uvLights.Length > 0)
+        {
+            // Apply the upgrade to each UV light found
+            foreach (UVLight uvLight in uvLights)
+            {
+                if (uvLight != null)
+                {
+                    // Increase the radius of the UV light
+                    uvLight.IncreaseRadius();
+                    Debug.Log("UV Light upgrade applied to: " + uvLight.gameObject.name);
+                }
+            }
+        }
+        else
+        {
+            // If no UV Light exists in the current scene, just save the upgrade state
+            // It will be applied when a UV Light is created
+            Debug.Log("No UVLight found in scene - upgrade saved and will apply when UV Light is used");
         }
     }
 
