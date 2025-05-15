@@ -285,6 +285,19 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -1709,7 +1722,71 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      computerLoadingCircle_0: 3537809669915055640
+      computerLoadingCircle_1: -8430148810682959122
+      computerLoadingCircle_10: 5614523077041140207
+      computerLoadingCircle_11: -7116409101818106569
+      computerLoadingCircle_12: -8709374680803228966
+      computerLoadingCircle_13: -2136067774571516806
+      computerLoadingCircle_14: 6761075269286263688
+      computerLoadingCircle_15: -1048808653023479210
+      computerLoadingCircle_16: 3461848955246774562
+      computerLoadingCircle_17: 8301047826263398281
+      computerLoadingCircle_18: -8471713597579456683
+      computerLoadingCircle_19: -6543198003113357739
+      computerLoadingCircle_2: 531893763202680625
+      computerLoadingCircle_20: -4947267753330725365
+      computerLoadingCircle_21: -449771020915898589
+      computerLoadingCircle_22: 4752528058306561428
+      computerLoadingCircle_23: 6495634408822760750
+      computerLoadingCircle_24: -5449496273914894973
+      computerLoadingCircle_25: -1284103801081783251
+      computerLoadingCircle_26: 6021797491954503062
+      computerLoadingCircle_27: -8039885701684381125
+      computerLoadingCircle_28: 2930149472023964815
+      computerLoadingCircle_29: -4559716298536834271
+      computerLoadingCircle_3: 6890698738966933400
+      computerLoadingCircle_30: 4460506306732422398
+      computerLoadingCircle_31: 8299109321349788147
+      computerLoadingCircle_32: -561119323051057810
+      computerLoadingCircle_33: -180082972109976447
+      computerLoadingCircle_34: -1389494977776796195
+      computerLoadingCircle_35: -2456123017560494733
+      computerLoadingCircle_36: 5110796823470580944
+      computerLoadingCircle_37: 6707513919643219314
+      computerLoadingCircle_38: -1775481310519435732
+      computerLoadingCircle_39: -7455342428160037831
+      computerLoadingCircle_4: 981279842076456889
+      computerLoadingCircle_40: 3099383086418887860
+      computerLoadingCircle_41: 5810817015196829278
+      computerLoadingCircle_42: 2837666448425732779
+      computerLoadingCircle_43: -4255589311967755733
+      computerLoadingCircle_44: 6310243358092757595
+      computerLoadingCircle_45: -7737152590276562212
+      computerLoadingCircle_46: 1637472920055395378
+      computerLoadingCircle_47: -499316581248431473
+      computerLoadingCircle_48: 1452473924508040162
+      computerLoadingCircle_49: 2299460114329060060
+      computerLoadingCircle_5: 7798141563974841923
+      computerLoadingCircle_50: 6744216050801772706
+      computerLoadingCircle_51: 4420912904833168605
+      computerLoadingCircle_52: -8152823880106384318
+      computerLoadingCircle_53: -5034361349771173301
+      computerLoadingCircle_54: -2554768778744306660
+      computerLoadingCircle_55: -2992135967571284638
+      computerLoadingCircle_56: 2971324467577176471
+      computerLoadingCircle_57: -1536028910548301457
+      computerLoadingCircle_58: -5621032233669496706
+      computerLoadingCircle_59: 7137773106447613205
+      computerLoadingCircle_6: 5847236485282781845
+      computerLoadingCircle_60: 5218378017445707385
+      computerLoadingCircle_61: 7957760127422161169
+      computerLoadingCircle_62: -8323692012339921665
+      computerLoadingCircle_63: -8538375477399783359
+      computerLoadingCircle_7: -3590168413081387695
+      computerLoadingCircle_8: 7118627666852258539
+      computerLoadingCircle_9: -6138154699810438655
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
