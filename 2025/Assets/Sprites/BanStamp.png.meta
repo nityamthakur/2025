@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 730662dd17067b6468fc2e5b553ef607
+guid: 0fbdb10fb384a2448a617a04da320348
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1479065316249688633
-    second: shopScene_0
+      213: -7927250979191488575
+    second: BanStamp_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: shopScene_0
+      name: BanStamp_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 640
-        height: 360
+        y: 7
+        width: 64
+        height: 55
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 93ad9a69112b68410800000000000000
-      internalID: 1479065316249688633
+      spriteID: 1cf7ceb1c3fbcf190800000000000000
+      internalID: -7927250979191488575
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      shopScene_0: 1479065316249688633
+      BanStamp_0: -7927250979191488575
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

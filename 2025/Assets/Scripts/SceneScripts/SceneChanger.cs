@@ -121,20 +121,16 @@ public class SceneChanger : MonoBehaviour
 
             // Start Game
             // Comment out if using with debug
-            mainMenuScene.LoadMainMenu();
+            //mainMenuScene.LoadMainMenu();                                     uncomment
 
             // For Debugging
             // Change the starting day
-            //gameManager.gameData.day = 5;
             
             // Start the game at day end
             //currentSceneIndex = 3;
             //dayEndScene.LoadDayEnd();
             
             // Start the game at the job scene
-            //currentSceneIndex = 2;
-            //jobScene.LoadJobStart();
-            //StartCoroutine(gameManager.UpdatePlayTime());
         }
     }
 

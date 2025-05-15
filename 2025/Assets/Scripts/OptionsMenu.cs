@@ -435,6 +435,7 @@ public class OptionsMenu : MonoBehaviour
         {
             prefabCanvas.renderMode = RenderMode.ScreenSpaceCamera;
             prefabCanvas.worldCamera = Camera.main;
+            prefabCanvas.sortingLayerID = SortingLayer.NameToID("Media");
         }
     }
 

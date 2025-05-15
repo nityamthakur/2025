@@ -149,6 +149,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64bad4d023c348e4fbb1a8fb3662da52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  censorColor: {r: 0, g: 0, b: 0, a: 1}
+  cutColor: {r: 1, g: 1, b: 0, a: 0.2}
 --- !u!114 &625610983118235071
 MonoBehaviour:
   m_ObjectHideFlags: 0

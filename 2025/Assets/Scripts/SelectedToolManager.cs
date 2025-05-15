@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class SelectedToolManager : MonoBehaviour
 {
+    [SerializeField] private GameObject toolsLocation;
     [SerializeField] private List<GameObject> tools;
-    [SerializeField] private int[] toolAppearanceOrder;
+    [SerializeField] private int[] toolAppearanceOrderByDay;
     private GameObject selectedTool = null;
+    private bool canCensor = false;
+    private bool canCut = false;
     private GameManager gameManager;
 
 
@@ -14,20 +17,23 @@ public class SelectedToolManager : MonoBehaviour
     void Start()
     {
         gameManager = FindFirstObjectByType<GameManager>();
-        
+
+        if (toolsLocation == null)
+        {
+            Debug.LogError("Tools location is not assigned in the inspector.");
+            return;
+        }
         // Add the available tools to the list
-        foreach (Transform child in transform)
+        foreach (Transform child in toolsLocation.transform)
         {
             if (child.gameObject.activeSelf)
                 tools.Add(child.gameObject);
         }
 
-        // Check the game manager for the current tool, otherwise set the first tool as the selected tool
-        selectedTool = tools.FirstOrDefault(obj => obj.name == gameManager.GetCurrentTool());
+        // set the first tool as the selected tool
         if (selectedTool == null && tools.Count > 0)
         {
             selectedTool = tools[0];
-            gameManager.SetCurrentTool(selectedTool.name);
         }
         else if (selectedTool == null)
         {
@@ -37,7 +43,7 @@ public class SelectedToolManager : MonoBehaviour
 
         selectedTool.GetComponent<ToolSelection>().SelectToolEffect();
 
-        InitializeToolSelection();
+        InitializeToolAppearance();
     }
 
     // Update is called once per frame
@@ -46,12 +52,12 @@ public class SelectedToolManager : MonoBehaviour
         
     }
 
-    private void InitializeToolSelection()
+    public void InitializeToolAppearance()
     {
         int i = 0;
         foreach (GameObject tool in tools)
         {
-            if (gameManager.gameData.GetCurrentDay() >= toolAppearanceOrder[i])
+            if (gameManager.gameData.GetCurrentDay() >= toolAppearanceOrderByDay[i])
             {
                 tool.SetActive(true);
             }
@@ -69,14 +75,79 @@ public class SelectedToolManager : MonoBehaviour
         if (!tools.Contains(tool)) 
             Debug.LogError("Selected tool is not in the tools array.");
         
+        // Deselect the currently selected tool
         if (selectedTool != null)
+        {
             selectedTool.GetComponent<ToolSelection>().DeselectToolEffect();
+
+            // Exit cutting mode if the selected tool is CraftKnife
+            if (selectedTool.name == "CraftKnife")
+                gameManager.ExitCuttingMode();
+        }
+
+        // Select the new tool unless it's the same as the current one
+        if (selectedTool == tool)
+        {
+            SetToolFunctionality(false);
+            selectedTool = null;
+        }
+        else 
+        {
+            selectedTool = tool;
+            SetToolFunctionality(true);
+            selectedTool.GetComponent<ToolSelection>().SelectToolEffect();
+        }
         
-        selectedTool = tool;
-        gameManager.SetCurrentTool(tool.name);
+        
     }
     public string GetSelectedTool()
     {
         return selectedTool.name;
+    }
+
+    public void SetToolFunctionality(bool canUse)
+    {
+        if (selectedTool == null) return;
+
+        switch (selectedTool.name) 
+        {
+            case "BanStamp":
+                gameManager.BanStampObjActive(canUse);
+                gameManager.UVLightObjActive(false);
+                canCensor = false;
+                canCut = false;
+                break;
+            case "CensorPen":
+                canCensor = canUse;
+                gameManager.BanStampObjActive(false);
+                gameManager.UVLightObjActive(false);
+                canCut = false;
+                break;
+            case "UVLight":
+                gameManager.UVLightObjActive(canUse);
+                gameManager.BanStampObjActive(false);
+                canCensor = false;
+                canCut = false;
+                break;
+            case "CraftKnife":
+                canCut = canUse;
+                gameManager.BanStampObjActive(false);
+                gameManager.UVLightObjActive(false);
+                canCensor = false;
+                break;
+            default:
+                Debug.LogError($"Invalid tool: {selectedTool.name}");
+                break;
+        }
+        
+    }
+
+    public bool CanCensor()
+    {
+        return canCensor;
+    }
+    public bool CanCut()
+    {
+        return canCut;
     }
 }
