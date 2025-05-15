@@ -79,17 +79,21 @@ public class NewspaperZoom : MonoBehaviour
         {
             Debug.LogError("Tool Overlay UI Object not found!");
         }
-        toolOverlayStartPos = toolOverlayUI.transform.position;
-        toolOverlayEndPos = toolOverlayUI.transform.position + new Vector3(0f, -1200f, 0f);
+        toolOverlayStartPos = toolOverlayUI.GetComponent<RectTransform>().anchoredPosition;
+        toolOverlayEndPos = toolOverlayStartPos + new Vector3(0f, -1200f, 0f);
+
+        Debug.Log(toolOverlayStartPos + " " + toolOverlayEndPos);
 
         phoneOverlayUI = gameManager.GetPhoneOverlayObj().transform.GetChild(0).gameObject;
         if (phoneOverlayUI == null)
         {
             Debug.LogError("Phone Overlay UI Object not found!");
         }
-        phoneOverlayStartPos = phoneOverlayUI.transform.position;
-        phoneOverlayEndPos = phoneOverlayUI.transform.position + new Vector3(0f, -1200f, 0f);
+        phoneOverlayStartPos = phoneOverlayUI.GetComponent<RectTransform>().anchoredPosition;
+        phoneOverlayEndPos = phoneOverlayStartPos + new Vector3(0f, -1200f, 0f);
         phoneText = phoneOverlayUI.GetComponentInChildren<TextMeshProUGUI>();
+
+        Debug.Log(phoneOverlayStartPos + " " + phoneOverlayEndPos);
 
         UVLight = gameManager.GetUVLightObj();
         if (UVLight == null)
@@ -100,7 +104,7 @@ public class NewspaperZoom : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(1) && canZoom && stopZoom)
+        if (Input.GetMouseButtonDown(1) && canZoom && stopZoom && Time.timeScale != 0)
         {
             canZoom = false;
             ToggleZoom();
@@ -233,8 +237,8 @@ public class NewspaperZoom : MonoBehaviour
             yield break;
         }
 
-        instance.transform.position = endPos;
-
+        RectTransform rect = instance.GetComponent<RectTransform>();
+        rect.anchoredPosition = endPos;
         instance.SetActive(true);
 
         float elapsedTime = 0f;
@@ -242,12 +246,12 @@ public class NewspaperZoom : MonoBehaviour
 
         while (elapsedTime < duration)
         {
-            instance.transform.position = Vector3.Lerp(endPos, startPos, elapsedTime / duration);
+            rect.anchoredPosition = Vector2.Lerp(endPos, startPos, elapsedTime / duration);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
-        instance.transform.position = startPos;
+        rect.anchoredPosition = startPos;
     }
 
     private IEnumerator HideUIObject(GameObject instance, Vector3 startPos, Vector3 endPos)
@@ -258,19 +262,19 @@ public class NewspaperZoom : MonoBehaviour
             yield break;
         }
 
+        RectTransform rect = instance.GetComponent<RectTransform>();
         float elapsedTime = 0f;
         float duration = 0.2f;
 
         while (elapsedTime < duration)
         {
-            instance.transform.position = Vector3.Lerp(startPos, endPos, elapsedTime / duration);
+            rect.anchoredPosition = Vector3.Lerp(startPos, endPos, elapsedTime / duration);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
         instance.SetActive(false);
-
-        instance.transform.position = startPos;
+        rect.anchoredPosition = startPos;
     }
 
     public void PreventZoom()

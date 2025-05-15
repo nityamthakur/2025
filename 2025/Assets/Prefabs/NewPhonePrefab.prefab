@@ -149,7 +149,6 @@ GameObject:
   - component: {fileID: 1060110753650909576}
   - component: {fileID: 4435876937549435321}
   - component: {fileID: 3844230436223903604}
-  - component: {fileID: 1703398783955918335}
   m_Layer: 5
   m_Name: PhoneImage
   m_TagString: Untagged
@@ -214,19 +213,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &1703398783955918335
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3179994486202151162}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 541cb3d6e61f7cd4d80c30c0975a0c4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  grayscaleMaterial: {fileID: 0}
 --- !u!1 &8119046456042734119
 GameObject:
   m_ObjectHideFlags: 0
@@ -312,7 +298,7 @@ Canvas:
   m_GameObject: {fileID: 8764790447295677070}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
+  m_RenderMode: 1
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0

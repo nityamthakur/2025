@@ -5,8 +5,6 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
-
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 public class ObjectSpawner : MonoBehaviour
@@ -17,12 +15,10 @@ public class ObjectSpawner : MonoBehaviour
     [SerializeField] private GameObject rentNoticePrefab;
     [SerializeField] private GameObject imageObject;
 
-    // Quick fix for preventing object spawn on game close
-    //private int currDay;
+    private List<GameObject> rentNotices = new();
     private int newspaperPos = 0;
     private Entity.Newspaper[] newspapers;
     private Entity.Newspaper currentNewspaper;
-    //public JobScene jobScene; 
     private GameManager gameManager;
 
     bool quitting = false;
@@ -110,6 +106,14 @@ public class ObjectSpawner : MonoBehaviour
     {
         // Instantiate RentNoticePrefab
         GameObject rentNoticeInstance = Instantiate(rentNoticePrefab);
+        Canvas prefabCanvas = rentNoticeInstance.GetComponentInChildren<Canvas>();
+        if (prefabCanvas != null)
+        {
+            prefabCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+            prefabCanvas.worldCamera = Camera.main;
+        }
+        rentNotices.Add(rentNoticeInstance);
+
 
         int rent = gameManager.gameData.rent;
         string rentText = $"Rent will cost {rent}. If you are unable to pay by the end of the day, expect to be evicted.";
@@ -134,6 +138,19 @@ public class ObjectSpawner : MonoBehaviour
         else
         {
             Debug.LogError("SpawnRentNotice: RentNoticePrefab is missing Entity script!");
+        }
+    }
+
+    private void ShowHideRentNotices(bool show)
+    {
+        if(rentNotices.Count < 1)
+            return;
+        foreach(GameObject objectPiece in rentNotices)
+        {
+            if(objectPiece != null)
+                objectPiece.SetActive(show);
+            else
+                Destroy(objectPiece);
         }
     }
 
@@ -273,12 +290,14 @@ public class ObjectSpawner : MonoBehaviour
     // EventManager for creating a new media object after one gets destroyed
     private void OnEnable()
     {
+        EventManager.ShowHideRentNotices += ShowHideRentNotices;
         EventManager.OnMediaDestroyed += HandleMediaDestroyed;
         GameManager.OnGameRestart += StopSpawningOnRestart; // Listen for restarts
     }
 
     private void OnDisable()
     {
+        EventManager.ShowHideRentNotices -= ShowHideRentNotices;
         EventManager.OnMediaDestroyed -= HandleMediaDestroyed;
         GameManager.OnGameRestart -= StopSpawningOnRestart;
     }

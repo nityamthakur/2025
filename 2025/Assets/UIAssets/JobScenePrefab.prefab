@@ -95,7 +95,6 @@ GameObject:
   - component: {fileID: 8970508028443237563}
   - component: {fileID: 4303280746210685630}
   - component: {fileID: 7451953768896373738}
-  - component: {fileID: 354261884673731311}
   - component: {fileID: 1399352646785512101}
   m_Layer: 5
   m_Name: BackgroundImage
@@ -161,19 +160,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &354261884673731311
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 568260267567358377}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 541cb3d6e61f7cd4d80c30c0975a0c4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  grayscaleMaterial: {fileID: 2100000, guid: cec02e0e72fd1a047abd9cfb7c5f0078, type: 2}
 --- !u!114 &1399352646785512101
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -199,7 +185,6 @@ GameObject:
   - component: {fileID: 7563500426901154535}
   - component: {fileID: 7514220005070362749}
   - component: {fileID: 715873696523070173}
-  - component: {fileID: 1761114035179350369}
   m_Layer: 5
   m_Name: DropBoxDestroyGlow
   m_TagString: Untagged
@@ -264,19 +249,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &1761114035179350369
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1007065790805903764}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 541cb3d6e61f7cd4d80c30c0975a0c4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  grayscaleMaterial: {fileID: 0}
 --- !u!1 &1283195638312794857
 GameObject:
   m_ObjectHideFlags: 0
@@ -442,7 +414,6 @@ GameObject:
   - component: {fileID: 3417646864477974790}
   - component: {fileID: 2056362243517119608}
   - component: {fileID: 9091791658169151829}
-  - component: {fileID: 1649331547193904133}
   m_Layer: 5
   m_Name: IncorrectBuzzer
   m_TagString: Untagged
@@ -507,19 +478,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &1649331547193904133
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1501548129863203419}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 541cb3d6e61f7cd4d80c30c0975a0c4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  grayscaleMaterial: {fileID: 0}
 --- !u!1 &1548965507751852313
 GameObject:
   m_ObjectHideFlags: 0
@@ -1426,7 +1384,6 @@ GameObject:
   - component: {fileID: 3831860351623248187}
   - component: {fileID: 3084290126576954872}
   - component: {fileID: 4299821723408355004}
-  - component: {fileID: 7353658603153418037}
   m_Layer: 5
   m_Name: DropBoxAcceptGlow
   m_TagString: Untagged
@@ -1491,19 +1448,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &7353658603153418037
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6633558092373197151}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 541cb3d6e61f7cd4d80c30c0975a0c4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  grayscaleMaterial: {fileID: 0}
 --- !u!1 &6854021746180396986
 GameObject:
   m_ObjectHideFlags: 0
@@ -1602,7 +1546,6 @@ GameObject:
   - component: {fileID: 3428936214318160239}
   - component: {fileID: 1814014955747618525}
   - component: {fileID: 2424654937323887851}
-  - component: {fileID: 302987604812133542}
   m_Layer: 5
   m_Name: CorrectBuzzer
   m_TagString: Untagged
@@ -1667,19 +1610,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &302987604812133542
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7819604989002796954}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 541cb3d6e61f7cd4d80c30c0975a0c4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  grayscaleMaterial: {fileID: 0}
 --- !u!1001 &8163814340331849906
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1698,6 +1628,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 226659462298186212, guid: b266d1cd220d5e4478e3dd7f8e9e1123, type: 3}
       propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 361247754157056120, guid: b266d1cd220d5e4478e3dd7f8e9e1123, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 361247754157056120, guid: b266d1cd220d5e4478e3dd7f8e9e1123, type: 3}
+      propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 614185460494724219, guid: b266d1cd220d5e4478e3dd7f8e9e1123, type: 3}
@@ -1850,11 +1788,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3874995069250237577, guid: b266d1cd220d5e4478e3dd7f8e9e1123, type: 3}
       propertyPath: m_Size
-      value: 0.8798474
+      value: 0.8798473
       objectReference: {fileID: 0}
     - target: {fileID: 3874995069250237577, guid: b266d1cd220d5e4478e3dd7f8e9e1123, type: 3}
       propertyPath: m_Value
-      value: 1.0000008
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3951689101042767069, guid: b266d1cd220d5e4478e3dd7f8e9e1123, type: 3}
       propertyPath: m_Name
@@ -1881,6 +1819,30 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5580368377023887995, guid: b266d1cd220d5e4478e3dd7f8e9e1123, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6171409172462887316, guid: b266d1cd220d5e4478e3dd7f8e9e1123, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6171409172462887316, guid: b266d1cd220d5e4478e3dd7f8e9e1123, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6171409172462887316, guid: b266d1cd220d5e4478e3dd7f8e9e1123, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6171409172462887316, guid: b266d1cd220d5e4478e3dd7f8e9e1123, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6171409172462887316, guid: b266d1cd220d5e4478e3dd7f8e9e1123, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6171409172462887316, guid: b266d1cd220d5e4478e3dd7f8e9e1123, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}

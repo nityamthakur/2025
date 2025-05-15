@@ -34,11 +34,16 @@ public class DayStartScene : MonoBehaviour
     public void LoadDayStart()
     {
         currentTextBox = Instantiate(UITextBox);
-
         if (currentTextBox == null)
         {
             Debug.LogError("currentTextBox is null.");
             return;
+        }
+        Canvas prefabCanvas = currentTextBox.GetComponentInChildren<Canvas>();
+        if (prefabCanvas != null)
+        {
+            prefabCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+            prefabCanvas.worldCamera = Camera.main;
         }
 
         SetUpDayStart();

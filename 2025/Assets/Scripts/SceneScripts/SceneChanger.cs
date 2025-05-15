@@ -42,12 +42,18 @@ public class SceneChanger : MonoBehaviour
             () => dayEndScene.LoadDayEnd()
         };
         fadingScreen = Instantiate(fadingScreenPrefab);
-
         if (fadingScreen == null)
         {
             Debug.LogError("fadingImage is null in SceneManager.");
             return;
         }
+        Canvas prefabCanvas = fadingScreen.GetComponentInChildren<Canvas>();
+        if (prefabCanvas != null)
+        {
+            prefabCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+            prefabCanvas.worldCamera = Camera.main;
+        }
+
 
         fadingImage = fadingScreen.transform.Find("FadingImage").GetComponent<Image>();
         if (fadingImage == null)
@@ -119,14 +125,14 @@ public class SceneChanger : MonoBehaviour
 
             // For Debugging
             // Change the starting day
-            gameManager.gameData.day = 4;
+            gameManager.gameData.day = 4;                                       // 1
             
             // Start the game at day end
             //currentSceneIndex = 4;
             //dayEndScene.LoadDayEnd();
             
             // Start the game at the job scene
-            currentSceneIndex = 2;
+            currentSceneIndex = 2;                                              // comment both
             jobScene.LoadJobStart();
         }
     }

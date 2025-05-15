@@ -26,6 +26,12 @@ public class MainMenuScene : MonoBehaviour
             Debug.LogError("menuObject is null.");
             return;
         }
+        Canvas prefabCanvas = currentMenuObject.GetComponentInChildren<Canvas>();
+        if (prefabCanvas != null)
+        {
+            prefabCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+            prefabCanvas.worldCamera = Camera.main;
+        }
 
         SetUpMainMenu();
         EventManager.FadeIn?.Invoke(); 
