@@ -272,14 +272,13 @@ MonoBehaviour:
   femaleNewsAnchor: {fileID: -1540687528, guid: a3b2525eefac14d5881507c820d26496, type: 3}
   maleNewsAnchor: {fileID: -195469805601254878, guid: 0d88bc2eb627439499134ddbde6b061f, type: 3}
   badEnding: {fileID: -8335090095948488748, guid: 6f8ef183b4a69484387fa1dd869b2bb9, type: 3}
-
+  playtestQRCode: {fileID: 0}
+  gameRating: 0
 --- !u!1 &284965278 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1154006878560304443, guid: e524956e60a779e4ca8ab5bcabe3ccf0, type: 3}
   m_PrefabInstance: {fileID: 6653156993321225801}
   m_PrefabAsset: {fileID: 0}
-  playtestQRCode: {fileID: 1285756113957457238, guid: aa20ee9f0a5f6e046ad3bbced7e34df8, type: 3}
-  gameRating: 0
 --- !u!1 &374167941
 GameObject:
   m_ObjectHideFlags: 0
@@ -838,7 +837,7 @@ MonoBehaviour:
   mainCamera: {fileID: 519420028}
   objectSpawner: {fileID: 1245310923}
   jobScenePrefab: {fileID: 5289697525290493822, guid: 87b1fee1ad31bc843b21ba6484daea50, type: 3}
-  workBackgroundImage: {fileID: 8941961987756735026, guid: 12cfa2c3fdcaa8644816bc0be2f33a8f, type: 3}
+  workBackgroundImage: {fileID: -4104544116909880467, guid: d422700926564504d9b3ae856d636c32, type: 3}
   glitchedScreen: {fileID: 5111763290514371741, guid: 69c02822765493849b65f7d53cfdce8a, type: 3}
   jobBuildingPrefab: {fileID: 7365597034380788627, guid: 179c1e3c7be1eed4385ed3fdeb7cc64b, type: 3}
   jobBuildingImage: {fileID: 7500719156437101807, guid: f0d23fea0664eb14a9e6c31266085328, type: 3}
@@ -1940,7 +1939,7 @@ PrefabInstance:
       objectReference: {fileID: 519420031}
     - target: {fileID: 6070897284736800011, guid: 9e6adce8c8125c046a3755b6e97c7847, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8764790447295677070, guid: 9e6adce8c8125c046a3755b6e97c7847, type: 3}
       propertyPath: m_Name
