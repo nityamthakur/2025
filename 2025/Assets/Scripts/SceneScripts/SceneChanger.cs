@@ -121,7 +121,7 @@ public class SceneChanger : MonoBehaviour
 
             // Start Game
             // Comment out if using with debug
-            //mainMenuScene.LoadMainMenu();                                     uncomment
+            mainMenuScene.LoadMainMenu();
 
             // For Debugging
             // Change the starting day
