@@ -14,6 +14,9 @@ public static class SaveSystem
 
     public static void SaveGame(int slot, GameData data)
     {
+        if(slot == -1)
+            return;
+    
         BinaryFormatter formatter = new();
         string path = GetSaveFilePath(slot);
 

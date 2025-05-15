@@ -218,13 +218,20 @@ public class OptionsMenu : MonoBehaviour
     {
         if(SaveSystem.SaveExists(slot))
         {
-            ChangeObjectText(confirmText, $"Save Over File {slot}?");
+            ChangeObjectText(confirmText, $"Create A New Save Over File {slot}?");
             ChangeMenuSection(confirmSection);
+            deleteButton.gameObject.SetActive(false);
 
             confirmAction = () =>
             {
+                gameManager.gameData.saveSlot = slot;
+                gameManager.gameData.day = 1;
                 SaveSystem.SaveGame(slot, gameManager.gameData);
-                ChangeMenuSection(saveLoadSection);
+                //ChangeMenuSection(saveLoadSection);
+                EventManager.BeginNewGame?.Invoke();
+                gameObject.SetActive(false);
+                deleteButtonPressed = false;
+                Time.timeScale = 1;
             };
             cancelAction = () =>
             {
@@ -233,8 +240,14 @@ public class OptionsMenu : MonoBehaviour
         }
         else
         {
+            gameManager.gameData.saveSlot = slot;
+            gameManager.gameData.day = 1;
             SaveSystem.SaveGame(slot, gameManager.gameData);
-            ChangeMenuSection(saveLoadSection);
+            EventManager.BeginNewGame?.Invoke();
+            gameObject.SetActive(false);
+            deleteButtonPressed = false;
+            Time.timeScale = 1;
+            //ChangeMenuSection(saveLoadSection);
         }
     }
 
@@ -369,7 +382,7 @@ public class OptionsMenu : MonoBehaviour
             else
             {
                 if(lastSaveLoadOption == "save")
-                    ChangeObjectText(pauseMenuText, "Save Menu");
+                    ChangeObjectText(pauseMenuText, "Choose A Save File");
                 else
                     ChangeObjectText(pauseMenuText, "Load Menu");
             }
@@ -378,7 +391,7 @@ public class OptionsMenu : MonoBehaviour
             ChangeObjectText(pauseMenuText, "Pause Menu");
 
 
-        if (section == menuSections)
+        if (section == menuSections || lastSaveLoadOption == "save")
             backButton.gameObject.SetActive(false);
         else
             backButton.gameObject.SetActive(true);
@@ -432,19 +445,19 @@ public class OptionsMenu : MonoBehaviour
 
     private void OptionsChanger(string option)
     {
+        lastSaveLoadOption = "load";
         switch (option.ToLower())
         {
             case "load":
                 UpdateSaveLoadButtons("load");
                 ChangeMenuSection(saveLoadSection);
                 break;
-
             case "options":
                 ChangeMenuSection(audioSection);
                 break;
             
             default:
-                saveButton?.gameObject.SetActive(true);
+                //saveButton?.gameObject.SetActive(true);
                 mainMenuButton?.gameObject.SetActive(true);
                 ChangeMenuSection(menuSections);
                 break;
@@ -650,13 +663,24 @@ public class OptionsMenu : MonoBehaviour
         return null;
     }
 
+    public void NewStartGame()
+    {
+        lastSaveLoadOption = "save";
+        UpdateSaveLoadButtons("save");
+        ChangeMenuSection(saveLoadSection);
+
+        backButton.gameObject.SetActive(false);
+    }
+
     void OnEnable()
     {
         EventManager.OptionsChanger += OptionsChanger;
+        EventManager.NewStartGame += NewStartGame;
     }
 
     void OnDisable()
     {
         EventManager.OptionsChanger -= OptionsChanger;
+        EventManager.NewStartGame -= NewStartGame;
     }
 }

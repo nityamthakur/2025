@@ -1,0 +1,1717 @@
+fileFormatVersion: 2
+guid: d73dc98a93f7edc47b7646fda2f7d4b8
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 3537809669915055640
+    second: computerLoadingCircle_0
+  - first:
+      213: -8430148810682959122
+    second: computerLoadingCircle_1
+  - first:
+      213: 531893763202680625
+    second: computerLoadingCircle_2
+  - first:
+      213: 6890698738966933400
+    second: computerLoadingCircle_3
+  - first:
+      213: 981279842076456889
+    second: computerLoadingCircle_4
+  - first:
+      213: 7798141563974841923
+    second: computerLoadingCircle_5
+  - first:
+      213: 5847236485282781845
+    second: computerLoadingCircle_6
+  - first:
+      213: -3590168413081387695
+    second: computerLoadingCircle_7
+  - first:
+      213: 7118627666852258539
+    second: computerLoadingCircle_8
+  - first:
+      213: -6138154699810438655
+    second: computerLoadingCircle_9
+  - first:
+      213: 5614523077041140207
+    second: computerLoadingCircle_10
+  - first:
+      213: -7116409101818106569
+    second: computerLoadingCircle_11
+  - first:
+      213: -8709374680803228966
+    second: computerLoadingCircle_12
+  - first:
+      213: -2136067774571516806
+    second: computerLoadingCircle_13
+  - first:
+      213: 6761075269286263688
+    second: computerLoadingCircle_14
+  - first:
+      213: -1048808653023479210
+    second: computerLoadingCircle_15
+  - first:
+      213: 3461848955246774562
+    second: computerLoadingCircle_16
+  - first:
+      213: 8301047826263398281
+    second: computerLoadingCircle_17
+  - first:
+      213: -8471713597579456683
+    second: computerLoadingCircle_18
+  - first:
+      213: -6543198003113357739
+    second: computerLoadingCircle_19
+  - first:
+      213: -4947267753330725365
+    second: computerLoadingCircle_20
+  - first:
+      213: -449771020915898589
+    second: computerLoadingCircle_21
+  - first:
+      213: 4752528058306561428
+    second: computerLoadingCircle_22
+  - first:
+      213: 6495634408822760750
+    second: computerLoadingCircle_23
+  - first:
+      213: -5449496273914894973
+    second: computerLoadingCircle_24
+  - first:
+      213: -1284103801081783251
+    second: computerLoadingCircle_25
+  - first:
+      213: 6021797491954503062
+    second: computerLoadingCircle_26
+  - first:
+      213: -8039885701684381125
+    second: computerLoadingCircle_27
+  - first:
+      213: 2930149472023964815
+    second: computerLoadingCircle_28
+  - first:
+      213: -4559716298536834271
+    second: computerLoadingCircle_29
+  - first:
+      213: 4460506306732422398
+    second: computerLoadingCircle_30
+  - first:
+      213: 8299109321349788147
+    second: computerLoadingCircle_31
+  - first:
+      213: -561119323051057810
+    second: computerLoadingCircle_32
+  - first:
+      213: -180082972109976447
+    second: computerLoadingCircle_33
+  - first:
+      213: -1389494977776796195
+    second: computerLoadingCircle_34
+  - first:
+      213: -2456123017560494733
+    second: computerLoadingCircle_35
+  - first:
+      213: 5110796823470580944
+    second: computerLoadingCircle_36
+  - first:
+      213: 6707513919643219314
+    second: computerLoadingCircle_37
+  - first:
+      213: -1775481310519435732
+    second: computerLoadingCircle_38
+  - first:
+      213: -7455342428160037831
+    second: computerLoadingCircle_39
+  - first:
+      213: 3099383086418887860
+    second: computerLoadingCircle_40
+  - first:
+      213: 5810817015196829278
+    second: computerLoadingCircle_41
+  - first:
+      213: 2837666448425732779
+    second: computerLoadingCircle_42
+  - first:
+      213: -4255589311967755733
+    second: computerLoadingCircle_43
+  - first:
+      213: 6310243358092757595
+    second: computerLoadingCircle_44
+  - first:
+      213: -7737152590276562212
+    second: computerLoadingCircle_45
+  - first:
+      213: 1637472920055395378
+    second: computerLoadingCircle_46
+  - first:
+      213: -499316581248431473
+    second: computerLoadingCircle_47
+  - first:
+      213: 1452473924508040162
+    second: computerLoadingCircle_48
+  - first:
+      213: 2299460114329060060
+    second: computerLoadingCircle_49
+  - first:
+      213: 6744216050801772706
+    second: computerLoadingCircle_50
+  - first:
+      213: 4420912904833168605
+    second: computerLoadingCircle_51
+  - first:
+      213: -8152823880106384318
+    second: computerLoadingCircle_52
+  - first:
+      213: -5034361349771173301
+    second: computerLoadingCircle_53
+  - first:
+      213: -2554768778744306660
+    second: computerLoadingCircle_54
+  - first:
+      213: -2992135967571284638
+    second: computerLoadingCircle_55
+  - first:
+      213: 2971324467577176471
+    second: computerLoadingCircle_56
+  - first:
+      213: -1536028910548301457
+    second: computerLoadingCircle_57
+  - first:
+      213: -5621032233669496706
+    second: computerLoadingCircle_58
+  - first:
+      213: 7137773106447613205
+    second: computerLoadingCircle_59
+  - first:
+      213: 5218378017445707385
+    second: computerLoadingCircle_60
+  - first:
+      213: 7957760127422161169
+    second: computerLoadingCircle_61
+  - first:
+      213: -8323692012339921665
+    second: computerLoadingCircle_62
+  - first:
+      213: -8538375477399783359
+    second: computerLoadingCircle_63
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: computerLoadingCircle_0
+      rect:
+        serializedVersion: 2
+        x: 84
+        y: 267
+        width: 23
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8169a329623d81130800000000000000
+      internalID: 3537809669915055640
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_1
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 277
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eea7f8f4258120b80800000000000000
+      internalID: -8430148810682959122
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_2
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 267
+        width: 23
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 13701fd3f8aa16700800000000000000
+      internalID: 531893763202680625
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_3
+      rect:
+        serializedVersion: 2
+        x: 435
+        y: 277
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 89f2b5e9efda0af50800000000000000
+      internalID: 6890698738966933400
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_4
+      rect:
+        serializedVersion: 2
+        x: 490
+        y: 264
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b7f73c31d43e9d00800000000000000
+      internalID: 981279842076456889
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_5
+      rect:
+        serializedVersion: 2
+        x: 684
+        y: 267
+        width: 23
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 346fde4af60983c60800000000000000
+      internalID: 7798141563974841923
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_6
+      rect:
+        serializedVersion: 2
+        x: 735
+        y: 277
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 59adbf67a9e852150800000000000000
+      internalID: 5847236485282781845
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_7
+      rect:
+        serializedVersion: 2
+        x: 790
+        y: 264
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 15db47e89d82d2ec0800000000000000
+      internalID: -3590168413081387695
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_8
+      rect:
+        serializedVersion: 2
+        x: 1035
+        y: 277
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be22ffa95227ac260800000000000000
+      internalID: 7118627666852258539
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_9
+      rect:
+        serializedVersion: 2
+        x: 1090
+        y: 264
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 102876562d4e0daa0800000000000000
+      internalID: -6138154699810438655
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_10
+      rect:
+        serializedVersion: 2
+        x: 1390
+        y: 264
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fe13546ddfacaed40800000000000000
+      internalID: 5614523077041140207
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_11
+      rect:
+        serializedVersion: 2
+        x: 4584
+        y: 267
+        width: 23
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73d66c150af6d3d90800000000000000
+      internalID: -7116409101818106569
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_12
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 236
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad241fe3fd5122780800000000000000
+      internalID: -8709374680803228966
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_13
+      rect:
+        serializedVersion: 2
+        x: 340
+        y: 236
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a7c61882da92b52e0800000000000000
+      internalID: -2136067774571516806
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_14
+      rect:
+        serializedVersion: 2
+        x: 835
+        y: 236
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 88b7c7db22a24dd50800000000000000
+      internalID: 6761075269286263688
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_15
+      rect:
+        serializedVersion: 2
+        x: 1135
+        y: 236
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 65afd2f3612e171f0800000000000000
+      internalID: -1048808653023479210
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_16
+      rect:
+        serializedVersion: 2
+        x: 1435
+        y: 236
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2298a8b7845fa0030800000000000000
+      internalID: 3461848955246774562
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_17
+      rect:
+        serializedVersion: 2
+        x: 1735
+        y: 236
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98755f3640f333370800000000000000
+      internalID: 8301047826263398281
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_18
+      rect:
+        serializedVersion: 2
+        x: 4240
+        y: 236
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 55f0e693e5d6e6a80800000000000000
+      internalID: -8471713597579456683
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_19
+      rect:
+        serializedVersion: 2
+        x: 4540
+        y: 236
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 55e02616514e135a0800000000000000
+      internalID: -6543198003113357739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_20
+      rect:
+        serializedVersion: 2
+        x: 12
+        y: 191
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0e2af9a036c75bb0800000000000000
+      internalID: -4947267753330725365
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_21
+      rect:
+        serializedVersion: 2
+        x: 1167
+        y: 192
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3270b04b3a712c9f0800000000000000
+      internalID: -449771020915898589
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_22
+      rect:
+        serializedVersion: 2
+        x: 1467
+        y: 192
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 495807cc61f54f140800000000000000
+      internalID: 4752528058306561428
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_23
+      rect:
+        serializedVersion: 2
+        x: 1767
+        y: 192
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e256fa85411252a50800000000000000
+      internalID: 6495634408822760750
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_24
+      rect:
+        serializedVersion: 2
+        x: 2067
+        y: 192
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 385ec74f2008f54b0800000000000000
+      internalID: -5449496273914894973
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_25
+      rect:
+        serializedVersion: 2
+        x: 3912
+        y: 191
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2c9ac97562fd2ee0800000000000000
+      internalID: -1284103801081783251
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_26
+      rect:
+        serializedVersion: 2
+        x: 4212
+        y: 191
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69d49410ae8b19350800000000000000
+      internalID: 6021797491954503062
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_27
+      rect:
+        serializedVersion: 2
+        x: 4512
+        y: 191
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b3a3c5c2d869c6090800000000000000
+      internalID: -8039885701684381125
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_28
+      rect:
+        serializedVersion: 2
+        x: 1477
+        y: 141
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8c69c29b6bf9a820800000000000000
+      internalID: 2930149472023964815
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_29
+      rect:
+        serializedVersion: 2
+        x: 1777
+        y: 141
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 12b27255f22a8b0c0800000000000000
+      internalID: -4559716298536834271
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_30
+      rect:
+        serializedVersion: 2
+        x: 2077
+        y: 141
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ef4fc2b6ad6e6ed30800000000000000
+      internalID: 4460506306732422398
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_31
+      rect:
+        serializedVersion: 2
+        x: 2377
+        y: 141
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f1ff2b05fb5c2370800000000000000
+      internalID: 8299109321349788147
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_32
+      rect:
+        serializedVersion: 2
+        x: 3599
+        y: 136
+        width: 23
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e6d1fe8d2f08638f0800000000000000
+      internalID: -561119323051057810
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_33
+      rect:
+        serializedVersion: 2
+        x: 3899
+        y: 136
+        width: 23
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 18cc941bd77308df0800000000000000
+      internalID: -180082972109976447
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_34
+      rect:
+        serializedVersion: 2
+        x: 4199
+        y: 136
+        width: 23
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dddbc68fda587bce0800000000000000
+      internalID: -1389494977776796195
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_35
+      rect:
+        serializedVersion: 2
+        x: 4499
+        y: 136
+        width: 23
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37d65ade0291aedd0800000000000000
+      internalID: -2456123017560494733
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_36
+      rect:
+        serializedVersion: 2
+        x: 1764
+        y: 86
+        width: 23
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0d4a82ef1a23de640800000000000000
+      internalID: 5110796823470580944
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_37
+      rect:
+        serializedVersion: 2
+        x: 2064
+        y: 86
+        width: 23
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 275725a3f50e51d50800000000000000
+      internalID: 6707513919643219314
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_38
+      rect:
+        serializedVersion: 2
+        x: 2364
+        y: 86
+        width: 23
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2ed42da7293c57e0800000000000000
+      internalID: -1775481310519435732
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_39
+      rect:
+        serializedVersion: 2
+        x: 2664
+        y: 86
+        width: 23
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 93c6f9acf8d498890800000000000000
+      internalID: -7455342428160037831
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_40
+      rect:
+        serializedVersion: 2
+        x: 3309
+        y: 84
+        width: 23
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b40ad0fe78330b20800000000000000
+      internalID: 3099383086418887860
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_41
+      rect:
+        serializedVersion: 2
+        x: 3609
+        y: 84
+        width: 23
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e564a9dc94b24a050800000000000000
+      internalID: 5810817015196829278
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_42
+      rect:
+        serializedVersion: 2
+        x: 3909
+        y: 84
+        width: 23
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: baac579a99a616720800000000000000
+      internalID: 2837666448425732779
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_43
+      rect:
+        serializedVersion: 2
+        x: 4209
+        y: 84
+        width: 23
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b22863e511c11f4c0800000000000000
+      internalID: -4255589311967755733
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_44
+      rect:
+        serializedVersion: 2
+        x: 2035
+        y: 41
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5a036da6ec729750800000000000000
+      internalID: 6310243358092757595
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_45
+      rect:
+        serializedVersion: 2
+        x: 2335
+        y: 41
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd2729b56bc10a490800000000000000
+      internalID: -7737152590276562212
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_46
+      rect:
+        serializedVersion: 2
+        x: 2635
+        y: 41
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2343931f1f879b610800000000000000
+      internalID: 1637472920055395378
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_47
+      rect:
+        serializedVersion: 2
+        x: 2935
+        y: 41
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8a893007321219f0800000000000000
+      internalID: -499316581248431473
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_48
+      rect:
+        serializedVersion: 2
+        x: 3040
+        y: 41
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2ebb1dbb659382410800000000000000
+      internalID: 1452473924508040162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_49
+      rect:
+        serializedVersion: 2
+        x: 3340
+        y: 41
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd243c97ac259ef10800000000000000
+      internalID: 2299460114329060060
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_50
+      rect:
+        serializedVersion: 2
+        x: 3640
+        y: 41
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a8078c04c4489d50800000000000000
+      internalID: 6744216050801772706
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_51
+      rect:
+        serializedVersion: 2
+        x: 3940
+        y: 41
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd4758b2ddc3a5d30800000000000000
+      internalID: 4420912904833168605
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_52
+      rect:
+        serializedVersion: 2
+        x: 2292
+        y: 9
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 244efe560e95bde80800000000000000
+      internalID: -8152823880106384318
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_53
+      rect:
+        serializedVersion: 2
+        x: 2540
+        y: 0
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b42eeeb860b522ab0800000000000000
+      internalID: -5034361349771173301
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_54
+      rect:
+        serializedVersion: 2
+        x: 2592
+        y: 9
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c14efabd453ab8cd0800000000000000
+      internalID: -2554768778744306660
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_55
+      rect:
+        serializedVersion: 2
+        x: 2785
+        y: 12
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 26d6e35c03cc976d0800000000000000
+      internalID: -2992135967571284638
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_56
+      rect:
+        serializedVersion: 2
+        x: 2840
+        y: 0
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7914d5a4cd34c3920800000000000000
+      internalID: 2971324467577176471
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_57
+      rect:
+        serializedVersion: 2
+        x: 2892
+        y: 9
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f69c90618ddeeaae0800000000000000
+      internalID: -1536028910548301457
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_58
+      rect:
+        serializedVersion: 2
+        x: 3085
+        y: 12
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e70fb1907f41ef1b0800000000000000
+      internalID: -5621032233669496706
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_59
+      rect:
+        serializedVersion: 2
+        x: 3140
+        y: 0
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51d7521a2d67e0360800000000000000
+      internalID: 7137773106447613205
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_60
+      rect:
+        serializedVersion: 2
+        x: 3192
+        y: 9
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 97efe81a8276b6840800000000000000
+      internalID: 5218378017445707385
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_61
+      rect:
+        serializedVersion: 2
+        x: 3385
+        y: 12
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 111e3c28ca4af6e60800000000000000
+      internalID: 7957760127422161169
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_62
+      rect:
+        serializedVersion: 2
+        x: 3440
+        y: 0
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ffcf8b0373e4c7c80800000000000000
+      internalID: -8323692012339921665
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: computerLoadingCircle_63
+      rect:
+        serializedVersion: 2
+        x: 3685
+        y: 12
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 148fda6ddb8918980800000000000000
+      internalID: -8538375477399783359
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable: {}
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
