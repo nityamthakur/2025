@@ -1,14 +1,14 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Entity : MonoBehaviour
 {
     [SerializeField] private GameObject censorBoxPrefab;
-    [SerializeField] private GameObject frontCensorBoxContainer;
-    [SerializeField] private GameObject backCensorBoxContainer;
     [SerializeField] GameObject backOfNewspaper;
     [SerializeField] Material blurMaterial;
     [SerializeField] Material defaultMaterial;
@@ -49,6 +49,7 @@ public class Entity : MonoBehaviour
     private void Start()
     {
         textComponents = GetComponentsInChildren<TMP_Text>(true);
+
         if (textComponents == null)
         {
             Debug.LogError("No TextMeshPro components found!");
@@ -213,17 +214,12 @@ public class Entity : MonoBehaviour
 
     private void CreateBoxesForText(TMP_Text textComponent, bool isBack)
     {
-        GameObject censorBoxContainer;
         if (isBack) 
-        {
             backOfNewspaper.SetActive(true);
-            censorBoxContainer = backCensorBoxContainer;
-        }
-        else censorBoxContainer = frontCensorBoxContainer;
 
         int curLineIndex = 0;
         int curWordIndex = 0;
-        float prevLastCharX = 0;
+        float prevLastCharX = 0f;
         
         // Loop through each word in the text
         foreach (var wordInfo in textComponent.textInfo.wordInfo)
@@ -232,6 +228,7 @@ public class Entity : MonoBehaviour
 
             string word = wordInfo.GetWord();
             bool isCensorTarget = WordisCensorable(word);
+            bool isReplaceTarget = WordisReplaceable(word);
 
             // Gather the corners of the word
             var firstCharInfo = textComponent.textInfo.characterInfo[wordInfo.firstCharacterIndex];
@@ -248,7 +245,10 @@ public class Entity : MonoBehaviour
             var boxSize = new Vector2(Mathf.Abs(topLeft.x - bottomRight.x), 
                 Mathf.Abs(topLeft.y - bottomRight.y));
 
-            GameObject newCensorBox = Instantiate(censorBoxPrefab, censorBoxContainer.transform);
+            GameObject textComponentObj = textComponent.gameObject;
+            GameObject newCensorBox = Instantiate(censorBoxPrefab, textComponentObj.transform);
+            newCensorBox.GetComponent<CensorTarget>().InitializeCensorTarget(word, textComponent, wordInfo.firstCharacterIndex, wordInfo.characterCount, curLineIndex, curWordIndex, topLeft);
+            textComponentObj.GetComponent<TextComponent>().AddCensorTarget(newCensorBox.GetComponent<CensorTarget>(), wordInfo.firstCharacterIndex);
             
             // Center the box around the word
             newCensorBox.transform.position = new Vector3((topLeft.x + bottomRight.x) / 2, (topLeft.y + bottomRight.y) / 2, 0);
@@ -264,6 +264,11 @@ public class Entity : MonoBehaviour
             {
                 newCensorBox.GetComponent<CensorTarget>().SetToCensorTarget();
                 gameManager.RegisterCensorTarget();
+            }
+            else if (isReplaceTarget)
+            {
+                newCensorBox.GetComponent<CensorTarget>().SetToReplaceTarget();
+                gameManager.RegisterReplaceTarget();
             }
         }
         if (isBack)
@@ -287,6 +292,160 @@ public class Entity : MonoBehaviour
         }
         return false;
     }
+    private bool WordisReplaceable(string word)
+    {
+        // Find if the word contains any replace words
+        foreach (string[] replaceWord in gameManager.GetReplaceTargetWords())
+        {
+            // Split the replace word/phrase into individual words
+            string[] splicedWord = replaceWord[0].Split(' ');
+            foreach (string individualWord in splicedWord)
+            {
+                if (word.Contains(individualWord))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public void UpdateCensorBoxes(CensorTarget cuttingRecipient, string replacementText)
+    {
+        TMP_Text textComponent = cuttingRecipient.GetTextComponent();
+        int lineIndex = cuttingRecipient.GetWordLocation().Item1;
+        int wordIndex = cuttingRecipient.GetWordLocation().Item2;
+        
+        int curLineIndex = 0;
+        int curWordIndex = 0;
+        float prevLastCharX = 0f;
+
+        UpdateTextComponent(textComponent, replacementText, cuttingRecipient.GetTextCmpFirstIndex(), cuttingRecipient.GetWordCharCount());
+        List<CensorTarget> targets = new List<CensorTarget>();
+        int wordNum = 0;
+        bool lineFound = false;
+        
+        // Loop through each word in the text
+        foreach (var wordInfo in textComponent.textInfo.wordInfo)
+        {
+            if (wordInfo.characterCount == 0) continue;
+
+            if (curLineIndex < lineIndex)
+            {
+                curWordIndex++;
+                if (curLineIndex < textComponent.textInfo.lineInfo.Length && curWordIndex >= textComponent.textInfo.lineInfo[curLineIndex].wordCount) {
+                    curLineIndex++;
+                    curWordIndex = 0;
+                }
+                continue;
+            }
+            else if (!lineFound) 
+            {
+                lineFound = true;
+                targets = textComponent.gameObject.GetComponent<TextComponent>().ClearCensorTargetIndices(wordInfo.firstCharacterIndex);
+            }
+
+            // Gather the corners of the word
+            var firstCharInfo = textComponent.textInfo.characterInfo[wordInfo.firstCharacterIndex];
+            var lastCharInfo = textComponent.textInfo.characterInfo[wordInfo.lastCharacterIndex];
+            var topLeft = textComponent.transform.TransformPoint(firstCharInfo.topLeft);
+            var bottomRight = textComponent.transform.TransformPoint(lastCharInfo.bottomRight);
+
+            if (curWordIndex != 0) {
+                topLeft.x = prevLastCharX;
+            }
+            prevLastCharX = bottomRight.x;
+            
+            // Create rectangle to block out the word
+            var boxSize = new Vector2(Mathf.Abs(topLeft.x - bottomRight.x), 
+                Mathf.Abs(topLeft.y - bottomRight.y));
+
+            CensorTarget censorBox = targets[wordNum++];
+            textComponent.gameObject.GetComponent<TextComponent>().AddCensorTarget(censorBox, wordInfo.firstCharacterIndex);
+
+            censorBox.SetTextCmpFirstIndex(wordInfo.firstCharacterIndex);
+            censorBox.SetWordCharCount(wordInfo.characterCount);
+            
+            // Center the box around the word
+            censorBox.transform.position = new Vector3((topLeft.x + bottomRight.x) / 2, (topLeft.y + bottomRight.y) / 2, 0);
+            Vector3 parentScale = censorBox.transform.parent.lossyScale;
+            censorBox.transform.localScale = new Vector3(
+                boxSize.x / parentScale.x,
+                boxSize.y / parentScale.y,
+                1
+            );
+
+            curWordIndex++;
+            if (curLineIndex < textComponent.textInfo.lineInfo.Length && curWordIndex >= textComponent.textInfo.lineInfo[curLineIndex].wordCount) {
+                curLineIndex++;
+                curWordIndex = 0;
+            }
+        }
+    }
+
+    private void UpdateTextComponent(TMP_Text textComponent, string replacementText, int firstCharacterIndex, int characterCount)
+    {
+        if (textComponent == null)
+        {
+            Debug.LogError("Text component is null.");
+            return;
+        }
+
+        // Remove any previous <nobr> tags for a clean search
+        string taggedText = textComponent.text;
+        // Remove all <nobr> tags to get the clean text
+        string cleanText = taggedText.Replace("<nobr>", "").Replace("</nobr>", "");
+
+        // Get the phrase to replace from the clean text
+        if (firstCharacterIndex + characterCount > cleanText.Length)
+        {
+            Debug.LogError("Index out of range for replacement.");
+            return;
+        }
+        string phraseToReplace = cleanText.Substring(firstCharacterIndex, characterCount);
+
+        // Now, map the clean index to the tagged text index
+        int realIndex = 0, cleanCount = 0;
+        while (realIndex < taggedText.Length && cleanCount < firstCharacterIndex)
+        {
+            if (taggedText[realIndex] != '<')
+                cleanCount++;
+            else
+            {
+                int close = taggedText.IndexOf('>', realIndex);
+                if (close == -1) break;
+                realIndex = close;
+            }
+            realIndex++;
+        }
+
+        // Now, find the end index for replacement (skip tags in the substring)
+        int replaceStart = realIndex;
+        int charsToReplace = characterCount;
+        int replaced = 0;
+        int replaceEnd = replaceStart;
+        while (replaceEnd < taggedText.Length && replaced < charsToReplace)
+        {
+            if (taggedText[replaceEnd] != '<')
+                replaced++;
+            else
+            {
+                int close = taggedText.IndexOf('>', replaceEnd);
+                if (close == -1) break;
+                replaceEnd = close;
+            }
+            replaceEnd++;
+        }
+
+        // Replace the substring (from replaceStart to replaceEnd) with the new <nobr>replacementText</nobr>
+        string updatedText = taggedText.Substring(0, replaceStart)
+            + "<nobr>" + replacementText + "</nobr>"
+            + taggedText.Substring(replaceEnd);
+
+        textComponent.text = updatedText;
+        textComponent.ForceMeshUpdate();
+    }
+
 
     private void SetUpSplinePath() 
     {
@@ -340,6 +499,10 @@ public class Entity : MonoBehaviour
     {
         if (other == storedTrigger)
         {
+            GameObject banStampCollider = transform.Find("BanStampCollider")?.gameObject;
+            if (banStampCollider != null)
+                gameManager.ResetBanStampCollider(banStampCollider);
+            
             isInsideTrigger = false;
             storedTrigger = null;
             if(other.gameObject.CompareTag("DropBoxAccept"))
@@ -439,6 +602,7 @@ public class Entity : MonoBehaviour
         
         public string[] banWords;
         public string[] censorWords;
+        public string[][] replaceWords;
         public bool hasHiddenImage;
 
         public string GetPublisher()

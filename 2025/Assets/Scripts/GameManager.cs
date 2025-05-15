@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -18,22 +19,32 @@ public class GameManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI onScreenTimer;
     [SerializeField] GameObject onScreenDayChanger;
     
+    [SerializeField] GameObject toolOverlayObj;
+    [SerializeField] GameObject phoneOverlayObj;
+    [SerializeField] GameObject cuttingTargetObj;
     [SerializeField] GameObject UVLightObj;
+    [SerializeField] GameObject banStampObj;
     private JobDetails jobDetails;
     private JobScene jobScene;
     private Coroutine jobTimerCoroutine;
+    private GameObject currentMediaObject;
+    private SelectedToolManager selectedToolManager;
 
     private string[] censorTargetWords;
     private string[] banTargetWords;
+    private string[][] replaceTargetWords;
     private int totalCensorTargets = 0;
     private int currentCensorNum = 0;
     private int numCensorMistakes = 0;
-    private bool canCensor = false;
+    private int totalReplaceTargets = 0;
+    private int currentReplaceNum = 0;
+    private int numReplaceMistakes = 0;
     private bool dayEnded = false;
-    private bool toolOverlayCreated = false;
-    private string currentTool = "CensorPen";
     private bool hiddenImageExists = false;
     private bool hiddenImageFound = false;
+    private bool banStampPressed = false;
+    private bool cuttingModeActive = false;
+    private CensorTarget currentCuttingRecipient = null;
 
     // Set total score minimum to 0
     private int totalScore = 0;
@@ -55,6 +66,7 @@ public class GameManager : MonoBehaviour
     public void SetCurrentDay(int day)
     {
         gameData.day = day;
+        selectedToolManager.InitializeToolAppearance();
     }
 
     public JobDetails GetJobDetails()
@@ -78,6 +90,21 @@ public class GameManager : MonoBehaviour
         return jobScene;
     }
 
+    public GameObject GetCurrentMediaObject()
+    {
+        return currentMediaObject;
+    }
+    public void SetCurrentMediaObject(GameObject mediaObj)
+    {
+        if (mediaObj == null)
+        {
+            Debug.LogError("mediaObj is null.");
+            return;
+        }
+
+        currentMediaObject = mediaObj;
+    }
+
     public string[] GetCensorTargetWords()
     {
         return censorTargetWords;
@@ -98,54 +125,60 @@ public class GameManager : MonoBehaviour
         banTargetWords = words;
     }
 
-    public void SetToolFunctionality(bool canCensor)
+    public string[][] GetReplaceTargetWords()
     {
-        switch (currentTool) 
-        {
-            case "CensorPen":
-                this.canCensor = canCensor;
-                break;
-            case "UVLight":
-                UVLightObj.SetActive(canCensor);
-                break;
-            default:
-                Debug.LogError($"Invalid tool: {currentTool}");
-                break;
-        }
-        
+        return replaceTargetWords;
     }
-    public bool CanCensor()
-    {
-        return canCensor;
-    }
-    public void SetToolOverlayCreated(bool created)
-    {
-        toolOverlayCreated = created;
-    }
-    public bool IsToolOverlayCreated()
-    {
-        return toolOverlayCreated;
-    }
-    public string GetCurrentTool()
-    {
-        return currentTool;
-    }
-    public void SetCurrentTool(string tool)
-    {
-        currentTool = tool;
 
-        if (tool == "UVLight")
+    public void SetReplaceTargetWords(string[][] words)
+    {
+        replaceTargetWords = words;
+
+        foreach (string[] wordSet in words)
         {
-            UVLightObj.SetActive(true);
-        }
-        else if (UVLightObj.activeSelf)
-        {
-            UVLightObj.SetActive(false);
+            foreach (string word in wordSet)
+            {
+                Debug.Log($"Replace target word: {word}");
+            }
         }
     }
+
+    public GameObject GetToolOverlayObj()
+    {
+        return toolOverlayObj;
+    }
+    public void ToolOverlayObjActive(bool active)
+    {
+        if (toolOverlayObj == null)
+        {
+            Debug.LogError("ToolOverlayObj is null.");
+            return;
+        }
+
+        toolOverlayObj.SetActive(active);
+    }
+    public GameObject GetPhoneOverlayObj()
+    {
+        return phoneOverlayObj;
+    }
+    public GameObject GetCuttingTargetObj()
+    {
+        return cuttingTargetObj;
+    }
+
     public GameObject GetUVLightObj()
     {
         return UVLightObj;
+    }
+    public void UVLightObjActive(bool active)
+    {
+        if (UVLightObj == null)
+        {
+            Debug.LogError("UVLightObj is null.");
+            return;
+        }
+
+        UVLightObj.SetActive(active);
     }
     public void SetUVLightTarget(GameObject target)
     {
@@ -172,11 +205,82 @@ public class GameManager : MonoBehaviour
         return hiddenImageFound;
     }
 
+    public GameObject GetBanStampObj()
+    {
+        return banStampObj;
+    }
+    public void BanStampObjActive(bool active)
+    {
+        if (banStampObj == null)
+        {
+            Debug.LogError("BanStampObj is null.");
+            return;
+        }
+
+        banStampObj.SetActive(active);
+    }
+    public void SetBanStampColliderActive(bool active)
+    {
+        if (banStampObj == null)
+        {
+            Debug.LogError("BanStampObj is null.");
+            return;
+        }
+
+        banStampObj.GetComponent<BanStamp>().BanStampColliderActive(active);
+    }
+
+    public void SetBanStampPressed(bool pressed)
+    {
+        banStampPressed = pressed;
+    }
+    public bool IsBanStampPressed()
+    {
+        return banStampPressed;
+    }
+    public void SetBanStampColliderParentToMediaObj(GameObject banStampCollider) 
+    {
+        if (banStampCollider == null)
+        {
+            Debug.LogError("BanStampCollider is null.");
+            return;
+        }
+
+        banStampCollider.transform.SetParent(currentMediaObject.transform);
+    }
+    public void ResetBanStampCollider(GameObject banStampCollider)
+    {
+        if (banStampCollider == null)
+        {
+            Debug.LogError("BanStampCollider is null.");
+            return;
+        }
+
+        banStampCollider.transform.SetParent(banStampObj.transform);
+        banStampCollider.transform.localPosition = Vector3.zero;
+        banStampCollider.transform.localRotation = Quaternion.identity;
+        banStampCollider.transform.localScale = Vector3.one;
+    }
+
+    public void SetCuttingModeActive(bool active)
+    {
+        cuttingModeActive = active;
+    }
+    public bool IsCuttingModeActive()
+    {
+        return cuttingModeActive;
+    }
+    public CensorTarget GetCurrentCuttingRecipient()
+    {
+        return currentCuttingRecipient;
+    }
+
     // -------------------------------------
     // Functions
     public void RestartGame()
     {
         IsRestarting = true;
+        currentMediaObject = null;
         OnGameRestart?.Invoke();
         Time.timeScale = 1;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -201,6 +305,27 @@ public class GameManager : MonoBehaviour
         jobDetails = new JobDetails();
         onScreenTimer.enabled = false; // Hide the onscreen timer
         onScreenDayChanger.SetActive(false); // Hide the jump to day debug box
+
+        selectedToolManager = FindFirstObjectByType<SelectedToolManager>();
+        if (selectedToolManager == null)
+        {
+            Debug.LogError("GameManager is not found in the scene.");
+            return;
+        } 
+
+        if (toolOverlayObj == null)
+        {
+            Debug.LogError("ToolOverlayObj is null.");
+            return;
+        }
+        toolOverlayObj.transform.GetChild(0).gameObject.SetActive(false); // Hide the tool overlay object
+
+        if (phoneOverlayObj == null)
+        {
+            Debug.LogError("PhoneOverlayObj is null.");
+            return;
+        }
+        phoneOverlayObj.transform.GetChild(0).gameObject.SetActive(false); // Hide the phone overlay object
     }
 
     private int CheckLoadGameSave()
@@ -288,20 +413,104 @@ public class GameManager : MonoBehaviour
         Debug.Log($"Uncensored Word! Total Mistakes: {numCensorMistakes}");
     }
 
+    public void RegisterReplaceTarget()
+    {
+        totalReplaceTargets++;
+    }
+
+    public void ReplaceTargetEnabled()
+    {
+        currentReplaceNum++;
+        Debug.Log($"Replaced Word! Score: {currentReplaceNum}/{totalReplaceTargets}");
+    }
+
+    public void ReplaceTargetDisabled()
+    {
+        currentReplaceNum--;
+        Debug.Log($"Unreplaced Word! Score: {currentReplaceNum}/{totalReplaceTargets}");
+    }
+
+    public void NonReplaceTargetEnabled()
+    {
+        numReplaceMistakes++;
+        Debug.Log($"Incorrectly Replaced Word! Total Mistakes: {numReplaceMistakes}");
+    }
+    public void NonReplaceTargetDisabled()
+    {
+        numReplaceMistakes--;
+        Debug.Log($"Unreplaced Word! Total Mistakes: {numReplaceMistakes}");
+    }
+
+    public void EnterCuttingMode(CensorTarget recipient)
+    {
+        if (recipient == null)
+        {
+            Debug.LogError("Target is null.");
+            return;
+        }
+        
+        if (cuttingModeActive && currentCuttingRecipient != null)
+        {
+            currentCuttingRecipient.CuttingModeEffect(false);
+        }
+        currentCuttingRecipient = recipient;
+        cuttingModeActive = true;
+
+        Debug.Log("Cutting mode activated");
+    }
+
+    public void ExitCuttingMode()
+    {
+        if (currentCuttingRecipient != null)
+        {
+            currentCuttingRecipient.CuttingModeEffect(false);
+            currentCuttingRecipient = null;
+        }
+        cuttingModeActive = false;
+
+        Debug.Log("Cutting mode deactivated");
+    } 
+
+    public void UpdateCensorTargets(string replacementText)
+    {
+        currentCuttingRecipient.ToggleIsCut();
+        
+        selectedToolManager.SetToolFunctionality(false);
+        currentMediaObject.GetComponent<Entity>().UpdateCensorBoxes(currentCuttingRecipient, replacementText);
+        selectedToolManager.SetToolFunctionality(true);
+
+        ExitCuttingMode();
+    }
+       
+
     public void ResetPuzzleTracking()
     {
         currentCensorNum = 0;
         totalCensorTargets = 0;
         numCensorMistakes = 0;
+        currentReplaceNum = 0;
+        totalReplaceTargets = 0;
+        numReplaceMistakes = 0;
         hiddenImageExists = false;
         hiddenImageFound = false;
+        banStampPressed = false;
+
+        currentMediaObject = null;
     }
 
     public void EvaluatePlayerAccept(string[] banWords)
     {
-        bool playerSucceeds = banWords.Length == 0 && !hiddenImageExists;
+        bool playerSucceeds;
+        
+        // Check if the player has used the ban stamp if there are any bannable offenses or used the stamp incorrectly
+        if (banWords.Length != 0 || (hiddenImageExists && hiddenImageFound))
+            playerSucceeds = banStampPressed;
+        else 
+            playerSucceeds = !banStampPressed;
+        
+        //bool playerSucceeds = banWords.Length == 0 && !hiddenImageExists;
 
-        if (playerSucceeds && (currentCensorNum == totalCensorTargets) && (numCensorMistakes == 0))
+        if (playerSucceeds && (banStampPressed || ((currentCensorNum == totalCensorTargets) && (numCensorMistakes == 0) && (currentReplaceNum == totalReplaceTargets) && (numReplaceMistakes == 0))))
         {
             EventManager.ShowCorrectBuzzer?.Invoke(true);
             EventManager.PlaySound?.Invoke("correctBuzz", true);
@@ -318,14 +527,14 @@ public class GameManager : MonoBehaviour
         int mediaScore = 5;
         float maxPossibleScore = (float) mediaScore;
 
-        if (currentCensorNum == 0 && totalCensorTargets == 0) 
+        if (currentCensorNum == 0 && totalCensorTargets == 0 && currentReplaceNum == 0 && totalReplaceTargets == 0) 
         {
             mediaScore = playerSucceeds ? 3 : 0;
             maxPossibleScore = 3f;
         } 
         
         // Penalize for mistakes made
-        int totalMistakes = totalCensorTargets - currentCensorNum + numCensorMistakes;
+        int totalMistakes = totalCensorTargets - currentCensorNum + numCensorMistakes + totalReplaceTargets - currentReplaceNum + numReplaceMistakes;
         int mistakeBuffer = totalMistakes > 0 ? 1 : 0;
         mediaScore -= Math.Abs(totalMistakes / jobDetails.penalty) + mistakeBuffer;
         
@@ -387,6 +596,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log($"Total Score: {TotalScore}");
         Debug.Log($"Results: \n{currentCensorNum}/{totalCensorTargets} words correctly censored. {numCensorMistakes} words incorrectly censored.");
+
         Debug.Log($"Performance Scale: {gameData.PerformanceScale}");
     }
 
@@ -420,8 +630,8 @@ public class GameManager : MonoBehaviour
             gameData.SetCurrentMoney(totalScore, false);
             jobScene.ShowResults(jobDetails.numMediaProcessed, TotalScore);
             TotalScore = 0;
+            currentMediaObject = null;
             ResetJobDetails();
-            toolOverlayCreated = false;
         }
     }
 

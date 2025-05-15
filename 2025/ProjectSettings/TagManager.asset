@@ -16,7 +16,7 @@ TagManager:
   - UI
   - Media
   - HiddenImage
-  - 
+  - BanStamp
   - 
   - 
   - 
@@ -44,7 +44,7 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: UVLight
+  - name: Media
     uniqueID: 12239037
     locked: 0
   m_RenderingLayers:

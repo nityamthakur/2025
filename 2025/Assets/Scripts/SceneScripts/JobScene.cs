@@ -64,7 +64,7 @@ public class JobScene : MonoBehaviour
 
 
     public void LoadJobStart() {
-        ShowBuildingTransition();
+        //ShowBuildingTransition();                                 uncomment
         LoadJsonFromFile();
         SetUpJobStart();
         computerScreenClass.StartComputer();
@@ -151,11 +151,6 @@ public class JobScene : MonoBehaviour
         }
         backgroundImage.sprite = workBackgroundImage;
 
-        minuteHand = currJobScene.transform.Find("MinuteHand").GetComponent<Image>();
-        if (minuteHand == null)
-        {
-            Debug.Log("Failed to find minuteHand in SetUpJobStart");
-        }
         hourHand = currJobScene.transform.Find("HourHand").GetComponent<Image>();
         if (hourHand == null)
         {
@@ -341,6 +336,7 @@ public class JobScene : MonoBehaviour
             yield return new WaitForSeconds(3f);
             
             EventManager.PlaySound?.Invoke("glitch", true);
+
             computerScreenClass.EventTrigger(3, jobDelayed);
             objectSpawner.SpawnImageObject(true);
 

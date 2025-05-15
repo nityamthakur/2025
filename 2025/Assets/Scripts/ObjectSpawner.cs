@@ -40,7 +40,7 @@ public class ObjectSpawner : MonoBehaviour
         }
 
         LoadJsonFromFile();
-        PassBanCensorLists();
+        PassWordLists();
         SpawnNewMediaObject();
     }
 
@@ -79,6 +79,7 @@ public class ObjectSpawner : MonoBehaviour
             Destroy(newMedia);
         }
 
+        gameManager.SetCurrentMediaObject(newMedia);
     }
 
     // For non media censoring objects like fliers and pamphlets
@@ -212,7 +213,8 @@ public class ObjectSpawner : MonoBehaviour
                     date = newspaperObj["date"]?.ToString(),
                     hasHiddenImage = newspaperObj["hasHiddenImage"] != null && (bool)newspaperObj["hasHiddenImage"],
                     banWords = newspaperObj["banWords"]?.ToObject<string[]>() ?? Array.Empty<string>(),
-                    censorWords = newspaperObj["censorWords"]?.ToObject<string[]>() ?? Array.Empty<string>()
+                    censorWords = newspaperObj["censorWords"]?.ToObject<string[]>() ?? Array.Empty<string>(),
+                    replaceWords = newspaperObj["replaceWords"]?.ToObject<string[][]>() ?? Array.Empty<string[]>(),
                 };
 
                 //Add all of the possibly complex objects
@@ -260,10 +262,11 @@ public class ObjectSpawner : MonoBehaviour
         }
     }
 
-    private void PassBanCensorLists()
+    private void PassWordLists()
     {
         List<string> banWords = new List<string>();
         List<string> censorWords = new List<string>();
+        List<string[]> replaceWords = new List<string[]>();
 
         foreach (var newspaper in newspapers)
         {
@@ -275,10 +278,15 @@ public class ObjectSpawner : MonoBehaviour
             {
                 censorWords.Add(word);
             }
+            foreach (string[] wordPair in newspaper.replaceWords)
+            {
+                replaceWords.Add(wordPair);
+            }
         }
 
         gameManager.SetBanTargetWords(banWords.Distinct().ToArray());
         gameManager.SetCensorTargetWords(censorWords.Distinct().ToArray());
+        gameManager.SetReplaceTargetWords(replaceWords.Distinct().ToArray());
     }
 
     void OnApplicationQuit()
