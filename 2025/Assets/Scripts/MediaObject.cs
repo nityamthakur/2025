@@ -228,6 +228,7 @@ public class Entity : MonoBehaviour
 
             string word = wordInfo.GetWord();
             bool isCensorTarget = WordisCensorable(word);
+            bool isReplaceTarget = WordisReplaceable(word);
 
             // Gather the corners of the word
             var firstCharInfo = textComponent.textInfo.characterInfo[wordInfo.firstCharacterIndex];
@@ -264,6 +265,11 @@ public class Entity : MonoBehaviour
                 newCensorBox.GetComponent<CensorTarget>().SetToCensorTarget();
                 gameManager.RegisterCensorTarget();
             }
+            else if (isReplaceTarget)
+            {
+                newCensorBox.GetComponent<CensorTarget>().SetToReplaceTarget();
+                gameManager.RegisterReplaceTarget();
+            }
         }
         if (isBack)
             backOfNewspaper.SetActive(false);
@@ -276,6 +282,23 @@ public class Entity : MonoBehaviour
         {
             // Split the censor word/phrase into individual words
             string[] splicedWord = censorWord.Split(' ');
+            foreach (string individualWord in splicedWord)
+            {
+                if (word.Contains(individualWord))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    private bool WordisReplaceable(string word)
+    {
+        // Find if the word contains any replace words
+        foreach (string[] replaceWord in gameManager.GetReplaceTargetWords())
+        {
+            // Split the replace word/phrase into individual words
+            string[] splicedWord = replaceWord[0].Split(' ');
             foreach (string individualWord in splicedWord)
             {
                 if (word.Contains(individualWord))
@@ -313,8 +336,6 @@ public class Entity : MonoBehaviour
                 if (curLineIndex < textComponent.textInfo.lineInfo.Length && curWordIndex >= textComponent.textInfo.lineInfo[curLineIndex].wordCount) {
                     curLineIndex++;
                     curWordIndex = 0;
-
-                    Debug.Log("changing at start ");
                 }
                 continue;
             }
@@ -322,15 +343,7 @@ public class Entity : MonoBehaviour
             {
                 lineFound = true;
                 targets = textComponent.gameObject.GetComponent<TextComponent>().ClearCensorTargetIndices(wordInfo.firstCharacterIndex);
-
-                Debug.Log("printing targets: ");
-                foreach (var target in targets)
-                {
-                    Debug.Log(target.GetTextCmpFirstIndex());
-                }
             }
-
-            Debug.Log("curLineIndex: " + curLineIndex + " curWordIndex: " + curWordIndex + " lineIndex: " + lineIndex + " wordIndex: " + wordIndex);
 
             // Gather the corners of the word
             var firstCharInfo = textComponent.textInfo.characterInfo[wordInfo.firstCharacterIndex];
@@ -346,8 +359,6 @@ public class Entity : MonoBehaviour
             // Create rectangle to block out the word
             var boxSize = new Vector2(Mathf.Abs(topLeft.x - bottomRight.x), 
                 Mathf.Abs(topLeft.y - bottomRight.y));
-
-            Debug.Log("retrieving censor target for: " + curLineIndex + " " + curWordIndex + "for word: " + wordInfo.GetWord());
 
             CensorTarget censorBox = targets[wordNum++];
             textComponent.gameObject.GetComponent<TextComponent>().AddCensorTarget(censorBox, wordInfo.firstCharacterIndex);
@@ -368,8 +379,6 @@ public class Entity : MonoBehaviour
             if (curLineIndex < textComponent.textInfo.lineInfo.Length && curWordIndex >= textComponent.textInfo.lineInfo[curLineIndex].wordCount) {
                 curLineIndex++;
                 curWordIndex = 0;
-
-                Debug.Log("changing at end ");
             }
         }
     }
@@ -381,16 +390,57 @@ public class Entity : MonoBehaviour
             Debug.LogError("Text component is null.");
             return;
         }
-        
-        // Replace word in TMP obj and force update
-        string originalText = textComponent.text;
-        int wordStartIndex = firstCharacterIndex;
-        int wordLength = characterCount;
 
-        string beforeWord = originalText.Substring(0, wordStartIndex);
-        string afterWord = originalText.Substring(wordStartIndex + wordLength);
+        // Remove any previous <nobr> tags for a clean search
+        string taggedText = textComponent.text;
+        // Remove all <nobr> tags to get the clean text
+        string cleanText = taggedText.Replace("<nobr>", "").Replace("</nobr>", "");
 
-        string updatedText = beforeWord + replacementText + afterWord;
+        // Get the phrase to replace from the clean text
+        if (firstCharacterIndex + characterCount > cleanText.Length)
+        {
+            Debug.LogError("Index out of range for replacement.");
+            return;
+        }
+        string phraseToReplace = cleanText.Substring(firstCharacterIndex, characterCount);
+
+        // Now, map the clean index to the tagged text index
+        int realIndex = 0, cleanCount = 0;
+        while (realIndex < taggedText.Length && cleanCount < firstCharacterIndex)
+        {
+            if (taggedText[realIndex] != '<')
+                cleanCount++;
+            else
+            {
+                int close = taggedText.IndexOf('>', realIndex);
+                if (close == -1) break;
+                realIndex = close;
+            }
+            realIndex++;
+        }
+
+        // Now, find the end index for replacement (skip tags in the substring)
+        int replaceStart = realIndex;
+        int charsToReplace = characterCount;
+        int replaced = 0;
+        int replaceEnd = replaceStart;
+        while (replaceEnd < taggedText.Length && replaced < charsToReplace)
+        {
+            if (taggedText[replaceEnd] != '<')
+                replaced++;
+            else
+            {
+                int close = taggedText.IndexOf('>', replaceEnd);
+                if (close == -1) break;
+                replaceEnd = close;
+            }
+            replaceEnd++;
+        }
+
+        // Replace the substring (from replaceStart to replaceEnd) with the new <nobr>replacementText</nobr>
+        string updatedText = taggedText.Substring(0, replaceStart)
+            + "<nobr>" + replacementText + "</nobr>"
+            + taggedText.Substring(replaceEnd);
 
         textComponent.text = updatedText;
         textComponent.ForceMeshUpdate();
@@ -552,6 +602,7 @@ public class Entity : MonoBehaviour
         
         public string[] banWords;
         public string[] censorWords;
+        public string[][] replaceWords;
         public bool hasHiddenImage;
 
         public string GetPublisher()

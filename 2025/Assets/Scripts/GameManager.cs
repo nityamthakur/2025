@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     
     [SerializeField] GameObject toolOverlayObj;
     [SerializeField] GameObject phoneOverlayObj;
+    [SerializeField] GameObject cuttingTargetObj;
     [SerializeField] GameObject UVLightObj;
     [SerializeField] GameObject banStampObj;
     private JobDetails jobDetails;
@@ -30,9 +31,13 @@ public class GameManager : MonoBehaviour
 
     private string[] censorTargetWords;
     private string[] banTargetWords;
+    private string[][] replaceTargetWords;
     private int totalCensorTargets = 0;
     private int currentCensorNum = 0;
     private int numCensorMistakes = 0;
+    private int totalReplaceTargets = 0;
+    private int currentReplaceNum = 0;
+    private int numReplaceMistakes = 0;
     private bool dayEnded = false;
     private bool hiddenImageExists = false;
     private bool hiddenImageFound = false;
@@ -119,6 +124,24 @@ public class GameManager : MonoBehaviour
         banTargetWords = words;
     }
 
+    public string[][] GetReplaceTargetWords()
+    {
+        return replaceTargetWords;
+    }
+
+    public void SetReplaceTargetWords(string[][] words)
+    {
+        replaceTargetWords = words;
+
+        foreach (string[] wordSet in words)
+        {
+            foreach (string word in wordSet)
+            {
+                Debug.Log($"Replace target word: {word}");
+            }
+        }
+    }
+
     public GameObject GetToolOverlayObj()
     {
         return toolOverlayObj;
@@ -136,6 +159,10 @@ public class GameManager : MonoBehaviour
     public GameObject GetPhoneOverlayObj()
     {
         return phoneOverlayObj;
+    }
+    public GameObject GetCuttingTargetObj()
+    {
+        return cuttingTargetObj;
     }
 
     public GameObject GetUVLightObj()
@@ -385,6 +412,34 @@ public class GameManager : MonoBehaviour
         Debug.Log($"Uncensored Word! Total Mistakes: {numCensorMistakes}");
     }
 
+    public void RegisterReplaceTarget()
+    {
+        totalReplaceTargets++;
+    }
+
+    public void ReplaceTargetEnabled()
+    {
+        currentReplaceNum++;
+        Debug.Log($"Replaced Word! Score: {currentReplaceNum}/{totalReplaceTargets}");
+    }
+
+    public void ReplaceTargetDisabled()
+    {
+        currentReplaceNum--;
+        Debug.Log($"Unreplaced Word! Score: {currentReplaceNum}/{totalReplaceTargets}");
+    }
+
+    public void NonReplaceTargetEnabled()
+    {
+        numReplaceMistakes++;
+        Debug.Log($"Incorrectly Replaced Word! Total Mistakes: {numReplaceMistakes}");
+    }
+    public void NonReplaceTargetDisabled()
+    {
+        numReplaceMistakes--;
+        Debug.Log($"Unreplaced Word! Total Mistakes: {numReplaceMistakes}");
+    }
+
     public void EnterCuttingMode(CensorTarget recipient)
     {
         if (recipient == null)
@@ -417,7 +472,7 @@ public class GameManager : MonoBehaviour
 
     public void UpdateCensorTargets(string replacementText)
     {
-        currentCuttingRecipient.SetToIsCut();
+        currentCuttingRecipient.ToggleIsCut();
         
         selectedToolManager.SetToolFunctionality(false);
         currentMediaObject.GetComponent<Entity>().UpdateCensorBoxes(currentCuttingRecipient, replacementText);
@@ -432,6 +487,9 @@ public class GameManager : MonoBehaviour
         currentCensorNum = 0;
         totalCensorTargets = 0;
         numCensorMistakes = 0;
+        currentReplaceNum = 0;
+        totalReplaceTargets = 0;
+        numReplaceMistakes = 0;
         hiddenImageExists = false;
         hiddenImageFound = false;
         banStampPressed = false;
@@ -451,7 +509,7 @@ public class GameManager : MonoBehaviour
         
         //bool playerSucceeds = banWords.Length == 0 && !hiddenImageExists;
 
-        if (playerSucceeds && (banStampPressed || ((currentCensorNum == totalCensorTargets) && (numCensorMistakes == 0))))
+        if (playerSucceeds && (banStampPressed || ((currentCensorNum == totalCensorTargets) && (numCensorMistakes == 0) && (currentReplaceNum == totalReplaceTargets) && (numReplaceMistakes == 0))))
         {
             EventManager.ShowCorrectBuzzer?.Invoke(true);
             EventManager.PlaySound?.Invoke("correctBuzz", true);
@@ -468,14 +526,14 @@ public class GameManager : MonoBehaviour
         int mediaScore = 5;
         float maxPossibleScore = (float) mediaScore;
 
-        if (currentCensorNum == 0 && totalCensorTargets == 0) 
+        if (currentCensorNum == 0 && totalCensorTargets == 0 && currentReplaceNum == 0 && totalReplaceTargets == 0) 
         {
             mediaScore = playerSucceeds ? 3 : 0;
             maxPossibleScore = 3f;
         } 
         
         // Penalize for mistakes made
-        int totalMistakes = totalCensorTargets - currentCensorNum + numCensorMistakes;
+        int totalMistakes = totalCensorTargets - currentCensorNum + numCensorMistakes + totalReplaceTargets - currentReplaceNum + numReplaceMistakes;
         int mistakeBuffer = totalMistakes > 0 ? 1 : 0;
         mediaScore -= Math.Abs(totalMistakes / jobDetails.penalty) + mistakeBuffer;
         
@@ -535,6 +593,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log($"Total Score: {TotalScore}");
         Debug.Log($"Results: \n{currentCensorNum}/{totalCensorTargets} words correctly censored. {numCensorMistakes} words incorrectly censored.");
+        Debug.Log($"Results: \n{currentReplaceNum}/{totalReplaceTargets} words correctly replaced. {numReplaceMistakes} words incorrectly replaced.");
     
         Debug.Log($"Performance Scale: {gameData.PerformanceScale}");
     }

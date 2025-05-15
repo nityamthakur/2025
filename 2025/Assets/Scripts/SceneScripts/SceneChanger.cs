@@ -125,7 +125,7 @@ public class SceneChanger : MonoBehaviour
 
             // For Debugging
             // Change the starting day
-            gameManager.gameData.day = 4;                                       // 1
+            gameManager.gameData.day = 1;                                       // 1
             
             // Start the game at day end
             //currentSceneIndex = 4;

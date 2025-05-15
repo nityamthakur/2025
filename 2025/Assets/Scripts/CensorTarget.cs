@@ -2,12 +2,16 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using System;
 using TMPro;
+using UnityEngine.UI;
 
 public class CensorTarget : MonoBehaviour, IPointerClickHandler
 {
+    [SerializeField] private Color censorColor = new Color(0, 0, 0, 1f);
+    [SerializeField] private Color cutColor = new Color(255, 255, 0, 0.5f);
     private SpriteRenderer spriteRenderer;
     private bool isCensored = false;
     private bool isCensorTarget = false;
+    private bool isReplaceTarget = false;
     private bool isCuttingMode = false;
     private bool isCut = false;
     private string originalText = "defaultOriginalText";
@@ -32,14 +36,26 @@ public class CensorTarget : MonoBehaviour, IPointerClickHandler
     {
         isCensorTarget = true;
     }
-    public void SetToIsCut()
+    public void SetToReplaceTarget()
     {
-        isCut = true;
+        isReplaceTarget = true;
+    }
+    public bool IsReplaceTarget()
+    {
+        return isReplaceTarget;
+    }
+    public void ToggleIsCut()
+    {
+        isCut = !isCut;
     }
 
     public TMP_Text GetTextComponent()
     {
         return textCmp;
+    }
+    public string GetOriginalText()
+    {
+        return originalText;
     }
     public void SetTextCmpFirstIndex(int textCmpFirstIndex)
     {
@@ -94,6 +110,8 @@ public class CensorTarget : MonoBehaviour, IPointerClickHandler
 
     private void HandleCensorInteraction()
     {
+        if (isCut) return;
+        
         if (isCensored) 
         {
             spriteRenderer.enabled = false;
@@ -110,6 +128,7 @@ public class CensorTarget : MonoBehaviour, IPointerClickHandler
         }
         else
         {
+            spriteRenderer.color = censorColor;
             spriteRenderer.enabled = true;
             isCensored = true;
 
@@ -129,17 +148,40 @@ public class CensorTarget : MonoBehaviour, IPointerClickHandler
 
     private void HandleCutInteraction()
     {
-        if (isCensored || isCuttingMode) return;
+        if (isCensored) return;
+        if (isCuttingMode) 
+        {
+            gameManager.ExitCuttingMode();
+            return;
+        }
 
         gameManager.EnterCuttingMode(this);
         if (isCut) 
         {
+            isCuttingMode = true;
             gameManager.UpdateCensorTargets(originalText);
-            isCut = false;
+
+            if (isReplaceTarget)
+            {
+                gameManager.ReplaceTargetDisabled();
+            }
+            else 
+            {
+                gameManager.NonReplaceTargetDisabled();
+            }
         }
         else
         {
             CuttingModeEffect(true);
+
+            // if (isReplaceTarget)
+            // {
+            //     gameManager.ReplaceTargetEnabled();
+            // }
+            // else 
+            // {
+            //     gameManager.NonReplaceTargetEnabled();
+            // }
         }
         
     }
@@ -149,11 +191,16 @@ public class CensorTarget : MonoBehaviour, IPointerClickHandler
         if (active && !isCuttingMode)
         {
             isCuttingMode = true;
+
+            spriteRenderer.color = cutColor;
+            spriteRenderer.enabled = true;
             Debug.Log("Cutting mode effect applied to: " + gameObject.name);
         }
         else if (!active && isCuttingMode)
         {
             isCuttingMode = false;
+
+            spriteRenderer.enabled = isCut;
             Debug.Log("Cutting mode effect removed from: " + gameObject.name);
         }
     }

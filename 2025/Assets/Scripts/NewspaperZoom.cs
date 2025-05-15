@@ -35,6 +35,7 @@ public class NewspaperZoom : MonoBehaviour
     private GameObject phoneOverlayUI;
     private Vector3 phoneOverlayStartPos, phoneOverlayEndPos;
     private TextMeshProUGUI phoneText;
+    private GameObject cuttingTargetObj;
 
     private Collider2D newspaperCollider;
     private Draggable draggableScript;
@@ -92,6 +93,8 @@ public class NewspaperZoom : MonoBehaviour
         phoneOverlayStartPos = phoneOverlayUI.GetComponent<RectTransform>().anchoredPosition;
         phoneOverlayEndPos = phoneOverlayStartPos + new Vector3(0f, -1200f, 0f);
         phoneText = phoneOverlayUI.GetComponentInChildren<TextMeshProUGUI>();
+        
+        cuttingTargetObj = gameManager.GetCuttingTargetObj();
 
         Debug.Log(phoneOverlayStartPos + " " + phoneOverlayEndPos);
 
@@ -207,6 +210,7 @@ public class NewspaperZoom : MonoBehaviour
         {
             List<string> banWords = new List<string>(gameManager.GetBanTargetWords());
             List<string> censorWords = new List<string>(gameManager.GetCensorTargetWords());
+            List<string[]> replaceWords = new List<string[]>(gameManager.GetReplaceTargetWords());
 
             // Start with the Ban List
             string displayText = "<b>BAN LIST:</b>\n";
@@ -222,6 +226,17 @@ public class NewspaperZoom : MonoBehaviour
                 foreach (string phrase in censorWords)
                 {
                     displayText += phrase.Replace(" ", "\n") + "\n\n";
+                }
+            }
+
+            // Only show the Censor List from Day 4 onward
+            if (gameManager.gameData.GetCurrentDay() > 3)
+            {
+                displayText += "<b>REPLACE LIST:</b>\n";
+                foreach (string[] phrase in replaceWords)
+                {
+                    cuttingTargetObj.SetActive(true);
+                    cuttingTargetObj.GetComponent<CuttingTarget>().SetReplacementText(phrase[1]);
                 }
             }
 

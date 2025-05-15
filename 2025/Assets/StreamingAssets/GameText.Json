@@ -392,6 +392,9 @@
                     "censorWords": [
                         "Deleanor Voluare"
                     ],
+                    "replaceWords": [
+                        ["1-9-2025", "1-10-2025"]
+                    ],
                     "hasHiddenImage": false
                 },
                 {
@@ -405,6 +408,9 @@
                         "Deleanor Voluare",
                         "Black Swan"
                     ],
+                    "replaceWords": [
+                        ["1-9-2025", "1-10-2025"]
+                    ],
                     "hasHiddenImage": false
                 },
                 {
@@ -417,6 +423,9 @@
                         "Media Regulation Branch"
                     ],
                     "censorWords": [],
+                    "replaceWords": [
+                        ["1-9-2025", "1-10-2025"]
+                    ],
                     "hasHiddenImage": true
                 },
                 {
@@ -427,6 +436,9 @@
                     "back": "\"The problem isn't that people don't have money,\" explained Senior Financial Strategist Scamuel Ponzi III. \"The problem is that people refuse to invest properly.\"\n Concerns over the recent stock market collapse were dismissed by government officials as \"market restructuring,\" with economists reassuring citizens that their investments will eventually regain value. Citizens failing to comply with the MII will be enrolled in the Economic Trustworthiness Program, where they will undergo financial re-education to correct their spending habits.",
                     "banWords": [],
                     "censorWords": [],
+                    "replaceWords": [
+                        ["1-9-2025", "1-10-2025"]
+                    ],
                     "hasHiddenImage": false
                 },
                 {
@@ -439,6 +451,9 @@
                         "Public Security Initiative"
                     ],
                     "censorWords": [],
+                    "replaceWords": [
+                        ["1-9-2025", "1-10-2025"]
+                    ],
                     "hasHiddenImage": false
                 }
             ]
