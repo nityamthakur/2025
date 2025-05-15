@@ -4,6 +4,7 @@ using System.Collections.Generic;
 [System.Serializable]
 public class GameData
 {
+    public int saveSlot;
     public int day;
     public int money, totalMoneyEarned, totalMoneySpent;
     public int rent;
@@ -20,17 +21,19 @@ public class GameData
 
     public GameData()
     {
+        saveSlot = -1;
         day = 1;
         money = 0;
         totalMoneyEarned = 0;
         totalMoneySpent = 0;
-        rent = 3;
+        rent = 5;
         PerformanceScale = 0.5f;  // Default to 50% performance (0.5f)
         playTime = 0f;
     }
 
     public GameData(GameData loadedGame)
     {
+        this.saveSlot = loadedGame.saveSlot;
         this.day = loadedGame.day;
         this.money = loadedGame.money;
         this.totalMoneyEarned = loadedGame.totalMoneyEarned;

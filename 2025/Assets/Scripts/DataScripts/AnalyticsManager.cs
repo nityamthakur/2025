@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.Services.Analytics;
 using Unity.Services.Core;
 using UnityEngine;
@@ -25,50 +26,52 @@ public class AnalyticsManager : MonoBehaviour
 		isInitialized = true;
     }
 
-	public void GameStart()
+	public void GameOver(GameData gameData, JobDetails jobDetails, int gameRating)
 	{
 		if(!isInitialized)
 		{
 			return;
 		}
 		
-		AnalyticsService.Instance.RecordEvent("gameStart");
-		AnalyticsService.Instance.Flush();
-		Debug.Log("gameStarted");
-	}
-
-	public void GameQuit()
-	{
-		if(!isInitialized)
+		CustomEvent gameEnd = new("GameOver")
 		{
-			return;
-		}
-		
-		AnalyticsService.Instance.RecordEvent("gameQuit");
-		AnalyticsService.Instance.Flush();
-	}
-
-	public void GameOver(GameData gameData)
-	{
-		if(!isInitialized)
-		{
-			return;
-		}
-		
-		CustomEvent dayReached = new("dayReached")
-		{
-			{"dayReached", gameData.day}
+			{"gameRating", gameRating},
+			{"dayReached", gameData.day},
+			{"timePlayed", gameData.playTime},
+			{"moneyEarned", gameData.totalMoneyEarned},
+			{"moneySpent", gameData.totalMoneySpent},
+			{"moneyEndedWith", gameData.money},
+			{"articlesSeen", jobDetails.dayMedia.Count},
+			{"articleWinRate", jobDetails.ArticleWinRate()},
+			{"articleTimeAvg", jobDetails.ArticleTimeAverage()},
+			{"articleTimeLongest", jobDetails.MostTimeSpentOnArticle()}
 		};
-		AnalyticsService.Instance.RecordEvent(dayReached);
-
-		CustomEvent timePlayed = new("timePlayed")
-		{
-			{"timePlayed", gameData.playTime}
-		};
-		AnalyticsService.Instance.RecordEvent(timePlayed);
+		AnalyticsService.Instance.RecordEvent(gameEnd);
 		AnalyticsService.Instance.Flush();
 
-		Debug.Log("GameOver");
+		Debug.Log("GameOver reached in AnalyitcsManager");
 	}
 
+	public void ArticleAnalysis(List<Media> articles)
+	{
+		if(!isInitialized)
+		{
+			return;
+		}
+
+		foreach(Media media in articles)
+		{
+			CustomEvent customEvent = new("articleAnalysis")
+			{
+				{"onDay", media.day},
+				{"timeSpent", media.timeSpent},
+				{"noMistakes", media.noMistakes},
+			};
+			AnalyticsService.Instance.RecordEvent(customEvent);
+
+		}
+		AnalyticsService.Instance.Flush();
+
+		Debug.Log("ArticleAnalysis reached in AnalyitcsManager");
+	}
 }

@@ -7,6 +7,7 @@
         { "sound": "newsjingle", "text": "TV News Jingle" }, 
 
         { "sound": "correctbuzz", "text": "Correct Buzzer" },
+        { "sound": "computerChime", "text": "Computer Booting Up" },
         { "sound": "errorbuzz", "text": "Error Buzzer" },
         { "sound": "doorbell", "text": "Door Bell Ringing" },
         { "sound": "switch1", "text": "Button Click" },
