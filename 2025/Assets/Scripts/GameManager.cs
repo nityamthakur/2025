@@ -37,6 +37,8 @@ public class GameManager : MonoBehaviour
     private bool hiddenImageExists = false;
     private bool hiddenImageFound = false;
     private bool banStampPressed = false;
+    private bool cuttingModeActive = false;
+    private CensorTarget currentCuttingRecipient = null;
 
     // Set total score minimum to 0
     private int totalScore = 0;
@@ -58,7 +60,7 @@ public class GameManager : MonoBehaviour
     public void SetCurrentDay(int day)
     {
         gameData.day = day;
-        selectedToolManager.InitializeToolSelection();
+        selectedToolManager.InitializeToolAppearance();
     }
 
     public JobDetails GetJobDetails()
@@ -232,6 +234,19 @@ public class GameManager : MonoBehaviour
         banStampCollider.transform.localScale = Vector3.one;
     }
 
+    public void SetCuttingModeActive(bool active)
+    {
+        cuttingModeActive = active;
+    }
+    public bool IsCuttingModeActive()
+    {
+        return cuttingModeActive;
+    }
+    public CensorTarget GetCurrentCuttingRecipient()
+    {
+        return currentCuttingRecipient;
+    }
+
     // -------------------------------------
     // Functions
     public void RestartGame()
@@ -367,6 +382,48 @@ public class GameManager : MonoBehaviour
         numCensorMistakes--;
         Debug.Log($"Uncensored Word! Total Mistakes: {numCensorMistakes}");
     }
+
+    public void EnterCuttingMode(CensorTarget recipient)
+    {
+        if (recipient == null)
+        {
+            Debug.LogError("Target is null.");
+            return;
+        }
+        
+        if (cuttingModeActive && currentCuttingRecipient != null)
+        {
+            currentCuttingRecipient.CuttingModeEffect(false);
+        }
+        currentCuttingRecipient = recipient;
+        cuttingModeActive = true;
+
+        Debug.Log("Cutting mode activated");
+    }
+
+    public void ExitCuttingMode()
+    {
+        if (currentCuttingRecipient != null)
+        {
+            currentCuttingRecipient.CuttingModeEffect(false);
+            currentCuttingRecipient = null;
+        }
+        cuttingModeActive = false;
+
+        Debug.Log("Cutting mode deactivated");
+    } 
+
+    public void UpdateCensorTargets(string replacementText)
+    {
+        currentCuttingRecipient.SetToIsCut();
+        
+        selectedToolManager.SetToolFunctionality(false);
+        currentMediaObject.GetComponent<Entity>().UpdateCensorBoxes(currentCuttingRecipient, replacementText);
+        selectedToolManager.SetToolFunctionality(true);
+
+        ExitCuttingMode();
+    }
+       
 
     public void ResetPuzzleTracking()
     {

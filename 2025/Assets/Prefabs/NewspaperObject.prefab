@@ -524,6 +524,7 @@ GameObject:
   - component: {fileID: 6848425215175548519}
   - component: {fileID: 6906856285568576627}
   - component: {fileID: 1983880785225409248}
+  - component: {fileID: 2060399471348190187}
   m_Layer: 6
   m_Name: Front Title
   m_TagString: Untagged
@@ -689,6 +690,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 6906856285568576627}
   m_maskType: 0
+--- !u!114 &2060399471348190187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4821118430528730615}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae206d52c3f79d74eadcefbfd93b5a2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4832082365053083893
 GameObject:
   m_ObjectHideFlags: 0
@@ -700,6 +713,7 @@ GameObject:
   - component: {fileID: 2278373549417008477}
   - component: {fileID: 4979836317665854049}
   - component: {fileID: 5667760033228279380}
+  - component: {fileID: 5368946940909976742}
   m_Layer: 6
   m_Name: Front Date
   m_TagString: Untagged
@@ -865,6 +879,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 4979836317665854049}
   m_maskType: 0
+--- !u!114 &5368946940909976742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4832082365053083893}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae206d52c3f79d74eadcefbfd93b5a2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4998836287132237453
 GameObject:
   m_ObjectHideFlags: 0
@@ -1045,6 +1071,7 @@ GameObject:
   - component: {fileID: 9219259851172075014}
   - component: {fileID: 2832131438314153436}
   - component: {fileID: 350339020351205209}
+  - component: {fileID: 3024943061987359284}
   m_Layer: 6
   m_Name: Front Body
   m_TagString: Untagged
@@ -1210,6 +1237,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 2832131438314153436}
   m_maskType: 0
+--- !u!114 &3024943061987359284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5049977346780101309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae206d52c3f79d74eadcefbfd93b5a2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5716982125195233432
 GameObject:
   m_ObjectHideFlags: 0
@@ -1395,6 +1434,7 @@ GameObject:
   - component: {fileID: 1470740662994479706}
   - component: {fileID: 5595287325337371416}
   - component: {fileID: 4519914415403748161}
+  - component: {fileID: 1975587312022048956}
   m_Layer: 6
   m_Name: Back Text
   m_TagString: Untagged
@@ -1560,6 +1600,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 5595287325337371416}
   m_maskType: 0
+--- !u!114 &1975587312022048956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7737755497345428812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae206d52c3f79d74eadcefbfd93b5a2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8973322203050557068
 GameObject:
   m_ObjectHideFlags: 0
@@ -1571,6 +1623,7 @@ GameObject:
   - component: {fileID: 5619560810697788782}
   - component: {fileID: 6500687267859349812}
   - component: {fileID: 7853103032548622613}
+  - component: {fileID: 8019080480698200098}
   m_Layer: 6
   m_Name: Front Publisher
   m_TagString: Untagged
@@ -1736,3 +1789,15 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 6500687267859349812}
   m_maskType: 0
+--- !u!114 &8019080480698200098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8973322203050557068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae206d52c3f79d74eadcefbfd93b5a2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

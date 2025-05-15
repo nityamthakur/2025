@@ -4,7 +4,8 @@ using UnityEngine.UI;
 
 public class ToolSelection : MonoBehaviour
 {
-    [SerializeField] private Image toolImage;
+    [SerializeField] private Sprite defaultImg;
+    [SerializeField] private Sprite selectionImg;
     private GameManager gameManager;
     private SelectedToolManager selectedToolManager; 
     
@@ -24,13 +25,16 @@ public class ToolSelection : MonoBehaviour
             Debug.LogError("GameManager is not found in the scene.");
             return;
         }
-        if (toolImage == null)
+        if (defaultImg == null)
         {
-            Debug.LogError("Image component is not found on the ToolSelection object.");
+            Debug.LogError("Default Image component is not found on the ToolSelection object.");
             return;
         }
-        // Ensure the corresponding tool image is active
-        toolImage.gameObject.SetActive(true);
+        if (selectionImg == null)
+        {
+            Debug.LogError("Selection Image component is not found on the ToolSelection object.");
+            return;
+        }
     }
 
     // Update is called once per frame
@@ -47,16 +51,14 @@ public class ToolSelection : MonoBehaviour
 
         // Play the sound for selecting the tool
         EventManager.PlaySound?.Invoke("switch1", true);
-
-        SelectToolEffect();
     }
 
     public void SelectToolEffect()
     {
-        toolImage.color = Color.yellow;
+        gameObject.GetComponent<Image>().sprite = selectionImg;
     }
     public void DeselectToolEffect()
     {
-        toolImage.color = Color.white;
+        gameObject.GetComponent<Image>().sprite = defaultImg;
     }
 }

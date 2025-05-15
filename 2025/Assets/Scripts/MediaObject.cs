@@ -1,14 +1,14 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Entity : MonoBehaviour
 {
     [SerializeField] private GameObject censorBoxPrefab;
-    [SerializeField] private GameObject frontCensorBoxContainer;
-    [SerializeField] private GameObject backCensorBoxContainer;
     [SerializeField] GameObject backOfNewspaper;
     [SerializeField] Material blurMaterial;
     [SerializeField] Material defaultMaterial;
@@ -206,17 +206,12 @@ public class Entity : MonoBehaviour
 
     private void CreateBoxesForText(TMP_Text textComponent, bool isBack)
     {
-        GameObject censorBoxContainer;
         if (isBack) 
-        {
             backOfNewspaper.SetActive(true);
-            censorBoxContainer = backCensorBoxContainer;
-        }
-        else censorBoxContainer = frontCensorBoxContainer;
 
         int curLineIndex = 0;
         int curWordIndex = 0;
-        float prevLastCharX = 0;
+        float prevLastCharX = 0f;
         
         // Loop through each word in the text
         foreach (var wordInfo in textComponent.textInfo.wordInfo)
@@ -241,7 +236,10 @@ public class Entity : MonoBehaviour
             var boxSize = new Vector2(Mathf.Abs(topLeft.x - bottomRight.x), 
                 Mathf.Abs(topLeft.y - bottomRight.y));
 
-            GameObject newCensorBox = Instantiate(censorBoxPrefab, censorBoxContainer.transform);
+            GameObject textComponentObj = textComponent.gameObject;
+            GameObject newCensorBox = Instantiate(censorBoxPrefab, textComponentObj.transform);
+            newCensorBox.GetComponent<CensorTarget>().InitializeCensorTarget(word, textComponent, wordInfo.firstCharacterIndex, wordInfo.characterCount, curLineIndex, curWordIndex, topLeft);
+            textComponentObj.GetComponent<TextComponent>().AddCensorTarget(newCensorBox.GetComponent<CensorTarget>(), wordInfo.firstCharacterIndex);
             
             // Center the box around the word
             newCensorBox.transform.position = new Vector3((topLeft.x + bottomRight.x) / 2, (topLeft.y + bottomRight.y) / 2, 0);
@@ -280,6 +278,116 @@ public class Entity : MonoBehaviour
         }
         return false;
     }
+
+    public void UpdateCensorBoxes(CensorTarget cuttingRecipient, string replacementText)
+    {
+        TMP_Text textComponent = cuttingRecipient.GetTextComponent();
+        int lineIndex = cuttingRecipient.GetWordLocation().Item1;
+        int wordIndex = cuttingRecipient.GetWordLocation().Item2;
+        
+        int curLineIndex = 0;
+        int curWordIndex = 0;
+        float prevLastCharX = 0f;
+
+        UpdateTextComponent(textComponent, replacementText, cuttingRecipient.GetTextCmpFirstIndex(), cuttingRecipient.GetWordCharCount());
+        List<CensorTarget> targets = new List<CensorTarget>();
+        int wordNum = 0;
+        bool lineFound = false;
+        
+        // Loop through each word in the text
+        foreach (var wordInfo in textComponent.textInfo.wordInfo)
+        {
+            if (wordInfo.characterCount == 0) continue;
+
+            if (curLineIndex < lineIndex)
+            {
+                curWordIndex++;
+                if (curLineIndex < textComponent.textInfo.lineInfo.Length && curWordIndex >= textComponent.textInfo.lineInfo[curLineIndex].wordCount) {
+                    curLineIndex++;
+                    curWordIndex = 0;
+
+                    Debug.Log("changing at start ");
+                }
+                continue;
+            }
+            else if (!lineFound) 
+            {
+                lineFound = true;
+                targets = textComponent.gameObject.GetComponent<TextComponent>().ClearCensorTargetIndices(wordInfo.firstCharacterIndex);
+
+                Debug.Log("printing targets: ");
+                foreach (var target in targets)
+                {
+                    Debug.Log(target.GetTextCmpFirstIndex());
+                }
+            }
+
+            Debug.Log("curLineIndex: " + curLineIndex + " curWordIndex: " + curWordIndex + " lineIndex: " + lineIndex + " wordIndex: " + wordIndex);
+
+            // Gather the corners of the word
+            var firstCharInfo = textComponent.textInfo.characterInfo[wordInfo.firstCharacterIndex];
+            var lastCharInfo = textComponent.textInfo.characterInfo[wordInfo.lastCharacterIndex];
+            var topLeft = textComponent.transform.TransformPoint(firstCharInfo.topLeft);
+            var bottomRight = textComponent.transform.TransformPoint(lastCharInfo.bottomRight);
+
+            if (curWordIndex != 0) {
+                topLeft.x = prevLastCharX;
+            }
+            prevLastCharX = bottomRight.x;
+            
+            // Create rectangle to block out the word
+            var boxSize = new Vector2(Mathf.Abs(topLeft.x - bottomRight.x), 
+                Mathf.Abs(topLeft.y - bottomRight.y));
+
+            Debug.Log("retrieving censor target for: " + curLineIndex + " " + curWordIndex + "for word: " + wordInfo.GetWord());
+
+            CensorTarget censorBox = targets[wordNum++];
+            textComponent.gameObject.GetComponent<TextComponent>().AddCensorTarget(censorBox, wordInfo.firstCharacterIndex);
+
+            censorBox.SetTextCmpFirstIndex(wordInfo.firstCharacterIndex);
+            censorBox.SetWordCharCount(wordInfo.characterCount);
+            
+            // Center the box around the word
+            censorBox.transform.position = new Vector3((topLeft.x + bottomRight.x) / 2, (topLeft.y + bottomRight.y) / 2, 0);
+            Vector3 parentScale = censorBox.transform.parent.lossyScale;
+            censorBox.transform.localScale = new Vector3(
+                boxSize.x / parentScale.x,
+                boxSize.y / parentScale.y,
+                1
+            );
+
+            curWordIndex++;
+            if (curLineIndex < textComponent.textInfo.lineInfo.Length && curWordIndex >= textComponent.textInfo.lineInfo[curLineIndex].wordCount) {
+                curLineIndex++;
+                curWordIndex = 0;
+
+                Debug.Log("changing at end ");
+            }
+        }
+    }
+
+    private void UpdateTextComponent(TMP_Text textComponent, string replacementText, int firstCharacterIndex, int characterCount)
+    {
+        if (textComponent == null)
+        {
+            Debug.LogError("Text component is null.");
+            return;
+        }
+        
+        // Replace word in TMP obj and force update
+        string originalText = textComponent.text;
+        int wordStartIndex = firstCharacterIndex;
+        int wordLength = characterCount;
+
+        string beforeWord = originalText.Substring(0, wordStartIndex);
+        string afterWord = originalText.Substring(wordStartIndex + wordLength);
+
+        string updatedText = beforeWord + replacementText + afterWord;
+
+        textComponent.text = updatedText;
+        textComponent.ForceMeshUpdate();
+    }
+
 
     private void SetUpSplinePath() 
     {
