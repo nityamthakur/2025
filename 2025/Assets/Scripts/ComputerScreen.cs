@@ -150,7 +150,7 @@ public class ComputerScreen : MonoBehaviour
 
         // Screen starts as black
         // Wait for 1 second
-        yield return new WaitForSeconds(8f);
+        yield return new WaitForSeconds(1f);
         
         // Screen goes to a lighter shader of dark blue showing the screen is on
         fadingImage.color = new Color(0.0f, 0.0f, 0.2f, 1.0f);

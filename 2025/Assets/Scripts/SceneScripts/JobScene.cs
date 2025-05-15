@@ -151,42 +151,42 @@ public class JobScene : MonoBehaviour
         }
         backgroundImage.sprite = workBackgroundImage;
         
-        computerScreen = currJobScene.transform.Find("ComputerScreenImage").GetComponent<Image>();
-        if (computerScreen == null)
-        {
-            Debug.Log("Failed to find ComputerScreenImage in SetUpJobStart");
-            return;
-        }
-        computerScreen.gameObject.SetActive(false);
+        // computerScreen = currJobScene.transform.Find("ComputerScreenImage").GetComponent<Image>();
+        // if (computerScreen == null)
+        // {
+        //     Debug.Log("Failed to find ComputerScreenImage in SetUpJobStart");
+        //     return;
+        // }
+        // computerScreen.gameObject.SetActive(false);
 
-        startWorkButton = currJobScene.transform.Find("WorkButton").GetComponent<Button>();
-        if (startWorkButton == null)
-        {
-            Debug.LogError("Failed to find startWorkButton component in SetUpJobStart.");
-            return;
-        }
-        startWorkButton.onClick.AddListener(() =>
-        {
-            startWorkButton.gameObject.SetActive(false);
-            EventManager.PlaySound?.Invoke("switch1");
-            StartCoroutine(BeginWorkDay());
-        });
+        // startWorkButton = currJobScene.transform.Find("WorkButton").GetComponent<Button>();
+        // if (startWorkButton == null)
+        // {
+        //     Debug.LogError("Failed to find startWorkButton component in SetUpJobStart.");
+        //     return;
+        // }
+        // startWorkButton.onClick.AddListener(() =>
+        // {
+        //     startWorkButton.gameObject.SetActive(false);
+        //     EventManager.PlaySound?.Invoke("switch1");
+        //     StartCoroutine(BeginWorkDay());
+        // });
 
-        screenText = currJobScene.transform.Find("ComputerScreenText").GetComponent<TextMeshProUGUI>();
-        if (screenText == null)
-        {
-            Debug.LogError("Failed to find screenText component in ShowResults.");
-            return;
-        }
-        SetScreenEmail(screenText);
+        // screenText = currJobScene.transform.Find("ComputerScreenText").GetComponent<TextMeshProUGUI>();
+        // if (screenText == null)
+        // {
+        //     Debug.LogError("Failed to find screenText component in ShowResults.");
+        //     return;
+        // }
+        // SetScreenEmail(screenText);
 
-        mediaProcessedText = currJobScene.transform.Find("MediaProcessedText").GetComponent<TextMeshProUGUI>();
-        if (screenText == null)
-        {
-            Debug.LogError("Failed to find mediaProcessedText component in ShowResults.");
-            return;
-        }
-        ShowMediaProcessedText(false);
+        // mediaProcessedText = currJobScene.transform.Find("MediaProcessedText").GetComponent<TextMeshProUGUI>();
+        // if (screenText == null)
+        // {
+        //     Debug.LogError("Failed to find mediaProcessedText component in ShowResults.");
+        //     return;
+        // }
+        // ShowMediaProcessedText(false);
         hourHand = currJobScene.transform.Find("HourHand").GetComponent<Image>();
         if (hourHand == null)
         {
@@ -264,8 +264,8 @@ public class JobScene : MonoBehaviour
         yield return StartCoroutine(CheckDailyEvent());
         gameManager.SetJobScene(this);
         objectSpawner.StartMediaSpawn();
-        SetScreenObjectives(screenText);
-        ShowMediaProcessedText(true);
+        // SetScreenObjectives(screenText);
+        // ShowMediaProcessedText(true);
         UpdateWorkTimer();
         gameManager.StartJobTimer(workTimer);
     }
@@ -383,9 +383,9 @@ public class JobScene : MonoBehaviour
             
             EventManager.PlaySound?.Invoke("glitch", true);
 
-            screenText.gameObject.SetActive(false);
-            computerScreen.gameObject.SetActive(true);
-            computerScreen.sprite = glitchedScreen;
+            // screenText.gameObject.SetActive(false);
+            // computerScreen.gameObject.SetActive(true);
+            // computerScreen.sprite = glitchedScreen;
 
             computerScreenClass.EventTrigger(3, jobDelayed);
             objectSpawner.SpawnImageObject(true);
@@ -396,8 +396,8 @@ public class JobScene : MonoBehaviour
             EventManager.PlaySound?.Invoke("glitch", true); 
             yield return new WaitForSeconds(2.5f);
 
-            computerScreen.gameObject.SetActive(false);
-            screenText.gameObject.SetActive(true);
+            // computerScreen.gameObject.SetActive(false);
+            // screenText.gameObject.SetActive(true);
 
             computerScreenClass.EventTrigger(3, jobDelayed);
             EventManager.PauseResumeMusic?.Invoke(); 

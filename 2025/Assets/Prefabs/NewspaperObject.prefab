@@ -948,8 +948,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   censorBoxPrefab: {fileID: 1238444521771680430, guid: 2ffe89bad49217d4197da332cf5fc953, type: 3}
-  frontCensorBoxContainer: {fileID: 3386311109668500006}
-  backCensorBoxContainer: {fileID: 951432843360145334}
   backOfNewspaper: {fileID: 103021862206449432}
   blurMaterial: {fileID: 2100000, guid: ccab195f60fdefc4092484acd6795aa2, type: 2}
   defaultMaterial: {fileID: 1659601194416434223, guid: a8e39c1c99ee52c4b83b118e5905ce04, type: 2}

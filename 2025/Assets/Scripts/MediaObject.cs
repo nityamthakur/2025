@@ -49,6 +49,7 @@ public class Entity : MonoBehaviour
     private void Start()
     {
         textComponents = GetComponentsInChildren<TMP_Text>(true);
+
         if (textComponents == null)
         {
             Debug.LogError("No TextMeshPro components found!");
