@@ -2124,7 +2124,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &3391042874937471906
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2409,7 +2409,7 @@ GameObject:
   - component: {fileID: 5824717824223114251}
   - component: {fileID: 5358007285061155565}
   m_Layer: 5
-  m_Name: ComputerLoadingCircle
+  m_Name: LoadingCircle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -55,6 +55,6 @@ public static class EventManager
 
     public static Action<float> SetTextSpeed;
     public static Action<bool> ShowCorrectBuzzer;
-    public static Action<int> GoToShop;
+    public static Action GoToShop;
 
 }

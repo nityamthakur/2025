@@ -73,7 +73,7 @@ public class ComputerScreen : MonoBehaviour
     {
         background = FindObject<Image>("Background");
         foreground = FindObject<Image>("Foreground");
-        loadingImage = FindObject<Image>("ComputerLoadingCircle");
+        loadingImage = FindObject<Image>("LoadingCircle");
         fadingImage = FindObject<Image>("FadingImage");
         resultsBackground = FindObject<Image>("ResultsBackground");
         resultsBackground.gameObject.SetActive(false);
@@ -123,7 +123,6 @@ public class ComputerScreen : MonoBehaviour
     {
         workButton.interactable = false;
         EventManager.PlaySound?.Invoke("switch1", true);
-        jobScene.gameManager.gameData.money += jobScene.DayProfit;
         jobScene.StartCoroutine(jobScene.NextScene());
         workButton.onClick.RemoveAllListeners();    
     }
@@ -175,6 +174,7 @@ public class ComputerScreen : MonoBehaviour
         yield return new WaitForSeconds(2f);
                 
         // Show background of computer being on
+        loadingImage.gameObject.SetActive(false);
         foreground.gameObject.SetActive(false);
         fadingImage.gameObject.SetActive(false);
         applicationBar.SetActive(true);

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 [System.Serializable]
 public class GameData
@@ -58,9 +59,18 @@ public class GameData
     {
         this.day = day;
     }
-    public void SetCurrentMoney(int money)
+    public void SetCurrentMoney(int money, bool wasUpgrade)
     {
-        this.money = money;
+        this.money += money;
+        if(money > 0)
+            this.totalMoneyEarned += money;
+        if(wasUpgrade)
+            this.totalMoneySpent += Math.Abs(money);
+    }
+
+    public void SetRent(int rent)
+    {
+        this.rent += rent;
     }
 
     public bool HasUVLightUpgrade()

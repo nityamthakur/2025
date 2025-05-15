@@ -23,7 +23,6 @@ public class ShopManager : MonoBehaviour
     private TextMeshProUGUI upgradeText2;
     private Image upgradeImage1;
     private Image upgradeImage2;
-
     private int playerMoney;
     private GameManager gameManager;
 
@@ -39,11 +38,18 @@ public class ShopManager : MonoBehaviour
         EventManager.GoToShop -= ShowShop;
     }
 
-    private void ShowShop(int money)
+    private int GetPlayerMoney()
     {
-        // Store the player's money
-        playerMoney = money;
+        return gameManager.gameData.GetCurrentMoney();
+    }
 
+    private void SpendPlayerMoney(int money)
+    {
+        gameManager.gameData.SetCurrentMoney(-money, true);
+    }
+
+    private void ShowShop()
+    {
         // Get reference to GameManager
         gameManager = FindFirstObjectByType<GameManager>();
 
@@ -68,7 +74,7 @@ public class ShopManager : MonoBehaviour
     {
         // Find and set up UI components
         moneyText = currentShopScreen.transform.Find("MoneyText").GetComponent<TextMeshProUGUI>();
-        moneyText.text = $"Money: ${playerMoney}";
+        moneyText.text = $"Money: {GetPlayerMoney()}";
 
         // Set up the Done button
         doneButton = currentShopScreen.transform.Find("DoneButton").GetComponent<Button>();
@@ -128,8 +134,8 @@ public class ShopManager : MonoBehaviour
     private void UpdateButtonStates()
     {
         // Check if player can afford each upgrade and if it's already purchased
-        bool canAfford1 = playerMoney >= upgradePrice1;
-        bool canAfford2 = playerMoney >= upgradePrice2;
+        bool canAfford1 = GetPlayerMoney() >= upgradePrice1;
+        bool canAfford2 = GetPlayerMoney() >= upgradePrice2;
 
         // Check if upgrades are already purchased
         bool isUVLightUpgradePurchased = gameManager != null &&
@@ -186,10 +192,10 @@ public class ShopManager : MonoBehaviour
         EventManager.PlaySound?.Invoke("switch1", true);
 
         // Deduct money
-        playerMoney -= price;
+        SpendPlayerMoney(price);
 
         // Update money display
-        moneyText.text = $"Money: ${playerMoney}";
+        moneyText.text = $"Money: ${GetPlayerMoney()}";
 
         // Apply the upgrade effect (store in GameManager.gameData)
         ApplyUpgradeEffect(upgradeNumber);
@@ -218,9 +224,6 @@ public class ShopManager : MonoBehaviour
                     Debug.Log("Timer Extension upgrade purchased!");
                     break;
             }
-
-            // Be sure to set the current money in gameData before exiting shop
-            gameManager.gameData.SetCurrentMoney(playerMoney);
         }
         else
         {
@@ -262,12 +265,6 @@ public class ShopManager : MonoBehaviour
 
     private void FinishShopping()
     {
-        // Make sure the money amount is saved to game data
-        if (gameManager != null && gameManager.gameData != null)
-        {
-            gameManager.gameData.SetCurrentMoney(playerMoney);
-        }
-
         // Play sound effect
         EventManager.PlaySound?.Invoke("switch1", true);
 
