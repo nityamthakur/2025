@@ -272,7 +272,7 @@ MonoBehaviour:
   femaleNewsAnchor: {fileID: -1540687528, guid: a3b2525eefac14d5881507c820d26496, type: 3}
   maleNewsAnchor: {fileID: -195469805601254878, guid: 0d88bc2eb627439499134ddbde6b061f, type: 3}
   badEnding: {fileID: -8335090095948488748, guid: 6f8ef183b4a69484387fa1dd869b2bb9, type: 3}
-  playtestQRCode: {fileID: 0}
+  playtestQRCode: {fileID: 1285756113957457238, guid: aa20ee9f0a5f6e046ad3bbced7e34df8, type: 3}
   gameRating: 0
 --- !u!1 &284965278 stripped
 GameObject:
