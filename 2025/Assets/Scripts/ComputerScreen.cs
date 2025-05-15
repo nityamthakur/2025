@@ -11,9 +11,10 @@ public class ComputerScreen : MonoBehaviour
     [SerializeField] private GameObject emailScreen, applicationBar, backgroundScreen;
     private GameObject lastOpenedScreen = null;
     private TextMeshProUGUI screenText, mediaProcessedText, emailText;
-    private Image background, foreground, resultsBackground, fadingImage, emailNotification;
+    private Image background, foreground, resultsBackground, fadingImage, emailNotification, loadingImage;
     private Slider performanceSlider;
     private JobScene jobScene;
+    private Sprite[] loadingCircleAnimation;
 
     //Emails -------------------------------------//
     [SerializeField] private Transform emailSpawnZone;
@@ -72,11 +73,13 @@ public class ComputerScreen : MonoBehaviour
     {
         background = FindObject<Image>("Background");
         foreground = FindObject<Image>("Foreground");
+        loadingImage = FindObject<Image>("LoadingCircle");
         fadingImage = FindObject<Image>("FadingImage");
         resultsBackground = FindObject<Image>("ResultsBackground");
         resultsBackground.gameObject.SetActive(false);
         emailNotification = FindObject<Image>("EmailNotification");
         emailNotificationText = emailNotification.transform.Find("Text").GetComponent<TextMeshProUGUI>();
+        loadingCircleAnimation = Resources.LoadAll<Sprite>("Animations/ComputerLoadingAnimation");
     }
 
     private void SetUpText()
@@ -120,7 +123,6 @@ public class ComputerScreen : MonoBehaviour
     {
         workButton.interactable = false;
         EventManager.PlaySound?.Invoke("switch1", true);
-        jobScene.gameManager.gameData.money += jobScene.DayProfit;
         jobScene.StartCoroutine(jobScene.NextScene());
         workButton.onClick.RemoveAllListeners();    
     }
@@ -137,6 +139,7 @@ public class ComputerScreen : MonoBehaviour
     public void StartComputer()
     {
         StartCoroutine(ComputerStartUp());
+        //StartCoroutine(ComputerInstantStartUp());
     }
 
     private IEnumerator ComputerStartUp()
@@ -161,13 +164,48 @@ public class ComputerScreen : MonoBehaviour
         // Fade in the Computer Logo, 0.5 seconds
         foreground.sprite = computerLogo;
         StartCoroutine(FadeImage(fadingImage, 0.5f, false));
+        StartCoroutine(CycleBackgroundFrames(loadingCircleAnimation, 6f, 0.2f));
         yield return new WaitForSeconds(5.0f);
         
-        // Show loading bar, 2 seconds
-        // LoadingBarAnimation(2f);
         // Fade out the Computer Logo, 0.5 seconds
         StartCoroutine(FadeImage(fadingImage, 0.5f, true));
+        EventManager.PlaySound?.Invoke("computerChime", true);
+
         yield return new WaitForSeconds(2f);
+                
+        // Show background of computer being on
+        loadingImage.gameObject.SetActive(false);
+        foreground.gameObject.SetActive(false);
+        fadingImage.gameObject.SetActive(false);
+        applicationBar.SetActive(true);
+        HideMenus();
+        UpdateUnreadEmailsPopUp();
+        // Show unread emails to the upper right of the email button. Look up iphone unread emails
+    }
+
+    private IEnumerator CycleBackgroundFrames(Sprite[] frames, float duration, float frameInterval)
+    {
+        if (frames == null || frames.Length == 0)
+            yield break;
+
+        int index = 0;
+        while (duration > 0)
+        {
+            duration -= Time.deltaTime;
+            loadingImage.sprite = frames[index];
+            index = (index + 1) % frames.Length;
+            yield return new WaitForSeconds(frameInterval);
+        }
+    }
+
+    private IEnumerator ComputerInstantStartUp()
+    {
+        // For some kind of animation for the computer
+        screenText.text = "";
+        applicationBar.SetActive(false);
+        emailScreen.SetActive(false);
+        fadingImage.gameObject.SetActive(true);
+        foreground.gameObject.SetActive(true);
 
         // Show background of computer being on
         foreground.gameObject.SetActive(false);
@@ -175,6 +213,7 @@ public class ComputerScreen : MonoBehaviour
         applicationBar.SetActive(true);
         HideMenus();
         UpdateUnreadEmailsPopUp();
+        yield return new();
         // Show unread emails to the upper right of the email button. Look up iphone unread emails
     }
 

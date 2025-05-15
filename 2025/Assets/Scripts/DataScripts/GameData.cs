@@ -1,9 +1,11 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 [System.Serializable]
 public class GameData
 {
+    public int saveSlot;
     public int day;
     public int money, totalMoneyEarned, totalMoneySpent;
     public int rent;
@@ -20,17 +22,19 @@ public class GameData
 
     public GameData()
     {
+        saveSlot = -1;
         day = 1;
         money = 0;
         totalMoneyEarned = 0;
         totalMoneySpent = 0;
-        rent = 3;
+        rent = 5;
         PerformanceScale = 0.5f;  // Default to 50% performance (0.5f)
         playTime = 0f;
     }
 
     public GameData(GameData loadedGame)
     {
+        this.saveSlot = loadedGame.saveSlot;
         this.day = loadedGame.day;
         this.money = loadedGame.money;
         this.totalMoneyEarned = loadedGame.totalMoneyEarned;
@@ -55,9 +59,18 @@ public class GameData
     {
         this.day = day;
     }
-    public void SetCurrentMoney(int money)
+    public void SetCurrentMoney(int money, bool wasUpgrade)
     {
-        this.money = money;
+        this.money += money;
+        if(money > 0)
+            this.totalMoneyEarned += money;
+        if(wasUpgrade)
+            this.totalMoneySpent += Math.Abs(money);
+    }
+
+    public void SetRent(int rent)
+    {
+        this.rent += rent;
     }
 
     public bool HasUVLightUpgrade()

@@ -125,15 +125,12 @@ public class SceneChanger : MonoBehaviour
 
             // For Debugging
             // Change the starting day
-            gameManager.gameData.day = 1;                                       // 1
             
             // Start the game at day end
-            //currentSceneIndex = 4;
+            //currentSceneIndex = 3;
             //dayEndScene.LoadDayEnd();
             
             // Start the game at the job scene
-            currentSceneIndex = 2;                                              // comment both
-            jobScene.LoadJobStart();
         }
     }
 
@@ -234,7 +231,8 @@ public class SceneChanger : MonoBehaviour
     private void ShowLightsOutImage()
     {
         //Debug.Log("ShowDeskOverlay called");
-        lightsOutImage.gameObject.SetActive(true);   
+        if(lightsOutImage != null)
+            lightsOutImage.gameObject.SetActive(true);   
     }
     private void HideLightsOutImage()
     {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -288,8 +289,6 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        AnalyticsManager.Instance.GameStart();
-
         // Set GameDevLoadDay if not absent to prevent errors on first install
         if(!PlayerPrefs.HasKey("GameDevLoadDay"))
             PlayerPrefs.SetInt("GameDevLoadDay", -1);
@@ -380,6 +379,8 @@ public class GameManager : MonoBehaviour
         {
             yield return new WaitForSeconds(1f);
             gameData.playTime += 1f;  // Increment playtime every second
+            if(jobDetails != null)
+                jobDetails.articleClockTime += 1f;
         }
     }
 
@@ -548,6 +549,7 @@ public class GameManager : MonoBehaviour
         TotalScore += Math.Clamp(mediaScore, 0, 5);
 
         EvaluatePlayerScore();
+        ArticleAnalysisCreation(banWords, false);
         ResetPuzzleTracking();
         CheckDayEnd();
     }
@@ -585,6 +587,7 @@ public class GameManager : MonoBehaviour
 
 
         EvaluatePlayerScore();
+        ArticleAnalysisCreation(banWords, true);
         ResetPuzzleTracking();
         CheckDayEnd();
     }
@@ -593,9 +596,28 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log($"Total Score: {TotalScore}");
         Debug.Log($"Results: \n{currentCensorNum}/{totalCensorTargets} words correctly censored. {numCensorMistakes} words incorrectly censored.");
-        Debug.Log($"Results: \n{currentReplaceNum}/{totalReplaceTargets} words correctly replaced. {numReplaceMistakes} words incorrectly replaced.");
-    
+
         Debug.Log($"Performance Scale: {gameData.PerformanceScale}");
+    }
+
+    public void ArticleAnalysisCreation(string[] banwords, bool wasBanned)
+    {
+        Media newMedia = new()
+        {
+            day = gameData.day,
+            timeSpent = jobDetails.articleClockTime,
+            hiddenImageExists = hiddenImageExists,
+            hiddenImageFound = hiddenImageFound,
+            bannedWords = banwords,
+            articleBanned = wasBanned,
+            numCensorableWords = totalCensorTargets,
+            numCensoredCorrectly =  currentCensorNum,
+            numCensorMistakes = numCensorMistakes
+        };
+        newMedia.CheckMistakesMade();
+        //newMedia.Print();
+        jobDetails.dayMedia.Add(newMedia);
+        jobDetails.articleClockTime = 0f;     
     }
 
     public void CheckDayEnd()
@@ -605,6 +627,7 @@ public class GameManager : MonoBehaviour
         if (jobDetails.currClockTime <= 0 && jobDetails.numMediaProcessed >= jobDetails.numMediaNeeded || jobDetails.numMediaProcessed >= jobDetails.numMediaExtra)
         {
             dayEnded = true;
+            gameData.SetCurrentMoney(totalScore, false);
             jobScene.ShowResults(jobDetails.numMediaProcessed, TotalScore);
             TotalScore = 0;
             currentMediaObject = null;
@@ -617,7 +640,7 @@ public class GameManager : MonoBehaviour
     {
         jobDetails.numMediaProcessed = 0;
         StopCoroutine(jobTimerCoroutine);
-        jobDetails.currClockTime = 0;
+        jobDetails.currClockTime = 0f;
     }
 
     public void StartJobTimer(float time)
@@ -633,6 +656,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Job Timer Started...");
         jobDetails.currClockTime = time;
+        jobDetails.articleClockTime = 0;
 
         float totalWorkTime = time; // Store total work time for calculations
         JobScene jobScene = GetJobScene();
@@ -640,7 +664,6 @@ public class GameManager : MonoBehaviour
         while (jobDetails.currClockTime > 0)
         {
             jobDetails.currClockTime -= Time.deltaTime;
-
             if (jobScene != null)
             {
                 float progress = 1f - (jobDetails.currClockTime / totalWorkTime);
@@ -676,6 +699,9 @@ public class JobDetails
 
     // For using a time based system for the day
     public float currClockTime;
+    public float articleClockTime;
+    public int numMediaCorrect = 0;
+    public List<Media> dayMedia = new();
     public JobDetails()
     {
         numMediaProcessed = 0;
@@ -683,5 +709,87 @@ public class JobDetails
         numMediaExtra = 5;
         penalty = 2;
         currClockTime = 0f;
+        articleClockTime = 0f;
+    }
+
+    public float ArticleWinRate()
+    {
+        if(dayMedia.Count == 0)
+            return 0;
+   
+        float articleWinRate = 0;
+        foreach(Media media in dayMedia)
+        {
+            if(media.noMistakes)
+                articleWinRate++;
+        }
+        articleWinRate /= dayMedia.Count;
+        return MathF.Round(articleWinRate, 2);
+    }
+
+    public float ArticleTimeAverage()
+    {
+        if(dayMedia.Count == 0)
+            return 0;
+
+        float articleTimeAvg = 0;
+        foreach(Media media in dayMedia)
+        {
+            articleTimeAvg += media.timeSpent;
+        }
+        articleTimeAvg /= dayMedia.Count;
+        return articleTimeAvg; 
+    }
+
+    public float MostTimeSpentOnArticle()
+    {
+        float time = 0;
+        foreach(Media media in dayMedia)
+        {
+            if(media.timeSpent > time)
+                time =  media.timeSpent;
+        }
+        return time;   
+    }
+}
+
+public class Media
+{
+    public int day = 0; // Day the article was shown
+    public float timeSpent = 0f;
+    public bool noMistakes = true; // If the article was passed with no mistakes
+    
+    public bool hiddenImageExists = false;
+    public bool hiddenImageFound = false;
+    
+    public string[] bannedWords = null; // Banned words
+    public bool articleBanned = false; // If the article was banned
+
+    public int numCensorableWords; // Number of words on the article that should be censored
+    public int numCensoredCorrectly; // Number of words censored correctly
+    public int numCensorMistakes; // Number of words incorrectly censored
+
+    public void CheckMistakesMade()
+    {
+        if(hiddenImageExists == true && !hiddenImageFound)
+        {
+            noMistakes = false;
+            return;
+        }
+        if((articleBanned && bannedWords.Length == 0) || (!articleBanned && bannedWords.Length > 0))
+        {
+            noMistakes = false;
+            return;
+        }
+        if(numCensorableWords == numCensoredCorrectly && numCensorMistakes > 0)
+        {
+            noMistakes = false;
+            return;
+        }
+    }
+
+    public void Print()
+    {
+        Debug.Log($"MediaDetails: \nDay: {day} \ntimeSpent: {timeSpent} \nnoMistakes: {noMistakes} \nHiddenImageExist/Found: {hiddenImageExists}/{hiddenImageFound} \nArticleBanned: {articleBanned} \nbannedWords: {bannedWords} \nnumCensorableWords: {numCensorableWords} \nWordsCensoredCorrectly: {numCensoredCorrectly} \nnumCensorMistakes: {numCensorMistakes}");
     }
 }

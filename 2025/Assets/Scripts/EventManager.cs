@@ -21,10 +21,16 @@ public static class EventManager
     public static Action<bool> DisplayMenuButton;
     public static Func<bool> IsMusicPlaying;
 
+    // MainMenuScene Events
+    public static Action BeginNewGame;
+
+    // OptionsMenu Events
     public static Action<string> OptionsChanger;
+    public static Action NewStartGame;
     public static Action OpenOptionsMenu;
     public static Action ReactivateMainMenuButtons;
 
+    // AudioManage Events
     public static Action<string> ShowCustomSubtitle;
     public static Action<string> PlayMusic;
     public static Action PauseResumeMusic;
@@ -49,6 +55,6 @@ public static class EventManager
 
     public static Action<float> SetTextSpeed;
     public static Action<bool> ShowCorrectBuzzer;
-    public static Action<int> GoToShop;
+    public static Action GoToShop;
 
 }

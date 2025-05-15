@@ -14,14 +14,14 @@ public class DayEndScene : MonoBehaviour
     [SerializeField] private Sprite newMericaEndingStar;
     [SerializeField] private Sprite femaleNewsAnchor;
     [SerializeField] private Sprite maleNewsAnchor;
-    [SerializeField] private Sprite badEnding;
+    [SerializeField] private Sprite badEnding, playtestQRCode;
     private GameObject currentPrefab;
-    private Image backgroundImage, textBoxBackground, textOutlines;
+    private Image backgroundImage, textBoxBackground, textOutlines, ratingImage;
     private Button gameButton, nextButton;
     private TextMeshProUGUI buttonText, fundsText, suppliesText, textBoxText, dayText;
     private GameManager gameManager;
-
     private int linePos = 0;
+    public int gameRating = 0;
     private Line[] currentLines;
 
     public void Initialize()
@@ -57,6 +57,13 @@ public class DayEndScene : MonoBehaviour
             return;
         }
         backgroundImage.gameObject.SetActive(false);
+
+        ratingImage = currentPrefab.transform.Find("RatingImage").GetComponent<Image>();
+        if (ratingImage == null)
+        {
+            Debug.Log("Failed to find RatingImage component");
+            return;
+        }
 
         fundsText = currentPrefab.transform.Find("FundsText").GetComponent<TextMeshProUGUI>();
         if (fundsText == null)
@@ -101,7 +108,7 @@ public class DayEndScene : MonoBehaviour
             return;
         }
         else
-            dayText.text = $"Day {gameManager.gameData.day}\nTime to head home";
+            dayText.text = $"DAY {gameManager.gameData.day}\nTIME TO HEAD HOME";
 
 
         gameButton = currentPrefab.transform.Find("GameButton").GetComponent<Button>();
@@ -166,20 +173,19 @@ public class DayEndScene : MonoBehaviour
         fundsText.text += $"\n\n<align=left>New Total<line-height=0>\n<align=right>${currMoney - rentDue}<line-height=1em>";
         
         suppliesText.text = $"Office supplies\n";
-        suppliesText.text += "\nGetting Low On Pens";
-        suppliesText.text += "\nRan out of batteries";
-        suppliesText.text += "\nGetting Low On Stamp Ink";
+        suppliesText.text += "\n<s>Getting Low On Pens";
+        suppliesText.text += "\n<s>Ran out of batteries";
+        suppliesText.text += "\n<s>Getting Low On Stamp Ink";
     }
 
     private bool CheckGameOver()
     {
         int rentDue = (gameManager.gameData.rent += 2) - 2;
-        gameManager.gameData.SetCurrentMoney(gameManager.gameData.money - rentDue);
+        gameManager.gameData.SetCurrentMoney(-rentDue, false);
 
         int selectedEnding = SelectedEnding();
         if (selectedEnding > 0)
         {
-            AnalyticsManager.Instance.GameOver(gameManager.gameData);
             dayText.gameObject.SetActive(false);
             return true;
         }
@@ -212,16 +218,19 @@ public class DayEndScene : MonoBehaviour
             // NewMerica Ending
             if (gameManager.gameData.PerformanceScale >= 0.66f)
             {
+                EventManager.PlayMusic?.Invoke("americana");
                 return 1;
             }
             // Neutral Ending
             else if (gameManager.gameData.PerformanceScale >= 0.33f)
             {
+                EventManager.PlayMusic?.Invoke("americana");
                 return 2;
             }
             // Green Party (Bad) Ending
             else
             {
+                EventManager.PlayMusic?.Invoke("darkfog");
                 return 3;
             }
         }
@@ -244,7 +253,7 @@ public class DayEndScene : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         // Trigger the shop "scene" to appear
-        EventManager.GoToShop?.Invoke(gameManager.gameData.money);
+        EventManager.GoToShop?.Invoke();
     }
 
     // This method would be called from the ShopManager when the player is done with the shop
@@ -260,6 +269,7 @@ public class DayEndScene : MonoBehaviour
             // Go to the next day's scene
             EventManager.StopMusic?.Invoke();
             EventManager.NextScene?.Invoke();
+            SaveSystem.SaveGame(gameManager.gameData.saveSlot, gameManager.gameData);
         }
         else
         {
@@ -285,6 +295,7 @@ public class DayEndScene : MonoBehaviour
     private IEnumerator RestartGame()
     {
         Debug.Log("Ending Game");
+        AnalyticsManager.Instance.GameOver(gameManager.gameData, gameManager.GetJobDetails(), gameRating);
 
         EventManager.StopMusic?.Invoke();
         EventManager.FadeOut?.Invoke();
@@ -297,6 +308,75 @@ public class DayEndScene : MonoBehaviour
         Time.timeScale = 1;
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    private void RateGame()
+    {
+        EventManager.StopMusic?.Invoke();
+
+        int ratingCount = 5;
+        List<Button> buttons = new();
+
+        backgroundImage.gameObject.SetActive(false);
+        nextButton.gameObject.SetActive(false);
+        textBoxText.text = "<align=center>Thank You For Playing!\n\nPlease Give Our Game A Rating Out Of 5 Golden Hands</align>";
+
+        gameButton.onClick.RemoveAllListeners();
+        gameButton.onClick.AddListener(() => ShowPlaytestFormQRCode() );
+
+        ratingImage.gameObject.SetActive(true);
+        Button ratingButtonPrefab = ratingImage.transform.Find("Rating").GetComponent<Button>();
+        ratingButtonPrefab.onClick.AddListener(() => 
+        {
+            gameRating = 1;
+            RatingButtonUpdater(buttons);
+        });
+        buttons.Add(ratingButtonPrefab);
+
+        Color color = ratingButtonPrefab.image.color;
+        color.a = 0.2f;
+        ratingButtonPrefab.image.color = color;
+
+        for(int i = 1; i < ratingCount; i++)
+        {
+            int newRating = i + 1;
+            Button ratingButton = Instantiate(ratingButtonPrefab, ratingImage.transform);
+            ratingButton.onClick.AddListener(() => 
+            {
+                gameRating = newRating;
+                RatingButtonUpdater(buttons);
+            });
+            buttons.Add(ratingButton);
+        }
+    }
+
+    private void RatingButtonUpdater(List<Button> buttons)
+    {
+        gameButton.gameObject.SetActive(true);
+
+        int num = 1;
+        foreach(Button button in buttons)
+        {
+            Color color = button.image.color;
+            if (num <= gameRating)
+                color.a = 1f; // 100% opacity
+            else
+                color.a = 0.2f; // 20% opacity
+
+            button.image.color = color; // Reassign the whole color back to the image
+            num++;
+        }
+    }
+
+    private void ShowPlaytestFormQRCode()
+    {
+        gameButton.onClick.RemoveAllListeners();
+        gameButton.onClick.AddListener(() => StartCoroutine(RestartGame()) );  
+
+        ratingImage.gameObject.SetActive(false);
+        backgroundImage.gameObject.SetActive(true);
+        backgroundImage.sprite = playtestQRCode;
+        textBoxText.text = "<align=center>Please Fill Out Our Playtest Form</align>";   
     }
 
     private void LoadJsonFromFile()
@@ -358,7 +438,8 @@ public class DayEndScene : MonoBehaviour
         else
         {
             nextButton.interactable = false;
-            StartCoroutine(RestartGame());
+            RateGame();
+            //StartCoroutine(RestartGame());
         }
     }
 

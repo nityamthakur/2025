@@ -5,6 +5,7 @@ using System;
 
 public class MainMenuScene : MonoBehaviour
 {
+    [SerializeField] private GameManager gameManager;
     [SerializeField] private GameObject menuObject;
     [SerializeField] private Sprite[] mainMenuImage;
     [SerializeField] private float frameInterval = 0.5f; // Interval for frame cycling
@@ -61,7 +62,9 @@ public class MainMenuScene : MonoBehaviour
         {
             playButton.interactable = false;
             EventManager.PlaySound?.Invoke("switch1", true); 
-            StartCoroutine(StartGame());
+            EventManager.OpenOptionsMenu?.Invoke();
+            EventManager.NewStartGame?.Invoke(); 
+            EventManager.PlaySound?.Invoke("switch1", true);
         });
 
         loadButton = currentMenuObject.transform.Find("LoadButton").GetComponent<Button>();
@@ -120,6 +123,11 @@ public class MainMenuScene : MonoBehaviour
         }
     }
 
+    private void BeginNewGame()
+    {
+        StartCoroutine(StartGame());
+    }
+
     private IEnumerator StartGame()
     {
         EventManager.FadeOut?.Invoke();
@@ -139,6 +147,7 @@ public class MainMenuScene : MonoBehaviour
         // Prevent reactivating load and open buttons when game has started
         if(playButton != null && playButton.IsActive())
         {
+            playButton.interactable = true;
             loadButton.interactable = true;
             optionsButton.interactable = true;
         }
@@ -147,10 +156,12 @@ public class MainMenuScene : MonoBehaviour
     void OnEnable()
     {
         EventManager.ReactivateMainMenuButtons += ReactivateMainMenuButtons;
+        EventManager.BeginNewGame += BeginNewGame;
     }
 
     void OnDisable()
     {
         EventManager.ReactivateMainMenuButtons -= ReactivateMainMenuButtons;
+        EventManager.BeginNewGame -= BeginNewGame;
     }
 }
