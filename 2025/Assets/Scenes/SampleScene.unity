@@ -340,7 +340,7 @@ MonoBehaviour:
   MaleNewsAnchor2:
   - {fileID: -195469805601254878, guid: 0d88bc2eb627439499134ddbde6b061f, type: 3}
   apartment:
-  - {fileID: -6199886327801638459, guid: 57b120dfceace764f9f7c7d5321a318c, type: 3}
+  - {fileID: -5663719376924119251, guid: 7ebf269f2e1e1dd46843a2d523284b91, type: 3}
   rentLetter: {fileID: 5162322167547290152, guid: f2d66c3b570b04920b75624d214676d9, type: 3}
   rentNotice: {fileID: 889754086627472722, guid: 50ffb7daf5478470c90ac2b7f8952d67, type: 3}
   jobLetter: {fileID: 2247088696051876834, guid: 10d5781b3649c3c40a0d1bce740af2fd, type: 3}
