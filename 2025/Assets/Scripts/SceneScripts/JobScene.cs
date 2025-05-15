@@ -248,7 +248,7 @@ public class JobScene : MonoBehaviour
             promotionPossibility = "Unlikely";
         }
 
-        string performanceText = $"Day {gameManager.gameData.day} Results:\n\nMedia Processed: {mediaProcessed}\n\nSupervisors Notified of Your Day\n\nProfit: ${score}\n\nTotal Money: ${gameManager.gameData.money + score}\n\nPossibility of Promotion: {promotionPossibility}";
+        string performanceText = $"Day {gameManager.gameData.day} Results:\n\nMedia Processed: {mediaProcessed}\n\nSupervisors Notified of Your Day\n\nProfit: ${score}\nCurrent Savings: ${gameManager.gameData.GetCurrentMoney()}\n\nPossibility of Promotion: {promotionPossibility}";
         computerScreenClass.SetScreenText(performanceText);
     }
 
@@ -275,8 +275,6 @@ public class JobScene : MonoBehaviour
 
     public IEnumerator NextScene()
     {
-        gameManager.gameData.money += dayProfit;
-
         EventManager.DisplayMenuButton?.Invoke(false);
         EventManager.FadeOut?.Invoke();
         yield return new WaitForSeconds(2f);

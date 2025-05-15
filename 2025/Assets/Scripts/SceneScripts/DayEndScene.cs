@@ -181,7 +181,7 @@ public class DayEndScene : MonoBehaviour
     private bool CheckGameOver()
     {
         int rentDue = (gameManager.gameData.rent += 2) - 2;
-        gameManager.gameData.SetCurrentMoney(gameManager.gameData.money - rentDue);
+        gameManager.gameData.SetCurrentMoney(-rentDue, false);
 
         int selectedEnding = SelectedEnding();
         if (selectedEnding > 0)
@@ -253,7 +253,7 @@ public class DayEndScene : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         // Trigger the shop "scene" to appear
-        EventManager.GoToShop?.Invoke(gameManager.gameData.money);
+        EventManager.GoToShop?.Invoke();
     }
 
     // This method would be called from the ShopManager when the player is done with the shop
