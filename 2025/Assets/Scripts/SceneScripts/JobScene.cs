@@ -64,7 +64,7 @@ public class JobScene : MonoBehaviour
 
 
     public void LoadJobStart() {
-        //ShowBuildingTransition();                                 uncomment
+        ShowBuildingTransition();
         LoadJsonFromFile();
         SetUpJobStart();
         computerScreenClass.StartComputer();

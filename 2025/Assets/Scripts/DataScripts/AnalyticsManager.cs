@@ -44,7 +44,7 @@ public class AnalyticsManager : MonoBehaviour
 			{"articlesSeen", jobDetails.dayMedia.Count},
 			{"articleWinRate", jobDetails.ArticleWinRate()},
 			{"articleTimeAvg", jobDetails.ArticleTimeAverage()},
-			{"articleTimeLongest", jobDetails.MostTimeSpentOnArticle()}
+			{"mostTimeSpentOnArticle", jobDetails.MostTimeSpentOnArticle()}
 		};
 		AnalyticsService.Instance.RecordEvent(gameEnd);
 		AnalyticsService.Instance.Flush();
