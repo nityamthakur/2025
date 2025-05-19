@@ -224,6 +224,20 @@ public class ObjectSpawner : MonoBehaviour
                 ProcessField(newspaperObj["back"], out newspaper.backContent, out newspaper.backIsComplex);
 
                 newspapers[i] = newspaper;
+
+                // Create Media to retain article information for gameData and other uses
+                Media newMedia = new()
+                {
+                    title = newspaper.title,
+                    publisher = newspaper.publisher,
+                    body = newspaper.frontContent + newspaper.backContent,
+                    date = newspaper.date,
+                    day = gameManager.gameData.day,
+                    hiddenImageExists = newspaper.hasHiddenImage,
+                    censorWords = newspaper.censorWords,
+                    bannedWords = newspaper.banWords,
+                };
+                gameManager.gameData.AddNewMedia(newMedia);
             }
 
             newspaperPos = 0;

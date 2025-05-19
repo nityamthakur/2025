@@ -344,12 +344,10 @@ public class OptionsMenu : MonoBehaviour
                     // Convert playtime to "H:MM:SS" format
                     string time = SecondMinuteHourConversion(gameSlot.playTime);
                     buttonText.text = $"Save Slot {slotIndex}\nPlaytime: {time}  Day: {gameSlot.day}";
-
-                    //Debug.Log($"The gameSlot{slotIndex} playTime is: {gameSlot.playTime}");
-                    //Debug.Log($"buttonText is now: {buttonText.text}");
                 }
                 else
                 {
+                    buttonText.text = "Save Data is Corrupted";
                     Debug.Log($"Failed to get Game Slot {slotIndex}");
                 }
             }

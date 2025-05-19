@@ -295,7 +295,7 @@ public class DayEndScene : MonoBehaviour
     private IEnumerator RestartGame()
     {
         Debug.Log("Ending Game");
-        AnalyticsManager.Instance.GameOver(gameManager.gameData, gameManager.GetJobDetails(), gameRating);
+        AnalyticsManager.Instance.GameOver(gameManager.gameData, gameRating);
 
         EventManager.StopMusic?.Invoke();
         EventManager.FadeOut?.Invoke();

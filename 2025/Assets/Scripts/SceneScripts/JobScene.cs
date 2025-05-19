@@ -187,35 +187,15 @@ public class JobScene : MonoBehaviour
         computerScreenPrefab = screenTransform.gameObject;
 
         computerScreenClass = computerScreenPrefab.GetComponent<ComputerScreen>();
-        if(computerScreenClass == null)
+        if (computerScreenClass == null)
         {
             Debug.Log("Failed to find ComputerScreenClass in SetUpJobStart");
             return;
         }
         computerScreenClass.Initalize();
         computerScreenClass.CreateEmails(gameManager.gameData.releasedEmails);
+        computerScreenClass.CreateReviews(gameManager.gameData.releasedArticles, gameManager.gameData.GetCurrentDay());
     }
-
-    private void SetScreenObjectives(TextMeshProUGUI screenText)
-    {
-        string text = "Ban List:\n";
-        foreach (string ban in gameManager.GetBanTargetWords())
-        {
-            text += ban + "\n";
-        }
-
-        // Don't show the censor list on the first day
-        if (gameManager.gameData.GetCurrentDay() == 1) return;
-
-        text += "\nCensor List:\n";
-        foreach (string censor in gameManager.GetCensorTargetWords())
-        {
-            text += censor + "\n";
-        }
-
-        computerScreenClass.SetScreenText(text);
-    }
-    
 
     public IEnumerator BeginWorkDay()
     {

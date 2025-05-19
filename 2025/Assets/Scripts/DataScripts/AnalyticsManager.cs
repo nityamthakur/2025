@@ -26,7 +26,7 @@ public class AnalyticsManager : MonoBehaviour
 		isInitialized = true;
     }
 
-	public void GameOver(GameData gameData, JobDetails jobDetails, int gameRating)
+	public void GameOver(GameData gameData, int gameRating)
 	{
 		if(!isInitialized)
 		{
@@ -41,10 +41,10 @@ public class AnalyticsManager : MonoBehaviour
 			{"moneyEarned", gameData.totalMoneyEarned},
 			{"moneySpent", gameData.totalMoneySpent},
 			{"moneyEndedWith", gameData.money},
-			{"articlesSeen", jobDetails.dayMedia.Count},
-			{"articleWinRate", jobDetails.ArticleWinRate()},
-			{"articleTimeAvg", jobDetails.ArticleTimeAverage()},
-			{"mostTimeSpentOnArticle", jobDetails.MostTimeSpentOnArticle()}
+			{"articlesSeen", gameData.releasedArticles.Count},
+			{"articleWinRate", gameData.ArticleWinRate()},
+			{"articleTimeAvg", gameData.ArticleTimeAverage()},
+			{"mostTimeSpentOnArticle", gameData.MostTimeSpentOnArticle()}
 		};
 		AnalyticsService.Instance.RecordEvent(gameEnd);
 		AnalyticsService.Instance.Flush();
