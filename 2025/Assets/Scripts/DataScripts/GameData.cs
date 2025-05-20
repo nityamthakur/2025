@@ -19,6 +19,7 @@ public class GameData
     }
     public float playTime;
     public List<JobScene.Entry> releasedEmails = new();
+    public List<Media> releasedArticles = new();
 
     public GameData()
     {
@@ -43,6 +44,7 @@ public class GameData
         this.PerformanceScale = loadedGame.PerformanceScale;
         this.playTime = loadedGame.playTime;
         this.releasedEmails = loadedGame.releasedEmails;
+        this.releasedArticles = loadedGame.releasedArticles;
     }
 
     public int GetCurrentDay()
@@ -53,7 +55,7 @@ public class GameData
     {
         return this.money;
     }
-    
+
 
     public void SetCurrentDay(int day)
     {
@@ -62,15 +64,20 @@ public class GameData
     public void SetCurrentMoney(int money, bool wasUpgrade)
     {
         this.money += money;
-        if(money > 0)
+        if (money > 0)
             this.totalMoneyEarned += money;
-        if(wasUpgrade)
+        if (wasUpgrade)
             this.totalMoneySpent += Math.Abs(money);
     }
 
     public void SetRent(int rent)
     {
         this.rent += rent;
+    }
+
+    public void AddNewMedia(Media newMedia)
+    {
+        releasedArticles.Add(newMedia);
     }
 
     public bool HasUVLightUpgrade()
@@ -93,6 +100,47 @@ public class GameData
     public List<JobScene.Entry> LinkEmails()
     {
         return this.releasedEmails;
-
     }
+    
+
+    public float ArticleWinRate()
+    {
+        if (releasedArticles.Count == 0)
+            return 0;
+
+        float articleWinRate = 0;
+        foreach (Media media in releasedArticles)
+        {
+            if (media.noMistakes)
+                articleWinRate++;
+        }
+        articleWinRate /= releasedArticles.Count;
+        return MathF.Round(articleWinRate, 2);
+    }
+
+    public float ArticleTimeAverage()
+    {
+        if(releasedArticles.Count == 0)
+            return 0;
+
+        float articleTimeAvg = 0;
+        foreach(Media media in releasedArticles)
+        {
+            articleTimeAvg += media.timeSpent;
+        }
+        articleTimeAvg /= releasedArticles.Count;
+        return articleTimeAvg; 
+    }
+
+    public float MostTimeSpentOnArticle()
+    {
+        float time = 0;
+        foreach(Media media in releasedArticles)
+        {
+            if(media.timeSpent > time)
+                time =  media.timeSpent;
+        }
+        return time;   
+    }
+
 }

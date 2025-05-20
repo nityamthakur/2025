@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -18,7 +19,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI onScreenTimer;
     [SerializeField] GameObject onScreenDayChanger;
-    
+
     [SerializeField] GameObject toolOverlayObj;
     [SerializeField] GameObject phoneOverlayObj;
     [SerializeField] GameObject cuttingTargetObj;
@@ -238,7 +239,7 @@ public class GameManager : MonoBehaviour
     {
         return banStampPressed;
     }
-    public void SetBanStampColliderParentToMediaObj(GameObject banStampCollider) 
+    public void SetBanStampColliderParentToMediaObj(GameObject banStampCollider)
     {
         if (banStampCollider == null)
         {
@@ -290,11 +291,11 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         // Set GameDevLoadDay if not absent to prevent errors on first install
-        if(!PlayerPrefs.HasKey("GameDevLoadDay"))
+        if (!PlayerPrefs.HasKey("GameDevLoadDay"))
             PlayerPrefs.SetInt("GameDevLoadDay", -1);
 
         // Set GameDevLoadDay if not absent to prevent errors on first install
-        if(!PlayerPrefs.HasKey("FullScreenState"))
+        if (!PlayerPrefs.HasKey("FullScreenState"))
             PlayerPrefs.SetInt("FullScreenState", 0);
 
         objectSpawner.Initialize();
@@ -311,7 +312,7 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError("GameManager is not found in the scene.");
             return;
-        } 
+        }
 
         if (toolOverlayObj == null)
         {
@@ -360,11 +361,11 @@ public class GameManager : MonoBehaviour
             onScreenDayChanger.SetActive(!onScreenDayChanger.activeSelf);
         }
 
-        if ( (Input.GetKey(KeyCode.KeypadEnter) || Input.GetKey(KeyCode.Return)) && onScreenDayChanger.activeSelf)
+        if ((Input.GetKey(KeyCode.KeypadEnter) || Input.GetKey(KeyCode.Return)) && onScreenDayChanger.activeSelf)
         {
             string text = onScreenDayChanger.GetComponent<TMP_InputField>().text;
             if (int.TryParse(text, out int num) && num > 0)
-            {                
+            {
                 PlayerPrefs.SetInt("GameDevLoadDay", num);
                 RestartGame();
             }
@@ -379,7 +380,7 @@ public class GameManager : MonoBehaviour
         {
             yield return new WaitForSeconds(1f);
             gameData.playTime += 1f;  // Increment playtime every second
-            if(jobDetails != null)
+            if (jobDetails != null)
                 jobDetails.articleClockTime += 1f;
         }
     }
@@ -448,7 +449,7 @@ public class GameManager : MonoBehaviour
             Debug.LogError("Target is null.");
             return;
         }
-        
+
         if (cuttingModeActive && currentCuttingRecipient != null)
         {
             currentCuttingRecipient.CuttingModeEffect(false);
@@ -469,19 +470,19 @@ public class GameManager : MonoBehaviour
         cuttingModeActive = false;
 
         Debug.Log("Cutting mode deactivated");
-    } 
+    }
 
     public void UpdateCensorTargets(string replacementText)
     {
         currentCuttingRecipient.ToggleIsCut();
-        
+
         selectedToolManager.SetToolFunctionality(false);
         currentMediaObject.GetComponent<Entity>().UpdateCensorBoxes(currentCuttingRecipient, replacementText);
         selectedToolManager.SetToolFunctionality(true);
 
         ExitCuttingMode();
     }
-       
+
 
     public void ResetPuzzleTracking()
     {
@@ -498,16 +499,16 @@ public class GameManager : MonoBehaviour
         currentMediaObject = null;
     }
 
-    public void EvaluatePlayerAccept(string[] banWords)
+    public void EvaluatePlayerAccept(string[] banWords, string mediaTitle)
     {
         bool playerSucceeds;
-        
+
         // Check if the player has used the ban stamp if there are any bannable offenses or used the stamp incorrectly
         if (banWords.Length != 0 || (hiddenImageExists && hiddenImageFound))
             playerSucceeds = banStampPressed;
-        else 
+        else
             playerSucceeds = !banStampPressed;
-        
+
         //bool playerSucceeds = banWords.Length == 0 && !hiddenImageExists;
 
         if (playerSucceeds && (banStampPressed || ((currentCensorNum == totalCensorTargets) && (numCensorMistakes == 0) && (currentReplaceNum == totalReplaceTargets) && (numReplaceMistakes == 0))))
@@ -525,36 +526,36 @@ public class GameManager : MonoBehaviour
         jobScene.UpdateMediaProcessedText(jobDetails.numMediaProcessed);
 
         int mediaScore = 5;
-        float maxPossibleScore = (float) mediaScore;
+        float maxPossibleScore = (float)mediaScore;
 
-        if (currentCensorNum == 0 && totalCensorTargets == 0 && currentReplaceNum == 0 && totalReplaceTargets == 0) 
+        if (currentCensorNum == 0 && totalCensorTargets == 0 && currentReplaceNum == 0 && totalReplaceTargets == 0)
         {
             mediaScore = playerSucceeds ? 3 : 0;
             maxPossibleScore = 3f;
-        } 
-        
+        }
+
         // Penalize for mistakes made
         int totalMistakes = totalCensorTargets - currentCensorNum + numCensorMistakes + totalReplaceTargets - currentReplaceNum + numReplaceMistakes;
         int mistakeBuffer = totalMistakes > 0 ? 1 : 0;
         mediaScore -= Math.Abs(totalMistakes / jobDetails.penalty) + mistakeBuffer;
-        
+
         // Change value on performance scale
         float performanceChange = maxPossibleScore - mediaScore > 0 ? -0.03f : 0.03f;
-        gameData.PerformanceScale += performanceChange; 
+        gameData.PerformanceScale += performanceChange;
 
         // Score gets cut in half for money earned after timer is up
-        if(jobDetails.currClockTime <= 0 && mediaScore > 0)
+        if (jobDetails.currClockTime <= 0 && mediaScore > 0)
             mediaScore /= 2;
 
         TotalScore += Math.Clamp(mediaScore, 0, 5);
 
         EvaluatePlayerScore();
-        ArticleAnalysisCreation(banWords, false);
+        ArticleAnalysisUpdate(mediaTitle, banWords, false);
         ResetPuzzleTracking();
         CheckDayEnd();
     }
 
-    public void EvalutatePlayerDestroy(string[] banWords)
+    public void EvalutatePlayerDestroy(string[] banWords, string mediaTitle)
     {
         bool playerSucceeds = banWords.Length != 0 || (hiddenImageExists && hiddenImageFound);
 
@@ -571,7 +572,7 @@ public class GameManager : MonoBehaviour
 
         jobDetails.numMediaProcessed += 1;
         jobScene.UpdateMediaProcessedText(jobDetails.numMediaProcessed);
-    
+
         int mediaScore = playerSucceeds ? 3 : 0;
         float maxPossibleScore = 3f;
 
@@ -579,15 +580,15 @@ public class GameManager : MonoBehaviour
         gameData.PerformanceScale += performanceChange;
 
         // Score gets cut in half for money earned after timer is up
-        if(jobDetails.currClockTime <= 0 && mediaScore > 0)
+        if (jobDetails.currClockTime <= 0 && mediaScore > 0)
             mediaScore /= 2;
-        
+
         Debug.Log($"mediaScore: {mediaScore}, TotalScore: {totalScore}");
         TotalScore += mediaScore;
 
 
         EvaluatePlayerScore();
-        ArticleAnalysisCreation(banWords, true);
+        ArticleAnalysisUpdate(mediaTitle, banWords, true);
         ResetPuzzleTracking();
         CheckDayEnd();
     }
@@ -600,24 +601,27 @@ public class GameManager : MonoBehaviour
         Debug.Log($"Performance Scale: {gameData.PerformanceScale}");
     }
 
-    public void ArticleAnalysisCreation(string[] banwords, bool wasBanned)
+    public void ArticleAnalysisUpdate(string mediaTitle, string[] banwords, bool wasBanned)
     {
-        Media newMedia = new()
+        // Find the matching media article and update its information
+        Media foundMedia = gameData.releasedArticles.Find(media => media.title == mediaTitle);
+        if (foundMedia == null)
         {
-            day = gameData.day,
-            timeSpent = jobDetails.articleClockTime,
-            hiddenImageExists = hiddenImageExists,
-            hiddenImageFound = hiddenImageFound,
-            bannedWords = banwords,
-            articleBanned = wasBanned,
-            numCensorableWords = totalCensorTargets,
-            numCensoredCorrectly =  currentCensorNum,
-            numCensorMistakes = numCensorMistakes
-        };
-        newMedia.CheckMistakesMade();
-        //newMedia.Print();
-        jobDetails.dayMedia.Add(newMedia);
-        jobDetails.articleClockTime = 0f;     
+            Debug.Log($"Unable to find media with title: {mediaTitle}");
+            return;
+        }
+
+        foundMedia.timeSpent = jobDetails.articleClockTime;
+        foundMedia.hiddenImageExists = hiddenImageExists;
+        foundMedia.hiddenImageFound = hiddenImageFound;
+        foundMedia.bannedWords = banwords;
+        foundMedia.articleBanned = wasBanned;
+        foundMedia.numCensorableWords = totalCensorTargets;
+        foundMedia.numCensoredCorrectly = currentCensorNum;
+        foundMedia.numCensorMistakes = numCensorMistakes;
+        foundMedia.CheckMistakesMade();
+        //foundMedia.Print();
+        jobDetails.articleClockTime = 0f;
     }
 
     public void CheckDayEnd()
@@ -685,6 +689,7 @@ public class GameManager : MonoBehaviour
     }
 }
 
+[Serializable]
 public class JobDetails
 {
     // For using a media target goal for the day
@@ -701,7 +706,6 @@ public class JobDetails
     public float currClockTime;
     public float articleClockTime;
     public int numMediaCorrect = 0;
-    public List<Media> dayMedia = new();
     public JobDetails()
     {
         numMediaProcessed = 0;
@@ -711,77 +715,44 @@ public class JobDetails
         currClockTime = 0f;
         articleClockTime = 0f;
     }
-
-    public float ArticleWinRate()
-    {
-        if(dayMedia.Count == 0)
-            return 0;
-   
-        float articleWinRate = 0;
-        foreach(Media media in dayMedia)
-        {
-            if(media.noMistakes)
-                articleWinRate++;
-        }
-        articleWinRate /= dayMedia.Count;
-        return MathF.Round(articleWinRate, 2);
-    }
-
-    public float ArticleTimeAverage()
-    {
-        if(dayMedia.Count == 0)
-            return 0;
-
-        float articleTimeAvg = 0;
-        foreach(Media media in dayMedia)
-        {
-            articleTimeAvg += media.timeSpent;
-        }
-        articleTimeAvg /= dayMedia.Count;
-        return articleTimeAvg; 
-    }
-
-    public float MostTimeSpentOnArticle()
-    {
-        float time = 0;
-        foreach(Media media in dayMedia)
-        {
-            if(media.timeSpent > time)
-                time =  media.timeSpent;
-        }
-        return time;   
-    }
 }
 
+[Serializable]
 public class Media
 {
+    public string title;
+    public string publisher;
+    public string body;
+    public string date;
+
     public int day = 0; // Day the article was shown
     public float timeSpent = 0f;
     public bool noMistakes = true; // If the article was passed with no mistakes
-    
+
     public bool hiddenImageExists = false;
     public bool hiddenImageFound = false;
-    
+
     public string[] bannedWords = null; // Banned words
     public bool articleBanned = false; // If the article was banned
 
+    public string[] censorWords = null; // Censored words
     public int numCensorableWords; // Number of words on the article that should be censored
     public int numCensoredCorrectly; // Number of words censored correctly
     public int numCensorMistakes; // Number of words incorrectly censored
 
     public void CheckMistakesMade()
     {
-        if(hiddenImageExists == true && !hiddenImageFound)
+        if (hiddenImageExists == true && !hiddenImageFound)
         {
             noMistakes = false;
             return;
         }
-        if((articleBanned && bannedWords.Length == 0) || (!articleBanned && bannedWords.Length > 0))
+        if ((articleBanned && bannedWords.Length == 0) || (!articleBanned && bannedWords.Length > 0))
         {
             noMistakes = false;
             return;
         }
-        if(numCensorableWords == numCensoredCorrectly && numCensorMistakes > 0)
+        if (numCensorableWords == numCensoredCorrectly && numCensorMistakes > 0)
         {
             noMistakes = false;
             return;

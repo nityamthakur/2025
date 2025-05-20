@@ -519,13 +519,13 @@ public class Entity : MonoBehaviour
             if (storedTrigger.gameObject.CompareTag("DropBoxAccept"))
             {
                 zoomComponent.PreventZoom();
-                gameManager.EvaluatePlayerAccept(newspaperData.banWords);
+                gameManager.EvaluatePlayerAccept(newspaperData.banWords, newspaperData.title);
                 StartCoroutine(DestroyAfterExitMovement("Accept"));
             }
             else if (storedTrigger.gameObject.CompareTag("DropBoxDestroy"))
             {
                 zoomComponent.PreventZoom();
-                gameManager.EvalutatePlayerDestroy(newspaperData.banWords);
+                gameManager.EvalutatePlayerDestroy(newspaperData.banWords, newspaperData.title);
                 StartCoroutine(DestroyAfterExitMovement("Destroy"));
             }
 
