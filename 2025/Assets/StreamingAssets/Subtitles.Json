@@ -14,6 +14,7 @@
         { "sound": "newspaperrustling", "text": "Newspaper Rustling" },
         { "sound": "tossPaper", "text": "Paper Being Thrown Away" },
         { "sound": "worksounds", "text": "People Talking, Phones Ringing, Papers Shuffling" },  
-        { "sound": "glitch", "text": "Computer Making Glitching Sounds" }  
+        { "sound": "glitch", "text": "Computer Making Glitching Sounds" },
+        { "sound": "switchoff", "text": "Echoing Sound of a Switch" }    
     ]
 }
