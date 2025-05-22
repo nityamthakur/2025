@@ -33,9 +33,9 @@ public class ComputerScreen : MonoBehaviour
     private Button workButton, emailButton, reviewButton, hackButton, nextButton, previousButton;
     private TextMeshProUGUI workButtonText, emailNotificationText, reviewNotificationText;
 
-    private Color SELECTEDCOLOR = new(0.7843137f, 0.7843137f, 0.7843137f, 1f); 
-    private Color NORMALCOLOR = new(1f, 1f, 1f, 1f); 
-    
+    private Color SELECTEDCOLOR = new(0.7843137f, 0.7843137f, 0.7843137f, 1f);
+    private Color NORMALCOLOR = new(1f, 1f, 1f, 1f);
+
 
     public void Initalize()
     {
@@ -49,20 +49,20 @@ public class ComputerScreen : MonoBehaviour
     private void SetUpButtons()
     {
         workButton = FindObject<Button>("WorkButton");
-        workButton.onClick.AddListener(WorkButtonStart);      
+        workButton.onClick.AddListener(WorkButtonStart);
         workButtonText = workButton.GetComponentInChildren<TextMeshProUGUI>();
         if (workButtonText == null)
         {
             Debug.LogError("TextMeshProUGUI component not found on startWorkButton.");
             return;
-        }    
+        }
         workButtonText.text = "Clock In";
 
         emailButton = FindObject<Button>("EmailButton");
         emailButton.onClick.AddListener(() =>
         {
             EventManager.PlaySound?.Invoke("switch1", true);
-            if(emailScreen.activeSelf == true)
+            if (emailScreen.activeSelf == true)
                 HideMenus();
             else
                 ShowEMailScreen();
@@ -72,7 +72,7 @@ public class ComputerScreen : MonoBehaviour
         reviewButton.onClick.AddListener(() =>
         {
             EventManager.PlaySound?.Invoke("switch1", true);
-            if(reviewScreen.activeSelf == true)
+            if (reviewScreen.activeSelf == true)
                 HideMenus();
             else
                 ShowReviewScreen();
@@ -133,7 +133,7 @@ public class ComputerScreen : MonoBehaviour
     private T FindComponentByName<T>(string name) where T : Component
     {
         T[] components = GetComponentsInChildren<T>(true); // Search all children, even inactive ones
-        
+
         foreach (T component in components)
         {
             if (component.gameObject.name == name)
@@ -160,7 +160,7 @@ public class ComputerScreen : MonoBehaviour
         workButton.interactable = false;
         EventManager.PlaySound?.Invoke("switch1", true);
         jobScene.StartCoroutine(jobScene.NextScene());
-        workButton.onClick.RemoveAllListeners();    
+        workButton.onClick.RemoveAllListeners();
     }
 
     public void EndDaySetUp()
@@ -170,6 +170,7 @@ public class ComputerScreen : MonoBehaviour
         resultsBackground.gameObject.SetActive(true);
         screenText.gameObject.SetActive(true);
         mostRecentReviews.gameObject.SetActive(true);
+        EventManager.StopClockMovement?.Invoke();
         ReviewCountUpdate(+1);
         HideMenus();
     }
@@ -192,25 +193,25 @@ public class ComputerScreen : MonoBehaviour
         // Screen starts as black
         // Wait for 1 second
         yield return new WaitForSeconds(1f);
-        
+
         // Screen goes to a lighter shader of dark blue showing the screen is on
         fadingImage.color = new Color(0.0f, 0.0f, 0.2f, 1.0f);
-        
+
         // Wait for 1 second
         yield return new WaitForSeconds(2f);
-        
+
         // Fade in the Computer Logo, 0.5 seconds
         foreground.sprite = computerLogo;
         StartCoroutine(FadeImage(fadingImage, 0.5f, false));
         StartCoroutine(CycleBackgroundFrames(loadingCircleAnimation, 6f, 0.2f));
         yield return new WaitForSeconds(5.0f);
-        
+
         // Fade out the Computer Logo, 0.5 seconds
         StartCoroutine(FadeImage(fadingImage, 0.5f, true));
         EventManager.PlaySound?.Invoke("computerChime", true);
 
         yield return new WaitForSeconds(2f);
-                
+
         // Show background of computer being on
         loadingImage.gameObject.SetActive(false);
         foreground.gameObject.SetActive(false);
@@ -280,7 +281,7 @@ public class ComputerScreen : MonoBehaviour
 
     private IEnumerator FadeImage(Image image, float duration, bool fadein)
     {
-        if(fadein)
+        if (fadein)
             yield return StartCoroutine(FadeImage(image, 0f, 1f, duration)); // goes to 100% opacity
         else
             yield return StartCoroutine(FadeImage(image, 1f, 0f, duration)); // goes to 0% opacity
@@ -318,7 +319,7 @@ public class ComputerScreen : MonoBehaviour
         HideMenus();
         emailScreen.SetActive(true);
         backgroundScreen.SetActive(false);
-        lastOpenedScreen = emailScreen; 
+        lastOpenedScreen = emailScreen;
     }
 
     private void ShowReviewScreen()
@@ -346,7 +347,7 @@ public class ComputerScreen : MonoBehaviour
     public void SetButtonSelected(Button targetButton, bool selected)
     {
         var colors = targetButton.colors;
-        colors.normalColor = selected ? SELECTEDCOLOR: NORMALCOLOR;
+        colors.normalColor = selected ? SELECTEDCOLOR : NORMALCOLOR;
         targetButton.colors = colors;
     }
 
@@ -371,7 +372,7 @@ public class ComputerScreen : MonoBehaviour
         emailNotificationText.text = $"{unreadEmailCount}";
         if (unreadEmailCount == 0)
             emailNotification.gameObject.SetActive(false);
-                
+
         unreadReviewCount = Math.Clamp(unreadReviewCount, 0, int.MaxValue);
         reviewNotificationText.text = $"{unreadReviewCount}";
         if (unreadReviewCount == 0)
@@ -381,7 +382,7 @@ public class ComputerScreen : MonoBehaviour
     internal void CreateEmails(List<JobScene.Entry> releasedEmails)
     {
         unreadEmailCount = 0;
-        foreach(JobScene.Entry email in releasedEmails)
+        foreach (JobScene.Entry email in releasedEmails)
         {
             Button spawnedEmail = Instantiate(emailButtonPrefab, emailSpawnZone);
             Image emailReadIndicator = spawnedEmail.transform.Find("EmailReadIndicator").GetComponent<Image>();
@@ -401,7 +402,7 @@ public class ComputerScreen : MonoBehaviour
                 }
             });
 
-            if(!email.seen)
+            if (!email.seen)
                 EmailCountUpdate(+1);
             else
                 emailReadIndicator.color = Color.white;
@@ -485,7 +486,7 @@ public class ComputerScreen : MonoBehaviour
             else
             {
                 text += "We found that this article was processed with one or more mistakes. Review below.";
-                
+
                 // Check if hidden image exists. If so, give warning if it wasn't found, or if it was found and article not banned
                 if (article.hiddenImageExists)
                     if (!article.hiddenImageFound || (article.hiddenImageFound && !article.articleBanned))

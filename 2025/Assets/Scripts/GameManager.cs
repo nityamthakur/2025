@@ -664,16 +664,11 @@ public class GameManager : MonoBehaviour
 
         float totalWorkTime = time; // Store total work time for calculations
         JobScene jobScene = GetJobScene();
+        EventManager.StartClockMovement?.Invoke(time);
 
         while (jobDetails.currClockTime > 0)
         {
             jobDetails.currClockTime -= Time.deltaTime;
-            if (jobScene != null)
-            {
-                float progress = 1f - (jobDetails.currClockTime / totalWorkTime);
-                jobScene.UpdateClockHands(progress);
-            }
-
             yield return null;
         }
 

@@ -24,15 +24,11 @@ public class JobScene : MonoBehaviour
 
     // ---------------------------------
     private float workTimer = 150f;
-    [SerializeField] private float baseWorkTimer = 150f;
-    [SerializeField] private float timerUpgradeBonus = 50f;
     private GameObject computerScreenPrefab;
     private ComputerScreen computerScreenClass;
 
     // ---------------------------------
-    //WANT TODO: Update Clock hand sprites to be square and have time move in ticking increments instead of smooth
-    private Image hourHand;
-    private Image minuteHand;
+
     private int dayProfit = 0;
     public int DayProfit
     {
@@ -47,19 +43,11 @@ public class JobScene : MonoBehaviour
     public void Initialize()
     {
         gameManager = FindFirstObjectByType<GameManager>();
-        UpdateWorkTimer();
     }
 
-    private void UpdateWorkTimer()
+    private float GetWorkTimer()
     {
-        if (gameManager != null && gameManager.gameData != null && gameManager.gameData.HasTimerUpgrade())
-        {
-            workTimer = baseWorkTimer + timerUpgradeBonus;
-        }
-        else
-        {
-            workTimer = baseWorkTimer;
-        }
+        return workTimer + gameManager.gameData.GetTimerUpgrade();
     }
 
 
@@ -151,12 +139,6 @@ public class JobScene : MonoBehaviour
         }
         backgroundImage.sprite = workBackgroundImage;
 
-        hourHand = currJobScene.transform.Find("HourHand").GetComponent<Image>();
-        if (hourHand == null)
-        {
-            Debug.Log("Failed to find hourHand in SetUpJobStart");
-        }
-
         dropBoxAcceptGlow = currJobScene.transform.Find("DropBoxAcceptGlow").GetComponent<Image>();
         if (dropBoxAcceptGlow == null)
         {
@@ -202,8 +184,7 @@ public class JobScene : MonoBehaviour
         yield return StartCoroutine(CheckDailyEvent());
         gameManager.SetJobScene(this);
         objectSpawner.StartMediaSpawn();
-        UpdateWorkTimer();
-        gameManager.StartJobTimer(workTimer);
+        gameManager.StartJobTimer(GetWorkTimer());
     }
 
     public void ShowResults(int mediaProcessed, int score)
@@ -225,22 +206,6 @@ public class JobScene : MonoBehaviour
 
         string performanceText = $"Day {gameManager.gameData.day} Results:\n\nMedia Processed: {mediaProcessed}\n\nSupervisors Notified of Your Day\n\nProfit: ${score}\nCurrent Savings: ${gameManager.gameData.GetCurrentMoney()}\n\nPossibility of Promotion: {promotionPossibility}";
         computerScreenClass.SetScreenText(performanceText);
-    }
-
-    public void UpdateClockHands(float progress)
-    {
-        //WANT TODO: Update Clock hand sprites to be square and have time move in ticking increments instead of smooth
-        if (hourHand)
-        {
-            float hourRotation = Mathf.Lerp(0f, 180f, progress); // Moves from 0 to 180 degrees
-            hourHand.transform.eulerAngles = new Vector3(0, 0, -hourRotation); // Invert rotation for correct direction
-        }
-
-        if (minuteHand)
-        {
-            float minuteRotation = Mathf.Lerp(0f, 2880f, progress); // 8 full revolutions (8 × 360)
-            minuteHand.transform.eulerAngles = new Vector3(0, 0, -minuteRotation);
-        }
     }
 
     public void UpdateMediaProcessedText(int num)

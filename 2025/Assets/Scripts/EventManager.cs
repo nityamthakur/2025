@@ -57,4 +57,7 @@ public static class EventManager
     public static Action<bool> ShowCorrectBuzzer;
     public static Action GoToShop;
 
+    // Clock Event
+    public static Action<float> StartClockMovement;
+    public static Action StopClockMovement;
 }

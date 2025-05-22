@@ -419,6 +419,7 @@ GameObject:
   - component: {fileID: 519420029}
   - component: {fileID: 519420030}
   - component: {fileID: 519420033}
+  - component: {fileID: 519420034}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -560,6 +561,21 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_MaxRayIntersections: 0
+--- !u!114 &519420034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2b66c95c86b2f04cbb961728ed7c46a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  widthAspect: 16
+  heightAspect: 9
+  updateAspectDelay: 100
 --- !u!1 &539799189
 GameObject:
   m_ObjectHideFlags: 0
@@ -841,8 +857,6 @@ MonoBehaviour:
   glitchedScreen: {fileID: 5111763290514371741, guid: 69c02822765493849b65f7d53cfdce8a, type: 3}
   jobBuildingPrefab: {fileID: 7365597034380788627, guid: 179c1e3c7be1eed4385ed3fdeb7cc64b, type: 3}
   jobBuildingImage: {fileID: 7500719156437101807, guid: f0d23fea0664eb14a9e6c31266085328, type: 3}
-  baseWorkTimer: 150
-  timerUpgradeBonus: 50
   gameManager: {fileID: 2059682408}
 --- !u!1 &766681848 stripped
 GameObject:
@@ -2183,8 +2197,10 @@ MonoBehaviour:
     totalMoneySpent: 0
     rent: 3
     performanceScale: 0.5
+    numPurchasedTimerUpgrades: 0
     playTime: 0
     releasedEmails: []
+    releasedArticles: []
   mainCamera: {fileID: 0}
 --- !u!4 &2059682409
 Transform:
