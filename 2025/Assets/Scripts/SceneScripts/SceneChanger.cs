@@ -101,7 +101,7 @@ public class SceneChanger : MonoBehaviour
 
     public void StartGame(int loadSlot)
     {
-        if(loadSlot > 0)
+        if (loadSlot > 0)
         {
             PlayerPrefs.SetInt("LoadSlot", -1);
             EventManager.NextScene?.Invoke();
@@ -109,7 +109,7 @@ public class SceneChanger : MonoBehaviour
             // Continue Playtime counter
             StartCoroutine(gameManager.UpdatePlayTime());
         }
-        else if( PlayerPrefs.GetInt("GameDevLoadDay") > 0)
+        else if (PlayerPrefs.GetInt("GameDevLoadDay") > 0)
         {
             gameManager.gameData.day = PlayerPrefs.GetInt("GameDevLoadDay");
             PlayerPrefs.SetInt("GameDevLoadDay", -1);
@@ -121,16 +121,19 @@ public class SceneChanger : MonoBehaviour
 
             // Start Game
             // Comment out if using with debug
-            mainMenuScene.LoadMainMenu();
+            //mainMenuScene.LoadMainMenu();
 
             // For Debugging
             // Change the starting day
-            
+            gameManager.gameData.day = 2;
+
             // Start the game at day end
             //currentSceneIndex = 3;
             //dayEndScene.LoadDayEnd();
-            
+
             // Start the game at the job scene
+            currentSceneIndex = 2;
+            jobScene.LoadJobStart();
         }
     }
 

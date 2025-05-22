@@ -31,13 +31,13 @@ public class PerformanceBuzzers : MonoBehaviour
 
         while (elapsedTime < flickerDuration)
         {
-            defBuzzer.SetActive(false);
-            yield return new WaitForSeconds(flickerInterval);
             defBuzzer.SetActive(true);
+            yield return new WaitForSeconds(flickerInterval);
+            defBuzzer.SetActive(false);
             yield return new WaitForSeconds(flickerInterval);
             elapsedTime += 2 * flickerInterval; // Update elapsed time
         }
-        defBuzzer.SetActive(true);
+        defBuzzer.SetActive(false);
     }
 
         private void OnEnable()

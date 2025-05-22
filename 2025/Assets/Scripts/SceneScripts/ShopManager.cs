@@ -141,9 +141,7 @@ public class ShopManager : MonoBehaviour
         bool isUVLightUpgradePurchased = gameManager != null &&
                                         gameManager.gameData != null &&
                                         gameManager.gameData.HasUVLightUpgrade();
-        bool isTimerUpgradePurchased = gameManager != null &&
-                                    gameManager.gameData != null &&
-                                    gameManager.gameData.HasTimerUpgrade();
+        int numTimerUpgradesPurchased = gameManager.gameData.numPurchasedTimerUpgrades;
 
         // Update button states
         if (upgradeButton1 != null)
@@ -168,10 +166,10 @@ public class ShopManager : MonoBehaviour
 
         if (upgradeButton2 != null)
         {
-            upgradeButton2.interactable = canAfford2 && !isTimerUpgradePurchased;
-            upgradeText2.color = isTimerUpgradePurchased ? Color.green : (canAfford2 ? Color.white : Color.red);
+            upgradeButton2.interactable = canAfford2 && (numTimerUpgradesPurchased == 0);
+            upgradeText2.color = numTimerUpgradesPurchased == 0 ? Color.green : (canAfford2 ? Color.white : Color.red);
 
-            if (isTimerUpgradePurchased)
+            if (numTimerUpgradesPurchased == 0)
             {
                 Transform buttonTextTrans = upgradeButton2.transform.Find("Text (TMP)");
                 if (buttonTextTrans != null)
@@ -220,7 +218,7 @@ public class ShopManager : MonoBehaviour
                     Debug.Log("UV Light upgrade purchased!");
                     break;
                 case 2:
-                    gameManager.gameData.SetTimerUpgraded(true);
+                    gameManager.gameData.numPurchasedTimerUpgrades++;
                     Debug.Log("Timer Extension upgrade purchased!");
                     break;
             }

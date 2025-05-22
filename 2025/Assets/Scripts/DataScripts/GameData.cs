@@ -11,7 +11,8 @@ public class GameData
     public int rent;
     public float performanceScale;
     private bool hasUVLightUpgrade = false;
-    private bool hasTimerUpgrade = false;
+    private readonly float timerUpgrade = 30f;
+    public int numPurchasedTimerUpgrades = 0;
     public float PerformanceScale
     {
         get { return performanceScale; }
@@ -40,6 +41,7 @@ public class GameData
         this.money = loadedGame.money;
         this.totalMoneyEarned = loadedGame.totalMoneyEarned;
         this.totalMoneySpent = loadedGame.totalMoneySpent;
+        this.numPurchasedTimerUpgrades = loadedGame.numPurchasedTimerUpgrades;
         this.rent = loadedGame.rent;
         this.PerformanceScale = loadedGame.PerformanceScale;
         this.playTime = loadedGame.playTime;
@@ -88,15 +90,6 @@ public class GameData
     {
         hasUVLightUpgrade = upgraded;
     }
-    public bool HasTimerUpgrade()
-    {
-        return hasTimerUpgrade;
-    }
-    public void SetTimerUpgraded(bool upgraded)
-    {
-        hasTimerUpgrade = upgraded;
-    }
-
     public List<JobScene.Entry> LinkEmails()
     {
         return this.releasedEmails;
@@ -143,4 +136,8 @@ public class GameData
         return time;   
     }
 
+    internal float GetTimerUpgrade()
+    {
+        return timerUpgrade * numPurchasedTimerUpgrades;
+    }
 }
