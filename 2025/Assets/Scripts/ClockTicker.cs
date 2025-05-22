@@ -15,7 +15,7 @@ public class ClockTicker : MonoBehaviour
         // Calculate how many degrees each tick should move the hands
         int totalTicks = Mathf.CeilToInt(workTime / updateTime);
         hourDegreesPerTick = 180f / totalTicks; // Move 180 degrees from left to right
-        minuteDegreesPerTick = 2880f / totalTicks; // Move 360 x 8 degrees
+        minuteDegreesPerTick = 360f * 6 / totalTicks; // Move 360 x 6 degrees
 
         if (tickingCoroutine != null)
             StopCoroutine(tickingCoroutine);
