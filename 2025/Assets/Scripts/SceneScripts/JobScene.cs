@@ -15,7 +15,7 @@ public class JobScene : MonoBehaviour
     [SerializeField] private Sprite glitchedScreen;
 
     private GameObject currJobScene;
-    private Image backgroundImage, dropBoxAcceptGlow, dropBoxDestroyGlow;
+    private Image backgroundImage, dropBoxAcceptGlow;
     private bool jobDelayed;
     // ---------------------------------
     [SerializeField] private GameObject jobBuildingPrefab;
@@ -23,7 +23,7 @@ public class JobScene : MonoBehaviour
     private GameObject outsideBuildingObject;
 
     // ---------------------------------
-    private float workTimer = 150f;
+    private float workTimer = 30f;//150f;
     private GameObject computerScreenPrefab;
     private ComputerScreen computerScreenClass;
 
@@ -147,15 +147,6 @@ public class JobScene : MonoBehaviour
         }
         StartCoroutine(PulseGlow(dropBoxAcceptGlow));
         dropBoxAcceptGlow.gameObject.SetActive(false);
-
-        dropBoxDestroyGlow = currJobScene.transform.Find("DropBoxDestroyGlow").GetComponent<Image>();
-        if (dropBoxDestroyGlow == null)
-        {
-            Debug.Log("Failed to find DropBoxDestroyGlow in SetUpJobStart");
-            return;
-        }
-        StartCoroutine(PulseGlow(dropBoxDestroyGlow));
-        dropBoxDestroyGlow.gameObject.SetActive(false);
     }
 
     private void ComputerScreenSetUp()
@@ -300,8 +291,6 @@ public class JobScene : MonoBehaviour
     {
         if (Box.ToLower() == "accept")
             dropBoxAcceptGlow.gameObject.SetActive(show);
-        else if (Box.ToLower() == "destroy")
-            dropBoxDestroyGlow.gameObject.SetActive(show);
     }
 
     private IEnumerator PulseGlow(Image glowImage)

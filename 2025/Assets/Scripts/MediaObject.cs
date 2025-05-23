@@ -478,22 +478,36 @@ public class Entity : MonoBehaviour
         draggableScript.enabled = true;
         ObjectGravityOn(true);
     }
-    
+
+
     private bool isInsideTrigger = false;
     private Collider2D storedTrigger = null;
 
+    /*
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("DropBoxAccept") || other.gameObject.CompareTag("DropBoxDestroy"))
         {
-            if(other.gameObject.CompareTag("DropBoxAccept"))
+            if (other.gameObject.CompareTag("DropBoxAccept"))
                 EventManager.GlowingBoxShow?.Invoke("accept", true);
-            if(other.gameObject.CompareTag("DropBoxDestroy"))
-                EventManager.GlowingBoxShow?.Invoke("destroy", true);
+            //if(other.gameObject.CompareTag("DropBoxDestroy"))
+            //EventManager.GlowingBoxShow?.Invoke("destroy", true);
             isInsideTrigger = true;
             storedTrigger = other;
         }
     }
+    */
+
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        if (!isInsideTrigger && other.CompareTag("DropBoxAccept"))
+        {
+            EventManager.GlowingBoxShow?.Invoke("accept", true);
+            isInsideTrigger = true;
+            storedTrigger = other;
+        }
+    }
+
 
     private void OnTriggerExit2D(Collider2D other)
     {
@@ -502,13 +516,13 @@ public class Entity : MonoBehaviour
             GameObject banStampCollider = transform.Find("BanStampCollider")?.gameObject;
             if (banStampCollider != null)
                 gameManager.ResetBanStampCollider(banStampCollider);
-            
+
             isInsideTrigger = false;
             storedTrigger = null;
-            if(other.gameObject.CompareTag("DropBoxAccept"))
+            if (other.gameObject.CompareTag("DropBoxAccept"))
                 EventManager.GlowingBoxShow?.Invoke("accept", false);
-            if(other.gameObject.CompareTag("DropBoxDestroy"))
-                EventManager.GlowingBoxShow?.Invoke("destroy", false);
+            //if(other.gameObject.CompareTag("DropBoxDestroy"))
+            //EventManager.GlowingBoxShow?.Invoke("destroy", false);
         }
     }
 
