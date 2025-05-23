@@ -4,8 +4,8 @@ using UnityEngine;
 public class ClockTicker : MonoBehaviour
 {
     [SerializeField] private Transform hourHand, minuteHand;
-
-    private float updateTime = 0.5f, workTime, hourDegreesPerTick, minuteDegreesPerTick;
+    private readonly float updateTime = 0.5f;
+    private float workTime, hourDegreesPerTick, minuteDegreesPerTick;
     private Coroutine tickingCoroutine;
 
     public void StartClockMovement(float time)
@@ -40,7 +40,6 @@ public class ClockTicker : MonoBehaviour
             currentHourRotation += hourDegreesPerTick;
             currentMinuteRotation += minuteDegreesPerTick;
 
-            // Apply new angles (negative for clockwise rotation)
             if (hourHand)
                 hourHand.eulerAngles = new Vector3(0, 0, -currentHourRotation);
 

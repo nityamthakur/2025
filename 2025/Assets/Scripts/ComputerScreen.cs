@@ -528,6 +528,9 @@ public class ComputerScreen : MonoBehaviour
                 if (article.numCensorMistakes > 0)
                     text += $"\n\nWe have found that you censored {article.numCensorMistakes} word(s) that should not have been censored. Censoring incorrect words can lead to untruths which confuse readers and can sow disorder. Do not censor words according to your own discretion.";
             }
+            text += $"\n\nYour resulting pay for this article was {article.moneyEarned}.";
+            if (article.OverTime)
+                text += $"\nYour pay was decreased for working overtime. Overtime pay is not permitted. Ensure you work more effciently next time.";
             text += $"\n\nTitle: {article.title}\nPublisher: {article.publisher}\nDate: {article.date}\n{article.body}";
             SetObjectText(reviewText, text);
         }
