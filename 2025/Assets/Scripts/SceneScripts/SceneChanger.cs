@@ -19,6 +19,7 @@ public class SceneChanger : MonoBehaviour
         get { return fadingScreen; }
         private set { fadingScreen = value; }
     }
+    private Canvas prefabCanvas;
 
     private Image fadingImage, lightsOutImage;
     private Image deskOverlayImage;
@@ -47,7 +48,7 @@ public class SceneChanger : MonoBehaviour
             Debug.LogError("fadingImage is null in SceneManager.");
             return;
         }
-        Canvas prefabCanvas = fadingScreen.GetComponentInChildren<Canvas>();
+        prefabCanvas = fadingScreen.GetComponentInChildren<Canvas>();
         if (prefabCanvas != null)
         {
             prefabCanvas.renderMode = RenderMode.ScreenSpaceCamera;
@@ -121,19 +122,19 @@ public class SceneChanger : MonoBehaviour
 
             // Start Game
             // Comment out if using with debug
-            mainMenuScene.LoadMainMenu();
+            //mainMenuScene.LoadMainMenu();
 
             // For Debugging
             // Change the starting day
-            //gameManager.gameData.day = 2;
+            gameManager.gameData.day = 1;
 
             // Start the game at day end
             //currentSceneIndex = 3;
             //dayEndScene.LoadDayEnd();
 
             // Start the game at the job scene
-            //currentSceneIndex = 2;
-            //jobScene.LoadJobStart();
+            currentSceneIndex = 2;
+            jobScene.LoadJobStart();
         }
     }
 
@@ -163,6 +164,7 @@ public class SceneChanger : MonoBehaviour
         EventManager.ShowLightsOutImage += ShowLightsOutImage;
         EventManager.HideLightsOutImage += HideLightsOutImage;
         EventManager.DisplayMenuButton += DisplayMenuButton;
+        EventManager.CameraZoomed += CanvasChanger;
     }
 
     void OnDisable()
@@ -172,9 +174,10 @@ public class SceneChanger : MonoBehaviour
         EventManager.FadeOut -= FadeOutScreen;
         EventManager.ShowDeskOverlay -= ShowDeskOverLay;
         EventManager.HideDeskOverlay -= HideDeskOverLay;
-        EventManager.ShowLightsOutImage += ShowLightsOutImage;
-        EventManager.HideLightsOutImage += HideLightsOutImage;
+        EventManager.ShowLightsOutImage -= ShowLightsOutImage;
+        EventManager.HideLightsOutImage -= HideLightsOutImage;
         EventManager.DisplayMenuButton -= DisplayMenuButton;
+        EventManager.CameraZoomed -= CanvasChanger;
     }
 
     private void FadeInScreen()
@@ -219,11 +222,25 @@ public class SceneChanger : MonoBehaviour
         color.a = endAlpha;
         image.color = color;
     }
+    
+    private void CanvasChanger(bool change)
+    {
+        if (prefabCanvas != null && !change)
+        {
+            prefabCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+            prefabCanvas.worldCamera = Camera.main;
+        }
+        else if (prefabCanvas != null && change)
+        {
+            prefabCanvas.renderMode = RenderMode.WorldSpace;
+            prefabCanvas.worldCamera = Camera.main;            
+        }
+    }
 
     private void ShowDeskOverLay()
     {
         //Debug.Log("ShowDeskOverlay called");
-        deskOverlayImage.gameObject.SetActive(true);   
+        deskOverlayImage.gameObject.SetActive(true);
     }
     private void HideDeskOverLay()
     {

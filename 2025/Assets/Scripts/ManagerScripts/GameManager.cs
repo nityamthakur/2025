@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     public GameManager Instance { get; private set; }
     public static bool IsRestarting { get; private set; }
     public static event Action OnGameRestart;
+    public bool gameZoomPaused = false;
 
     [SerializeField] SceneChanger sceneChanger;
     [SerializeField] ObjectSpawner objectSpawner;
@@ -380,8 +381,22 @@ public class GameManager : MonoBehaviour
         {
             yield return new WaitForSeconds(1f);
             gameData.playTime += 1f;  // Increment playtime every second
+        }
+    }
+
+    public IEnumerator UpdateArticleTime()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(1f);
             if (jobDetails != null)
                 jobDetails.articleClockTime += 1f;
+            if (gameZoomPaused)
+            {
+                Debug.Log("Time Stopped for UpdateArticleTime");
+                yield return new WaitUntil(() => gameZoomPaused == false);
+                Debug.Log("Time Resumed for UpdateArticleTime");
+            }
         }
     }
 
@@ -536,19 +551,11 @@ public class GameManager : MonoBehaviour
         int mediaScore = 5;
         float maxPossibleScore = (float)mediaScore;
 
-        //if (currentCensorNum == 0 && totalCensorTargets == 0 && currentReplaceNum == 0 && totalReplaceTargets == 0)
-        //{
-        //    mediaScore = playerSucceeds ? 3 : 0;
-        //    maxPossibleScore = 3f;
-        //}
-        // If the article required banning, max score possible is 3. 
-        if (banWords.Length > 0 || hiddenImageExists)
-        {
-            mediaScore = playerSucceeds ? 3 : 0;
-            maxPossibleScore = 3f;
-        }
+        // Lose 3 if article needed to be banned
+        if (!banWordsCheck || !hiddenImageCheck)
+            mediaScore -= 3;
 
-        // Penalize for mistakes made
+        // Penalize for censoring mistakes made
         int totalMistakes = totalCensorTargets - currentCensorNum + numCensorMistakes + totalReplaceTargets - currentReplaceNum + numReplaceMistakes;
         int mistakeBuffer = totalMistakes > 0 ? 1 : 0;
         mediaScore -= Math.Abs(totalMistakes / jobDetails.penalty) + mistakeBuffer;
@@ -564,7 +571,7 @@ public class GameManager : MonoBehaviour
         TotalScore += Math.Clamp(mediaScore, 0, 5);
 
         EvaluatePlayerScore();
-        ArticleAnalysisUpdate(mediaScore, mediaTitle, banWords, false, jobDetails.currClockTime <= 0);
+        ArticleAnalysisUpdate(mediaScore, mediaTitle, banWords, playerSucceeds, jobDetails.currClockTime <= 0);
         ResetPuzzleTracking();
         CheckDayEnd();
     }
@@ -601,7 +608,7 @@ public class GameManager : MonoBehaviour
         TotalScore += mediaScore;
 
         EvaluatePlayerScore();
-        ArticleAnalysisUpdate(mediaScore, mediaTitle, banWords, true, jobDetails.currClockTime <= 0);
+        ArticleAnalysisUpdate(mediaScore, mediaTitle, banWords, playerSucceeds, jobDetails.currClockTime <= 0);
         ResetPuzzleTracking();
         CheckDayEnd();
     }
@@ -614,7 +621,7 @@ public class GameManager : MonoBehaviour
         Debug.Log($"Performance Scale: {gameData.PerformanceScale}");
     }
 
-    public void ArticleAnalysisUpdate(int moneyEarned, string mediaTitle, string[] banwords, bool wasBanned, bool overTime)
+    public void ArticleAnalysisUpdate(int moneyEarned, string mediaTitle, string[] banwords, bool playerSucceeds, bool overTime)
     {
         // Find the matching media article and update its information
         Media foundMedia = gameData.releasedArticles.Find(media => media.title == mediaTitle);
@@ -631,11 +638,11 @@ public class GameManager : MonoBehaviour
         foundMedia.hiddenImageExists = hiddenImageExists;
         foundMedia.hiddenImageFound = hiddenImageFound;
         foundMedia.bannedWords = banwords;
-        foundMedia.articleBanned = wasBanned;
+        foundMedia.articleBanned = banStampPressed;
         foundMedia.numCensorableWords = totalCensorTargets;
         foundMedia.numCensoredCorrectly = currentCensorNum;
         foundMedia.numCensorMistakes = numCensorMistakes;
-        foundMedia.CheckMistakesMade();
+        foundMedia.noMistakes = playerSucceeds;
         //foundMedia.Print();
         jobDetails.articleClockTime = 0f;
     }
@@ -660,6 +667,7 @@ public class GameManager : MonoBehaviour
     {
         jobDetails.numMediaProcessed = 0;
         StopCoroutine(jobTimerCoroutine);
+        StopCoroutine(UpdateArticleTime());
         jobDetails.currClockTime = 0f;
     }
 
@@ -675,6 +683,8 @@ public class GameManager : MonoBehaviour
     private IEnumerator BeginWorkTimer(float time)
     {
         Debug.Log("Job Timer Started...");
+        StartCoroutine(UpdateArticleTime());
+
         jobDetails.currClockTime = time;
         jobDetails.articleClockTime = 0;
 
@@ -685,6 +695,12 @@ public class GameManager : MonoBehaviour
         while (jobDetails.currClockTime > 0)
         {
             jobDetails.currClockTime -= Time.deltaTime;
+            if (gameZoomPaused)
+            {
+                Debug.Log("Time Stopped for BeginWorkTimer");
+                yield return new WaitUntil(() => gameZoomPaused == false);
+                Debug.Log("Resume Time for BeginWorkTimer");
+            }
             yield return null;
         }
 
@@ -753,23 +769,24 @@ public class Media
     public int numCensoredCorrectly; // Number of words censored correctly
     public int numCensorMistakes; // Number of words incorrectly censored
 
-    public void CheckMistakesMade()
+    public bool CheckBanMistake()
     {
-        if (hiddenImageExists == true && !hiddenImageFound)
-        {
-            noMistakes = false;
-            return;
-        }
-        if ((articleBanned && bannedWords.Length == 0) || (!articleBanned && bannedWords.Length > 0))
-        {
-            noMistakes = false;
-            return;
-        }
-        if (numCensorableWords == numCensoredCorrectly && numCensorMistakes > 0)
-        {
-            noMistakes = false;
-            return;
-        }
+        return (bannedWords.Length > 0) == articleBanned;
+    }
+
+    public bool CheckHiddenImageMistake()
+    {
+        if ((hiddenImageExists == hiddenImageFound) && (hiddenImageFound == articleBanned))
+            return true;
+        else if (!hiddenImageExists && articleBanned)
+            return CheckBanMistake();
+        else
+            return false; 
+    }
+
+    public bool CheckCensorMistake()
+    {
+        return (numCensoredCorrectly == numCensorableWords) && (numCensorMistakes == 0);
     }
 
     public int MaxPotentialMoney()

@@ -597,6 +597,7 @@ public class Entity : MonoBehaviour
         }
     }
 
+
     [Serializable]
     public class Newspaper
     {

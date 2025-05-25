@@ -420,6 +420,7 @@ GameObject:
   - component: {fileID: 519420030}
   - component: {fileID: 519420033}
   - component: {fileID: 519420034}
+  - component: {fileID: 519420035}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -576,6 +577,20 @@ MonoBehaviour:
   widthAspect: 16
   heightAspect: 9
   updateAspectDelay: 100
+--- !u!114 &519420035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fe5af913b1fc5646a66947dccac936f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameManager: {fileID: 2059682408}
+  cam: {fileID: 519420031}
 --- !u!1 &539799189
 GameObject:
   m_ObjectHideFlags: 0
@@ -2020,7 +2035,7 @@ MonoBehaviour:
   - {fileID: 411854699, guid: eb918c658a73a42e09a5c1f4bf393371, type: 3}
   - {fileID: -2100817788, guid: eb918c658a73a42e09a5c1f4bf393371, type: 3}
   - {fileID: -899043937, guid: eb918c658a73a42e09a5c1f4bf393371, type: 3}
-  frameInterval: 0.5
+  frameInterval: 0.1
 --- !u!1 &1866314305 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8764790447295677070, guid: 9e6adce8c8125c046a3755b6e97c7847, type: 3}
@@ -2179,6 +2194,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e0444c3f7e1a964f895d93018772405, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameZoomPaused: 0
   sceneChanger: {fileID: 1487003097}
   objectSpawner: {fileID: 1245310923}
   accessibilityManager: {fileID: 443284279}
@@ -2201,7 +2217,7 @@ MonoBehaviour:
     playTime: 0
     releasedEmails: []
     releasedArticles: []
-  mainCamera: {fileID: 0}
+  mainCamera: {fileID: 519420031}
 --- !u!4 &2059682409
 Transform:
   m_ObjectHideFlags: 0
