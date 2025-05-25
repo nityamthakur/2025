@@ -106,6 +106,7 @@ public class ObjectSpawner : MonoBehaviour
 
     public void SpawnRentNotice()
     {
+        Debug.Log("Spawning Rent Notice");
         // Instantiate RentNoticePrefab
         GameObject rentNoticeInstance = Instantiate(rentNoticePrefab);
         Canvas prefabCanvas = rentNoticeInstance.GetComponentInChildren<Canvas>();
@@ -308,6 +309,7 @@ public class ObjectSpawner : MonoBehaviour
     void OnApplicationQuit()
     {
         quitting = true;
+        allMedia.Clear();
     }
 
     // EventManager for creating a new media object after one gets destroyed
@@ -334,11 +336,11 @@ public class ObjectSpawner : MonoBehaviour
         {
             if (gameObject == null)
             {
-                Destroy(gameObject);
+                //Destroy(gameObject);
             }
             else
             {
-                gameObject.SetActive(!show);
+                //gameObject.SetActive(!show);
             }
         }
     }

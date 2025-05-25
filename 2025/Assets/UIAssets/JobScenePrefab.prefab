@@ -48,7 +48,7 @@ GameObject:
   - component: {fileID: 1399352646785512101}
   m_Layer: 5
   m_Name: BackgroundImage
-  m_TagString: Untagged
+  m_TagString: GameScreenSize
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1204,7 +1204,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5482052484761055526, guid: b266d1cd220d5e4478e3dd7f8e9e1123, type: 3}
       propertyPath: m_Value
-      value: 1.0000006
+      value: 1.0000007
       objectReference: {fileID: 0}
     - target: {fileID: 6171409172462887316, guid: b266d1cd220d5e4478e3dd7f8e9e1123, type: 3}
       propertyPath: m_AnchorMax.y

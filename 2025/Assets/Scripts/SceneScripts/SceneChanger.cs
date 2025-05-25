@@ -1,7 +1,5 @@
 using UnityEngine;
-using UnityEngine.UI;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 public class SceneChanger : MonoBehaviour
@@ -13,18 +11,6 @@ public class SceneChanger : MonoBehaviour
     [SerializeField] private JobScene jobScene;
     [SerializeField] private DayEndScene dayEndScene;
     [SerializeField] private GameObject fadingScreenPrefab;
-    private GameObject fadingScreen;
-    public GameObject FadingScreen
-    {
-        get { return fadingScreen; }
-        private set { fadingScreen = value; }
-    }
-    private Canvas prefabCanvas;
-
-    private Image fadingImage, lightsOutImage;
-    private Image deskOverlayImage;
-    private Button menuButton;
-
     private bool mainMenuDone = false;
     private int currentSceneIndex = 0;
     private List<Action> sceneSequence;
@@ -42,59 +28,8 @@ public class SceneChanger : MonoBehaviour
             () => jobScene.LoadJobStart(),
             () => dayEndScene.LoadDayEnd()
         };
-        fadingScreen = Instantiate(fadingScreenPrefab);
-        if (fadingScreen == null)
-        {
-            Debug.LogError("fadingImage is null in SceneManager.");
-            return;
-        }
-        prefabCanvas = fadingScreen.GetComponentInChildren<Canvas>();
-        if (prefabCanvas != null)
-        {
-            prefabCanvas.renderMode = RenderMode.ScreenSpaceCamera;
-            prefabCanvas.worldCamera = Camera.main;
-        }
 
-
-        fadingImage = fadingScreen.transform.Find("FadingImage").GetComponent<Image>();
-        if (fadingImage == null)
-        {
-            Debug.LogError("Failed to find FadingImage component in SceneManager");
-            return;
-        }
-
-        lightsOutImage = fadingScreen.transform.Find("LightsOutImage").GetComponent<Image>();
-        if (lightsOutImage == null)
-        {
-            Debug.LogError("Failed to find LightsOutImage component in SceneManager");
-            return;
-        }
-        lightsOutImage.gameObject.SetActive(false);
-
-        // Used for ensuring the media enters and leaves behind certain screen elements
-        deskOverlayImage = fadingScreen.transform.Find("DeskOverlay").GetComponent<Image>();
-        if (deskOverlayImage == null)
-        {
-            Debug.LogError("Failed to find DeskOverlay component in SceneManager");
-            return;
-        }
-        deskOverlayImage.gameObject.SetActive(false);
-
-        menuButton = fadingScreen.transform.Find("MenuButton").GetComponent<Button>();
-        if (menuButton == null)
-        {
-            Debug.LogError("Failed to find menuButton component in SceneManager");
-            return;
-        }
-        menuButton.onClick.AddListener(() =>
-        {
-            EventManager.OpenOptionsMenu?.Invoke();
-            EventManager.OptionsChanger?.Invoke(""); 
-            EventManager.DisplayMenuButton?.Invoke(false);
-            EventManager.PlaySound?.Invoke("switch1", true);
-        });
-        menuButton.gameObject.SetActive(false);
-
+        Instantiate(fadingScreenPrefab);
         dayStartScene.Initialize();
         jobScene.Initialize();
         dayEndScene.Initialize();
@@ -157,115 +92,10 @@ public class SceneChanger : MonoBehaviour
     void OnEnable()
     {
         EventManager.NextScene += StartNextScene;
-        EventManager.FadeIn += FadeInScreen;
-        EventManager.FadeOut += FadeOutScreen;
-        EventManager.ShowDeskOverlay += ShowDeskOverLay;
-        EventManager.HideDeskOverlay += HideDeskOverLay;
-        EventManager.ShowLightsOutImage += ShowLightsOutImage;
-        EventManager.HideLightsOutImage += HideLightsOutImage;
-        EventManager.DisplayMenuButton += DisplayMenuButton;
-        EventManager.CameraZoomed += CanvasChanger;
     }
 
     void OnDisable()
     {
         EventManager.NextScene -= StartNextScene;
-        EventManager.FadeIn -= FadeInScreen;
-        EventManager.FadeOut -= FadeOutScreen;
-        EventManager.ShowDeskOverlay -= ShowDeskOverLay;
-        EventManager.HideDeskOverlay -= HideDeskOverLay;
-        EventManager.ShowLightsOutImage -= ShowLightsOutImage;
-        EventManager.HideLightsOutImage -= HideLightsOutImage;
-        EventManager.DisplayMenuButton -= DisplayMenuButton;
-        EventManager.CameraZoomed -= CanvasChanger;
-    }
-
-    private void FadeInScreen()
-    {
-        StartCoroutine(FadeIn());
-    }
-
-    private void FadeOutScreen()
-    {
-        StartCoroutine(FadeOut());
-    }
-
-    private float fadeDuration = 1f; // Adjustable fade duration
-    //private float waitTime = 1f; // Time to wait before fading back in
-    private IEnumerator FadeIn()
-    {
-        yield return StartCoroutine(FadeImage(fadingImage, 1f, 0f, fadeDuration)); // fadeInOut goes to 100% opacity (Black Screen) 
-        fadingImage.gameObject.SetActive(false);
-    }
-
-    private IEnumerator FadeOut()
-    {
-        fadingImage.gameObject.SetActive(true);   
-        yield return StartCoroutine(FadeImage(fadingImage, 0f, 1f, fadeDuration)); // fadeInOut goes to 100% opacity (Black Screen)    
-    }
-
-    private IEnumerator FadeImage(Image image, float startAlpha, float endAlpha, float duration)
-    {
-        float elapsedTime = 0f;
-        Color color = image.color;
-        color.a = startAlpha;
-        image.color = color;
-
-        while (elapsedTime < duration)
-        {
-            elapsedTime += Time.deltaTime;
-            color.a = Mathf.Lerp(startAlpha, endAlpha, elapsedTime / duration);
-            image.color = color;
-            yield return null;
-        }
-
-        color.a = endAlpha;
-        image.color = color;
-    }
-    
-    private void CanvasChanger(bool change)
-    {
-        if (prefabCanvas != null && !change)
-        {
-            prefabCanvas.renderMode = RenderMode.ScreenSpaceCamera;
-            prefabCanvas.worldCamera = Camera.main;
-        }
-        else if (prefabCanvas != null && change)
-        {
-            prefabCanvas.renderMode = RenderMode.WorldSpace;
-            prefabCanvas.worldCamera = Camera.main;            
-        }
-    }
-
-    private void ShowDeskOverLay()
-    {
-        //Debug.Log("ShowDeskOverlay called");
-        deskOverlayImage.gameObject.SetActive(true);
-    }
-    private void HideDeskOverLay()
-    {
-        //Debug.Log("HideDeskOverlay called");
-        deskOverlayImage.gameObject.SetActive(false);   
-    }
-
-    private void ShowLightsOutImage()
-    {
-        //Debug.Log("ShowDeskOverlay called");
-        if(lightsOutImage != null)
-            lightsOutImage.gameObject.SetActive(true);   
-    }
-    private void HideLightsOutImage()
-    {
-        //Debug.Log("HideDeskOverlay called");
-        if(lightsOutImage != null)
-            lightsOutImage.gameObject.SetActive(false);   
-    }
-
-    private void DisplayMenuButton(bool active)
-    {
-        if(mainMenuDone)
-        {
-            menuButton.gameObject.SetActive(active);
-        }
     }
 }

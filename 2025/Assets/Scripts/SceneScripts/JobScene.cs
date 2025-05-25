@@ -50,7 +50,7 @@ public class JobScene : MonoBehaviour
     }
 
     public void LoadJobStart() {
-        ShowBuildingTransition();
+        //ShowBuildingTransition();
         LoadJsonFromFile();
         SetUpJobStart();
         computerScreenClass.StartComputer();
@@ -221,7 +221,7 @@ public class JobScene : MonoBehaviour
         EventManager.DisplayMenuButton?.Invoke(false);
         EventManager.FadeOut?.Invoke();
         yield return new WaitForSeconds(2f);
-        EventManager.HideLightsOutImage?.Invoke();
+        EventManager.DisplayLightsOutImage?.Invoke(false);
 
         Destroy(currJobScene);
         currJobScene = null;

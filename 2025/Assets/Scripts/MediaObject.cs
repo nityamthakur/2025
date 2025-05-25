@@ -64,14 +64,45 @@ public class Entity : MonoBehaviour
         TryGetComponent<Rigidbody2D>(out var Urigid);
         rigidBody = Urigid;
 
+        GetScreenBounds();
+    }
+
+    private void GetScreenBounds()
+    {
+        GameObject boundsImage = GameObject.FindWithTag("GameScreenSize");
+        if (boundsImage == null)
+        {
+            Debug.Log("GameScreenSize tag not found.");
+            return;
+        }
+
+        RectTransform rectTransform = boundsImage.GetComponent<RectTransform>();
+        if (rectTransform == null)
+        {
+            Debug.Log("Object does not have RectTransform.");
+            return;
+        }
+
+        Vector3[] worldCorners = new Vector3[4];
+        rectTransform.GetWorldCorners(worldCorners);
+
+        // Bottom-left to top-right corner
+        Vector3 bottomLeft = worldCorners[0];
+        Vector3 topRight = worldCorners[2];
+
+        // Calculate half-width and half-height in world space
+        screenBounds = (topRight - bottomLeft) / 2f;
+        Debug.Log($"{screenBounds}");
+        //screenBounds = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
+
         // Setting object boundaries to keep it inside the screen
         TryGetComponent<BoxCollider2D>(out var Ucollider);
         boxCollider = Ucollider;
-        screenBounds = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
+
         playerHalfWidth = boxCollider.bounds.extents.x;
         playerHalfHeight = boxCollider.bounds.extents.y;
-
     }
+
 
     public void SetBlur(bool isBlurry)
     {
@@ -550,7 +581,6 @@ public class Entity : MonoBehaviour
         if(!beingDestroyed)
         {
             Vector2 pos = transform.position;
-
             pos.x = Mathf.Clamp(pos.x, -screenBounds.x + playerHalfWidth, screenBounds.x - playerHalfWidth);
             pos.y = Mathf.Clamp(pos.y, -screenBounds.y + playerHalfHeight, screenBounds.y - playerHalfHeight);
 

@@ -11,14 +11,14 @@ public static class EventManager
     public static Action FadeIn; // Trigger Fade in animation as a coroutine
     public static Action FadeOut; // Trigger Fade out animation as a coroutine
 
-    // Used for ensuring the media gets enters and leaves behind certain screen elements
-    public static Action ShowDeskOverlay;
-    public static Action HideDeskOverlay;
-    public static Action ShowLightsOutImage;
-    public static Action HideLightsOutImage;
-    public static Action<string, bool> GlowingBoxShow;
-
+    // FadingScreen Events
+    public static Action<bool> DisplayDeskOverlay;
+    public static Action<bool> DisplayLightsOutImage;
     public static Action<bool> DisplayMenuButton;
+
+
+    //
+    public static Action<string, bool> GlowingBoxShow;
     public static Func<bool> IsMusicPlaying;
 
     // MainMenuScene Events
@@ -31,7 +31,6 @@ public static class EventManager
     public static Action ReactivateMainMenuButtons;
 
     // AudioManage Events
-    public static Action<string> ShowCustomSubtitle;
     public static Action<string> PlayMusic;
     public static Action PauseResumeMusic;
     public static Action StopMusic;
@@ -54,6 +53,12 @@ public static class EventManager
     }
 
     public static Action<float> SetTextSpeed;
+
+    // Subtitle Events
+    public static Action<string> ShowCustomSubtitle;
+    public static Action<string, float> ShowSubtitle;
+
+    // ------------------
     public static Action<bool> ShowCorrectBuzzer;
     public static Action GoToShop;
 

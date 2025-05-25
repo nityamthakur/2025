@@ -704,7 +704,7 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
-        EventManager.ShowLightsOutImage?.Invoke();
+        EventManager.DisplayLightsOutImage?.Invoke(true);
         EventManager.PlaySound?.Invoke("switchoff", true);
         EventManager.StopMusic?.Invoke();
         jobDetails.currClockTime = 0;

@@ -7,37 +7,16 @@ using System.Collections.Generic;
 
 public class SubtitleManager : MonoBehaviour
 {
-    [SerializeField] private SceneChanger sceneChanger;
-    private GameObject fadingScreen;
-    private TextMeshProUGUI subtitleTextObject;
-    private RectTransform subtitleBackground;
+    [SerializeField] private TextMeshProUGUI subtitleTextObject;
+    [SerializeField] private RectTransform subtitleBackground;
     private Coroutine subtitleTime;
     private float paddingX = 20f; // Horizontal padding
     private float paddingY = 10f; // Vertical padding
     private Dictionary<string, string> subtitleDictionary = new Dictionary<string, string>();
     private bool subtitlesOn = false;
 
-    public void Initialize()
+    public void Awake()
     {
-        fadingScreen = sceneChanger.FadingScreen;
-
-        if (fadingScreen != null)
-        {
-            Transform bgTransform = fadingScreen.transform.Find("SubtitleBackground");
-            if (bgTransform != null)
-                subtitleBackground = bgTransform.GetComponent<RectTransform>();
-            else
-                Debug.LogError("Subtitle Background (SubtitleBackground) not found inside fadingScreen!");
-
-            Transform textTransform = bgTransform.transform.Find("SubtitleText");
-            if (textTransform != null)
-            {
-                subtitleTextObject = textTransform.GetComponent<TextMeshProUGUI>();
-            }
-            else
-                Debug.LogError("Subtitle Text (SubtitleText) not found inside fadingScreen!");
-        }
-
         SubtitleToggle(true);
         LoadJsonFromFile();
     }
@@ -157,11 +136,13 @@ public class SubtitleManager : MonoBehaviour
     private void OnEnable()
     {
         EventManager.ShowCustomSubtitle += ShowCustomSubtitle;
+        EventManager.ShowSubtitle += ShowSubtitle;
     }
 
     private void OnDisable()
     {
         EventManager.ShowCustomSubtitle -= ShowCustomSubtitle;
+        EventManager.ShowSubtitle -= ShowSubtitle;
     }
 
     [System.Serializable]

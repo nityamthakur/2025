@@ -29,10 +29,38 @@ public class Draggable : MonoBehaviour
         }
 
         // Calculate screen bounds and object half-size
-        screenBounds = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
+        GetScreenBounds();
+    }
+
+    private void GetScreenBounds()
+    {
+        GameObject boundsImage = GameObject.FindWithTag("GameScreenSize");
+        if (boundsImage == null)
+        {
+            Debug.Log("GameScreenSize tag not found.");
+            return;
+        }
+
+        RectTransform rectTransform = boundsImage.GetComponent<RectTransform>();
+        if (rectTransform == null)
+        {
+            Debug.Log("Object does not have RectTransform.");
+            return;
+        }
+
+        Vector3[] worldCorners = new Vector3[4];
+        rectTransform.GetWorldCorners(worldCorners);
+
+        // Bottom-left to top-right corner
+        Vector3 bottomLeft = worldCorners[0];
+        Vector3 topRight = worldCorners[2];
+
+        screenBounds = (topRight - bottomLeft) / 2f;
+
         playerHalfWidth = boxCollider.bounds.extents.x;
         playerHalfHeight = boxCollider.bounds.extents.y;
     }
+
 
     public bool IsDragging()
     {
