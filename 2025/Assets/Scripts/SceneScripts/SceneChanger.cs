@@ -10,6 +10,7 @@ public class SceneChanger : MonoBehaviour
     [SerializeField] private DayStartScene dayStartScene;
     [SerializeField] private JobScene jobScene;
     [SerializeField] private DayEndScene dayEndScene;
+    [SerializeField] private ShopScene shopScene;
     [SerializeField] private GameObject fadingScreenPrefab;
     private bool mainMenuDone = false;
     private int currentSceneIndex = 0;
@@ -17,7 +18,7 @@ public class SceneChanger : MonoBehaviour
 
     public void Initialize()
     {
-        if(gameManager == null)
+        if (gameManager == null)
         {
             Debug.Log("gameManager is null in SceneChanger");
         }
@@ -25,14 +26,16 @@ public class SceneChanger : MonoBehaviour
         sceneSequence = new List<Action>
         {
             () => dayStartScene.LoadDayStart(),
+            () => shopScene.LoadShop(),
             () => jobScene.LoadJobStart(),
-            () => dayEndScene.LoadDayEnd()
+            () => dayEndScene.LoadDayEnd(),
         };
 
         Instantiate(fadingScreenPrefab);
         dayStartScene.Initialize();
         jobScene.Initialize();
         dayEndScene.Initialize();
+        shopScene.Initalize();
     }
 
     public void StartGame(int loadSlot)
@@ -57,45 +60,59 @@ public class SceneChanger : MonoBehaviour
 
             // Start Game
             // Comment out if using with debug
-            //mainMenuScene.LoadMainMenu();
+            mainMenuScene.LoadMainMenu();
 
             // For Debugging
             // Change the starting day
-            gameManager.gameData.day = 1;
+            //gameManager.gameData.day = 1;
 
             // Start the game at day end
             //currentSceneIndex = 3;
             //dayEndScene.LoadDayEnd();
 
             // Start the game at the job scene
-            currentSceneIndex = 2;
-            jobScene.LoadJobStart();
+            //currentSceneIndex = 2;
+            //jobScene.LoadJobStart();
         }
     }
 
     public void StartNextScene()
     {
-        if(!mainMenuDone)
+        if (!mainMenuDone)
         {
             // Start Playtime counter for first time
             StartCoroutine(gameManager.UpdatePlayTime());
         }
 
         mainMenuDone = true;
+
+        // Ignore the shop on the first day
+        if (gameManager.gameData.GetCurrentDay() == 1 && currentSceneIndex == 1)
+            currentSceneIndex++;
+
         // Call the function for the current scene
         sceneSequence[currentSceneIndex]?.Invoke();
 
         // Increment and loop back if at the end
         currentSceneIndex = (currentSceneIndex + 1) % sceneSequence.Count;
+
+    }
+
+    private void JumpToScene(int sceneNum)
+    {
+        sceneSequence[sceneNum]?.Invoke();
+        currentSceneIndex = (sceneNum + 1) % sceneSequence.Count;
     }
 
     void OnEnable()
     {
         EventManager.NextScene += StartNextScene;
+        EventManager.JumpToScene += JumpToScene;
     }
 
     void OnDisable()
     {
         EventManager.NextScene -= StartNextScene;
+        EventManager.JumpToScene -= JumpToScene;
     }
 }

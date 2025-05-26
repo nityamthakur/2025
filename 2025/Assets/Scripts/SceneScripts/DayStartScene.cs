@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using System;
 using System.Collections;
 using Unity.VisualScripting;
+using System.Reflection;
 
 public class DayStartScene : MonoBehaviour
 {
@@ -15,10 +16,9 @@ public class DayStartScene : MonoBehaviour
     [SerializeField] private Sprite rentLetter, rentNotice, jobLetter;
     private float frameInterval = 0.2f;
     private GameObject currentTextBox;
-    private TextMeshProUGUI TextBox;
+    private TextMeshProUGUI TextBox, dayText;
     private Button nextButton;
     private Image backgroundImage, textBoxBackground;    
-    //private int currDay = 0;
     private int linePos = 0;
     private Line[] currentLines;
     private GameManager gameManager;
@@ -76,7 +76,7 @@ public class DayStartScene : MonoBehaviour
             return;
         }
 
-        TextMeshProUGUI dayText = currentTextBox.transform.Find("DayText").GetComponent<TextMeshProUGUI>();
+        dayText = currentTextBox.transform.Find("DayText").GetComponent<TextMeshProUGUI>();
         if (dayText == null)
         {
             Debug.LogError("Failed to find dayText component.");
@@ -156,28 +156,34 @@ public class DayStartScene : MonoBehaviour
             else
             {
                 // Run a timed delay based on JSON file text
-                if(currentLine.speaker.ToLower() == "delay")
-                {  
+                if (currentLine.speaker.ToLower() == "delay")
+                {
                     CheckDelay(currentLine);
                 }
                 // Play a song or stop a song in between dialogue 
-                else if(currentLine.speaker.ToLower() == "playmusic")
+                else if (currentLine.speaker.ToLower() == "playmusic")
                 {
                     EventManager.PlayMusic?.Invoke(currentLine.text);
                     linePos++;
                     ReadNextLine();
                 }
-                else if(currentLine.speaker.ToLower() == "stopmusic")
+                else if (currentLine.speaker.ToLower() == "stopmusic")
                 {
                     EventManager.StopMusic?.Invoke();
                     linePos++;
                     ReadNextLine();
                 }
-                else if(currentLine.speaker.ToLower() == "playsound")
+                else if (currentLine.speaker.ToLower() == "playsound")
                 {
                     EventManager.PlaySound?.Invoke(currentLine.text, true);
                     linePos++;
                     ReadNextLine();
+                }
+                else if (currentLine.speaker.ToLower() == "function")
+                {
+                    Invoke(currentLine.text, 0f);
+                    linePos++;
+                    ReadNextLine();            
                 }
                 else
                 {
@@ -187,7 +193,7 @@ public class DayStartScene : MonoBehaviour
                     linePos++;
 
                     // If there is no text, proceed to the next line, for swapping just the image
-                    if(currentLine.text == "")
+                    if (currentLine.text == "")
                         ReadNextLine();
                 }
             }
@@ -214,6 +220,7 @@ public class DayStartScene : MonoBehaviour
             StopCoroutine(animationCoroutine);
         }
 
+        backgroundImage.color = Color.white;
         switch (currentLine.speaker.ToLower())
         {
             case "femalenewsanchor":
@@ -226,7 +233,7 @@ public class DayStartScene : MonoBehaviour
                 animationCoroutine = StartCoroutine(CycleBackgroundFrames(MaleNewsAnchor2));
                 break;
             case "apartment":
-                animationCoroutine = StartCoroutine(CycleBackgroundFrames(apartment));;
+                animationCoroutine = StartCoroutine(CycleBackgroundFrames(apartment)); ;
                 break;
             case "jobletter":
                 backgroundImage.sprite = jobLetter;
@@ -238,6 +245,7 @@ public class DayStartScene : MonoBehaviour
                 backgroundImage.sprite = rentNotice;
                 break;
             default:
+                backgroundImage.color = Color.black;
                 backgroundImage.sprite = null;
                 break;
         }
@@ -286,16 +294,22 @@ public class DayStartScene : MonoBehaviour
 
     private void DayStartEventChecker()
     {
-        if(gameManager.gameData.GetCurrentDay() == 1)
+        EventManager.FadeIn?.Invoke();
+        EventManager.DisplayMenuButton?.Invoke(true); 
+        ReadNextLine();
+
+        /*
+        if (gameManager.gameData.GetCurrentDay() == 1)
         {
             StartCoroutine(DayStartOpening());
-        }   
+        }
         else
         {
             EventManager.FadeIn?.Invoke();
-            EventManager.DisplayMenuButton?.Invoke(true); 
+            EventManager.DisplayMenuButton?.Invoke(true);
             ReadNextLine();
         }
+        */
     }
 
     private IEnumerator DayStartOpening()
@@ -319,6 +333,15 @@ public class DayStartScene : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         EventManager.FadeIn?.Invoke();
         //EventManager.PlayMusic?.Invoke("Some Music For The Day Start / Apartment");
+    }
+
+    public void ShowDayText()
+    {
+        dayText.gameObject.SetActive(true);
+    }
+    public void HideDayText()
+    {
+        dayText.gameObject.SetActive(false);
     }
 
     private void StopAnimationCoroutines()

@@ -9,6 +9,7 @@ public class FadingScreen : MonoBehaviour
     [SerializeField] private Image fadingImage;
     [SerializeField] private Image lightsOutImage;
     [SerializeField] private Image deskOverlayImage;
+    [SerializeField] private Image saveIcon;
     [SerializeField] private Button menuButton;
 
     private bool mainMenuDone = false;
@@ -23,12 +24,12 @@ public class FadingScreen : MonoBehaviour
             EventManager.PlaySound?.Invoke("switch1", true);
         });
         menuButton.gameObject.SetActive(false);
-        
+
         canvas.renderMode = RenderMode.ScreenSpaceCamera;
         canvas.worldCamera = Camera.main;
     }
-    
-   private void FadeInScreen()
+
+    private void FadeInScreen()
     {
         StartCoroutine(FadeIn());
     }
@@ -48,7 +49,7 @@ public class FadingScreen : MonoBehaviour
 
     private IEnumerator FadeOut()
     {
-        fadingImage.gameObject.SetActive(true);   
+        fadingImage.gameObject.SetActive(true);
         yield return StartCoroutine(FadeImage(fadingImage, 0f, 1f, fadeDuration)); // fadeInOut goes to 100% opacity (Black Screen)    
     }
 
@@ -70,7 +71,7 @@ public class FadingScreen : MonoBehaviour
         color.a = endAlpha;
         image.color = color;
     }
-    
+
     private void CanvasChanger(bool change)
     {
         if (canvas != null && !change)
@@ -81,28 +82,55 @@ public class FadingScreen : MonoBehaviour
         else if (canvas != null && change)
         {
             canvas.renderMode = RenderMode.WorldSpace;
-            canvas.worldCamera = Camera.main;            
+            canvas.worldCamera = Camera.main;
         }
     }
 
     private void DisplayDeskOverLay(bool show)
     {
-        Debug.Log("ShowDeskOverlay called");
+        //Debug.Log("ShowDeskOverlay called");
         deskOverlayImage.gameObject.SetActive(show);
     }
 
     private void DisplayLightsOutImage(bool show)
     {
         //Debug.Log("ShowDeskOverlay called");
-        lightsOutImage.gameObject.SetActive(show);   
+        lightsOutImage.gameObject.SetActive(show);
     }
 
     private void DisplayMenuButton(bool active)
     {
-        if(mainMenuDone)
+        if (mainMenuDone)
         {
             menuButton.gameObject.SetActive(active);
         }
+    }
+
+    private void SaveIconBlink()
+    {
+        Debug.Log("Save Icon Blink");
+        saveIcon.gameObject.SetActive(true);
+        StartCoroutine(BlinkImage(saveIcon, 0.5f, 3f));
+    }
+
+    private IEnumerator BlinkImage(Image image, float blinkSpeed, float duration)
+    {
+        float elapsedTime = 0f;
+        Color color = image.color;
+
+        while (elapsedTime < duration)
+        {
+            float t = Mathf.PingPong(elapsedTime * (1f / blinkSpeed), 1f);
+            color.a = t;
+            image.color = color;
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        color.a = 0f;
+        image.color = color;
+        image.gameObject.SetActive(false);
     }
 
     void OnEnable()
@@ -113,6 +141,7 @@ public class FadingScreen : MonoBehaviour
         EventManager.DisplayLightsOutImage += DisplayLightsOutImage;
         EventManager.DisplayMenuButton += DisplayMenuButton;
         EventManager.CameraZoomed += CanvasChanger;
+        EventManager.SaveIconBlink += SaveIconBlink;
     }
 
     void OnDisable()
@@ -123,6 +152,15 @@ public class FadingScreen : MonoBehaviour
         EventManager.DisplayLightsOutImage -= DisplayLightsOutImage;
         EventManager.DisplayMenuButton -= DisplayMenuButton;
         EventManager.CameraZoomed -= CanvasChanger;
+        EventManager.SaveIconBlink -= SaveIconBlink;
+    }
+    
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            EventManager.SaveIconBlink?.Invoke();
+        }
     }
 
 }

@@ -8,7 +8,6 @@ using UnityEngine.UI;
 public class OptionsMenu : MonoBehaviour
 {
     private AudioManager audioManager;
-    private SubtitleManager subtitleManager;
     private List<GameObject> sections = new();
     private GameObject pauseMenu, menuSections, audioSection, saveLoadSection, confirmSection;
     private TextMeshProUGUI confirmText, pauseMenuText;
@@ -477,6 +476,8 @@ public class OptionsMenu : MonoBehaviour
             // Listen for changes when toggle is clicked
             grayscaleToggle.onValueChanged.AddListener((bool isOn) =>
             {
+                if (isLoadingSettings) return;
+                
                 EventManager.PlaySound?.Invoke("switch1", true); 
                 EventManager.ToggleGrayscaleState();
                 grayscaleActiveText.text = isOn ? "On" : "Off";
@@ -499,6 +500,8 @@ public class OptionsMenu : MonoBehaviour
             // Listen for changes when toggle is clicked
             fullScreenToggle.onValueChanged.AddListener((bool isOn) =>
             {
+                if (isLoadingSettings) return;
+
                 EventManager.PlaySound?.Invoke("switch1", true); 
                 EventManager.ToggleFullScreenState();
                 fullScreenActiveText.text = isOn ? "On" : "Off";
@@ -515,14 +518,6 @@ public class OptionsMenu : MonoBehaviour
         if (audioManager == null)
         {
             Debug.Log("AudioManager not found in scene!");
-            return;
-        }
-
-        // Locate SubtitleManager Object
-        subtitleManager = FindFirstObjectByType<SubtitleManager>();
-        if (subtitleManager == null)
-        {
-            Debug.Log("SubTitleManager not found in scene!");
             return;
         }
 
@@ -573,6 +568,8 @@ public class OptionsMenu : MonoBehaviour
             // Listen for changes when toggle is clicked
             muteToggle.onValueChanged.AddListener((bool isOn) =>
             {
+                if (isLoadingSettings) return;
+
                 audioManager.MuteToggle(isOn);
                 muteActiveText.text = isOn ? "On" : "Off";
                 EventManager.PlaySound?.Invoke("switch1", true); 
@@ -588,8 +585,13 @@ public class OptionsMenu : MonoBehaviour
             // Listen for changes when toggle is clicked
             subtitleToggle.onValueChanged.AddListener((bool isOn) =>
             {
-                subtitleManager.SubtitleToggle(isOn);
-                subtitleActiveText.text = isOn ? "On" : "Off";
+                if (isLoadingSettings) return;
+
+                bool subtitleIsOn = PlayerPrefs.GetInt("SubtitleState", 0) == 1;
+                PlayerPrefs.SetInt("SubtitleState", !subtitleIsOn ? 1 : 0);
+                subtitleActiveText.text = subtitleIsOn ? "On" : "Off";
+
+                EventManager.SubtitleToggle?.Invoke();
                 EventManager.PlaySound?.Invoke("switch1", true); 
                 SavePersistentSettings();
             });
@@ -598,7 +600,7 @@ public class OptionsMenu : MonoBehaviour
 
     public void SavePersistentSettings()
     {
-        if (isLoadingSettings) return; // 🔹 Prevent saving while loading settings
+        if (isLoadingSettings) return; // Prevent saving while loading settings
 
         PlayerPrefs.SetFloat("MasterVolume", masterVolumeSlider.value);
         PlayerPrefs.SetFloat("MusicVolume", musicVolumeSlider.value);
@@ -634,9 +636,8 @@ public class OptionsMenu : MonoBehaviour
         muteToggle.isOn = muteOn == 1;
         audioManager.MuteToggle(muteToggle.isOn);
 
-        int subtitleOn = PlayerPrefs.GetInt("SubtitleState", 0);
-        subtitleToggle.isOn = subtitleOn == 1;
-        subtitleManager.SubtitleToggle(subtitleToggle.isOn);
+        bool subtitleOn = PlayerPrefs.GetInt("SubtitleState", 0) == 1;
+        subtitleToggle.isOn = subtitleOn;
 
         int grayOn = PlayerPrefs.GetInt("GrayState", 0);
         grayscaleToggle.isOn = grayOn == 1;

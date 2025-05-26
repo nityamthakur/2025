@@ -3,9 +3,15 @@
         {
             "day": 1,
             "lines": [
-                {"speaker": "PlaySound", "text": "newspaperRustling" },
-                {"speaker": "RentNotice", "text": ""},
+                {"speaker": "Function", "text": "HideDayText" },
+                {"speaker": "", "text": "This game saves your progress automatically when the logo in the bottom right is flashing."},
+                {"speaker": "Function", "text": "ShowDayText" },
                 {"speaker": "Delay", "text": "2" },
+                {"speaker": "PlaySound", "text": "doorBell" },
+                {"speaker": "Delay", "text": "2" },
+                {"speaker": "PlaySound", "text": "papercomein" },
+                {"speaker": "Delay", "text": "1" },
+                {"speaker": "PlaySound", "text": "newspaperRustling" },
                 { "speaker": "RentNotice", "text": "Dear Tenet, \nYou have missed payment for your rent for 1 HOUR. Missing an additional time will result in your immediate eviction. "},
                 {"speaker": "RentNotice", "text": "You have until the end of day upon receiving this notice to pay your rent. Failure to do so will result in immediate relocation to temporary labor camp housing." },
                 {"speaker": "RentNotice", "text": "As per NewMerican Renters Regulations Guidelines 4th edition found in section 32 article 7 stanza 9, \"Failure to pay rent in a timely manner will result in a weekly increase in rent\"" },

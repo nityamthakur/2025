@@ -173,7 +173,7 @@ public class ComputerScreen : MonoBehaviour
         EventManager.StopClockMovement?.Invoke();
         ReviewCountUpdate(+1);
         HideMenus();
-        EventManager.ZoomCamera?.Invoke(screenZoomIn, 3.1f, 0.25f);
+        EventManager.ZoomCamera?.Invoke(screenZoomIn, 3.1f, 1.0f);
     }
 
     public void StartComputer()

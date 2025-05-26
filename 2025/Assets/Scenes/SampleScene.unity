@@ -343,7 +343,7 @@ MonoBehaviour:
   - {fileID: -5663719376924119251, guid: 7ebf269f2e1e1dd46843a2d523284b91, type: 3}
   rentLetter: {fileID: 5162322167547290152, guid: f2d66c3b570b04920b75624d214676d9, type: 3}
   rentNotice: {fileID: 889754086627472722, guid: 50ffb7daf5478470c90ac2b7f8952d67, type: 3}
-  jobLetter: {fileID: 2247088696051876834, guid: 10d5781b3649c3c40a0d1bce740af2fd, type: 3}
+  jobLetter: {fileID: 21300000, guid: 10d5781b3649c3c40a0d1bce740af2fd, type: 3}
 --- !u!1 &443284278
 GameObject:
   m_ObjectHideFlags: 0
@@ -1796,6 +1796,7 @@ MonoBehaviour:
   dayStartScene: {fileID: 374167943}
   jobScene: {fileID: 713576585}
   dayEndScene: {fileID: 168713421}
+  shopScene: {fileID: 1518353896}
   fadingScreenPrefab: {fileID: 810160988226875430, guid: b3b001d35d6235f4490dddcf23c1f675, type: 3}
 --- !u!4 &1487003098
 Transform:
@@ -1814,6 +1815,7 @@ Transform:
   - {fileID: 374167942}
   - {fileID: 713576584}
   - {fileID: 168713420}
+  - {fileID: 1518353897}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1518353895
@@ -1827,7 +1829,7 @@ GameObject:
   - component: {fileID: 1518353897}
   - component: {fileID: 1518353896}
   m_Layer: 0
-  m_Name: ShopManager
+  m_Name: ShopScene
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1858,12 +1860,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1518353895}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 460.22098, y: 265.655, z: -3.9538083}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 1096.1373, y: -200.60709, z: 4.7154765}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1487003098}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1668692183
 PrefabInstance:
@@ -2698,7 +2700,6 @@ SceneRoots:
   - {fileID: 1881933001}
   - {fileID: 2059682409}
   - {fileID: 1444022414}
-  - {fileID: 1518353897}
   - {fileID: 45294232700813355}
   - {fileID: 1245310924}
   - {fileID: 1487003098}

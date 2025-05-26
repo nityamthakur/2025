@@ -3,10 +3,9 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 
-public class ShopManager : MonoBehaviour
+public class ShopScene : MonoBehaviour
 {
     [SerializeField] private GameObject shopScreenPrefab;
-
     [SerializeField] private int upgradePrice1 = 7; // UV Light upgrade price
     [SerializeField] private int upgradePrice2 = 5;
     [SerializeField] private string upgradeDescription1 = "UV Light Range+: Increases the detection radius of your UV light";
@@ -26,29 +25,12 @@ public class ShopManager : MonoBehaviour
     private int playerMoney;
     private GameManager gameManager;
 
-    private void OnEnable()
+    public void Initalize()
     {
-        // Subscribe to the GoToShop event
-        EventManager.GoToShop += ShowShop;
+        gameManager = FindFirstObjectByType<GameManager>();
     }
 
-    private void OnDisable()
-    {
-        // Unsubscribe when disabled to prevent memory leaks
-        EventManager.GoToShop -= ShowShop;
-    }
-
-    private int GetPlayerMoney()
-    {
-        return gameManager.gameData.GetCurrentMoney();
-    }
-
-    private void SpendPlayerMoney(int money)
-    {
-        gameManager.gameData.SetCurrentMoney(-money, true);
-    }
-
-    private void ShowShop()
+    public void LoadShop()
     {
         // Get reference to GameManager
         gameManager = FindFirstObjectByType<GameManager>();
@@ -61,7 +43,6 @@ public class ShopManager : MonoBehaviour
             prefabCanvas.renderMode = RenderMode.ScreenSpaceCamera;
             prefabCanvas.worldCamera = Camera.main;
         }
-
 
         // Set up the shop UI
         SetupShopUI();
@@ -261,6 +242,30 @@ public class ShopManager : MonoBehaviour
         }
     }
 
+    private int GetPlayerMoney()
+    {
+        return gameManager.gameData.GetCurrentMoney();
+    }
+
+    private void SpendPlayerMoney(int money)
+    {
+        gameManager.gameData.SetCurrentMoney(-money, true);
+    }
+
+    public IEnumerator NextScene()
+    {
+        EventManager.DisplayMenuButton?.Invoke(false);
+        EventManager.FadeOut?.Invoke();
+        yield return new WaitForSeconds(2f);
+
+        Destroy(currentShopScreen);
+        currentShopScreen = null;
+        EventManager.ResetCamera?.Invoke(0f);
+
+        yield return new WaitForSeconds(2f);
+        EventManager.NextScene?.Invoke();
+    }
+
     private void FinishShopping()
     {
         // Play sound effect
@@ -270,19 +275,6 @@ public class ShopManager : MonoBehaviour
         EventManager.FadeOut?.Invoke();
 
         // Wait for fade out, then clean up and transition
-        StartCoroutine(CleanupAndTransition());
-    }
-
-    private IEnumerator CleanupAndTransition()
-    {
-        // Wait for fade out
-        yield return new WaitForSeconds(2f);
-
-        // Clean up the shop UI
-        Destroy(currentShopScreen);
-        currentShopScreen = null;
-
-        // Call the static method to transition to the next day
-        DayEndScene.TransitionFromShop();
+        StartCoroutine(NextScene());
     }
 }

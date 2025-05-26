@@ -17,7 +17,7 @@ public class SubtitleManager : MonoBehaviour
 
     public void Awake()
     {
-        SubtitleToggle(true);
+        SubtitleToggle();
         LoadJsonFromFile();
     }
 
@@ -127,20 +127,23 @@ public class SubtitleManager : MonoBehaviour
         subtitleTextObject.gameObject.SetActive(isOn);
     }
 
-    public void SubtitleToggle(bool isOn)
-    {
+    public void SubtitleToggle()
+    {   
+        bool isOn = PlayerPrefs.GetInt("SubtitleState", 0) == 1;
         subtitlesOn = isOn;
         ShowHideSubtitle(isOn);
     }
 
     private void OnEnable()
     {
+        EventManager.SubtitleToggle += SubtitleToggle;
         EventManager.ShowCustomSubtitle += ShowCustomSubtitle;
         EventManager.ShowSubtitle += ShowSubtitle;
     }
 
     private void OnDisable()
     {
+        EventManager.SubtitleToggle -= SubtitleToggle;
         EventManager.ShowCustomSubtitle -= ShowCustomSubtitle;
         EventManager.ShowSubtitle -= ShowSubtitle;
     }

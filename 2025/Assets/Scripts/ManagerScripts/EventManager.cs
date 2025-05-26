@@ -8,6 +8,7 @@ public static class EventManager
     public static Action<bool> ShowHideRentNotices;
 
     public static Action NextScene; // Event for beginning the next scene
+    public static Action<int> JumpToScene; // Event to move to a specific scene
     public static Action FadeIn; // Trigger Fade in animation as a coroutine
     public static Action FadeOut; // Trigger Fade out animation as a coroutine
 
@@ -15,8 +16,7 @@ public static class EventManager
     public static Action<bool> DisplayDeskOverlay;
     public static Action<bool> DisplayLightsOutImage;
     public static Action<bool> DisplayMenuButton;
-
-
+    public static Action SaveIconBlink;
     //
     public static Action<string, bool> GlowingBoxShow;
     public static Func<bool> IsMusicPlaying;
@@ -30,7 +30,7 @@ public static class EventManager
     public static Action OpenOptionsMenu;
     public static Action ReactivateMainMenuButtons;
 
-    // AudioManage Events
+    // AudioManager Events
     public static Action<string> PlayMusic;
     public static Action PauseResumeMusic;
     public static Action StopMusic;
@@ -55,6 +55,7 @@ public static class EventManager
     public static Action<float> SetTextSpeed;
 
     // Subtitle Events
+    public static Action SubtitleToggle;
     public static Action<string> ShowCustomSubtitle;
     public static Action<string, float> ShowSubtitle;
 

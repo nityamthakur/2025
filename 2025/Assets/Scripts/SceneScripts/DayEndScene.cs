@@ -118,21 +118,15 @@ public class DayEndScene : MonoBehaviour
             return;
         }
 
-        // Modified to handle transition to shop
         gameButton.onClick.AddListener(() =>
         {
             EventManager.PlaySound?.Invoke("switch1", true);
             gameButton.gameObject.SetActive(false);
 
             if (CheckGameOver())
-            {
                 StartGameOver();
-            }
             else
-            {
-                // Go to shop after rent screen
-                StartCoroutine(TransitionToShop());
-            }
+                StartCoroutine(NextScene());
         });
 
         buttonText = gameButton.transform.Find("GameButtonText").GetComponent<TextMeshProUGUI>();
@@ -239,44 +233,6 @@ public class DayEndScene : MonoBehaviour
         return 0;
     }
 
-    // New method to transition to the shop "scene"
-    private IEnumerator TransitionToShop()
-    {
-        // Fade out the current scene
-        EventManager.FadeOut?.Invoke();
-        yield return new WaitForSeconds(2f);
-
-        // Clean up the current day end UI
-        Destroy(currentPrefab);
-        currentPrefab = null;
-
-        yield return new WaitForSeconds(1f);
-
-        // Trigger the shop "scene" to appear
-        EventManager.GoToShop?.Invoke();
-    }
-
-    // This method would be called from the ShopManager when the player is done with the shop
-    public static void TransitionFromShop()
-    {
-        // Find the game manager using the newer non-deprecated method
-        GameManager gameManager = FindFirstObjectByType<GameManager>();
-        if (gameManager != null)
-        {
-            // Increment the day
-            gameManager.SetCurrentDay(gameManager.gameData.day + 1);
-
-            // Go to the next day's scene
-            EventManager.StopMusic?.Invoke();
-            EventManager.NextScene?.Invoke();
-            SaveSystem.SaveGame(gameManager.gameData.saveSlot, gameManager.gameData);
-        }
-        else
-        {
-            Debug.LogError("Could not find GameManager when transitioning from shop");
-        }
-    }
-
     private IEnumerator NextScene()
     {
         gameManager.SetCurrentDay(gameManager.gameData.day + 1);
@@ -287,8 +243,9 @@ public class DayEndScene : MonoBehaviour
 
         Destroy(currentPrefab);
         currentPrefab = null;
+        EventManager.SaveIconBlink?.Invoke();
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(3f);
         EventManager.NextScene?.Invoke();
     }
 
