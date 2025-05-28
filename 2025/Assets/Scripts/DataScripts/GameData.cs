@@ -5,6 +5,13 @@ using System;
 [System.Serializable]
 public class GameData
 {
+    public enum GameMode
+    {
+        Easy,
+        Normal,
+        Hard
+    }
+    public GameMode gameMode = GameMode.Normal;
     public int saveSlot;
     public int day;
     public int money, totalMoneyEarned, totalMoneySpent;
@@ -47,6 +54,7 @@ public class GameData
         this.playTime = loadedGame.playTime;
         this.releasedEmails = loadedGame.releasedEmails;
         this.releasedArticles = loadedGame.releasedArticles;
+        this.gameMode = loadedGame.gameMode;
     }
 
     public int GetCurrentDay()
@@ -74,7 +82,23 @@ public class GameData
 
     public void SetRent(int rent)
     {
-        this.rent += rent;
+        int difficultyScaler;
+        switch (gameMode)
+        {
+            case GameMode.Easy:
+                difficultyScaler = 1;
+                break;
+            case GameMode.Normal:
+                difficultyScaler = 2;
+                break;
+            case GameMode.Hard:
+                difficultyScaler = 4;
+                break;
+            default:
+                difficultyScaler = 2;
+                break;
+        }
+        this.rent += rent + difficultyScaler;
     }
 
     public void AddNewMedia(Media newMedia)

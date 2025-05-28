@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -79,7 +80,7 @@ public class OptionsMenu : MonoBehaviour
             gameObject.SetActive(false);
             deleteButtonPressed = false;
         });
-      
+
         backButton = FindButton("BackButton", () =>
         {
             deleteButtonPressed = false;
@@ -93,7 +94,7 @@ public class OptionsMenu : MonoBehaviour
             lastSaveLoadOption = "save";
             ChangeMenuSection(saveLoadSection);
             UpdateSaveLoadButtons("save");
-            EventManager.PlaySound?.Invoke("switch1", true); 
+            EventManager.PlaySound?.Invoke("switch1", true);
         });
         // Hide the save button initally in the main menu
         saveButton?.gameObject.SetActive(false);
@@ -103,7 +104,7 @@ public class OptionsMenu : MonoBehaviour
             lastSaveLoadOption = "load";
             ChangeMenuSection(saveLoadSection);
             UpdateSaveLoadButtons("load");
-            EventManager.PlaySound?.Invoke("switch1", true); 
+            EventManager.PlaySound?.Invoke("switch1", true);
         });
 
         deleteButton = FindButton("DeleteButton", () =>
@@ -111,14 +112,14 @@ public class OptionsMenu : MonoBehaviour
             deleteButtonPressed = true;
             UpdateSaveLoadButtons("delete");
             ChangeMenuSection(saveLoadSection);
-            EventManager.PlaySound?.Invoke("switch1", true); 
+            EventManager.PlaySound?.Invoke("switch1", true);
         });
         deleteButton?.gameObject.SetActive(false);
 
         FindButton("OptionsButton", () =>
         {
             ChangeMenuSection(audioSection);
-            EventManager.PlaySound?.Invoke("switch1", true); 
+            EventManager.PlaySound?.Invoke("switch1", true);
         });
 
         mainMenuButton = FindButton("MainMenuButton", () =>
@@ -150,9 +151,8 @@ public class OptionsMenu : MonoBehaviour
             confirmAction = () =>
             {
                 Application.Quit(); // For standalone builds
-
                 #if UNITY_EDITOR
-                UnityEditor.EditorApplication.ExitPlaymode(); // For Unity Editor testing
+                    UnityEditor.EditorApplication.ExitPlaymode(); // For Unity Editor testing
                 #endif
             };
             cancelAction = () =>
@@ -163,20 +163,20 @@ public class OptionsMenu : MonoBehaviour
 
         FindButton("YesButton", () =>
         {
-            EventManager.PlaySound?.Invoke("switch1", true); 
+            EventManager.PlaySound?.Invoke("switch1", true);
             confirmAction?.Invoke();
         });
 
         FindButton("NoButton", () =>
         {
-            EventManager.PlaySound?.Invoke("switch1", true); 
+            EventManager.PlaySound?.Invoke("switch1", true);
             cancelAction?.Invoke();
         });
 
         // Save and Load Slot Buttons
-        slot1Button = FindButton("Slot1Button");
-        slot2Button = FindButton("Slot2Button");
-        slot3Button = FindButton("Slot3Button");
+        slot1Button = FindObject<Button>("Slot1Button");
+        slot2Button = FindObject<Button>("Slot2Button");
+        slot3Button = FindObject<Button>("Slot3Button");
         UpdateSlotInformation();
 
     }
@@ -191,6 +191,33 @@ public class OptionsMenu : MonoBehaviour
         }
         return button;
     }
+    
+    private T FindObject<T>(string name, Action action = null) where T : Component
+    {
+        T objectType = FindComponentByName<T>(name);
+
+        if (typeof(T) == typeof(Button) && objectType != null && action != null)
+        {
+            Button button = objectType as Button;
+            button.onClick.AddListener(() => action.Invoke());
+        }
+
+        return objectType;
+    }
+
+    private T FindComponentByName<T>(string name) where T : Component
+    {
+        T[] components = GetComponentsInChildren<T>(true); // Search all children, even inactive ones
+
+        foreach (T component in components)
+        {
+            if (component.gameObject.name == name)
+                return component;
+        }
+
+        Debug.LogWarning($"Component '{name}' not found!");
+        return null;
+    }
 
     // Swaps game save slot buttons between, saving, loading, and deleting.
     private void UpdateSaveLoadButtons(string saveButtonPressed)
@@ -203,11 +230,11 @@ public class OptionsMenu : MonoBehaviour
             slots[i].onClick.AddListener(() =>
             {
                 EventManager.PlaySound?.Invoke("switch1", true);
-                if(saveButtonPressed == "save")
+                if (saveButtonPressed == "save")
                     HandleSaveSlot(slotIndex);
-                else if(saveButtonPressed == "load")
+                else if (saveButtonPressed == "load")
                     HandleLoadSlot(slotIndex);
-                else    
+                else
                     HandleDeleteSlot(slotIndex);
             });
         }
@@ -342,7 +369,7 @@ public class OptionsMenu : MonoBehaviour
                 {
                     // Convert playtime to "H:MM:SS" format
                     string time = SecondMinuteHourConversion(gameSlot.playTime);
-                    buttonText.text = $"Save Slot {slotIndex}\nPlaytime: {time}  Day: {gameSlot.day}";
+                    buttonText.text = $"Save Slot {slotIndex}\n\n{time}\n\nDay: {gameSlot.day}";
                 }
                 else
                 {
@@ -351,7 +378,7 @@ public class OptionsMenu : MonoBehaviour
                 }
             }
             else
-                buttonText.text = $"Save Slot {slotIndex}";
+                buttonText.text = $"Save Slot {slotIndex}\n\nOpen Position";
         }
     }
 
@@ -369,23 +396,25 @@ public class OptionsMenu : MonoBehaviour
     private void ChangeMenuSection(GameObject section)
     {
         UpdateSlotInformation();
+        pauseMenuText.gameObject.SetActive(true);
 
-        if(section == audioSection)
-            ChangeObjectText(pauseMenuText, "Options Menu");
-        else if(section == saveLoadSection || section == confirmSection)
+        if (section == audioSection)
+            ChangeObjectText(pauseMenuText, "Settings");
+        else if (section == saveLoadSection || section == confirmSection)
         {
-            if(deleteButtonPressed)
+            if (deleteButtonPressed)
                 ChangeObjectText(pauseMenuText, "Select a save file to delete");
             else
             {
-                if(lastSaveLoadOption == "save")
+                if (lastSaveLoadOption == "save")
                     ChangeObjectText(pauseMenuText, "Choose A Save File");
                 else
                     ChangeObjectText(pauseMenuText, "Load Menu");
             }
         }
         else
-            ChangeObjectText(pauseMenuText, "Pause Menu");
+            pauseMenuText.gameObject.SetActive(false);
+            //ChangeObjectText(pauseMenuText, "Pause Menu");
 
 
         if (section == menuSections || lastSaveLoadOption == "save")
@@ -647,20 +676,6 @@ public class OptionsMenu : MonoBehaviour
         Screen.fullScreen = fullScreenToggle.isOn;
         
         isLoadingSettings = false;
-    }
-
-    private T FindComponentByName<T>(string name) where T : Component
-    {
-        T[] components = GetComponentsInChildren<T>(true); // Search all children, even inactive ones
-        
-        foreach (T component in components)
-        {
-            if (component.gameObject.name == name)
-                return component;
-        }
-
-        Debug.LogWarning($"Component '{name}' not found!");
-        return null;
     }
 
     public void NewStartGame()
