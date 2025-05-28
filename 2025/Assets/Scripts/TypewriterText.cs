@@ -89,8 +89,7 @@ public class TypewriterText : MonoBehaviour
 
     private void SetTextSpeed(float speed)
     {
-        textSpeed = speed;
-        Debug.Log(textSpeed);
+        textSpeed = Mathf.Lerp(0f, 0.2f, speed);
     }
 
     private void OnEnable()

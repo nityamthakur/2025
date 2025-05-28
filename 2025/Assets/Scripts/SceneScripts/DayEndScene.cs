@@ -235,15 +235,19 @@ public class DayEndScene : MonoBehaviour
 
     private IEnumerator NextScene()
     {
-        gameManager.SetCurrentDay(gameManager.gameData.day + 1);
-
         EventManager.StopMusic?.Invoke();
         EventManager.FadeOut?.Invoke();
         yield return new WaitForSeconds(2f);
 
         Destroy(currentPrefab);
         currentPrefab = null;
-        EventManager.SaveIconBlink?.Invoke();
+
+        if (gameManager.gameData.GetCurrentDay() > 1)
+        {
+            gameManager.SetCurrentDay(gameManager.gameData.day + 1);
+            SaveSystem.SaveGame(gameManager.gameData.saveSlot, gameManager.gameData);
+            EventManager.SaveIconBlink?.Invoke();
+        }
 
         yield return new WaitForSeconds(3f);
         EventManager.NextScene?.Invoke();

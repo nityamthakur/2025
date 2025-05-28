@@ -73,21 +73,16 @@ public class OptionsMenu : MonoBehaviour
         backButton = FindButton("BackButton", () =>
         {
             EventManager.PlaySound?.Invoke("switch1", true);
+            deleteButtonPressed = false;
             if (currentSection == menuSections)
             {
                 EventManager.DisplayMenuButton?.Invoke(true);
                 EventManager.ReactivateMainMenuButtons?.Invoke();
-                EventManager.PlaySound?.Invoke("switch1", true);
                 Time.timeScale = 1;
                 gameObject.SetActive(false);
-                deleteButtonPressed = false;
             }
             else
-            {
-                deleteButtonPressed = false;
                 ChangeMenuSection(menuSections);
-                EventManager.PlaySound?.Invoke("switch1", true);
-            }
         });
         backButtonText = backButton.GetComponentInChildren<TextMeshProUGUI>();
 
@@ -127,7 +122,7 @@ public class OptionsMenu : MonoBehaviour
         mainMenuButton = FindButton("MainMenuButton", () =>
         {
             EventManager.PlaySound?.Invoke("switch1", true);
-            ChangeObjectText(confirmText, "Return to \nMain Menu?");
+            ChangeObjectText(confirmText, "Return to the Main Menu?");
             ChangeMenuSection(confirmSection);
 
             // Store the action to execute if "Yes" is clicked
@@ -246,7 +241,8 @@ public class OptionsMenu : MonoBehaviour
     {
         if(SaveSystem.SaveExists(slot))
         {
-            ChangeObjectText(confirmText, $"Create A New Save Over File {slot}?");
+            Debug.Log("Is this even being reached?");
+            ChangeObjectText(pauseMenuText, $"Create A New Save Over File {slot}?");
             ChangeMenuSection(confirmSection);
             deleteButton.gameObject.SetActive(false);
 
@@ -320,7 +316,7 @@ public class OptionsMenu : MonoBehaviour
         if(SaveSystem.SaveExists(slot))
         {
             ChangeObjectText(confirmText, $"Delete Game File {slot}?");
-            ChangeObjectText(pauseMenuText, "Select a save file to delete");
+            ChangeObjectText(pauseMenuText, "Select a save to delete");
             ChangeMenuSection(confirmSection);
 
             confirmAction = () =>
@@ -399,15 +395,21 @@ public class OptionsMenu : MonoBehaviour
     {
         UpdateSlotInformation();
         currentSection = section;
-        pauseMenuText.gameObject.SetActive(true);
+
         backButtonText.text = section == menuSections ? "Done" : "Back";
+
+        if(section == saveLoadSection)
+            deleteButton.gameObject.SetActive(true);
+        else
+            deleteButton.gameObject.SetActive(false);
+
 
         if (section == audioSection)
             ChangeObjectText(pauseMenuText, "Settings");
         else if (section == saveLoadSection || section == confirmSection)
         {
             if (deleteButtonPressed)
-                ChangeObjectText(pauseMenuText, "Select a save file to delete");
+                ChangeObjectText(pauseMenuText, "Select a save to delete");
             else
             {
                 if (lastSaveLoadOption == "save")
@@ -417,12 +419,9 @@ public class OptionsMenu : MonoBehaviour
             }
         }
         else
-            pauseMenuText.gameObject.SetActive(false);
-            //ChangeObjectText(pauseMenuText, "Pause Menu");
-
-
-        if (lastSaveLoadOption == "save")
-            backButton.gameObject.SetActive(false);
+        {
+            ChangeObjectText(pauseMenuText, "Settings");
+        }
 
         foreach (GameObject data in sections)
         {
