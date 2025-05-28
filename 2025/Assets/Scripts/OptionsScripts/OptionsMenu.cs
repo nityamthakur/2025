@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -11,7 +10,7 @@ public class OptionsMenu : MonoBehaviour
     private AudioManager audioManager;
     private List<GameObject> sections = new();
     private GameObject pauseMenu, menuSections, audioSection, saveLoadSection, confirmSection;
-    private TextMeshProUGUI confirmText, pauseMenuText;
+    private TextMeshProUGUI confirmText, pauseMenuText, backButtonText;
     private Action confirmAction, cancelAction;
     private Button slot1Button, slot2Button, slot3Button, backButton, saveButton, deleteButton, mainMenuButton;
     private Slider masterVolumeSlider, musicVolumeSlider, sfxVolumeSlider, textSpeedSlider;
@@ -19,7 +18,7 @@ public class OptionsMenu : MonoBehaviour
     private GameManager gameManager;
     private bool isLoadingSettings = false, deleteButtonPressed = false;
     private string lastSaveLoadOption = "";
-
+    private GameObject currentSection;
     private void Awake()
     {
         FindGameManager();
@@ -71,23 +70,26 @@ public class OptionsMenu : MonoBehaviour
         confirmText = FindComponentByName<TextMeshProUGUI>("ConfirmText");
         pauseMenuText = FindComponentByName<TextMeshProUGUI>("PauseMenuText");
 
-        FindButton("CloseMenuButton", () =>
-        {
-            EventManager.DisplayMenuButton?.Invoke(true);
-            EventManager.ReactivateMainMenuButtons?.Invoke();
-            EventManager.PlaySound?.Invoke("switch1", true);
-            Time.timeScale = 1;
-            gameObject.SetActive(false);
-            deleteButtonPressed = false;
-        });
-
         backButton = FindButton("BackButton", () =>
         {
-            deleteButtonPressed = false;
-            ChangeMenuSection(menuSections);
             EventManager.PlaySound?.Invoke("switch1", true);
+            if (currentSection == menuSections)
+            {
+                EventManager.DisplayMenuButton?.Invoke(true);
+                EventManager.ReactivateMainMenuButtons?.Invoke();
+                EventManager.PlaySound?.Invoke("switch1", true);
+                Time.timeScale = 1;
+                gameObject.SetActive(false);
+                deleteButtonPressed = false;
+            }
+            else
+            {
+                deleteButtonPressed = false;
+                ChangeMenuSection(menuSections);
+                EventManager.PlaySound?.Invoke("switch1", true);
+            }
         });
-        backButton?.gameObject.SetActive(false);
+        backButtonText = backButton.GetComponentInChildren<TextMeshProUGUI>();
 
         saveButton = FindButton("SaveButton", () =>
         {
@@ -396,7 +398,9 @@ public class OptionsMenu : MonoBehaviour
     private void ChangeMenuSection(GameObject section)
     {
         UpdateSlotInformation();
+        currentSection = section;
         pauseMenuText.gameObject.SetActive(true);
+        backButtonText.text = section == menuSections ? "Done" : "Back";
 
         if (section == audioSection)
             ChangeObjectText(pauseMenuText, "Settings");
@@ -417,15 +421,8 @@ public class OptionsMenu : MonoBehaviour
             //ChangeObjectText(pauseMenuText, "Pause Menu");
 
 
-        if (section == menuSections || lastSaveLoadOption == "save")
+        if (lastSaveLoadOption == "save")
             backButton.gameObject.SetActive(false);
-        else
-            backButton.gameObject.SetActive(true);
-
-        if (section == saveLoadSection)
-            deleteButton.gameObject.SetActive(true);
-        else
-            deleteButton.gameObject.SetActive(false);
 
         foreach (GameObject data in sections)
         {
@@ -683,8 +680,6 @@ public class OptionsMenu : MonoBehaviour
         lastSaveLoadOption = "save";
         UpdateSaveLoadButtons("save");
         ChangeMenuSection(saveLoadSection);
-
-        backButton.gameObject.SetActive(false);
     }
 
     void OnEnable()
