@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using UnityEditor.Rendering;
 
 public class SceneChanger : MonoBehaviour
 {
@@ -12,16 +13,16 @@ public class SceneChanger : MonoBehaviour
     [SerializeField] private DayEndScene dayEndScene;
     [SerializeField] private ShopScene shopScene;
     [SerializeField] private GameObject fadingScreenPrefab;
-    private bool mainMenuDone = false;
+    public bool MainMenuDone { get; private set;}
     private int currentSceneIndex = 0;
     private List<Action> sceneSequence;
 
     public void Initialize()
     {
+        MainMenuDone = false;
+
         if (gameManager == null)
-        {
             Debug.Log("gameManager is null in SceneChanger");
-        }
         // Define the order of the scenes
         sceneSequence = new List<Action>
         {
@@ -78,13 +79,13 @@ public class SceneChanger : MonoBehaviour
 
     public void StartNextScene()
     {
-        if (!mainMenuDone)
+        if (!MainMenuDone)
         {
             // Start Playtime counter for first time
             StartCoroutine(gameManager.UpdatePlayTime());
         }
 
-        mainMenuDone = true;
+        MainMenuDone = true;
 
         // Ignore the shop on the first day
         if (gameManager.gameData.GetCurrentDay() == 1 && currentSceneIndex == 1)

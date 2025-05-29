@@ -11,7 +11,6 @@ public class MainMenuScene : MonoBehaviour
     [SerializeField] private float frameInterval = 0.5f; // Interval for frame cycling
     private GameObject currentMenuObject;
     private Button playButton, loadButton, optionsButton, creditsButton, exitButton;
-
     private Image backgroundImage;
     private Coroutine animationCoroutine;
 

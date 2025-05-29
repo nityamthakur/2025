@@ -3,10 +3,8 @@
         {
             "day": 1,
             "lines": [
-                {"speaker": "Function", "text": "HideDayText" },
+                {"speaker": "Function", "text": "DayOneStart" },
                 {"speaker": "", "text": "This game saves your progress automatically when the logo in the bottom right is flashing."},
-                {"speaker": "Function", "text": "ShowDayText" },
-                {"speaker": "Delay", "text": "2" },
                 {"speaker": "PlaySound", "text": "doorBell" },
                 {"speaker": "Delay", "text": "2" },
                 {"speaker": "PlaySound", "text": "papercomein" },

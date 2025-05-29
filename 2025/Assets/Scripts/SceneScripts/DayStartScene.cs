@@ -335,6 +335,21 @@ public class DayStartScene : MonoBehaviour
         //EventManager.PlayMusic?.Invoke("Some Music For The Day Start / Apartment");
     }
 
+    public void DayOneStart()
+    {
+        StartCoroutine(DayOneIntro());
+    }
+
+    private IEnumerator DayOneIntro()
+    {
+        dayText.gameObject.SetActive(false);
+        nextButton.gameObject.SetActive(false);
+        EventManager.SaveIconBlink?.Invoke(9.5f);
+        yield return new WaitForSeconds(10f);
+        ReadNextLine();
+        dayText.gameObject.SetActive(true);
+    }
+
     public void ShowDayText()
     {
         dayText.gameObject.SetActive(true);

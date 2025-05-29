@@ -106,11 +106,10 @@ public class FadingScreen : MonoBehaviour
         }
     }
 
-    private void SaveIconBlink()
+    private void SaveIconBlink(float duration = 3f)
     {
-        Debug.Log("Save Icon Blink");
         saveIcon.gameObject.SetActive(true);
-        StartCoroutine(BlinkImage(saveIcon, 0.5f, 3f));
+        StartCoroutine(BlinkImage(saveIcon, 0.5f, duration));
     }
 
     private IEnumerator BlinkImage(Image image, float blinkSpeed, float duration)
@@ -154,13 +153,4 @@ public class FadingScreen : MonoBehaviour
         EventManager.CameraZoomed -= CanvasChanger;
         EventManager.SaveIconBlink -= SaveIconBlink;
     }
-    
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            EventManager.SaveIconBlink?.Invoke();
-        }
-    }
-
 }

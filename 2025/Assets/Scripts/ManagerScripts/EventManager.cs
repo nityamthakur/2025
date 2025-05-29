@@ -16,7 +16,7 @@ public static class EventManager
     public static Action<bool> DisplayDeskOverlay;
     public static Action<bool> DisplayLightsOutImage;
     public static Action<bool> DisplayMenuButton;
-    public static Action SaveIconBlink;
+    public static Action<float> SaveIconBlink;
     //
     public static Action<string, bool> GlowingBoxShow;
     public static Func<bool> IsMusicPlaying;

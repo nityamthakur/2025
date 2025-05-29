@@ -9,7 +9,6 @@ public class AccessibilityManager : MonoBehaviour
     public void Initialize()
     {   
         audioManager.Initialize();
-
         pauseMenu = Instantiate(pauseMenuPrefab);
         if (pauseMenu == null)
             Debug.Log("Pause Menu Prefab is missing from AccessibilityManager.");

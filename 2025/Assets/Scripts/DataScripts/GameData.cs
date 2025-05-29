@@ -80,25 +80,16 @@ public class GameData
             this.totalMoneySpent += Math.Abs(money);
     }
 
-    public void SetRent(int rent)
+    public void IncreaseRent()
     {
-        int difficultyScaler;
-        switch (gameMode)
+        var difficultyScaler = gameMode switch
         {
-            case GameMode.Easy:
-                difficultyScaler = 1;
-                break;
-            case GameMode.Normal:
-                difficultyScaler = 2;
-                break;
-            case GameMode.Hard:
-                difficultyScaler = 4;
-                break;
-            default:
-                difficultyScaler = 2;
-                break;
-        }
-        this.rent += rent + difficultyScaler;
+            GameMode.Easy => 1,
+            GameMode.Normal => 2,
+            GameMode.Hard => 4,
+            _ => 2,
+        };
+        this.rent += difficultyScaler;
     }
 
     public void AddNewMedia(Media newMedia)

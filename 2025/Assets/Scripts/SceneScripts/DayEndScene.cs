@@ -162,9 +162,9 @@ public class DayEndScene : MonoBehaviour
         int rentDue = gameManager.gameData.rent;
 
         fundsText.text = "Funds\n";
-        fundsText.text += $"\n<align=left>Savings<line-height=0>\n<align=right>{currMoney}<line-height=1em>";
+        fundsText.text += $"\n<align=left>Savings<line-height=0>\n<align=right>{currMoney + rentDue}<line-height=1em>";
         fundsText.text += $"\n<align=left>Rent<line-height=0>\n<align=right>-{rentDue}<line-height=1em>";
-        fundsText.text += $"\n\n<align=left>New Total<line-height=0>\n<align=right>${currMoney - rentDue}<line-height=1em>";
+        fundsText.text += $"\n\n<align=left>New Total<line-height=0>\n<align=right>${currMoney}<line-height=1em>";
         
         suppliesText.text = $"Office supplies\n";
         suppliesText.text += "\n<s>Getting Low On Pens";
@@ -174,9 +174,6 @@ public class DayEndScene : MonoBehaviour
 
     private bool CheckGameOver()
     {
-        int rentDue = (gameManager.gameData.rent += 2) - 2;
-        gameManager.gameData.SetCurrentMoney(-rentDue, false);
-
         int selectedEnding = SelectedEnding();
         if (selectedEnding > 0)
         {
@@ -200,6 +197,9 @@ public class DayEndScene : MonoBehaviour
 
     private int SelectedEnding()
     {
+        gameManager.gameData.SetCurrentMoney(-gameManager.gameData.rent, false);
+        gameManager.gameData.IncreaseRent();
+
         // Bad / Evicted Ending
         if (gameManager.gameData.money < 0)
         {
@@ -242,12 +242,9 @@ public class DayEndScene : MonoBehaviour
         Destroy(currentPrefab);
         currentPrefab = null;
 
-        if (gameManager.gameData.GetCurrentDay() > 1)
-        {
-            gameManager.SetCurrentDay(gameManager.gameData.day + 1);
-            SaveSystem.SaveGame(gameManager.gameData.saveSlot, gameManager.gameData);
-            EventManager.SaveIconBlink?.Invoke();
-        }
+        gameManager.SetCurrentDay(gameManager.gameData.day + 1);
+        SaveSystem.SaveGame(gameManager.gameData.saveSlot, gameManager.gameData);
+        EventManager.SaveIconBlink?.Invoke(3f);
 
         yield return new WaitForSeconds(3f);
         EventManager.NextScene?.Invoke();

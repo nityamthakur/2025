@@ -261,11 +261,6 @@ public class ShopScene : MonoBehaviour
         Destroy(currentShopScreen);
         currentShopScreen = null;
 
-        EventManager.ResetCamera?.Invoke(0f);
-        gameManager.SetCurrentDay(gameManager.gameData.day + 1);
-        SaveSystem.SaveGame(gameManager.gameData.saveSlot, gameManager.gameData);
-        EventManager.SaveIconBlink?.Invoke();
-
         yield return new WaitForSeconds(3f);
         EventManager.NextScene?.Invoke();
     }
