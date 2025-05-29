@@ -295,57 +295,38 @@ public class DayStartScene : MonoBehaviour
     private void DayStartEventChecker()
     {
         EventManager.FadeIn?.Invoke();
-        EventManager.DisplayMenuButton?.Invoke(true); 
-        ReadNextLine();
-
-        /*
+        EventManager.DisplayMenuButton?.Invoke(true);
         if (gameManager.gameData.GetCurrentDay() == 1)
         {
             StartCoroutine(DayStartOpening());
         }
         else
         {
-            EventManager.FadeIn?.Invoke();
-            EventManager.DisplayMenuButton?.Invoke(true);
-            ReadNextLine();
+            ReadNextLine();            
         }
-        */
-    }
-
-    private IEnumerator DayStartOpening()
-    {
-        backgroundImage.sprite = rentLetter;
-        TextBox.gameObject.SetActive(false);
-        textBoxBackground.gameObject.SetActive(false);
-
-        nextButton.onClick.RemoveAllListeners();
-        nextButton.onClick.AddListener(() =>
-        {
-            TextBox.gameObject.SetActive(true);
-            textBoxBackground.gameObject.SetActive(true);
-            EventManager.PlaySound?.Invoke("switch1", true);
-            ReadNextLine();
-        });
-
-        EventManager.PlaySound?.Invoke("doorbell", true);
-        yield return new WaitForSeconds(2f);
-        EventManager.PlaySound?.Invoke("papercomein", true);
-        yield return new WaitForSeconds(0.5f);
-        EventManager.FadeIn?.Invoke();
-        //EventManager.PlayMusic?.Invoke("Some Music For The Day Start / Apartment");
     }
 
     public void DayOneStart()
     {
-        StartCoroutine(DayOneIntro());
+        StartCoroutine(DayStartOpening());
     }
 
-    private IEnumerator DayOneIntro()
+    private IEnumerator DayStartOpening()
     {
         dayText.gameObject.SetActive(false);
         nextButton.gameObject.SetActive(false);
-        EventManager.SaveIconBlink?.Invoke(9.5f);
-        yield return new WaitForSeconds(10f);
+        backgroundImage.color = Color.black;
+        backgroundImage.sprite = null;
+        typewriterText.TypewriteMessage("This game saves your progress automatically when the logo in the bottom right is flashing.");
+        EventManager.SaveIconBlink?.Invoke(-1f);
+
+        while (typewriterText.MessageWriting())
+        {
+            yield return null;
+        }
+        yield return new WaitForSeconds(5f);
+        EventManager.SaveIconBlink?.Invoke(0f);
+
         ReadNextLine();
         dayText.gameObject.SetActive(true);
     }
