@@ -487,7 +487,10 @@ public class OptionsMenu : MonoBehaviour
         if (section == confirmSection)
             backButtonText.text = "Back";
         backButton.gameObject.SetActive(section != confirmSection);
-            
+        
+        difficultyButtons.SetActive(false);
+        confirmButtons.SetActive(true);
+
         // Show Save File Deletion Button
         deleteButton.gameObject.SetActive(section == saveLoadSection);
         ChangeObjectText(pauseMenuText, "Settings");
