@@ -13,6 +13,7 @@ public class FadingScreen : MonoBehaviour
     [SerializeField] private Button menuButton;
 
     private bool mainMenuDone = false;
+    private Coroutine blinkCoroutine;
 
     void Awake()
     {
@@ -109,7 +110,27 @@ public class FadingScreen : MonoBehaviour
     private void SaveIconBlink(float duration = 3f)
     {
         saveIcon.gameObject.SetActive(true);
-        StartCoroutine(BlinkImage(saveIcon, 0.5f, duration));
+        if (blinkCoroutine != null)
+            StopCoroutine(blinkCoroutine);
+
+        // If duration is negative, blink forever
+        if (duration < 0f)
+            blinkCoroutine = StartCoroutine(BlinkImageForever(saveIcon, 0.5f));
+        else
+            blinkCoroutine = StartCoroutine(BlinkImage(saveIcon, 0.5f, duration));
+    }
+
+    private IEnumerator BlinkImageForever(Image image, float blinkSpeed)
+    {
+        Color color = image.color;
+
+        while (true)
+        {
+            float t = Mathf.PingPong(Time.time * (1f / blinkSpeed), 1f);
+            color.a = t;
+            image.color = color;
+            yield return null;
+        }
     }
 
     private IEnumerator BlinkImage(Image image, float blinkSpeed, float duration)
