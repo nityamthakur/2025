@@ -7,6 +7,12 @@ public class ClockTicker : MonoBehaviour
     private readonly float updateTime = 0.5f;
     private float workTime, hourDegreesPerTick, minuteDegreesPerTick;
     private Coroutine tickingCoroutine;
+    private GameManager gameManager;
+
+    private void Awake()
+    {
+        gameManager = FindFirstObjectByType<GameManager>();   
+    }
 
     public void StartClockMovement(float time)
     {
@@ -27,6 +33,8 @@ public class ClockTicker : MonoBehaviour
     {
         if (tickingCoroutine != null)
             StopCoroutine(tickingCoroutine);
+
+        tickingCoroutine = null;
     }
 
     private IEnumerator TickClock()
@@ -47,7 +55,20 @@ public class ClockTicker : MonoBehaviour
                 minuteHand.eulerAngles = new Vector3(0, 0, -currentMinuteRotation);
 
             yield return new WaitForSeconds(updateTime);
+            if (gameManager.gameZoomPaused)
+            {
+                Debug.Log("Time Stopped for TickClock");
+                yield return new WaitUntil(() => gameManager.gameZoomPaused == false);
+                Debug.Log("Time Resumed for TickClock");
+            }
+
         }
+    }
+
+    private void OnDestroy()
+    {
+        StopAllCoroutines();
+        tickingCoroutine = null;
     }
 
     private void OnEnable()
@@ -59,6 +80,6 @@ public class ClockTicker : MonoBehaviour
     private void OnDisable()
     {
         EventManager.StartClockMovement -= StartClockMovement;
-        EventManager.StopClockMovement += StopClockMovement;
+        EventManager.StopClockMovement -= StopClockMovement;
     }
 }

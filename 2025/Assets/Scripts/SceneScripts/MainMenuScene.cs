@@ -10,11 +10,7 @@ public class MainMenuScene : MonoBehaviour
     [SerializeField] private Sprite[] mainMenuImage;
     [SerializeField] private float frameInterval = 0.5f; // Interval for frame cycling
     private GameObject currentMenuObject;
-    private Button playButton;
-    private Button loadButton;
-    private Button optionsButton;
-    private Button exitButton;
-
+    private Button playButton, loadButton, optionsButton, creditsButton, exitButton;
     private Image backgroundImage;
     private Coroutine animationCoroutine;
 
@@ -40,24 +36,13 @@ public class MainMenuScene : MonoBehaviour
 
     private void SetUpMainMenu()
     {
-        backgroundImage = currentMenuObject.transform.Find("BackgroundImage").GetComponent<Image>();
-        if (backgroundImage == null)
-        {
-            Debug.Log("Failed to find Image component in MainMenu");
-            return;
-        }
-
+        backgroundImage = FindObject<Image>("BackgroundImage");
         if (mainMenuImage.Length > 0)
         {
             animationCoroutine = StartCoroutine(CycleBackgroundFrames());
         }
 
-        playButton = currentMenuObject.transform.Find("PlayButton").GetComponent<Button>();
-        if (playButton == null)
-        {
-            Debug.LogError("Failed to find playButton component in MainMenu.");
-            return;
-        }
+        playButton = FindObject<Button>("PlayButton");
         playButton.onClick.AddListener(() =>
         {
             playButton.interactable = false;
@@ -67,12 +52,7 @@ public class MainMenuScene : MonoBehaviour
             EventManager.PlaySound?.Invoke("switch1", true);
         });
 
-        loadButton = currentMenuObject.transform.Find("LoadButton").GetComponent<Button>();
-        if (loadButton == null)
-        {
-            Debug.LogError("Failed to find loadButton component in MainMenu.");
-            return;
-        }
+        loadButton = FindObject<Button>("LoadButton");
         loadButton.onClick.AddListener(() =>
         {
             loadButton.interactable = false;
@@ -81,12 +61,7 @@ public class MainMenuScene : MonoBehaviour
             EventManager.PlaySound?.Invoke("switch1", true); 
         });
 
-        optionsButton = currentMenuObject.transform.Find("OptionsButton").GetComponent<Button>();
-        if (optionsButton == null)
-        {
-            Debug.LogError("Failed to find optionsButton component in MainMenu.");
-            return;
-        }
+        optionsButton = FindObject<Button>("OptionsButton");
         optionsButton.onClick.AddListener(() =>
         {
             optionsButton.interactable = false;
@@ -95,12 +70,12 @@ public class MainMenuScene : MonoBehaviour
             EventManager.PlaySound?.Invoke("switch1", true); 
         });
 
-        exitButton = currentMenuObject.transform.Find("ExitButton").GetComponent<Button>();
-        if (exitButton == null)
+        creditsButton = FindObject<Button>("CreditsButton");
+        creditsButton.onClick.AddListener(() =>
         {
-            Debug.LogError("Failed to find exitButton component in MainMenu.");
-            return;
-        }
+        });
+
+        exitButton = FindObject<Button>("ExitButton");
         exitButton.onClick.AddListener(() =>
         {
             optionsButton.interactable = false;
@@ -121,6 +96,25 @@ public class MainMenuScene : MonoBehaviour
             frameIndex = (frameIndex + 1) % mainMenuImage.Length;
             yield return new WaitForSeconds(frameInterval);
         }
+    }
+
+    private T FindObject<T>(string name) where T : Component
+    {
+        return FindComponentByName<T>(name);
+    }
+
+    private T FindComponentByName<T>(string name) where T : Component
+    {
+        T[] components = currentMenuObject.GetComponentsInChildren<T>(true); // Search all children, even inactive ones
+
+        foreach (T component in components)
+        {
+            if (component.gameObject.name == name)
+                return component;
+        }
+
+        Debug.LogWarning($"Component '{name}' not found!");
+        return null;
     }
 
     private void BeginNewGame()
@@ -145,11 +139,13 @@ public class MainMenuScene : MonoBehaviour
     private void ReactivateMainMenuButtons()
     {
         // Prevent reactivating load and open buttons when game has started
-        if(playButton != null && playButton.IsActive())
+        if (playButton != null && playButton.IsActive())
         {
             playButton.interactable = true;
             loadButton.interactable = true;
             optionsButton.interactable = true;
+            creditsButton.interactable = true;
+            exitButton.interactable = true;
         }
     }
 

@@ -64,7 +64,7 @@ public class AudioManager : MonoBehaviour
 
     public void PlayMusic(string soundName)
     {
-        if(!canPlaySounds)
+        if (!canPlaySounds)
         {
             return;
         }
@@ -92,7 +92,7 @@ public class AudioManager : MonoBehaviour
         currentMusicCoroutine = StartCoroutine(FadeInMusic());
 
         // Call subtitle
-        subtitleManager.ShowSubtitle(soundName.ToLower(), sound.length);    
+        EventManager.ShowSubtitle?.Invoke(soundName.ToLower(), sound.length); 
     }
 
     public void PauseResumeMusic()
@@ -140,12 +140,11 @@ public class AudioManager : MonoBehaviour
         audioSource.volume = masterVolume * sfxVolume * muteVolume;
         audioSource.Play();
 
-        // Destroy after sound finishes playing
         Destroy(audioSource.gameObject, sound.length);
 
-        // Call subtitle
-        if(subtitles)
-            subtitleManager.ShowSubtitle(soundName.ToLower(), sound.length);
+        // subtitles variable used to prevent spamming of sounds when calling specifically sound
+        if (subtitles)
+            EventManager.ShowSubtitle?.Invoke(soundName.ToLower(), sound.length);
     }
 
     private IEnumerator FadeInMusic()

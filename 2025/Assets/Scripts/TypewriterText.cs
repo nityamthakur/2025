@@ -14,8 +14,10 @@ public class TypewriterText : MonoBehaviour
     private void Awake()
     {
         textObject = transform.GetComponent<TextMeshProUGUI>();
-        if(PlayerPrefs.HasKey("TextSpeed"))
-            textSpeed = PlayerPrefs.GetFloat("TextSpeed", 1.0f);
+        if (PlayerPrefs.HasKey("TextSpeed"))
+        {
+            SetTextSpeed(PlayerPrefs.GetFloat("TextSpeed", 1.0f));
+        }
     }
 
     public bool MessageWriting()
@@ -89,8 +91,7 @@ public class TypewriterText : MonoBehaviour
 
     private void SetTextSpeed(float speed)
     {
-        textSpeed = speed;
-        Debug.Log(textSpeed);
+        textSpeed = Mathf.Lerp(0f, 0.2f, speed);
     }
 
     private void OnEnable()

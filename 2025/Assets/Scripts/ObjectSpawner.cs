@@ -18,6 +18,7 @@ public class ObjectSpawner : MonoBehaviour
     private List<GameObject> rentNotices = new();
     private int newspaperPos = 0;
     private Entity.Newspaper[] newspapers;
+    private List<GameObject> allMedia = new();
     private Entity.Newspaper currentNewspaper;
     private GameManager gameManager;
 
@@ -74,12 +75,13 @@ public class ObjectSpawner : MonoBehaviour
             Debug.LogError("Spawned media object is missing the Entity script!");
         }
 
-        if(quitting)
+        if (quitting)
         {
             Destroy(newMedia);
         }
 
         gameManager.SetCurrentMediaObject(newMedia);
+        allMedia.Add(newMedia);
     }
 
     // For non media censoring objects like fliers and pamphlets
@@ -104,6 +106,7 @@ public class ObjectSpawner : MonoBehaviour
 
     public void SpawnRentNotice()
     {
+        Debug.Log("Spawning Rent Notice");
         // Instantiate RentNoticePrefab
         GameObject rentNoticeInstance = Instantiate(rentNoticePrefab);
         Canvas prefabCanvas = rentNoticeInstance.GetComponentInChildren<Canvas>();
@@ -306,6 +309,7 @@ public class ObjectSpawner : MonoBehaviour
     void OnApplicationQuit()
     {
         quitting = true;
+        allMedia.Clear();
     }
 
     // EventManager for creating a new media object after one gets destroyed
@@ -314,6 +318,7 @@ public class ObjectSpawner : MonoBehaviour
         EventManager.ShowHideRentNotices += ShowHideRentNotices;
         EventManager.OnMediaDestroyed += HandleMediaDestroyed;
         GameManager.OnGameRestart += StopSpawningOnRestart; // Listen for restarts
+        EventManager.CameraZoomed += ShowHideObject;
     }
 
     private void OnDisable()
@@ -321,6 +326,23 @@ public class ObjectSpawner : MonoBehaviour
         EventManager.ShowHideRentNotices -= ShowHideRentNotices;
         EventManager.OnMediaDestroyed -= HandleMediaDestroyed;
         GameManager.OnGameRestart -= StopSpawningOnRestart;
+        EventManager.CameraZoomed -= ShowHideObject;
+    }
+
+
+    private void ShowHideObject(bool show)
+    {
+        foreach (GameObject gameObject in allMedia)
+        {
+            if (gameObject == null)
+            {
+                //Destroy(gameObject);
+            }
+            else
+            {
+                //gameObject.SetActive(!show);
+            }
+        }
     }
 
     private void HandleMediaDestroyed(GameObject customer)

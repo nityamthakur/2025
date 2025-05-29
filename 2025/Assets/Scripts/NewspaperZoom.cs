@@ -83,7 +83,7 @@ public class NewspaperZoom : MonoBehaviour
         toolOverlayStartPos = toolOverlayUI.GetComponent<RectTransform>().anchoredPosition;
         toolOverlayEndPos = toolOverlayStartPos + new Vector3(0f, -1200f, 0f);
 
-        Debug.Log(toolOverlayStartPos + " " + toolOverlayEndPos);
+        //Debug.Log(toolOverlayStartPos + " " + toolOverlayEndPos);
 
         phoneOverlayUI = gameManager.GetPhoneOverlayObj().transform.GetChild(0).gameObject;
         if (phoneOverlayUI == null)
@@ -96,7 +96,7 @@ public class NewspaperZoom : MonoBehaviour
         
         cuttingTargetObj = gameManager.GetCuttingTargetObj();
 
-        Debug.Log(phoneOverlayStartPos + " " + phoneOverlayEndPos);
+        //Debug.Log(phoneOverlayStartPos + " " + phoneOverlayEndPos);
 
         UVLight = gameManager.GetUVLightObj();
         if (UVLight == null)

@@ -3,12 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ComputerScreen : MonoBehaviour
 {
+    [SerializeField] private Transform screenZoomIn;
     [SerializeField] private Sprite glitchedScreen, computerLogo;
     [SerializeField] private GameObject emailScreen, reviewScreen, applicationBar, backgroundScreen;
     private GameObject lastOpenedScreen = null;
@@ -173,6 +173,7 @@ public class ComputerScreen : MonoBehaviour
         EventManager.StopClockMovement?.Invoke();
         ReviewCountUpdate(+1);
         HideMenus();
+        EventManager.ZoomCamera?.Invoke(screenZoomIn, 3.1f, 1.0f);
     }
 
     public void StartComputer()
@@ -553,5 +554,28 @@ public class ComputerScreen : MonoBehaviour
             if (lastOpenedScreen != null)
                 lastOpenedScreen.SetActive(!startEnd);
         }
+    }
+
+    private bool zoomedIn = false;
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            if (!zoomedIn)
+            {
+                EventManager.ZoomCamera?.Invoke(screenZoomIn, 3.1f, 0.25f);
+                zoomedIn = true;
+            }
+            else
+            {
+                EventManager.ResetCamera?.Invoke(0.25f);
+                zoomedIn = false;
+            }
+        }
+    }
+
+    private void OnDestroy()
+    {
+        StopAllCoroutines();
     }
 }

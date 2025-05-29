@@ -4,14 +4,11 @@ public class AccessibilityManager : MonoBehaviour
 {
     [SerializeField] private GameObject pauseMenuPrefab;
     [SerializeField] private AudioManager audioManager;
-    [SerializeField] private SubtitleManager subtitleManager;
     private GameObject pauseMenu;
 
     public void Initialize()
     {   
-        subtitleManager.Initialize();
         audioManager.Initialize();
-
         pauseMenu = Instantiate(pauseMenuPrefab);
         if (pauseMenu == null)
             Debug.Log("Pause Menu Prefab is missing from AccessibilityManager.");

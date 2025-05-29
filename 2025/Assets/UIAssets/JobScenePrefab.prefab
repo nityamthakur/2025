@@ -48,7 +48,7 @@ GameObject:
   - component: {fileID: 1399352646785512101}
   m_Layer: 5
   m_Name: BackgroundImage
-  m_TagString: Untagged
+  m_TagString: GameScreenSize
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -854,7 +854,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.49463153, g: 0.93962264, b: 0.4955818, a: 0.28235295}
+  m_Color: {r: 0.49463153, g: 0.93962264, b: 0.4955818, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1204,7 +1204,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5482052484761055526, guid: b266d1cd220d5e4478e3dd7f8e9e1123, type: 3}
       propertyPath: m_Value
-      value: -0.00000029825617
+      value: 1.0000007
       objectReference: {fileID: 0}
     - target: {fileID: 6171409172462887316, guid: b266d1cd220d5e4478e3dd7f8e9e1123, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1252,7 +1252,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7993087893928482229, guid: b266d1cd220d5e4478e3dd7f8e9e1123, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 345.42004
+      value: 140.77988
       objectReference: {fileID: 0}
     - target: {fileID: 8320521669576507454, guid: b266d1cd220d5e4478e3dd7f8e9e1123, type: 3}
       propertyPath: m_AnchorMax.y

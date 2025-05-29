@@ -39,7 +39,7 @@ public class MediaSplinePath : MonoBehaviour
     {
         if (!isMoving)
         {
-            EventManager.ShowDeskOverlay?.Invoke(); 
+            EventManager.DisplayDeskOverlay?.Invoke(true); 
             StartCoroutine(MoveBetweenPoints(target, start.position, end.position, moveTime, easeOut, onComplete));
         }
     }
@@ -60,7 +60,7 @@ public class MediaSplinePath : MonoBehaviour
 
         target.position = end; // Ensure exact position at the end
         isMoving = false;
-        EventManager.HideDeskOverlay?.Invoke(); 
+        EventManager.DisplayDeskOverlay?.Invoke(false); 
 
         onComplete?.Invoke(); // Call the callback if provided
     }

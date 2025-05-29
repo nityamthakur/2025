@@ -13,7 +13,6 @@ public class JobScene : MonoBehaviour
     [SerializeField] private GameObject jobScenePrefab;
     [SerializeField] private Sprite workBackgroundImage;
     [SerializeField] private Sprite glitchedScreen;
-
     private GameObject currJobScene;
     private Image backgroundImage, dropBoxAcceptGlow;
     private bool jobDelayed;
@@ -21,9 +20,9 @@ public class JobScene : MonoBehaviour
     [SerializeField] private GameObject jobBuildingPrefab;
     [SerializeField] private Sprite jobBuildingImage;
     private GameObject outsideBuildingObject;
-
+    private Canvas canvas, prefabCanvas;
     // ---------------------------------
-    private float workTimer = 30f;//150f;
+    private float workTimer = 150f;
     private GameObject computerScreenPrefab;
     private ComputerScreen computerScreenClass;
 
@@ -50,7 +49,6 @@ public class JobScene : MonoBehaviour
         return workTimer + gameManager.gameData.GetTimerUpgrade();
     }
 
-
     public void LoadJobStart() {
         ShowBuildingTransition();
         LoadJsonFromFile();
@@ -59,6 +57,20 @@ public class JobScene : MonoBehaviour
         EventManager.ShowHideRentNotices?.Invoke(true);
         EventManager.FadeIn?.Invoke();
         EventManager.PlayMusic?.Invoke("work");
+    }
+
+    private void CanvasChanger(bool change)
+    {
+        if (canvas != null && !change)
+        {
+            canvas.renderMode = RenderMode.ScreenSpaceCamera;
+            canvas.worldCamera = Camera.main;
+        }
+        else if (canvas != null && change)
+        {
+            canvas.renderMode = RenderMode.WorldSpace;
+            canvas.worldCamera = Camera.main;            
+        }
     }
 
     private void ShowBuildingTransition()
@@ -70,13 +82,12 @@ public class JobScene : MonoBehaviour
             Debug.LogError("outsideBuildingObject object is null in ShowBuildingTransition.");
             return;
         }
-        Canvas prefabCanvas = outsideBuildingObject.GetComponentInChildren<Canvas>();
+        prefabCanvas = outsideBuildingObject.GetComponentInChildren<Canvas>();
         if (prefabCanvas != null)
         {
             prefabCanvas.renderMode = RenderMode.ScreenSpaceCamera;
             prefabCanvas.worldCamera = Camera.main;
         }
-
 
         backgroundImage = outsideBuildingObject.transform.Find("BackgroundImage").GetComponent<Image>();
         if (backgroundImage == null)
@@ -119,14 +130,15 @@ public class JobScene : MonoBehaviour
             return;
         }
 
-        Canvas canvas = currJobScene.GetComponentInChildren<Canvas>();
+        canvas = currJobScene.GetComponentInChildren<Canvas>();
         if (canvas == null && mainCamera == null)
         {
             Debug.LogError("Failed to set Event Camera. Canvas or mainCamera is missing.");
         }
         else
         {
-            canvas.worldCamera = mainCamera.GetComponent<Camera>();
+            canvas.renderMode = RenderMode.ScreenSpaceCamera;
+            canvas.worldCamera = Camera.main;
         }
 
         ComputerScreenSetUp();
@@ -195,7 +207,7 @@ public class JobScene : MonoBehaviour
             promotionPossibility = "Unlikely";
         }
 
-        string performanceText = $"Day {gameManager.gameData.day} Results:\n\nMedia Processed: {mediaProcessed}\n\nSupervisors Notified of Your Day\n\nProfit: ${score}\nCurrent Savings: ${gameManager.gameData.GetCurrentMoney()}\n\nPossibility of Promotion: {promotionPossibility}";
+        string performanceText = $"Day {gameManager.gameData.day} Results:\n\nMedia Processed: {mediaProcessed}\n\nSupervisors Notified of Your Day\n\nProfit: ${score}\n\nPossibility of Promotion: {promotionPossibility}";
         computerScreenClass.SetScreenText(performanceText);
     }
 
@@ -209,11 +221,13 @@ public class JobScene : MonoBehaviour
         EventManager.DisplayMenuButton?.Invoke(false);
         EventManager.FadeOut?.Invoke();
         yield return new WaitForSeconds(2f);
-        EventManager.HideLightsOutImage?.Invoke();
+        EventManager.DisplayLightsOutImage?.Invoke(false);
 
         Destroy(currJobScene);
         currJobScene = null;
         EventManager.ShowHideRentNotices?.Invoke(false);
+        EventManager.ResetCamera?.Invoke(0f);
+
 
         yield return new WaitForSeconds(2f);
         EventManager.NextScene?.Invoke();
@@ -326,12 +340,14 @@ public class JobScene : MonoBehaviour
     {
         EventManager.OnImageDestroyed += HandleImageDestroyed;
         EventManager.GlowingBoxShow += GlowingBoxShow;
+        EventManager.CameraZoomed += CanvasChanger;
     }
 
     private void OnDisable()
     {
         EventManager.OnImageDestroyed -= HandleImageDestroyed;
         EventManager.GlowingBoxShow -= GlowingBoxShow;
+        EventManager.CameraZoomed -= CanvasChanger;
     }
 
     private void HandleImageDestroyed()
