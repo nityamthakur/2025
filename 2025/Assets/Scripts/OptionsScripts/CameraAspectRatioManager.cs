@@ -19,7 +19,7 @@ public class CameraAspectRatioManager : MonoBehaviour
     {
         frame++;
 
-        if (frame % updateAspectDelay != 0) { return; }
+        if (frame % updateAspectDelay != 0 || Screen.fullScreen) { return; }
 
         var width = Screen.width;
         var height = Screen.height;

@@ -291,6 +291,7 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
+        Screen.fullScreen = PlayerPrefs.GetInt("FullScreenState", 0) == 1;
         // Set GameDevLoadDay if not absent to prevent errors on first install
         if (!PlayerPrefs.HasKey("GameDevLoadDay"))
             PlayerPrefs.SetInt("GameDevLoadDay", -1);
