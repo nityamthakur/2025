@@ -101,6 +101,8 @@ public class Entity : MonoBehaviour
 
         playerHalfWidth = boxCollider.bounds.extents.x;
         playerHalfHeight = boxCollider.bounds.extents.y;
+
+        Debug.Log($"{worldCorners[0]} : {worldCorners[2]} : {playerHalfHeight} : {playerHalfWidth}");
     }
 
 

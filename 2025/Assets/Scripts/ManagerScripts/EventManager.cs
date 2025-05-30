@@ -71,4 +71,8 @@ public static class EventManager
     public static Action<Transform, float, float> ZoomCamera;
     public static Action<float> ResetCamera;
     public static Action<bool> CameraZoomed;
+
+    // Entity and ImageObject Events
+    public static Action UnZoomObject;
+    public static Action ResetLayerOrder;
 }

@@ -1,7 +1,6 @@
 using UnityEngine.UI;
 using UnityEngine;
 using System.Collections;
-using TMPro;
 using System.IO;
 using System.Collections.Generic;
 using System;
@@ -50,7 +49,8 @@ public class JobScene : MonoBehaviour
     }
 
     public void LoadJobStart() {
-        ShowBuildingTransition();
+        //ShowBuildingTransition();
+        objectSpawner.SpawnRentNotice();
         LoadJsonFromFile();
         SetUpJobStart();
         computerScreenClass.StartComputer();
