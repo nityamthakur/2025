@@ -16,6 +16,7 @@ public class ImageObject : MonoBehaviour
     private Vector2 screenBounds;
     private float playerHalfWidth;
     private float playerHalfHeight;
+    private bool isInteractable = true;
 
     private void Awake()
     {
@@ -152,9 +153,9 @@ public class ImageObject : MonoBehaviour
     IEnumerator SpawnDelay(float duration)
     {
         draggableScript.enabled = false;
-        zoomComponent.AllowZoom(false);
+        zoomComponent.AllowZoom = false;
         yield return new WaitForSeconds(duration);
-        zoomComponent.AllowZoom(true);
+        zoomComponent.AllowZoom = true;
         ChangeMediaRotation(-60);
         ObjectGravityOn(true);
         draggableScript.enabled = true;
@@ -162,21 +163,24 @@ public class ImageObject : MonoBehaviour
 
     private void OnMouseOver()
     {
-        if (Input.GetMouseButtonDown(1))
+        if (isInteractable)
         {
-            MoveToFront();
-            zoomComponent.StartZoom();
-        }
-        if (Input.GetMouseButtonDown(0))
-        {
-            MoveToFront();
+            if (Input.GetMouseButtonDown(1))
+            {
+                MoveToFront();
+                zoomComponent.StartZoom();
+            }
+            if (Input.GetMouseButtonDown(0))
+            {
+                MoveToFront();
+            }
         }
     }
 
     private void MoveToFront()
     {
         EventManager.ResetLayerOrder?.Invoke();
-        canvas.sortingOrder = 2;
+        canvas.sortingOrder = 5;
     }
 
     private void ResetLayerOrder()
@@ -184,16 +188,23 @@ public class ImageObject : MonoBehaviour
         canvas.sortingOrder = 1;
     }
 
+    private void CanInteractWithObject(bool able)
+    {
+        isInteractable = able;
+        draggableScript.CanDrag = able;
+    }
+
     private void OnEnable()
     {
         EventManager.ResetLayerOrder += ResetLayerOrder;
+        EventManager.CanInteractWithObject += CanInteractWithObject;
     }
 
     private void OnDisable()
     {
         EventManager.ResetLayerOrder -= ResetLayerOrder;
+        EventManager.CanInteractWithObject -= CanInteractWithObject;
     }
-
 
     private bool isInsideTrigger = false;
     private Collider2D storedTrigger = null;
@@ -214,7 +225,7 @@ public class ImageObject : MonoBehaviour
     */
     private void OnTriggerStay2D(Collider2D other)
     {
-        if (!isInsideTrigger && other.CompareTag("DropBoxAccept"))
+        if (!isInsideTrigger && other.CompareTag("DropBoxAccept") && draggableScript.IsDragging())
         {
             EventManager.GlowingBoxShow?.Invoke("accept", true);
             isInsideTrigger = true;
@@ -236,11 +247,11 @@ public class ImageObject : MonoBehaviour
 
     private void Update()
     {
-        if (isInsideTrigger && storedTrigger != null && !draggableScript.IsDragging()) // Check if dragging has stopped inside trigger
+        if (isInsideTrigger && storedTrigger != null && !draggableScript.IsDragging() && draggableScript.DraggingDelay) // Check if dragging has stopped inside trigger
         {
             if (storedTrigger.gameObject.CompareTag("DropBoxAccept"))
             {
-                zoomComponent.AllowZoom(false);
+                zoomComponent.AllowZoom = false;
                 StartCoroutine(DestroyAfterExitMovement("Accept"));
             }
 

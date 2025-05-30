@@ -49,8 +49,8 @@ public class JobScene : MonoBehaviour
     }
 
     public void LoadJobStart() {
-        //ShowBuildingTransition();
-        objectSpawner.SpawnRentNotice();
+        ShowBuildingTransition();
+        //objectSpawner.SpawnRentNotice();
         LoadJsonFromFile();
         SetUpJobStart();
         computerScreenClass.StartComputer();

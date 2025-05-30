@@ -505,11 +505,34 @@ public class Entity : MonoBehaviour
     IEnumerator SpawnDelay(float duration)
     {
         draggableScript.enabled = false;
-        zoomComponent.PreventZoom();
+        zoomComponent.AllowZoom = false;
         yield return new WaitForSeconds(duration);
-        zoomComponent.AllowZoom();
+        zoomComponent.AllowZoom = true;
         draggableScript.enabled = true;
         ObjectGravityOn(true);
+    }
+
+
+    private void OnMouseOver()
+    {
+        if (Input.GetMouseButtonDown(1))
+        {
+            MoveToFront();
+            zoomComponent.StartZoom();
+            EventManager.CanInteractWithObject(false);
+        }
+        if (Input.GetMouseButtonDown(0))
+        {
+            MoveToFront();
+            EventManager.CanInteractWithObject(false);
+        }
+    }
+
+    private void MoveToFront()
+    {
+        EventManager.ResetLayerOrder?.Invoke();
+        // Commented out since newspaper has multiple parts of different sorting orders
+        //canvas.sortingOrder = 2;
     }
 
 
@@ -533,7 +556,7 @@ public class Entity : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D other)
     {
-        if (!isInsideTrigger && other.CompareTag("DropBoxAccept"))
+        if (!isInsideTrigger && other.CompareTag("DropBoxAccept") && draggableScript.IsDragging())
         {
             EventManager.GlowingBoxShow?.Invoke("accept", true);
             isInsideTrigger = true;
@@ -554,26 +577,21 @@ public class Entity : MonoBehaviour
             storedTrigger = null;
             if (other.gameObject.CompareTag("DropBoxAccept"))
                 EventManager.GlowingBoxShow?.Invoke("accept", false);
-            //if(other.gameObject.CompareTag("DropBoxDestroy"))
-            //EventManager.GlowingBoxShow?.Invoke("destroy", false);
         }
     }
 
     private void Update()
     {
-        if (isInsideTrigger && storedTrigger != null && !draggableScript.IsDragging()) // Check if dragging has stopped inside trigger
+        if (isInsideTrigger && storedTrigger != null && !draggableScript.IsDragging() && draggableScript.DraggingDelay ) // Check if dragging has stopped inside trigger
         {
             if (storedTrigger.gameObject.CompareTag("DropBoxAccept"))
             {
-                zoomComponent.PreventZoom();
+                zoomComponent.AllowZoom = false;
+                EventManager.CanInteractWithObject?.Invoke(true);
+                EventManager.CanInteractWithObject(true);
+
                 gameManager.EvaluatePlayerAccept(newspaperData.banWords, newspaperData.title);
                 StartCoroutine(DestroyAfterExitMovement("Accept"));
-            }
-            else if (storedTrigger.gameObject.CompareTag("DropBoxDestroy"))
-            {
-                zoomComponent.PreventZoom();
-                gameManager.EvalutatePlayerDestroy(newspaperData.banWords, newspaperData.title);
-                StartCoroutine(DestroyAfterExitMovement("Destroy"));
             }
 
             // Prevent multiple triggers

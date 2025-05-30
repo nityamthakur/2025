@@ -75,4 +75,5 @@ public static class EventManager
     // Entity and ImageObject Events
     public static Action UnZoomObject;
     public static Action ResetLayerOrder;
+    public static Action<bool> CanInteractWithObject;
 }

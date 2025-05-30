@@ -12,7 +12,6 @@ public class MediaZoom : MonoBehaviour
         get { return isZoomedIn; }
         private set { isZoomedIn = value; }
     }
-    private bool currentlyZooming = false;
     private Camera mainCamera;
     private Vector3 zoomPosition;
     private Vector3 zoomScale;
@@ -20,7 +19,9 @@ public class MediaZoom : MonoBehaviour
     public float zoomFactor = 10.0f;
     public float zoomSpeed = 0.2f;
     public bool canZoom = true;
-    public bool stopZoom = true;
+    public bool AllowZoom { get; set; }
+    private bool currentlyZooming = false;
+
     [SerializeField] private ImageObject entityComponent;
     [SerializeField] private Collider2D newspaperCollider;
     [SerializeField] private Draggable draggableScript;
@@ -44,7 +45,7 @@ public class MediaZoom : MonoBehaviour
 
     public void StartZoom()
     {
-        if (canZoom && stopZoom && Time.timeScale != 0)
+        if (canZoom && AllowZoom && Time.timeScale != 0)
         {
             canZoom = false;
             ToggleZoom();
@@ -136,10 +137,6 @@ public class MediaZoom : MonoBehaviour
         currentlyZooming = false;
     }
 
-    public void AllowZoom(bool able)
-    {
-        stopZoom = able;
-    }
     private void OnDestroy()
     {
 

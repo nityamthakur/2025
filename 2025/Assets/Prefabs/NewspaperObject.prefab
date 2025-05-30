@@ -982,9 +982,10 @@ MonoBehaviour:
   zoomSpeed: 0.2
   canZoom: 1
   stopZoom: 1
-  entityComponent: {fileID: 0}
+  entityComponent: {fileID: 1557041313085716512}
   backOfNewspaper: {fileID: 103021862206449432}
-  toolOverlayUI: {fileID: 0}
+  newspaperCollider: {fileID: 6355933026193757114}
+  draggableScript: {fileID: 6764300093197395354}
 --- !u!61 &6355933026193757114
 BoxCollider2D:
   m_ObjectHideFlags: 0
