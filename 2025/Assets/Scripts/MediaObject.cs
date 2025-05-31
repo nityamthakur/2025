@@ -12,6 +12,7 @@ public class Entity : MonoBehaviour
     [SerializeField] GameObject backOfNewspaper;
     [SerializeField] Material blurMaterial;
     [SerializeField] Material defaultMaterial;
+    [SerializeField] SortingOrderChanger sortingOrder;
     [SerializeField] float blurSize;
     [SerializeField] private GameObject hiddenImageSpawnBounds;
     private Newspaper newspaperData;
@@ -145,8 +146,8 @@ public class Entity : MonoBehaviour
 
         foreach (var textComponent in textComponents)
         {
-            textComponent.fontSharedMaterial = blurMaterial;
-            textComponent.fontSharedMaterial.SetFloat("_BlurSize", blurSize);
+            //textComponent.fontSharedMaterial = blurMaterial;
+            //textComponent.fontSharedMaterial.SetFloat("_BlurSize", blurSize);
             textComponent.ForceMeshUpdate();
         }
 
@@ -506,7 +507,9 @@ public class Entity : MonoBehaviour
     {
         draggableScript.enabled = false;
         zoomComponent.AllowZoom = false;
+        sortingOrder.ChangeSortingOrders(-2);
         yield return new WaitForSeconds(duration);
+        sortingOrder.ChangeSortingOrders(4);
         zoomComponent.AllowZoom = true;
         draggableScript.enabled = true;
         ObjectGravityOn(true);
@@ -519,12 +522,11 @@ public class Entity : MonoBehaviour
         {
             MoveToFront();
             zoomComponent.StartZoom();
-            EventManager.CanInteractWithObject(false);
+            EventManager.CanInteractWithObject?.Invoke(false);
         }
         if (Input.GetMouseButtonDown(0))
         {
             MoveToFront();
-            EventManager.CanInteractWithObject(false);
         }
     }
 
@@ -582,13 +584,13 @@ public class Entity : MonoBehaviour
 
     private void Update()
     {
-        if (isInsideTrigger && storedTrigger != null && !draggableScript.IsDragging() && draggableScript.DraggingDelay ) // Check if dragging has stopped inside trigger
+        if (isInsideTrigger && storedTrigger != null && !draggableScript.IsDragging() && draggableScript.DraggingDelay) // Check if dragging has stopped inside trigger
         {
             if (storedTrigger.gameObject.CompareTag("DropBoxAccept"))
             {
                 zoomComponent.AllowZoom = false;
+                sortingOrder.ChangeSortingOrders(-4);
                 EventManager.CanInteractWithObject?.Invoke(true);
-                EventManager.CanInteractWithObject(true);
 
                 gameManager.EvaluatePlayerAccept(newspaperData.banWords, newspaperData.title);
                 StartCoroutine(DestroyAfterExitMovement("Accept"));
@@ -598,7 +600,7 @@ public class Entity : MonoBehaviour
             isInsideTrigger = false;
         }
 
-        if(!beingDestroyed)
+        if (!beingDestroyed)
         {
             Vector2 pos = transform.position;
             pos.x = Mathf.Clamp(pos.x, -screenBounds.x + playerHalfWidth, screenBounds.x - playerHalfWidth);
@@ -608,8 +610,9 @@ public class Entity : MonoBehaviour
         }
     }
 
+
     private IEnumerator DestroyAfterExitMovement(string box)
-    {        
+    {
         beingDestroyed = true;
         EventManager.PlaySound?.Invoke("tossPaper", true);
         // Turn of Rigidbody because newspaper gets wierd when colliding with boxes
@@ -618,7 +621,7 @@ public class Entity : MonoBehaviour
             rigidBody.simulated = false; // Disables physics interactions without removing Rigidbody2D
         }
 
-        draggableScript.enabled = false; 
+        draggableScript.enabled = false;
         if (box == "Accept")
         {
             currSplinePath.ExitMovementAccept(transform);

@@ -90,7 +90,7 @@ public class FadingScreen : MonoBehaviour
     private void DisplayDeskOverLay(bool show)
     {
         //Debug.Log("ShowDeskOverlay called");
-        deskOverlayImage.gameObject.SetActive(show);
+        //deskOverlayImage.gameObject.SetActive(show);
     }
 
     private void DisplayLightsOutImage(bool show)

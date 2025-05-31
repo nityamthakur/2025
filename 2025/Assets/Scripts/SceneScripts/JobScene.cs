@@ -151,7 +151,8 @@ public class JobScene : MonoBehaviour
         }
         backgroundImage.sprite = workBackgroundImage;
 
-        dropBoxAcceptGlow = currJobScene.transform.Find("DropBoxAcceptGlow").GetComponent<Image>();
+        Canvas overlayCanvas = currJobScene.transform.Find("OverlayCanvas").GetComponent<Canvas>();
+        dropBoxAcceptGlow = overlayCanvas.transform.Find("DropBoxAcceptGlow").GetComponent<Image>();
         if (dropBoxAcceptGlow == null)
         {
             Debug.Log("Failed to find DropBoxAcceptGlow in SetUpJobStart");
@@ -180,6 +181,25 @@ public class JobScene : MonoBehaviour
         computerScreenClass.Initalize();
         computerScreenClass.CreateEmails(gameManager.gameData.releasedEmails);
         computerScreenClass.CreateReviews(gameManager.gameData.releasedArticles, gameManager.gameData.GetCurrentDay());
+    }
+
+    private T FindObject<T>(string name) where T : Component
+    {
+        return FindComponentByName<T>(name);
+    }
+
+    private T FindComponentByName<T>(string name) where T : Component
+    {
+        T[] components = GetComponentsInChildren<T>(true); // Search all children, even inactive ones
+
+        foreach (T component in components)
+        {
+            if (component.gameObject.name == name)
+                return component;
+        }
+
+        Debug.LogWarning($"Component '{name}' not found!");
+        return null;
     }
 
     public IEnumerator BeginWorkDay()

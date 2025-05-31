@@ -185,7 +185,7 @@ public class ImageObject : MonoBehaviour
 
     private void ResetLayerOrder()
     {
-        canvas.sortingOrder = 1;
+        canvas.sortingOrder = 3;
     }
 
     private void CanInteractWithObject(bool able)
@@ -252,6 +252,7 @@ public class ImageObject : MonoBehaviour
             if (storedTrigger.gameObject.CompareTag("DropBoxAccept"))
             {
                 zoomComponent.AllowZoom = false;
+                canvas.sortingOrder = 1;
                 StartCoroutine(DestroyAfterExitMovement("Accept"));
             }
 
@@ -302,7 +303,7 @@ public class ImageObject : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         EventManager.PlaySound?.Invoke("tossPaper", true);
         yield return new WaitForSeconds(1.0f);
-        Destroy(gameObject);
+        Destroy(transform.root.gameObject);
     }
 
     private void OnDestroy()

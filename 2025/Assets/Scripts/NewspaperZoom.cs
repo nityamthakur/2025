@@ -139,7 +139,7 @@ public class NewspaperZoom : MonoBehaviour
             backOfNewspaper.SetActive(false);
             selectedToolManager.SetToolFunctionality(false);
             gameManager.SetBanStampColliderActive(false);
-            entityComponent.SetBlur(true);
+            //entityComponent.SetBlur(true);
 
             if (gameManager.UVLightTargetFound())
             {
@@ -177,7 +177,7 @@ public class NewspaperZoom : MonoBehaviour
             backOfNewspaper.SetActive(false);
             selectedToolManager.SetToolFunctionality(false);
             gameManager.SetBanStampColliderActive(false);
-            entityComponent.SetBlur(true);
+            //entityComponent.SetBlur(true);
 
             if (gameManager.UVLightTargetFound())
             {
@@ -203,7 +203,7 @@ public class NewspaperZoom : MonoBehaviour
             backOfNewspaper.SetActive(true);
             selectedToolManager.SetToolFunctionality(true);
             gameManager.SetBanStampColliderActive(true);
-            entityComponent.SetBlur(false);
+            //entityComponent.SetBlur(false);
 
             if (gameManager.UVLightTargetFound())
             {
@@ -235,16 +235,15 @@ public class NewspaperZoom : MonoBehaviour
         transform.position = targetPos;
         transform.localScale = targetScale;
 
+        currentlyZooming = false;
         canZoom = true;
         isZoomedIn = !isZoomedIn;
+        EventManager.CanInteractWithObject?.Invoke(isZoomedIn == false);
 
         if (!isZoomedIn)
             newspaperCollider.enabled = true;
         else
             transform.position = zoomPosition;
-
-        currentlyZooming = false;
-        EventManager.CanInteractWithObject(true);
     }
 
     private void UpdatePhoneText()
