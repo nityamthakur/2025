@@ -13,6 +13,10 @@ public class GameData
     private bool hasUVLightUpgrade = false;
     private readonly float timerUpgrade = 30f;
     public int numPurchasedTimerUpgrades = 0;
+    public HashSet<string> purchasedCosmetics = new HashSet<string>();
+
+    private int uvLightUpgradeTier = 0;
+    public int timerUpgradeTier = 0;
     public float PerformanceScale
     {
         get { return performanceScale; }
@@ -81,20 +85,28 @@ public class GameData
     {
         releasedArticles.Add(newMedia);
     }
-
+    public int GetUVLightUpgradeTier()
+    {
+        return uvLightUpgradeTier;
+    }
+    public void SetUVLightUpgradeTier(int tier)
+    {
+        uvLightUpgradeTier = Mathf.Clamp(tier, 0, 3);
+    }
     public bool HasUVLightUpgrade()
     {
-        return hasUVLightUpgrade;
+        return uvLightUpgradeTier > 0;
     }
     public void SetUVLightUpgraded(bool upgraded)
     {
-        hasUVLightUpgrade = upgraded;
+        if (upgraded && uvLightUpgradeTier < 3)
+            uvLightUpgradeTier++;
     }
     public List<JobScene.Entry> LinkEmails()
     {
         return this.releasedEmails;
     }
-    
+
 
     public float ArticleWinRate()
     {
@@ -113,31 +125,57 @@ public class GameData
 
     public float ArticleTimeAverage()
     {
-        if(releasedArticles.Count == 0)
+        if (releasedArticles.Count == 0)
             return 0;
 
         float articleTimeAvg = 0;
-        foreach(Media media in releasedArticles)
+        foreach (Media media in releasedArticles)
         {
             articleTimeAvg += media.timeSpent;
         }
         articleTimeAvg /= releasedArticles.Count;
-        return articleTimeAvg; 
+        return articleTimeAvg;
     }
 
     public float MostTimeSpentOnArticle()
     {
         float time = 0;
-        foreach(Media media in releasedArticles)
+        foreach (Media media in releasedArticles)
         {
-            if(media.timeSpent > time)
-                time =  media.timeSpent;
+            if (media.timeSpent > time)
+                time = media.timeSpent;
         }
-        return time;   
+        return time;
     }
 
+    public int GetTimerUpgradeTier()
+    {
+        return timerUpgradeTier;
+    }
+    public void SetTimerUpgradeTier(int tier)
+    {
+        timerUpgradeTier = Mathf.Clamp(tier, 0, 3);
+    }
+    public bool HasTimerUpgrade()
+    {
+        return timerUpgradeTier > 0;
+    }
+    public void UpgradeTimer()
+    {
+        if (timerUpgradeTier < 3)
+            timerUpgradeTier++;
+    }
     internal float GetTimerUpgrade()
     {
-        return timerUpgrade * numPurchasedTimerUpgrades;
+        return timerUpgradeTier * 30f;
+    }
+    public bool IsCosmeticPurchased(string cosmeticId)
+    {
+        return purchasedCosmetics.Contains(cosmeticId);
+    }
+
+    public void PurchaseCosmetic(string cosmeticId)
+    {
+        purchasedCosmetics.Add(cosmeticId);
     }
 }

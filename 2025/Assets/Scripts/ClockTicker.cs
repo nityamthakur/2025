@@ -59,6 +59,11 @@ public class ClockTicker : MonoBehaviour
     private void OnDisable()
     {
         EventManager.StartClockMovement -= StartClockMovement;
-        EventManager.StopClockMovement += StopClockMovement;
+        EventManager.StopClockMovement -= StopClockMovement;
+    }
+    private void OnDestroy()
+    {
+        EventManager.StartClockMovement -= StartClockMovement;
+        EventManager.StopClockMovement -= StopClockMovement;
     }
 }

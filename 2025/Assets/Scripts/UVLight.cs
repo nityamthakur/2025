@@ -8,6 +8,7 @@ public class UVLight : MonoBehaviour
     [SerializeField] private float blinkDuration = 0.25f;
     [SerializeField] private float defaultRadius = 1.0f; // Default radius size
     [SerializeField] private float upgradedRadius = 1.5f; // Size after upgrade
+    [SerializeField] private float[] radiusTiers = { 1.0f, 1.25f, 1.5f, 1.75f }; // index 0 = default, 1-3 = upgrades
 
     private bool isOverlapping = false;
     private SpriteRenderer spriteRenderer;
@@ -66,6 +67,7 @@ public class UVLight : MonoBehaviour
         {
             CheckClickOnTarget(mousePos);
         }
+        ApplyUpgradeTier();
     }
 
     // Check if the UV Light upgrade has been purchased
@@ -94,19 +96,30 @@ public class UVLight : MonoBehaviour
     }
 
     // Method to increase radius when upgrade is purchased
+    private void ApplyUpgradeTier()
+    {
+        int tier = 0;
+        if (gameManager != null && gameManager.gameData != null)
+            tier = gameManager.gameData.GetUVLightUpgradeTier();
+
+        float radius = radiusTiers[Mathf.Clamp(tier, 0, radiusTiers.Length - 1)];
+        float xToYRatio = transform.localScale.y / transform.localScale.x;
+        transform.localScale = new Vector3(radius, radius * xToYRatio, 1f);
+        Debug.Log($"UV Light set to tier {tier} radius: {radius}");
+    }
+
     public void IncreaseRadius()
     {
-        // Force update the upgrade state in GameData
         if (gameManager != null && gameManager.gameData != null)
         {
-            gameManager.gameData.SetUVLightUpgraded(true);
+            int currentTier = gameManager.gameData.GetUVLightUpgradeTier();
+            if (currentTier < 3)
+            {
+                gameManager.gameData.SetUVLightUpgradeTier(currentTier + 1);
+                ApplyUpgradeTier();
+                Debug.Log("UV Light upgrade applied - new tier: " + (currentTier + 1));
+            }
         }
-
-        // Apply the upgraded radius immediately
-        SetUpgradedRadius();
-
-        // Log for debugging
-        Debug.Log("UV Light upgrade applied - radius increased to: " + upgradedRadius);
     }
 
     // Set the default radius for UV light

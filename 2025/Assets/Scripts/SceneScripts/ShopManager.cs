@@ -11,6 +11,18 @@ public class ShopManager : MonoBehaviour
     [SerializeField] private int upgradePrice2 = 5;
     [SerializeField] private string upgradeDescription1 = "UV Light Range+: Increases the detection radius of your UV light";
     [SerializeField] private string upgradeDescription2 = "Time Extension: Increases the allotted time for tasks";
+    [SerializeField] private int[] upgradePrices1 = { 7, 10, 15 }; // UV Light prices per tier
+    [SerializeField] private int[] upgradePrices2 = { 5, 8, 12 }; // Timer prices per tier
+    [SerializeField] private GameObject cosmeticShopEntryPrefab; // Assign in Inspector
+    [SerializeField] private CosmeticShopItem[] cosmeticItems;
+    [System.Serializable]
+    public class CosmeticShopItem
+    {
+        public string id; // Unique identifier
+        public string displayName;
+        public int price;
+        public Sprite icon;
+    }
 
     private GameObject currentShopScreen;
     private Button doneButton;
@@ -25,6 +37,9 @@ public class ShopManager : MonoBehaviour
     private Image upgradeImage2;
     private int playerMoney;
     private GameManager gameManager;
+    private Image[] upgradeLevelBars1;
+    private Image[] upgradeLevelBars2;
+    private bool isCleaningUp = false;
 
     private void OnEnable()
     {
@@ -84,12 +99,74 @@ public class ShopManager : MonoBehaviour
         TextMeshProUGUI shopTitle = currentShopScreen.transform.Find("ShopTitle").GetComponent<TextMeshProUGUI>();
         shopTitle.text = "SHOP";
 
-        // Set up the upgrade buttons and images
-        SetupUpgradeSlot(1, upgradePrice1, upgradeDescription1);
+        // Only show UV Light upgrade after day 3
+        int currentDay = gameManager.gameData.GetCurrentDay();
+        Transform upgradeSlot1 = currentShopScreen.transform.Find("UpgradeSlot1");
+        if (currentDay >= 3)
+        {
+            if (upgradeSlot1 != null)
+                upgradeSlot1.gameObject.SetActive(true);
+            SetupUpgradeSlot(1, upgradePrice1, upgradeDescription1);
+        }
+        else
+        {
+            if (upgradeSlot1 != null)
+                upgradeSlot1.gameObject.SetActive(false);
+        }
+
+        // Timer upgrade is always available
         SetupUpgradeSlot(2, upgradePrice2, upgradeDescription2);
 
         // Update button interactability based on available money and purchased status
         UpdateButtonStates();
+
+        Transform cosmeticsPanel = currentShopScreen.transform.Find("CosmeticsPanel");
+        if (cosmeticsPanel != null && cosmeticItems != null)
+        {
+            // Clear previous entries
+            foreach (Transform child in cosmeticsPanel)
+                Destroy(child.gameObject);
+
+            foreach (var item in cosmeticItems)
+            {
+                GameObject entry = Instantiate(cosmeticShopEntryPrefab, cosmeticsPanel);
+                // Set icon
+                entry.transform.Find("Icon").GetComponent<Image>().sprite = item.icon;
+                // Set name
+                entry.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = item.displayName;
+                // Set price
+                entry.transform.Find("Price").GetComponent<TextMeshProUGUI>().text = $"${item.price}";
+                // Set button
+                Button buyButton = entry.transform.Find("BuyButton").GetComponent<Button>();
+                buyButton.interactable = !gameManager.gameData.IsCosmeticPurchased(item.id) && GetPlayerMoney() >= item.price;
+                buyButton.onClick.AddListener(() => PurchaseCosmetic(item));
+                // Optionally, disable button and show "OWNED" if purchased
+                if (gameManager.gameData.IsCosmeticPurchased(item.id))
+                {
+                    buyButton.interactable = false;
+                    buyButton.transform.Find("Text (TMP)").GetComponent<TextMeshProUGUI>().text = "OWNED";
+                }
+            }
+        }
+    }
+
+    private void PurchaseCosmetic(CosmeticShopItem item)
+    {
+        if (gameManager.gameData.IsCosmeticPurchased(item.id)) return;
+        if (GetPlayerMoney() < item.price) return;
+
+        SpendPlayerMoney(item.price);
+        gameManager.gameData.PurchaseCosmetic(item.id);
+
+        // Update UI
+        SetupShopUI();
+
+        // Refresh cosmetics in the job scene if it exists
+        JobScene jobScene = FindFirstObjectByType<JobScene>();
+        if (jobScene != null)
+        {
+            jobScene.RefreshCosmetics();
+        }
     }
 
     private void SetupUpgradeSlot(int slotNumber, int price, string description)
@@ -107,6 +184,8 @@ public class ShopManager : MonoBehaviour
         TextMeshProUGUI priceText = upgradeSlot.Find("PriceText").GetComponent<TextMeshProUGUI>();
         TextMeshProUGUI descText = upgradeSlot.Find("DescriptionText").GetComponent<TextMeshProUGUI>();
         Image image = upgradeSlot.Find("UpgradeImage").GetComponent<Image>();
+        Transform upgradeLevel = upgradeSlot.Find("UpgradeLevel");
+        Image[] levelBars = upgradeLevel != null ? upgradeLevel.GetComponentsInChildren<Image>() : null;
 
         // Store references for later use
         if (slotNumber == 1)
@@ -114,12 +193,14 @@ public class ShopManager : MonoBehaviour
             upgradeButton1 = button;
             upgradeText1 = priceText;
             upgradeImage1 = image;
+            upgradeLevelBars1 = levelBars;
         }
         else if (slotNumber == 2)
         {
             upgradeButton2 = button;
             upgradeText2 = priceText;
             upgradeImage2 = image;
+            upgradeLevelBars2 = levelBars;
         }
 
         // Set the texts
@@ -143,44 +224,55 @@ public class ShopManager : MonoBehaviour
                                         gameManager.gameData.HasUVLightUpgrade();
         int numTimerUpgradesPurchased = gameManager.gameData.numPurchasedTimerUpgrades;
 
-        // Update button states
+        int uvTier = gameManager.gameData.GetUVLightUpgradeTier();
+        int timerTier = gameManager.gameData.GetTimerUpgradeTier();
+
+        // Update price and button for UV Light
         if (upgradeButton1 != null)
         {
-            upgradeButton1.interactable = canAfford1 && !isUVLightUpgradePurchased;
-            upgradeText1.color = isUVLightUpgradePurchased ? Color.green : (canAfford1 ? Color.white : Color.red);
+            bool maxed = uvTier >= 3;
+            int nextPrice = !maxed ? upgradePrices1[uvTier] : 0;
+            upgradeButton1.interactable = !maxed && GetPlayerMoney() >= nextPrice;
+            upgradeText1.text = !maxed ? $"${nextPrice}" : "MAXED";
+            upgradeText1.color = maxed ? Color.green : (GetPlayerMoney() >= nextPrice ? Color.white : Color.red);
 
-            // Update button text if already purchased
-            if (isUVLightUpgradePurchased)
+            // Button text
+            Transform buttonTextTrans = upgradeButton1.transform.Find("Text (TMP)");
+            if (buttonTextTrans != null)
             {
-                Transform buttonTextTrans = upgradeButton1.transform.Find("Text (TMP)");
-                if (buttonTextTrans != null)
-                {
-                    TextMeshProUGUI buttonText = buttonTextTrans.GetComponent<TextMeshProUGUI>();
-                    if (buttonText != null)
-                    {
-                        buttonText.text = "PURCHASED";
-                    }
-                }
+                var buttonText = buttonTextTrans.GetComponent<TextMeshProUGUI>();
+                buttonText.text = maxed ? "MAXED" : "BUY";
             }
+
+            // Update bar
+            UpdateUpgradeLevelBar(upgradeLevelBars1, uvTier);
         }
 
+        // Timer upgrade
         if (upgradeButton2 != null)
         {
-            upgradeButton2.interactable = canAfford2 && (numTimerUpgradesPurchased == 0);
-            upgradeText2.color = numTimerUpgradesPurchased == 0 ? Color.green : (canAfford2 ? Color.white : Color.red);
+            bool maxed = timerTier >= 3;
+            int nextPrice = !maxed ? upgradePrices2[timerTier] : 0;
+            upgradeButton2.interactable = !maxed && GetPlayerMoney() >= nextPrice;
+            upgradeText2.text = !maxed ? $"${nextPrice}" : "MAXED";
+            upgradeText2.color = maxed ? Color.green : (GetPlayerMoney() >= nextPrice ? Color.white : Color.red);
 
-            if (numTimerUpgradesPurchased == 0)
+            Transform buttonTextTrans = upgradeButton2.transform.Find("Text (TMP)");
+            if (buttonTextTrans != null)
             {
-                Transform buttonTextTrans = upgradeButton2.transform.Find("Text (TMP)");
-                if (buttonTextTrans != null)
-                {
-                    TextMeshProUGUI buttonText = buttonTextTrans.GetComponent<TextMeshProUGUI>();
-                    if (buttonText != null)
-                    {
-                        buttonText.text = "PURCHASED";
-                    }
-                }
+                var buttonText = buttonTextTrans.GetComponent<TextMeshProUGUI>();
+                buttonText.text = maxed ? "MAXED" : "BUY";
             }
+
+            UpdateUpgradeLevelBar(upgradeLevelBars2, timerTier);
+        }
+    }
+    private void UpdateUpgradeLevelBar(Image[] bars, int tier)
+    {
+        if (bars == null) return;
+        for (int i = 0; i < bars.Length; i++)
+        {
+            bars[i].color = i < tier ? Color.yellow : Color.gray;
         }
     }
 
@@ -189,8 +281,11 @@ public class ShopManager : MonoBehaviour
         // Play purchase sound
         EventManager.PlaySound?.Invoke("switch1", true);
 
-        // Deduct money
-        SpendPlayerMoney(price);
+        int tier = (upgradeNumber == 1) ? gameManager.gameData.GetUVLightUpgradeTier() : gameManager.gameData.GetTimerUpgradeTier();
+        int[] prices = (upgradeNumber == 1) ? upgradePrices1 : upgradePrices2;
+        if (tier >= 3 || GetPlayerMoney() < prices[tier]) return;
+
+        SpendPlayerMoney(prices[tier]);
 
         // Update money display
         moneyText.text = $"Money: ${GetPlayerMoney()}";
@@ -209,17 +304,19 @@ public class ShopManager : MonoBehaviour
             switch (upgradeNumber)
             {
                 case 1:
-                    // Apply UV Light upgrade
-                    gameManager.gameData.SetUVLightUpgraded(true);
-
-                    // Find and enhance UV Light if it exists in the scene
-                    EnhanceUVLight();
-
-                    Debug.Log("UV Light upgrade purchased!");
+                    int uvTier = gameManager.gameData.GetUVLightUpgradeTier();
+                    if (uvTier < 3)
+                    {
+                        gameManager.gameData.SetUVLightUpgradeTier(uvTier + 1);
+                        EnhanceUVLight();
+                    }
                     break;
                 case 2:
-                    gameManager.gameData.numPurchasedTimerUpgrades++;
-                    Debug.Log("Timer Extension upgrade purchased!");
+                    int timerTier = gameManager.gameData.GetTimerUpgradeTier();
+                    if (timerTier < 3)
+                    {
+                        gameManager.gameData.SetTimerUpgradeTier(timerTier + 1);
+                    }
                     break;
             }
         }
@@ -231,23 +328,17 @@ public class ShopManager : MonoBehaviour
 
     private void EnhanceUVLight()
     {
-        // First make sure the upgrade is saved in game data
-        if (gameManager != null && gameManager.gameData != null)
-        {
-            gameManager.gameData.SetUVLightUpgraded(true);
-        }
+        // Do NOT increment the tier here!
+        // Just apply the effect to all UVLight instances
 
-        // Find all UVLight instances in the scene using the non-deprecated method
         UVLight[] uvLights = FindObjectsByType<UVLight>(FindObjectsSortMode.None);
 
         if (uvLights != null && uvLights.Length > 0)
         {
-            // Apply the upgrade to each UV light found
             foreach (UVLight uvLight in uvLights)
             {
                 if (uvLight != null)
                 {
-                    // Increase the radius of the UV light
                     uvLight.IncreaseRadius();
                     Debug.Log("UV Light upgrade applied to: " + uvLight.gameObject.name);
                 }
@@ -255,34 +346,31 @@ public class ShopManager : MonoBehaviour
         }
         else
         {
-            // If no UV Light exists in the current scene, just save the upgrade state
-            // It will be applied when a UV Light is created
             Debug.Log("No UVLight found in scene - upgrade saved and will apply when UV Light is used");
         }
     }
 
     private void FinishShopping()
     {
-        // Play sound effect
+        if (isCleaningUp) return; // Prevent double cleanup
+        isCleaningUp = true;
+
         EventManager.PlaySound?.Invoke("switch1", true);
-
-        // Fade out
         EventManager.FadeOut?.Invoke();
-
-        // Wait for fade out, then clean up and transition
         StartCoroutine(CleanupAndTransition());
     }
 
     private IEnumerator CleanupAndTransition()
     {
-        // Wait for fade out
         yield return new WaitForSeconds(2f);
 
-        // Clean up the shop UI
-        Destroy(currentShopScreen);
-        currentShopScreen = null;
+        if (currentShopScreen != null)
+        {
+            Destroy(currentShopScreen);
+            currentShopScreen = null;
+        }
 
-        // Call the static method to transition to the next day
         DayEndScene.TransitionFromShop();
+        isCleaningUp = false;
     }
 }
