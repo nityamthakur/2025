@@ -905,6 +905,7 @@ GameObject:
   - component: {fileID: -4859060692816504937}
   - component: {fileID: 6355933026193757114}
   - component: {fileID: 6181959918788005876}
+  - component: {fileID: 3516979593153285702}
   m_Layer: 6
   m_Name: NewspaperObject
   m_TagString: Untagged
@@ -951,6 +952,7 @@ MonoBehaviour:
   backOfNewspaper: {fileID: 103021862206449432}
   blurMaterial: {fileID: 2100000, guid: ccab195f60fdefc4092484acd6795aa2, type: 2}
   defaultMaterial: {fileID: 1659601194416434223, guid: a8e39c1c99ee52c4b83b118e5905ce04, type: 2}
+  sortingOrder: {fileID: 3516979593153285702}
   blurSize: 20
   hiddenImageSpawnBounds: {fileID: 6632955342856906375}
   beingDestroyed: 0
@@ -981,10 +983,10 @@ MonoBehaviour:
   zoomFactor: 2
   zoomSpeed: 0.2
   canZoom: 1
-  stopZoom: 1
-  entityComponent: {fileID: 0}
+  entityComponent: {fileID: 1557041313085716512}
   backOfNewspaper: {fileID: 103021862206449432}
-  toolOverlayUI: {fileID: 0}
+  newspaperCollider: {fileID: 6355933026193757114}
+  draggableScript: {fileID: 6764300093197395354}
 --- !u!61 &6355933026193757114
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1058,6 +1060,18 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
+--- !u!114 &3516979593153285702
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4998836287132237453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f281554f9fb40549a6145b105b562af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5049977346780101309
 GameObject:
   m_ObjectHideFlags: 0

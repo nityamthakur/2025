@@ -2,7 +2,6 @@ using UnityEngine;
 using TMPro;
 using System.Collections;
 using System.Collections.Generic;
-using System;
 
 public class NewspaperZoom : MonoBehaviour
 {
@@ -14,7 +13,7 @@ public class NewspaperZoom : MonoBehaviour
     {
         get { return isZoomedIn; }
         private set { isZoomedIn = value; }
-    }    
+    }  
     private Camera mainCamera;
     private Vector3 zoomPosition;
     private Vector3 zoomScale;
@@ -22,25 +21,26 @@ public class NewspaperZoom : MonoBehaviour
     public float zoomFactor = 1.25f;
     public float zoomSpeed = 0.2f;
     public bool canZoom = true;
-    public bool stopZoom = true;
-    public Entity entityComponent = null;
+    public bool AllowZoom { get; set; }
+    private bool currentlyZooming = false;
+    [SerializeField] private Entity entityComponent = null;
     public GameObject backOfNewspaper;
 
     // Tool Overlay object
-    public GameObject toolOverlayUI;
+    private GameObject toolOverlayUI;
     private Vector3 toolOverlayStartPos, toolOverlayEndPos;
     private GameObject UVLight;
-    
+    private SelectedToolManager selectedToolManager;
+
     // Phone object
     private GameObject phoneOverlayUI;
     private Vector3 phoneOverlayStartPos, phoneOverlayEndPos;
     private TextMeshProUGUI phoneText;
     private GameObject cuttingTargetObj;
 
-    private Collider2D newspaperCollider;
-    private Draggable draggableScript;
+    [SerializeField] private Collider2D newspaperCollider;
+    [SerializeField]private Draggable draggableScript;
     private GameManager gameManager;
-    private SelectedToolManager selectedToolManager;
 
     void Start()
     {
@@ -59,16 +59,9 @@ public class NewspaperZoom : MonoBehaviour
         }
         originalScale = transform.localScale;
         originalPosition = transform.position;
-        newspaperCollider = GetComponent<Collider2D>();
-        draggableScript = GetComponent<Draggable>();
 
         zoomPosition = new Vector3(mainCamera.transform.position.x, mainCamera.transform.position.y + 2.25f, originalPosition.z);
 
-        entityComponent = GetComponent<Entity>();
-        if (entityComponent == null)
-        {
-            Debug.LogError("Entity component not found on Newspaper!");
-        }
 
         if (backOfNewspaper == null)
         {
@@ -105,17 +98,65 @@ public class NewspaperZoom : MonoBehaviour
         }
     }
 
-    void Update()
+    public void StartZoom()
     {
-        if (Input.GetMouseButtonDown(1) && canZoom && stopZoom && Time.timeScale != 0)
+        if (canZoom && AllowZoom && Time.timeScale != 0)
         {
             canZoom = false;
             ToggleZoom();
         }
     }
 
+    private void OnEnable()
+    {
+        EventManager.UnZoomObject += UnZoomObject;
+    }
+
+    private void OnDisable()
+    {
+        EventManager.UnZoomObject -= UnZoomObject;
+    }
+
+    private void UnZoomObject()
+    {
+        if (isZoomedIn && !currentlyZooming)
+        {
+            currentlyZooming = true;
+
+            EventManager.PlaySound?.Invoke("newspaperRustling", true);      
+            GameObject hiddenImage = transform.Find("HiddenImage").gameObject;
+
+            entityComponent.ObjectGravityOn(true);
+
+            if (entityComponent)
+                entityComponent.ChangeMediaRotation(60);
+
+            StartCoroutine(SmoothTransition(previousPosition, originalScale));
+
+            if (draggableScript != null)
+                draggableScript.enabled = true;
+
+            backOfNewspaper.SetActive(false);
+            selectedToolManager.SetToolFunctionality(false);
+            gameManager.SetBanStampColliderActive(false);
+            //entityComponent.SetBlur(true);
+
+            if (gameManager.UVLightTargetFound())
+            {
+                hiddenImage.SetActive(false);
+            }   
+
+            StartCoroutine(HideUIObject(phoneOverlayUI, phoneOverlayStartPos, phoneOverlayEndPos));
+            StartCoroutine(HideUIObject(toolOverlayUI, toolOverlayStartPos, toolOverlayEndPos));
+        }
+    }
+
     void ToggleZoom()
-    {            
+    {
+        currentlyZooming = true;   
+        EventManager.UnZoomObject?.Invoke();      
+        EventManager.UnZoomObject?.Invoke();      
+
         EventManager.PlaySound?.Invoke("newspaperRustling", true);
         zoomFactor = 1.25f;
         zoomScale = originalScale * zoomFactor;
@@ -136,7 +177,7 @@ public class NewspaperZoom : MonoBehaviour
             backOfNewspaper.SetActive(false);
             selectedToolManager.SetToolFunctionality(false);
             gameManager.SetBanStampColliderActive(false);
-            entityComponent.SetBlur(true);
+            //entityComponent.SetBlur(true);
 
             if (gameManager.UVLightTargetFound())
             {
@@ -162,7 +203,7 @@ public class NewspaperZoom : MonoBehaviour
             backOfNewspaper.SetActive(true);
             selectedToolManager.SetToolFunctionality(true);
             gameManager.SetBanStampColliderActive(true);
-            entityComponent.SetBlur(false);
+            //entityComponent.SetBlur(false);
 
             if (gameManager.UVLightTargetFound())
             {
@@ -194,14 +235,15 @@ public class NewspaperZoom : MonoBehaviour
         transform.position = targetPos;
         transform.localScale = targetScale;
 
+        currentlyZooming = false;
         canZoom = true;
         isZoomedIn = !isZoomedIn;
+        EventManager.CanInteractWithObject?.Invoke(isZoomedIn == false);
 
         if (!isZoomedIn)
             newspaperCollider.enabled = true;
         else
             transform.position = zoomPosition;
-
     }
 
     private void UpdatePhoneText()
@@ -292,14 +334,6 @@ public class NewspaperZoom : MonoBehaviour
         rect.anchoredPosition = startPos;
     }
 
-    public void PreventZoom()
-    {
-        stopZoom = false;
-    }
-    public void AllowZoom()
-    {
-        stopZoom = true;
-    }
     private void OnDestroy()
     {
         

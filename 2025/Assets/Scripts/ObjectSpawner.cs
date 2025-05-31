@@ -112,36 +112,33 @@ public class ObjectSpawner : MonoBehaviour
         Canvas prefabCanvas = rentNoticeInstance.GetComponentInChildren<Canvas>();
         if (prefabCanvas != null)
         {
-            prefabCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+            prefabCanvas.renderMode = RenderMode.WorldSpace;
             prefabCanvas.worldCamera = Camera.main;
         }
         rentNotices.Add(rentNoticeInstance);
 
 
         int rent = gameManager.gameData.rent;
-        string rentText = $"Rent will cost {rent}. If you are unable to pay by the end of the day, expect to be evicted.";
+        string rentText = $"Dear Tenet,\n\nThis is a reminder that due to missed payments, your rent has been increased to <color=yellow>${rent}.</color>\n\nIf you are unable to pay by end of day, expect to be evicted.";
 
         // Find BodyText directly under RentNoticePrefab
-        TextMeshPro bodyText = rentNoticeInstance.transform.Find("BodyText")?.GetComponent<TextMeshPro>();
-        if (bodyText != null)
+        Transform rentImage = rentNoticeInstance.transform.Find("ImageComponent");
+        if (rentImage != null)
         {
-            bodyText.text = rentText;
+            TextMeshProUGUI bodyText = rentImage.GetComponentInChildren<TextMeshProUGUI>();
+            if (bodyText != null)
+                bodyText.text = rentText;
+            else
+                Debug.LogError("SpawnRentNotice: Couldn't find BodyText!");
         }
         else
-        {
-            Debug.LogError("SpawnRentNotice: Couldn't find BodyText!");
-        }
+            Debug.LogError("SpawnRentNotice: Couldn't find ImageComponent!");
 
         // Attach movement logic to RentNoticePrefab itself (since physics is on the parent now)
-        ImageObject mediaEntity = rentNoticeInstance.GetComponent<ImageObject>();
-        if (mediaEntity != null)
-        {
+        if (rentImage.TryGetComponent<ImageObject>(out var mediaEntity))
             mediaEntity.SetUpSplinePath(splinePath); // Apply movement
-        }
         else
-        {
             Debug.LogError("SpawnRentNotice: RentNoticePrefab is missing Entity script!");
-        }
     }
 
     private void ShowHideRentNotices(bool show)

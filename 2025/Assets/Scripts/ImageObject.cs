@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ImageObject : MonoBehaviour
@@ -8,37 +9,69 @@ public class ImageObject : MonoBehaviour
     private Draggable draggableScript;
     private Rigidbody2D rigidBody;
     private BoxCollider2D boxCollider;
+    [SerializeField] private MediaZoom zoomComponent;
+    [SerializeField] private Canvas canvas;
     public bool takeActionOnDestroy = false;
     public bool beingDestroyed = false;
     private Vector2 screenBounds;
     private float playerHalfWidth;
     private float playerHalfHeight;
+    private bool isInteractable = true;
 
     private void Awake()
     {
         draggableScript = GetComponent<Draggable>(); // Get the Draggable script
-        Canvas prefabCanvas = GetComponentInChildren<Canvas>();
-        if (prefabCanvas != null)
+        Canvas canvas = GetComponentInChildren<Canvas>();
+        if (canvas != null)
         {
-            prefabCanvas.renderMode = RenderMode.ScreenSpaceCamera;
-            prefabCanvas.worldCamera = Camera.main;
+            canvas.renderMode = RenderMode.ScreenSpaceCamera;
+            canvas.worldCamera = Camera.main;
         }
-
     }
-    
+
     private void Start()
     {
-        ChangeMediaRotation( 60 );
+        ChangeMediaRotation(60);
 
         TryGetComponent<Rigidbody2D>(out var Urigid);
         rigidBody = Urigid;
 
+        GetScreenBounds();
+    }
+
+    private void GetScreenBounds()
+    {
+        GameObject boundsImage = GameObject.FindWithTag("GameScreenSize");
+        if (boundsImage == null)
+        {
+            Debug.Log("GameScreenSize tag not found.");
+            return;
+        }
+
+        RectTransform rectTransform = boundsImage.GetComponent<RectTransform>();
+        if (rectTransform == null)
+        {
+            Debug.Log("Object does not have RectTransform.");
+            return;
+        }
+
+        Vector3[] worldCorners = new Vector3[4];
+        rectTransform.GetWorldCorners(worldCorners);
+
+        // Bottom-left to top-right corner
+        Vector3 bottomLeft = worldCorners[0];
+        Vector3 topRight = worldCorners[2];
+
+        // Calculate half-width and half-height in world space
+        screenBounds = (topRight - bottomLeft) / 2f;
+
         // Setting object boundaries to keep it inside the screen
         TryGetComponent<BoxCollider2D>(out var Ucollider);
         boxCollider = Ucollider;
-        screenBounds = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
+
         playerHalfWidth = boxCollider.bounds.extents.x;
         playerHalfHeight = boxCollider.bounds.extents.y;
+
     }
 
     /*public void ChangeMediaRotation( int angleX )
@@ -92,15 +125,15 @@ public class ImageObject : MonoBehaviour
     }
 
 
-    public void SetUpSplinePath(GameObject prefab) 
+    public void SetUpSplinePath(GameObject prefab)
     {
-        draggableScript.enabled = false;        
+        draggableScript.enabled = false;
 
         // Create a new spline path
         splinePrefab = prefab;
         if (splinePrefab == null)
         {
-            Debug.LogError("Spline prefab not assigned correctly in Entity."); 
+            Debug.LogError("Spline prefab not assigned correctly in Entity.");
         }
 
         GameObject newSplinePath = Instantiate(splinePrefab);
@@ -120,25 +153,83 @@ public class ImageObject : MonoBehaviour
     IEnumerator SpawnDelay(float duration)
     {
         draggableScript.enabled = false;
+        zoomComponent.AllowZoom = false;
         yield return new WaitForSeconds(duration);
+        zoomComponent.AllowZoom = true;
         ChangeMediaRotation(-60);
         ObjectGravityOn(true);
         draggableScript.enabled = true;
     }
 
+    private void OnMouseOver()
+    {
+        if (isInteractable)
+        {
+            if (Input.GetMouseButtonDown(1))
+            {
+                MoveToFront();
+                zoomComponent.StartZoom();
+            }
+            if (Input.GetMouseButtonDown(0))
+            {
+                MoveToFront();
+            }
+        }
+    }
+
+    private void MoveToFront()
+    {
+        EventManager.ResetLayerOrder?.Invoke();
+        canvas.sortingOrder = 5;
+    }
+
+    private void ResetLayerOrder()
+    {
+        canvas.sortingOrder = 3;
+    }
+
+    private void CanInteractWithObject(bool able)
+    {
+        isInteractable = able;
+        draggableScript.CanDrag = able;
+    }
+
+    private void OnEnable()
+    {
+        EventManager.ResetLayerOrder += ResetLayerOrder;
+        EventManager.CanInteractWithObject += CanInteractWithObject;
+    }
+
+    private void OnDisable()
+    {
+        EventManager.ResetLayerOrder -= ResetLayerOrder;
+        EventManager.CanInteractWithObject -= CanInteractWithObject;
+    }
+
     private bool isInsideTrigger = false;
     private Collider2D storedTrigger = null;
 
+    /*
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("DropBoxAccept") || other.gameObject.CompareTag("DropBoxDestroy"))
         {
             isInsideTrigger = true;
             storedTrigger = other;
-            if(other.gameObject.CompareTag("DropBoxAccept"))
+            if (other.gameObject.CompareTag("DropBoxAccept"))
                 EventManager.GlowingBoxShow?.Invoke("accept", true);
-            if(other.gameObject.CompareTag("DropBoxDestroy"))
+            if (other.gameObject.CompareTag("DropBoxDestroy"))
                 EventManager.GlowingBoxShow?.Invoke("destroy", true);
+        }
+    }
+    */
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        if (!isInsideTrigger && other.CompareTag("DropBoxAccept") && draggableScript.IsDragging())
+        {
+            EventManager.GlowingBoxShow?.Invoke("accept", true);
+            isInsideTrigger = true;
+            storedTrigger = other;
         }
     }
 
@@ -148,42 +239,44 @@ public class ImageObject : MonoBehaviour
         {
             isInsideTrigger = false;
             storedTrigger = null;
-            if(other.gameObject.CompareTag("DropBoxAccept"))
+            if (other.gameObject.CompareTag("DropBoxAccept"))
                 EventManager.GlowingBoxShow?.Invoke("accept", false);
-            if(other.gameObject.CompareTag("DropBoxDestroy"))
-                EventManager.GlowingBoxShow?.Invoke("destroy", false);
         }
-        
+
     }
 
     private void Update()
     {
-        if (isInsideTrigger && storedTrigger != null && !draggableScript.IsDragging()) // Check if dragging has stopped inside trigger
+        if (isInsideTrigger && storedTrigger != null && !draggableScript.IsDragging() && draggableScript.DraggingDelay) // Check if dragging has stopped inside trigger
         {
             if (storedTrigger.gameObject.CompareTag("DropBoxAccept"))
             {
+                zoomComponent.AllowZoom = false;
+                canvas.sortingOrder = 1;
                 StartCoroutine(DestroyAfterExitMovement("Accept"));
             }
-            else if (storedTrigger.gameObject.CompareTag("DropBoxDestroy"))
-            {
-                StartCoroutine(DestroyAfterExitMovement("Destroy"));
-            }
+
+            // Prevent multiple triggers
+            isInsideTrigger = false;
         }
 
-        if(!beingDestroyed)
+        if (!beingDestroyed)
         {
-            Vector2 pos = transform.position;
-
-            pos.x = Mathf.Clamp(pos.x, -screenBounds.x + playerHalfWidth, screenBounds.x - playerHalfWidth);
-            pos.y = Mathf.Clamp(pos.y, -screenBounds.y + playerHalfHeight, screenBounds.y - playerHalfHeight);
-
-            if (transform.position.y != pos.y && rigidBody != null)
+            Transform imageComponent = transform.Find("ImageComponent");
+            if (imageComponent != null)
             {
-                rigidBody.linearVelocity = Vector2.zero; // Reset velocity when reaching boundary
-                rigidBody.angularVelocity = 0f;
+                Vector3 pos = imageComponent.position;
+                pos.x = Mathf.Clamp(pos.x, -screenBounds.x + playerHalfWidth, screenBounds.x - playerHalfWidth);
+                pos.y = Mathf.Clamp(pos.y, -screenBounds.y + playerHalfHeight, screenBounds.y - playerHalfHeight);
+                imageComponent.position = pos;
             }
-
-            transform.position = pos;
+            else
+            {
+                Vector3 pos = transform.position;
+                pos.x = Mathf.Clamp(pos.x, -screenBounds.x + playerHalfWidth, screenBounds.x - playerHalfWidth);
+                pos.y = Mathf.Clamp(pos.y, -screenBounds.y + playerHalfHeight, screenBounds.y - playerHalfHeight);
+                transform.position = pos;
+            }
         }
     }
 
@@ -197,7 +290,7 @@ public class ImageObject : MonoBehaviour
             rigidBody.simulated = false; // Disables physics interactions without removing Rigidbody2D
         }
 
-        draggableScript.enabled = false; 
+        draggableScript.enabled = false;
         if (box == "Accept")
         {
             currSplinePath.ExitMovementAccept(transform);
@@ -210,7 +303,7 @@ public class ImageObject : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         EventManager.PlaySound?.Invoke("tossPaper", true);
         yield return new WaitForSeconds(1.0f);
-        Destroy(gameObject);
+        Destroy(transform.root.gameObject);
     }
 
     private void OnDestroy()
@@ -220,8 +313,8 @@ public class ImageObject : MonoBehaviour
         {
             Destroy(currSplinePath.gameObject);
         }
-        
-        if(takeActionOnDestroy)
+
+        if (takeActionOnDestroy)
         {
             EventManager.OnImageDestroyed?.Invoke();
         }

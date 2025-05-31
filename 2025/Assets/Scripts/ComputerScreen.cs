@@ -563,12 +563,12 @@ public class ComputerScreen : MonoBehaviour
         {
             if (!zoomedIn)
             {
-                EventManager.ZoomCamera?.Invoke(screenZoomIn, 3.1f, 0.25f);
+                //EventManager.ZoomCamera?.Invoke(screenZoomIn, 3.1f, 0.25f);
                 zoomedIn = true;
             }
             else
             {
-                EventManager.ResetCamera?.Invoke(0.25f);
+                //EventManager.ResetCamera?.Invoke(0.25f);
                 zoomedIn = false;
             }
         }

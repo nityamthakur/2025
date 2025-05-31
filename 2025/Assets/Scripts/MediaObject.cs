@@ -12,6 +12,7 @@ public class Entity : MonoBehaviour
     [SerializeField] GameObject backOfNewspaper;
     [SerializeField] Material blurMaterial;
     [SerializeField] Material defaultMaterial;
+    [SerializeField] SortingOrderChanger sortingOrder;
     [SerializeField] float blurSize;
     [SerializeField] private GameObject hiddenImageSpawnBounds;
     private Newspaper newspaperData;
@@ -101,6 +102,8 @@ public class Entity : MonoBehaviour
 
         playerHalfWidth = boxCollider.bounds.extents.x;
         playerHalfHeight = boxCollider.bounds.extents.y;
+
+        Debug.Log($"{worldCorners[0]} : {worldCorners[2]} : {playerHalfHeight} : {playerHalfWidth}");
     }
 
 
@@ -143,8 +146,8 @@ public class Entity : MonoBehaviour
 
         foreach (var textComponent in textComponents)
         {
-            textComponent.fontSharedMaterial = blurMaterial;
-            textComponent.fontSharedMaterial.SetFloat("_BlurSize", blurSize);
+            //textComponent.fontSharedMaterial = blurMaterial;
+            //textComponent.fontSharedMaterial.SetFloat("_BlurSize", blurSize);
             textComponent.ForceMeshUpdate();
         }
 
@@ -503,11 +506,35 @@ public class Entity : MonoBehaviour
     IEnumerator SpawnDelay(float duration)
     {
         draggableScript.enabled = false;
-        zoomComponent.PreventZoom();
+        zoomComponent.AllowZoom = false;
+        sortingOrder.ChangeSortingOrders(-2);
         yield return new WaitForSeconds(duration);
-        zoomComponent.AllowZoom();
+        sortingOrder.ChangeSortingOrders(4);
+        zoomComponent.AllowZoom = true;
         draggableScript.enabled = true;
         ObjectGravityOn(true);
+    }
+
+
+    private void OnMouseOver()
+    {
+        if (Input.GetMouseButtonDown(1))
+        {
+            MoveToFront();
+            zoomComponent.StartZoom();
+            EventManager.CanInteractWithObject?.Invoke(false);
+        }
+        if (Input.GetMouseButtonDown(0))
+        {
+            MoveToFront();
+        }
+    }
+
+    private void MoveToFront()
+    {
+        EventManager.ResetLayerOrder?.Invoke();
+        // Commented out since newspaper has multiple parts of different sorting orders
+        //canvas.sortingOrder = 2;
     }
 
 
@@ -531,7 +558,7 @@ public class Entity : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D other)
     {
-        if (!isInsideTrigger && other.CompareTag("DropBoxAccept"))
+        if (!isInsideTrigger && other.CompareTag("DropBoxAccept") && draggableScript.IsDragging())
         {
             EventManager.GlowingBoxShow?.Invoke("accept", true);
             isInsideTrigger = true;
@@ -552,33 +579,28 @@ public class Entity : MonoBehaviour
             storedTrigger = null;
             if (other.gameObject.CompareTag("DropBoxAccept"))
                 EventManager.GlowingBoxShow?.Invoke("accept", false);
-            //if(other.gameObject.CompareTag("DropBoxDestroy"))
-            //EventManager.GlowingBoxShow?.Invoke("destroy", false);
         }
     }
 
     private void Update()
     {
-        if (isInsideTrigger && storedTrigger != null && !draggableScript.IsDragging()) // Check if dragging has stopped inside trigger
+        if (isInsideTrigger && storedTrigger != null && !draggableScript.IsDragging() && draggableScript.DraggingDelay) // Check if dragging has stopped inside trigger
         {
             if (storedTrigger.gameObject.CompareTag("DropBoxAccept"))
             {
-                zoomComponent.PreventZoom();
+                zoomComponent.AllowZoom = false;
+                sortingOrder.ChangeSortingOrders(-4);
+                EventManager.CanInteractWithObject?.Invoke(true);
+
                 gameManager.EvaluatePlayerAccept(newspaperData.banWords, newspaperData.title);
                 StartCoroutine(DestroyAfterExitMovement("Accept"));
-            }
-            else if (storedTrigger.gameObject.CompareTag("DropBoxDestroy"))
-            {
-                zoomComponent.PreventZoom();
-                gameManager.EvalutatePlayerDestroy(newspaperData.banWords, newspaperData.title);
-                StartCoroutine(DestroyAfterExitMovement("Destroy"));
             }
 
             // Prevent multiple triggers
             isInsideTrigger = false;
         }
 
-        if(!beingDestroyed)
+        if (!beingDestroyed)
         {
             Vector2 pos = transform.position;
             pos.x = Mathf.Clamp(pos.x, -screenBounds.x + playerHalfWidth, screenBounds.x - playerHalfWidth);
@@ -588,8 +610,9 @@ public class Entity : MonoBehaviour
         }
     }
 
+
     private IEnumerator DestroyAfterExitMovement(string box)
-    {        
+    {
         beingDestroyed = true;
         EventManager.PlaySound?.Invoke("tossPaper", true);
         // Turn of Rigidbody because newspaper gets wierd when colliding with boxes
@@ -598,7 +621,7 @@ public class Entity : MonoBehaviour
             rigidBody.simulated = false; // Disables physics interactions without removing Rigidbody2D
         }
 
-        draggableScript.enabled = false; 
+        draggableScript.enabled = false;
         if (box == "Accept")
         {
             currSplinePath.ExitMovementAccept(transform);
