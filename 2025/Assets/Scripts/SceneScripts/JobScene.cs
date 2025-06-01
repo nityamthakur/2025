@@ -12,6 +12,7 @@ public class JobScene : MonoBehaviour
     [SerializeField] private GameObject jobScenePrefab;
     [SerializeField] private Sprite workBackgroundImage;
     [SerializeField] private Sprite glitchedScreen;
+    [SerializeField] private CosmeticObject[] allCosmeticObjects;
     private GameObject currJobScene;
     private Image backgroundImage, dropBoxAcceptGlow;
     private bool jobDelayed;
@@ -48,7 +49,8 @@ public class JobScene : MonoBehaviour
         return workTimer + gameManager.gameData.GetTimerUpgrade();
     }
 
-    public void LoadJobStart() {
+    public void LoadJobStart()
+    {
         ShowBuildingTransition();
         //objectSpawner.SpawnRentNotice();
         LoadJsonFromFile();
@@ -69,7 +71,7 @@ public class JobScene : MonoBehaviour
         else if (canvas != null && change)
         {
             canvas.renderMode = RenderMode.WorldSpace;
-            canvas.worldCamera = Camera.main;            
+            canvas.worldCamera = Camera.main;
         }
     }
 
@@ -122,7 +124,8 @@ public class JobScene : MonoBehaviour
     }
 
 
-    private void SetUpJobStart() {
+    private void SetUpJobStart()
+    {
         currJobScene = Instantiate(jobScenePrefab);
         if (currJobScene == null)
         {
@@ -158,8 +161,25 @@ public class JobScene : MonoBehaviour
             Debug.Log("Failed to find DropBoxAcceptGlow in SetUpJobStart");
             return;
         }
+        allCosmeticObjects = currJobScene.GetComponentsInChildren<CosmeticObject>(true);
+        foreach (var cosmetic in allCosmeticObjects)
+        {
+            bool owned = gameManager.gameData.IsCosmeticPurchased(cosmetic.id);
+            cosmetic.gameObject.SetActive(owned);
+        }
         StartCoroutine(PulseGlow(dropBoxAcceptGlow));
         dropBoxAcceptGlow.gameObject.SetActive(false);
+    }
+
+    public void RefreshCosmetics()
+    {
+        if (allCosmeticObjects == null) return;
+        foreach (var cosmetic in allCosmeticObjects)
+        {
+            if (cosmetic == null) continue;
+            bool owned = gameManager.gameData.IsCosmeticPurchased(cosmetic.id);
+            cosmetic.gameObject.SetActive(owned);
+        }
     }
 
     private void ComputerScreenSetUp()
@@ -304,7 +324,7 @@ public class JobScene : MonoBehaviour
 
             // Pause for effect
             yield return new WaitForSeconds(3f);
-            
+
             EventManager.PlaySound?.Invoke("glitch", true);
 
             computerScreenClass.EventTrigger(3, jobDelayed);
@@ -313,11 +333,11 @@ public class JobScene : MonoBehaviour
             // Prevent progression
             yield return new WaitUntil(() => !jobDelayed);
 
-            EventManager.PlaySound?.Invoke("glitch", true); 
+            EventManager.PlaySound?.Invoke("glitch", true);
             yield return new WaitForSeconds(2.5f);
 
             computerScreenClass.EventTrigger(3, jobDelayed);
-            EventManager.PauseResumeMusic?.Invoke(); 
+            EventManager.PauseResumeMusic?.Invoke();
         }
     }
 

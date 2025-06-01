@@ -12,7 +12,7 @@ public class SceneChanger : MonoBehaviour
     [SerializeField] private DayEndScene dayEndScene;
     [SerializeField] private ShopScene shopScene;
     [SerializeField] private GameObject fadingScreenPrefab;
-    public bool MainMenuDone { get; private set;}
+    public bool MainMenuDone { get; private set; }
     private int currentSceneIndex = 0;
     private List<Action> sceneSequence;
 
@@ -26,9 +26,9 @@ public class SceneChanger : MonoBehaviour
         sceneSequence = new List<Action>
         {
             () => dayStartScene.LoadDayStart(),
-            () => shopScene.LoadShop(),
             () => jobScene.LoadJobStart(),
             () => dayEndScene.LoadDayEnd(),
+            () => shopScene.LoadShop(),
         };
 
         Instantiate(fadingScreenPrefab);
@@ -87,8 +87,8 @@ public class SceneChanger : MonoBehaviour
         MainMenuDone = true;
 
         // Ignore the shop on the first day
-        if (gameManager.gameData.GetCurrentDay() == 1 && currentSceneIndex == 1)
-            currentSceneIndex++;
+        //if (gameManager.gameData.GetCurrentDay() == 1 && currentSceneIndex == 1)
+        //    currentSceneIndex++;
 
         // Call the function for the current scene
         sceneSequence[currentSceneIndex]?.Invoke();
