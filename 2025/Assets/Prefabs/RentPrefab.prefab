@@ -124,7 +124,6 @@ MonoBehaviour:
   zoomFactor: 1.25
   zoomSpeed: 0.2
   canZoom: 1
-  stopZoom: 1
   entityComponent: {fileID: 1399095783508188917}
   newspaperCollider: {fileID: 3769669410615307783}
   draggableScript: {fileID: 6369264900731619868}

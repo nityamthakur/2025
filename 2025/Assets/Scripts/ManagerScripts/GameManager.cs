@@ -394,9 +394,9 @@ public class GameManager : MonoBehaviour
                 jobDetails.articleClockTime += 1f;
             if (gameZoomPaused)
             {
-                Debug.Log("Time Stopped for UpdateArticleTime");
+                //Debug.Log("Time Stopped for UpdateArticleTime");
                 yield return new WaitUntil(() => gameZoomPaused == false);
-                Debug.Log("Time Resumed for UpdateArticleTime");
+                //Debug.Log("Time Resumed for UpdateArticleTime");
             }
         }
     }

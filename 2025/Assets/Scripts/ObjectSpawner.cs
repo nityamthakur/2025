@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using Newtonsoft.Json.Linq;
+using UnityEngine.UI;
 
 public class ObjectSpawner : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class ObjectSpawner : MonoBehaviour
     [SerializeField] private GameObject splinePath;
     [SerializeField] private GameObject rentNoticePrefab;
     [SerializeField] private GameObject imageObject;
-
+    public Sprite greenPartyLetter;
     private List<GameObject> rentNotices = new();
     private int newspaperPos = 0;
     private Entity.Newspaper[] newspapers;
@@ -85,28 +86,68 @@ public class ObjectSpawner : MonoBehaviour
     }
 
     // For non media censoring objects like fliers and pamphlets
-    public void SpawnImageObject(bool takeActionOnDestroy) 
+    public void SpawnImageObject(bool takeActionOnDestroy)
     {
-
+        /*
         // Create new media object
         GameObject newMedia = Instantiate(imageObject, mediaSpawner.transform.position, Quaternion.identity);
-        
+
         // Pass the spline prefab reference
         ImageObject mediaEntity = newMedia.GetComponent<ImageObject>();
-        if (mediaEntity != null) 
+        if (mediaEntity != null)
         {
             mediaEntity.takeActionOnDestroy = takeActionOnDestroy;
             mediaEntity.SetUpSplinePath(splinePath); // Pass the splinePath prefab reference
-        } 
-        else 
+        }
+        else
         {
             Debug.LogError("Spawned media object is missing the Entity script!");
         }
+        */
+        // Create new media object
+        GameObject rentNoticeInstance = Instantiate(rentNoticePrefab);
+        Canvas prefabCanvas = rentNoticeInstance.GetComponentInChildren<Canvas>();
+        if (prefabCanvas != null)
+        {
+            prefabCanvas.renderMode = RenderMode.WorldSpace;
+            prefabCanvas.worldCamera = Camera.main;
+        }
+        rentNotices.Add(rentNoticeInstance);
+
+        // Find BodyText directly under RentNoticePrefab
+        Transform rentImage = rentNoticeInstance.transform.Find("ImageComponent");
+        if (rentImage != null)
+        {
+            TextMeshProUGUI bodyText = rentImage.GetComponentInChildren<TextMeshProUGUI>();
+            if (bodyText != null)
+                bodyText.text = "";
+            else
+                Debug.LogError("SpawnRentNotice: Couldn't find BodyText!");
+
+            // Change the image sprite
+            Image imageComponent = rentImage.GetComponent<Image>();
+            if (imageComponent != null)
+                imageComponent.sprite = greenPartyLetter;
+            else
+                Debug.LogError("SpawnRentNotice: Couldn't find Image component!");
+
+        }
+        else
+            Debug.LogError("SpawnRentNotice: Couldn't find ImageComponent!");
+
+        // Attach movement logic to RentNoticePrefab itself (since physics is on the parent now)
+        if (rentImage.TryGetComponent<ImageObject>(out var mediaEntity))
+        {
+            mediaEntity.SetUpSplinePath(splinePath); // Apply movement
+            mediaEntity.takeActionOnDestroy = takeActionOnDestroy;
+        }
+        else
+            Debug.LogError("SpawnRentNotice: RentNoticePrefab is missing Entity script!");
+
     }
 
     public void SpawnRentNotice()
     {
-        Debug.Log("Spawning Rent Notice");
         // Instantiate RentNoticePrefab
         GameObject rentNoticeInstance = Instantiate(rentNoticePrefab);
         Canvas prefabCanvas = rentNoticeInstance.GetComponentInChildren<Canvas>();

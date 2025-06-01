@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 918874521553096539}
   - component: {fileID: 1278511094205302555}
   - component: {fileID: 739999741855408619}
+  - component: {fileID: 507915534124289742}
   - component: {fileID: 1470804603084446537}
   - component: {fileID: 2691637305598030234}
   m_Layer: 6
@@ -159,6 +160,24 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
+--- !u!114 &507915534124289742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5459676195759465388}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79955594e696ef488ad073df2d12c62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  zoomFactor: 10
+  zoomSpeed: 0.2
+  canZoom: 1
+  entityComponent: {fileID: 1470804603084446537}
+  newspaperCollider: {fileID: 0}
+  draggableScript: {fileID: 0}
 --- !u!114 &1470804603084446537
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -171,6 +190,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cd7dc51515858a42baf21c25720cd6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  zoomComponent: {fileID: 0}
+  canvas: {fileID: 0}
   takeActionOnDestroy: 0
   beingDestroyed: 0
 --- !u!114 &2691637305598030234
