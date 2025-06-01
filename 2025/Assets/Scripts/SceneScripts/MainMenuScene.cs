@@ -73,6 +73,10 @@ public class MainMenuScene : MonoBehaviour
         creditsButton = FindObject<Button>("CreditsButton");
         creditsButton.onClick.AddListener(() =>
         {
+            creditsButton.interactable = false;
+            EventManager.OpenOptionsMenu?.Invoke();
+            EventManager.OptionsChanger?.Invoke("credits"); 
+            EventManager.PlaySound?.Invoke("switch1", true); 
         });
 
         exitButton = FindObject<Button>("ExitButton");

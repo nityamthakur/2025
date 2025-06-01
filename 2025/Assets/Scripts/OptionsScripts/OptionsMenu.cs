@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class OptionsMenu : MonoBehaviour
 {
     private List<GameObject> sections = new();
-    private GameObject pauseMenu, menuSections, audioSection, saveLoadSection, confirmSection;
+    private GameObject pauseMenu, menuSections, audioSection, saveLoadSection, creditSection, confirmSection;
     private TextMeshProUGUI confirmText, pauseMenuText, backButtonText;
     private Action confirmAction, cancelAction;
     private Button slot1Button, slot2Button, slot3Button, backButton, saveButton, deleteButton, mainMenuButton;
@@ -86,6 +86,7 @@ public class OptionsMenu : MonoBehaviour
         menuSections = pauseMenu.transform.Find("MenuSections")?.gameObject;
         audioSection = pauseMenu.transform.Find("AudioMenu")?.gameObject;
         saveLoadSection = pauseMenu.transform.Find("SaveLoadMenu")?.gameObject;
+        creditSection = pauseMenu.transform.Find("CreditSection")?.gameObject;
         confirmSection = pauseMenu.transform.Find("ConfirmMenu")?.gameObject;
 
         if (pauseMenu == null)
@@ -96,8 +97,10 @@ public class OptionsMenu : MonoBehaviour
             sections.Add(audioSection);
         if (saveLoadSection != null)
             sections.Add(saveLoadSection);
+        if (creditSection != null)
+            sections.Add(creditSection);
         if (confirmSection != null)
-            sections.Add(confirmSection);
+                sections.Add(confirmSection);
 
         // Hide all sections initially
         foreach (GameObject section in sections)
@@ -506,19 +509,24 @@ public class OptionsMenu : MonoBehaviour
 
             }
         }
+        if (section == creditSection)
+        {
+            ChangeObjectText(pauseMenuText, "Credits");
+            backButtonText.text = "Done";
+        }
 
         foreach (GameObject data in sections)
-        {
-            if (data == section)
             {
-                data.SetActive(false); // Force UI refresh by toggling off first
-                data.SetActive(true);
+                if (data == section)
+                {
+                    data.SetActive(false); // Force UI refresh by toggling off first
+                    data.SetActive(true);
+                }
+                else
+                {
+                    data.SetActive(false);
+                }
             }
-            else
-            {
-                data.SetActive(false);
-            }
-        }
     }
 
     private void OptionsChanger(string option)
@@ -533,7 +541,9 @@ public class OptionsMenu : MonoBehaviour
             case "options":
                 ChangeMenuSection(audioSection);
                 break;
-            
+            case "credits":
+                ChangeMenuSection(creditSection);
+                break;
             default:
                 //saveButton?.gameObject.SetActive(true);
                 mainMenuButton?.gameObject.SetActive(true);
