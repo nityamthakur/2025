@@ -58,6 +58,7 @@ public class GameData
         this.releasedEmails = loadedGame.releasedEmails;
         this.releasedArticles = loadedGame.releasedArticles;
         this.gameMode = loadedGame.gameMode;
+        this.hasUVLightUpgrade = loadedGame.hasUVLightUpgrade;
     }
 
     public int GetCurrentDay()
@@ -182,7 +183,7 @@ public class GameData
     }
     internal float GetTimerUpgrade()
     {
-        return timerUpgradeTier * 30f;
+        return timerUpgradeTier * timerUpgrade;
     }
     public bool IsCosmeticPurchased(string cosmeticId)
     {
