@@ -369,8 +369,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2929197216514644969}
   m_HandleRect: {fileID: 1038046257731757449}
   m_Direction: 2
-  m_Value: 1.0000004
-  m_Size: 0.5791032
+  m_Value: 1.0000001
+  m_Size: 0.3872849
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3223,8 +3223,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 185, y: -14}
-  m_SizeDelta: {x: 37.6571, y: 52.049}
+  m_AnchoredPosition: {x: 189.01, y: 1.5915}
+  m_SizeDelta: {x: 26.99, y: 70.5278}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7735021868248588785
 CanvasRenderer:
@@ -3247,7 +3247,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.82745105, g: 0.8470589, b: 0.72156864, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3256,7 +3256,7 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: -4346244404228752641, guid: 4aecda1b30b7783478c6bed564847439, type: 3}
   m_Type: 0
-  m_PreserveAspect: 1
+  m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -3342,8 +3342,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 175.5, y: -124.5}
-  m_SizeDelta: {x: 70.0434, y: 25.7644}
+  m_AnchoredPosition: {x: 188.2, y: -127.72208}
+  m_SizeDelta: {x: 28.3113, y: 12.8804}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5892761809782873544
 CanvasRenderer:
@@ -3373,10 +3373,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Review:\n1/ 5
-
-
-'
+  m_text: 10/10
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0f2f9f3386c87b44b85d36ccdc1fe93c, type: 2}
   m_sharedMaterial: {fileID: -2165670025903004395, guid: 0f2f9f3386c87b44b85d36ccdc1fe93c, type: 2}
@@ -3385,8 +3382,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4285257471
+  m_fontColor: {r: 1, g: 0.8380035, b: 0.42075467, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -3403,14 +3400,14 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 8
-  m_fontSizeBase: 8
+  m_fontSize: 7
+  m_fontSizeBase: 7
   m_fontWeight: 400
   m_enableAutoSizing: 0
-  m_fontSizeMin: 18
+  m_fontSizeMin: 7
   m_fontSizeMax: 72
   m_fontStyle: 16
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 4
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -3419,7 +3416,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_TextWrappingMode: 1
+  m_TextWrappingMode: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
@@ -4217,7 +4214,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &312782381897117251
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4589,37 +4586,51 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Title: NewMerican Central Bank Phases Out Physical Currency to Curb \"Financial
-    Misinformation\"
-
-    Publisher: The Arbitrage Authority
-
-    Dated: 1-7-2025
+  m_text: 'We found that this article was processed with one or more mistakes. Review
+    below.
 
 
-    Mistakes:
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    No
-    Mistakes Made
+    The publisher of
+    this article is untruthful and a hazard to NewMerica. Always ban articles from
+    this publisher.
 
-    Didn''t identify hidden image
+    Be on the look out for future articles from:
 
-
-    Didn''t ban due to required
-    words:
-
-    Black Swan
+    Workplace
+    Excellence Program.
 
 
-    Didn''t censor words:
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    Electoral Trustworthiness
-    Project
-
-
+    Your
+    resulting pay for this article was 2.
 
 
-'
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+    Title:
+    Conspiracy Surrounding New Draft Lottery System
+
+    Publisher: Green Voice
+
+    Date:
+    1-6-2025
+
+    As we are sure our readers are aware, NewMerica has recently begun
+    what has been coined the "The Draft to End all Drafts." Despite the supposed
+    action for NewMerican safety made by Chief Arbiter of Conflict Cassius Halloway,
+    there is reason to believe that the Draft has a devilish pretense.According to
+    our anonymous sources inside the Department of Suspicious Persons Regulation
+    (DSPR), the Draft seems to target those who have engaged in protests against
+    unpopular NewMerican policies, such as the Workplace Excellence Program (WEP).
+    Additionally, it appears that those who have been reported to the DSPR have a
+    75% higher chance of being selected by the Draft''s "lottery" system. While research
+    surrounding this matter is still ongoing, there is reasonable evidence to conclude
+    that the Draft is more than it seems. When Green Voice attempted to contact Halloway
+    for questioning, there was no response.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a8e39c1c99ee52c4b83b118e5905ce04, type: 2}
   m_sharedMaterial: {fileID: 1659601194416434223, guid: a8e39c1c99ee52c4b83b118e5905ce04, type: 2}
@@ -4646,14 +4657,14 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 18
-  m_fontSizeBase: 18
+  m_fontSize: 14
+  m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 8
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 2
@@ -4684,7 +4695,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 50, y: 10, z: 50, w: 10}
+  m_margin: {x: 10, y: 10, z: 50, w: 10}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0

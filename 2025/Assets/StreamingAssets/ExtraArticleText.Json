@@ -1,0 +1,19 @@
+{
+    "extraNewspaperText": [
+        {
+            "newspapers": [
+                {
+                    "publisher": "",
+                    "title": "",
+                    "date": "X-X-2025",
+                    "front": "",
+                    "back": "",
+                    "banWords": [
+                    ],
+                    "censorWords": [],
+                    "hasHiddenImage": false
+                }
+            ]
+        }
+    ]
+}

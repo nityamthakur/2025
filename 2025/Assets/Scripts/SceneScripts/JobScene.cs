@@ -161,12 +161,14 @@ public class JobScene : MonoBehaviour
             Debug.Log("Failed to find DropBoxAcceptGlow in SetUpJobStart");
             return;
         }
+
         allCosmeticObjects = currJobScene.GetComponentsInChildren<CosmeticObject>(true);
         foreach (var cosmetic in allCosmeticObjects)
         {
             bool owned = gameManager.gameData.IsCosmeticPurchased(cosmetic.id);
             cosmetic.gameObject.SetActive(owned);
         }
+
         StartCoroutine(PulseGlow(dropBoxAcceptGlow));
         dropBoxAcceptGlow.gameObject.SetActive(false);
     }

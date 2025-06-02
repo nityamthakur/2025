@@ -159,13 +159,15 @@ public class Entity : MonoBehaviour
         else backOfNewspaper.SetActive(false);
 
         ChangeMediaRotation(60);
-        SetUpSplinePath(); 
+        SetUpSplinePath();
 
         // Set the hidden image if it exists
         if (newspaper.hasHiddenImage)
         {
             StartCoroutine(DelayedInitializeHiddenImage());
         }
+
+        AddMediaToGameData(newspaperData);
     }
 
     private IEnumerator DelayedInitializeHiddenImage()
@@ -211,7 +213,25 @@ public class Entity : MonoBehaviour
         Debug.Log("Hidden image initialized at position: " + randomWorldPosition);
     }
 
-    public void ChangeMediaRotation( int angleX )
+    private void AddMediaToGameData(Newspaper newspaper)
+    {
+
+        Media newMedia = new()
+        {
+            title = newspaper.GetTitle(),
+            publisher = newspaper.GetPublisher(),
+            body = newspaper.GetFront() + "\n" + newspaper.GetBack(),
+            date = newspaper.GetDate(),
+            day = gameManager.gameData.day,
+            hiddenImageExists = newspaper.hasHiddenImage,
+            censorWords = newspaper.censorWords,
+            bannedWords = newspaper.banWords,
+        };
+        gameManager.gameData.AddNewMedia(newMedia);
+    }
+
+
+    public void ChangeMediaRotation(int angleX)
     {
         transform.eulerAngles = new Vector3(
         transform.eulerAngles.x + angleX,
@@ -507,9 +527,10 @@ public class Entity : MonoBehaviour
     {
         draggableScript.enabled = false;
         zoomComponent.AllowZoom = false;
+        sortingOrder.StoreAllRenderOrders();
         sortingOrder.ChangeSortingOrders(-2);
         yield return new WaitForSeconds(duration);
-        sortingOrder.ChangeSortingOrders(4);
+        sortingOrder.ChangeSortingOrders(2);
         zoomComponent.AllowZoom = true;
         draggableScript.enabled = true;
         ObjectGravityOn(true);
@@ -589,7 +610,7 @@ public class Entity : MonoBehaviour
             if (storedTrigger.gameObject.CompareTag("DropBoxAccept"))
             {
                 zoomComponent.AllowZoom = false;
-                sortingOrder.ChangeSortingOrders(-4);
+                sortingOrder.ChangeSortingOrders(-2);
                 EventManager.CanInteractWithObject?.Invoke(true);
 
                 gameManager.EvaluatePlayerAccept(newspaperData.banWords, newspaperData.title);
@@ -654,8 +675,8 @@ public class Entity : MonoBehaviour
     [Serializable]
     public class Newspaper
     {
-        public string publisher;
-        public string title;
+        public string publisher = null;
+        public string title = null;
         public string date;
         
         [JsonIgnore] public string backContent;
@@ -675,25 +696,33 @@ public class Entity : MonoBehaviour
 
         public string GetPublisher()
         {
-            return publisherIsComplex ? FlattenGrammar(publisher) : publisher;
+            return publisher;
         }
-        
+
         public string GetTitle()
         {
-            return titleIsComplex ? FlattenGrammar(title) : title; 
+            return title;
         }
         
         public string GetFront()
         {
-            return frontIsComplex ? FlattenGrammar(frontContent) : frontContent;
+            return frontContent;
         }
         public string GetBack()
         {
-            return backIsComplex ? FlattenGrammar(backContent) : backContent ;
+            return backContent;
         }
         public string GetDate()
         {
             return date;
+        }
+
+        public void CreateComplex()
+        {
+            publisher = publisherIsComplex ? FlattenGrammar(publisher) : publisher;
+            title = titleIsComplex ? FlattenGrammar(title) : title;
+            frontContent = frontIsComplex ? FlattenGrammar(frontContent) : frontContent;
+            backContent = backIsComplex ? FlattenGrammar(backContent) : backContent;
         }
 
 

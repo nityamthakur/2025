@@ -451,8 +451,8 @@ public class ComputerScreen : MonoBehaviour
                 }
                 */
 
-                ShowHideButton(nextButton, currentDayMedia.Count >= 2);
-                ShowHideButton(previousButton, currentDayMedia.Count >= 2);
+                ShowHideButton(nextButton, currentDayMedia.Count > 1);
+                //ShowHideButton(previousButton, currentDayMedia.Count >= 2);
                 reviewMediaText.gameObject.SetActive(true);
             });
 
@@ -476,22 +476,23 @@ public class ComputerScreen : MonoBehaviour
 
     private void ReviewArticleTextUpdate()
     {
+        string lineBreaker = "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~";
         if (currentDayMedia.Count > 0)
         {
-            reviewMediaText.text = $"Review:\n{dayMediaIterator + 1}/ {currentDayMedia.Count}";
+            reviewMediaText.text = $"{dayMediaIterator + 1}/{currentDayMedia.Count}";
 
             Media article = currentDayMedia[dayMediaIterator];
             string text = "";
             if (article.noMistakes)
-                text += "Well Done! There were no mistakes made on review of this article.";
+                text += "Well Done! There were no mistakes made on review of this article." + lineBreaker;
             else
             {
-                text += "We found that this article was processed with one or more mistakes. Review below.";
+                text += "We found that this article was processed with one or more mistakes. Review below." + lineBreaker;
 
                 // Check if hidden image exists. If so, give warning if it wasn't found, or if it was found and article not banned
                 if (article.hiddenImageExists)
                     if (!article.hiddenImageFound || (article.hiddenImageFound && !article.articleBanned))
-                        text += "\n\nWe located a image hidden within this article. Ensure that future articles are scoured diligently and banned accordingly.";
+                        text += "\n\nWe located a image hidden within this article. Ensure that future articles are scoured diligently and banned accordingly." + lineBreaker;
 
                 // Check if article should have been banned or was banned mistakenly
                 if (article.bannedWords.Length > 0 && !article.articleBanned)
@@ -506,10 +507,10 @@ public class ComputerScreen : MonoBehaviour
 
                         text += $"{article.bannedWords[i]}";
                     }
-                    text += ".";
+                    text += "." + lineBreaker;
                 }
                 else if (article.bannedWords.Length == 0 && article.articleBanned)
-                    text += "\n\nThis article was from a reputable source. Ensure only articles from select publishers are banned.";
+                    text += "\n\nThis article was from a reputable source. Ensure only articles from select publishers are banned." + lineBreaker;
 
                 // Check words that were not censored or words that were censored.
                 if (article.numCensorableWords != article.numCensoredCorrectly)
@@ -524,15 +525,15 @@ public class ComputerScreen : MonoBehaviour
 
                         text += $"{article.censorWords[i]}";
                     }
-                    text += ".";
+                    text += "." + lineBreaker;
                 }
                 if (article.numCensorMistakes > 0)
-                    text += $"\n\nWe have found that you censored {article.numCensorMistakes} word(s) that should not have been censored. Censoring incorrect words can lead to untruths which confuse readers and can sow disorder. Do not censor words according to your own discretion.";
+                    text += $"\n\nWe have found that you censored {article.numCensorMistakes} word(s) that should not have been censored. Censoring incorrect words can lead to untruths which confuse readers and can sow disorder. Do not censor words according to your own discretion." + lineBreaker;
             }
             text += $"\n\nYour resulting pay for this article was {article.moneyEarned}.";
             if (article.OverTime)
                 text += $"\nYour pay was decreased for working overtime. Overtime pay is not permitted. Ensure you work more effciently next time.";
-            text += $"\n\nTitle: {article.title}\nPublisher: {article.publisher}\nDate: {article.date}\n{article.body}";
+            text += lineBreaker + $"\n\nTitle: {article.title}\nPublisher: {article.publisher}\nDate: {article.date}\n{article.body}";
             SetObjectText(reviewText, text);
         }
         else

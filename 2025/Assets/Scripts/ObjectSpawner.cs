@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using Newtonsoft.Json.Linq;
+using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class ObjectSpawner : MonoBehaviour
 {
@@ -14,7 +16,7 @@ public class ObjectSpawner : MonoBehaviour
     [SerializeField] private GameObject splinePath;
     [SerializeField] private GameObject rentNoticePrefab;
     [SerializeField] private GameObject imageObject;
-
+    public Sprite greenPartyLetter;
     private List<GameObject> rentNotices = new();
     private int newspaperPos = 0;
     private Entity.Newspaper[] newspapers;
@@ -41,6 +43,7 @@ public class ObjectSpawner : MonoBehaviour
         }
 
         LoadJsonFromFile();
+        Reshuffle(newspapers);
         PassWordLists();
         SpawnNewMediaObject();
     }
@@ -85,28 +88,68 @@ public class ObjectSpawner : MonoBehaviour
     }
 
     // For non media censoring objects like fliers and pamphlets
-    public void SpawnImageObject(bool takeActionOnDestroy) 
+    public void SpawnImageObject(bool takeActionOnDestroy)
     {
-
+        /*
         // Create new media object
         GameObject newMedia = Instantiate(imageObject, mediaSpawner.transform.position, Quaternion.identity);
-        
+
         // Pass the spline prefab reference
         ImageObject mediaEntity = newMedia.GetComponent<ImageObject>();
-        if (mediaEntity != null) 
+        if (mediaEntity != null)
         {
             mediaEntity.takeActionOnDestroy = takeActionOnDestroy;
             mediaEntity.SetUpSplinePath(splinePath); // Pass the splinePath prefab reference
-        } 
-        else 
+        }
+        else
         {
             Debug.LogError("Spawned media object is missing the Entity script!");
         }
+        */
+        // Create new media object
+        GameObject rentNoticeInstance = Instantiate(rentNoticePrefab);
+        Canvas prefabCanvas = rentNoticeInstance.GetComponentInChildren<Canvas>();
+        if (prefabCanvas != null)
+        {
+            prefabCanvas.renderMode = RenderMode.WorldSpace;
+            prefabCanvas.worldCamera = Camera.main;
+        }
+        rentNotices.Add(rentNoticeInstance);
+
+        // Find BodyText directly under RentNoticePrefab
+        Transform rentImage = rentNoticeInstance.transform.Find("ImageComponent");
+        if (rentImage != null)
+        {
+            TextMeshProUGUI bodyText = rentImage.GetComponentInChildren<TextMeshProUGUI>();
+            if (bodyText != null)
+                bodyText.text = "";
+            else
+                Debug.LogError("SpawnRentNotice: Couldn't find BodyText!");
+
+            // Change the image sprite
+            Image imageComponent = rentImage.GetComponent<Image>();
+            if (imageComponent != null)
+                imageComponent.sprite = greenPartyLetter;
+            else
+                Debug.LogError("SpawnRentNotice: Couldn't find Image component!");
+
+        }
+        else
+            Debug.LogError("SpawnRentNotice: Couldn't find ImageComponent!");
+
+        // Attach movement logic to RentNoticePrefab itself (since physics is on the parent now)
+        if (rentImage.TryGetComponent<ImageObject>(out var mediaEntity))
+        {
+            mediaEntity.SetUpSplinePath(splinePath); // Apply movement
+            mediaEntity.takeActionOnDestroy = takeActionOnDestroy;
+        }
+        else
+            Debug.LogError("SpawnRentNotice: RentNoticePrefab is missing Entity script!");
+
     }
 
     public void SpawnRentNotice()
     {
-        Debug.Log("Spawning Rent Notice");
         // Instantiate RentNoticePrefab
         GameObject rentNoticeInstance = Instantiate(rentNoticePrefab);
         Canvas prefabCanvas = rentNoticeInstance.GetComponentInChildren<Canvas>();
@@ -171,10 +214,88 @@ public class ObjectSpawner : MonoBehaviour
         }
 
         string json = File.ReadAllText(path);
-        ParseJson(json);
+        ParseJson(json, "newspaperText");
+        ParseJson(json, "grammerEngineText");
     }
 
-    private void ParseJson(string json)
+    private void ParseJson(string json, string section)
+    {
+        try
+        {
+            var jsonRoot = JObject.Parse(json);
+            var newspaperTextArr = (JArray)jsonRoot[section];
+
+            if (newspaperTextArr == null)
+            {
+                Debug.LogError("Unable to find newspaper data in JSON section: " + section);
+                return;
+            }
+
+            var currentPapers = newspaperTextArr
+                .Where(item => (int)item["day"] == gameManager.gameData.GetCurrentDay())
+                .Cast<JObject>()
+                .FirstOrDefault();
+
+            if (currentPapers == null)
+            {
+                Debug.LogWarning($"No paper entries found in section '{section}' for day {gameManager.gameData.GetCurrentDay()}.");
+                return;
+            }
+
+            var newsPaperArr = (JArray)currentPapers["newspapers"];
+            var tempList = new List<Entity.Newspaper>();
+
+            for (var i = 0; i < newsPaperArr.Count; i++)
+            {
+                var newspaperObj = (JObject)newsPaperArr[i];
+                var newspaper = new Entity.Newspaper
+                {
+                    date = newspaperObj["date"]?.ToString(),
+                    hasHiddenImage = newspaperObj["hasHiddenImage"] != null && (bool)newspaperObj["hasHiddenImage"],
+                    banWords = newspaperObj["banWords"]?.ToObject<string[]>() ?? Array.Empty<string>(),
+                    censorWords = newspaperObj["censorWords"]?.ToObject<string[]>() ?? Array.Empty<string>(),
+                    replaceWords = newspaperObj["replaceWords"]?.ToObject<string[][]>() ?? Array.Empty<string[]>(),
+                };
+
+                ProcessField(newspaperObj["publisher"], out newspaper.publisher, out newspaper.publisherIsComplex);
+                ProcessField(newspaperObj["title"], out newspaper.title, out newspaper.titleIsComplex);
+                ProcessField(newspaperObj["front"], out newspaper.frontContent, out newspaper.frontIsComplex);
+                ProcessField(newspaperObj["back"], out newspaper.backContent, out newspaper.backIsComplex);
+
+                tempList.Add(newspaper);
+
+                // Create Media for tracking
+                /*
+                Media newMedia = new()
+                {
+                    title = newspaper.title,
+                    publisher = newspaper.publisher,
+                    body = newspaper.frontContent + newspaper.backContent,
+                    date = newspaper.date,
+                    day = gameManager.gameData.day,
+                    hiddenImageExists = newspaper.hasHiddenImage,
+                    censorWords = newspaper.censorWords,
+                    bannedWords = newspaper.banWords,
+                };
+                gameManager.gameData.AddNewMedia(newMedia);
+                */
+            }
+
+            // Combine with previous newspapers if already populated
+            if (newspapers == null)
+                newspapers = tempList.ToArray();
+            else
+                newspapers = newspapers.Concat(tempList).ToArray();
+
+            newspaperPos = 0;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Error while parsing newspaper JSON data: " + e.Message);
+        }
+    }
+
+    /*private void ParseJson(string json, string section)
     {
         //Our JSON deserialization needs to be significantly more complex to handle this.
         //Once all of the JSON is migrated over to the new format, it can be simplified
@@ -183,7 +304,7 @@ public class ObjectSpawner : MonoBehaviour
             //Load everything
             var jsonRoot = JObject.Parse(json);
             //Get just the newspaper text
-            var newspaperTextArr = (JArray)jsonRoot["newspaperText"];
+            var newspaperTextArr = (JArray)jsonRoot[section];
 
             if (newspaperTextArr == null)
             {
@@ -203,6 +324,8 @@ public class ObjectSpawner : MonoBehaviour
 
             //Now go through and get the paper data
             var newsPaperArr = (JArray)currentPapers["newspapers"];
+
+
             newspapers = new Entity.Newspaper[newsPaperArr.Count];
 
             for (var i = 0; i < newsPaperArr.Count; i++)
@@ -246,7 +369,7 @@ public class ObjectSpawner : MonoBehaviour
         {
             Debug.LogError("Error while parsing newspaper JSON data: " + e.Message);
         }
-    }
+    }*/
 
     private void ProcessField(JToken token, out string content, out bool isComplex)
     {
@@ -262,11 +385,24 @@ public class ObjectSpawner : MonoBehaviour
         }
     }
 
+    private void Reshuffle(Entity.Newspaper[] newspapers)
+    {
+        // Knuth shuffle algorithm :: courtesy of Wikipedia
+        for (int t = 0; t < newspapers.Length; t++ )
+        {
+            Entity.Newspaper tmp = newspapers[t];
+            int r = Random.Range(t, newspapers.Length);
+            newspapers[t] = newspapers[r];
+            newspapers[r] = tmp;
+        }
+    }
+
     private void ReadNextNewspaper()
     {
         if (newspaperPos < newspapers.Length)
         {
             currentNewspaper = newspapers[newspaperPos];
+            currentNewspaper.CreateComplex();
             newspaperPos++;
         }
         else
