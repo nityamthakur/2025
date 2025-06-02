@@ -520,7 +520,7 @@ public class GameManager : MonoBehaviour
         jobScene.UpdateMediaProcessedText(jobDetails.numMediaProcessed);
 
         // Check if the player has used the ban stamp if there are any bannable offenses or used the stamp incorrectly
-        bool banWordsCheck = (banWords.Length > 0) == banStampPressed;
+        bool banWordsCheck = (banWords.Length > 0 || hiddenImageExists) == banStampPressed;
 
         bool hiddenImageCheck;
         if ((hiddenImageExists == hiddenImageFound) && (hiddenImageFound == banStampPressed))
@@ -625,6 +625,7 @@ public class GameManager : MonoBehaviour
     public void ArticleAnalysisUpdate(int moneyEarned, string mediaTitle, string[] banwords, bool playerSucceeds, bool overTime)
     {
         // Find the matching media article and update its information
+
         Media foundMedia = gameData.releasedArticles.Find(media => media.title == mediaTitle);
         if (foundMedia == null)
         {

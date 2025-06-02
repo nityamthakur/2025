@@ -1,20 +1,37 @@
+using System.Collections.Generic;
 using UnityEngine;
 
+// For moving all layers of the newspaper object and keeping their orders intact
 public class SortingOrderChanger : MonoBehaviour
 {
-    public void ChangeSortingOrders(int num)
-    {
-        int changes = 0;
-        foreach (var sr in GetComponentsInChildren<SpriteRenderer>(true))
-        {
-            sr.sortingOrder += num;
-            changes++;
-        }
+    public List<RendererData> rendererDataList = new();
 
-        foreach (var mr in GetComponentsInChildren<MeshRenderer>(true))
+    public void StoreAllRenderOrders()
+    {
+        foreach (var renderer in GetComponentsInChildren<Renderer>(true))
         {
-            mr.sortingOrder += num;
-            changes++;
+            RendererData layer = new()
+            {
+                renderer = renderer,
+                baseOrder = renderer.sortingOrder
+            };
+            rendererDataList.Add(layer);
         }
     }
+
+    public void ChangeSortingOrders(int order)
+    {
+        foreach (var data in rendererDataList)
+        {
+            if (data.renderer != null)
+                data.renderer.sortingOrder = data.baseOrder + order;
+        }
+    }
+}
+
+[System.Serializable]
+public class RendererData
+{
+    public Renderer renderer;
+    public int baseOrder;
 }

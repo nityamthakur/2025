@@ -104,7 +104,7 @@ public class UVLight : MonoBehaviour
         float radius = radiusTiers[Mathf.Clamp(tier, 0, radiusTiers.Length - 1)];
         float xToYRatio = transform.localScale.y / transform.localScale.x;
         transform.localScale = new Vector3(radius, radius * xToYRatio, 1f);
-        Debug.Log($"UV Light set to tier {tier} radius: {radius}");
+        //Debug.Log($"UV Light set to tier {tier} radius: {radius}");
     }
 
     public void IncreaseRadius()

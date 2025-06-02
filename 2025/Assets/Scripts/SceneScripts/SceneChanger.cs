@@ -26,9 +26,9 @@ public class SceneChanger : MonoBehaviour
         sceneSequence = new List<Action>
         {
             () => dayStartScene.LoadDayStart(),
+            () => shopScene.LoadShop(),
             () => jobScene.LoadJobStart(),
             () => dayEndScene.LoadDayEnd(),
-            () => shopScene.LoadShop(),
         };
 
         Instantiate(fadingScreenPrefab);

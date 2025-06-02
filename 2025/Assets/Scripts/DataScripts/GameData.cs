@@ -48,17 +48,21 @@ public class GameData
     {
         this.saveSlot = loadedGame.saveSlot;
         this.day = loadedGame.day;
+        this.playTime = loadedGame.playTime;
+        this.gameMode = loadedGame.gameMode;
+        this.PerformanceScale = loadedGame.PerformanceScale;
+
         this.money = loadedGame.money;
         this.totalMoneyEarned = loadedGame.totalMoneyEarned;
         this.totalMoneySpent = loadedGame.totalMoneySpent;
-        this.numPurchasedTimerUpgrades = loadedGame.numPurchasedTimerUpgrades;
         this.rent = loadedGame.rent;
-        this.PerformanceScale = loadedGame.PerformanceScale;
-        this.playTime = loadedGame.playTime;
+
         this.releasedEmails = loadedGame.releasedEmails;
         this.releasedArticles = loadedGame.releasedArticles;
-        this.gameMode = loadedGame.gameMode;
+
+        this.numPurchasedTimerUpgrades = loadedGame.numPurchasedTimerUpgrades;
         this.hasUVLightUpgrade = loadedGame.hasUVLightUpgrade;
+        this.purchasedCosmetics = loadedGame.purchasedCosmetics;
     }
 
     public int GetCurrentDay()
