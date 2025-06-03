@@ -93,7 +93,7 @@ public class Entity : MonoBehaviour
 
         // Calculate half-width and half-height in world space
         screenBounds = (topRight - bottomLeft) / 2f;
-        Debug.Log($"{screenBounds}");
+        // Debug.Log($"{screenBounds}");
         //screenBounds = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
 
         // Setting object boundaries to keep it inside the screen
@@ -102,8 +102,6 @@ public class Entity : MonoBehaviour
 
         playerHalfWidth = boxCollider.bounds.extents.x;
         playerHalfHeight = boxCollider.bounds.extents.y;
-
-        Debug.Log($"{worldCorners[0]} : {worldCorners[2]} : {playerHalfHeight} : {playerHalfWidth}");
     }
 
 
@@ -528,7 +526,7 @@ public class Entity : MonoBehaviour
         draggableScript.enabled = false;
         zoomComponent.AllowZoom = false;
         sortingOrder.StoreAllRenderOrders();
-        sortingOrder.ChangeSortingOrders(-2);
+        sortingOrder.ChangeSortingOrders(-1);
         yield return new WaitForSeconds(duration);
         sortingOrder.ChangeSortingOrders(2);
         zoomComponent.AllowZoom = true;
@@ -610,7 +608,7 @@ public class Entity : MonoBehaviour
             if (storedTrigger.gameObject.CompareTag("DropBoxAccept"))
             {
                 zoomComponent.AllowZoom = false;
-                sortingOrder.ChangeSortingOrders(-2);
+                sortingOrder.ChangeSortingOrders(-1);
                 EventManager.CanInteractWithObject?.Invoke(true);
 
                 gameManager.EvaluatePlayerAccept(newspaperData.banWords, newspaperData.title);
@@ -719,6 +717,7 @@ public class Entity : MonoBehaviour
 
         public void CreateComplex()
         {
+            Debug.Log($"PublisherIsComplex: {publisherIsComplex}");
             publisher = publisherIsComplex ? FlattenGrammar(publisher) : publisher;
             title = titleIsComplex ? FlattenGrammar(title) : title;
             frontContent = frontIsComplex ? FlattenGrammar(frontContent) : frontContent;

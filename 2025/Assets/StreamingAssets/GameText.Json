@@ -146,6 +146,39 @@
             "email": "NewMerica faces its greatest threat in the efforts performed by the Black Swan. We are relying on you to diminish their influence.\n\n<color=#FFFF00><b>Click and drag to move newspapers.\nRight-click to zoom in and out on the newspapers.\nLeft-click on words to censor them.Switch to your UV Light to uncover hidden images.\nLeft-click on hidden images with the UV Light and ban any newspapers they reside on.\nUsing the replacement knife tool, left-click on text then an option from the replacement list to replace it.</color></b>\n\n"
         }
     ],
+    "vendingMachineItems": [
+        {
+            "itemCode": "111",
+            "itemName": "Family Photo",
+            "itemDescription": "Keep yourself on track at work with this beautifully machine carved wood frame. No family? Now Worries! A complimentary stock family is included with every frame.",
+            "itemEffect": ""
+        },
+        {
+            "itemCode": "112",
+            "itemName": "Coffee Mug",
+            "itemDescription": "With this mugs revolutionary flat bottom design, never worry about spills at your computer again.",
+            "itemEffect": ""
+        },
+        {
+            "itemCode": "113",
+            "itemName": "Pen Box",
+            "itemDescription": "Keep your workspace neat and tidy with this aluminum pen case. Impress your boss with this stylish case and and aim for that promotion. Pen's not included.",
+            "itemEffect": ""
+        },
+        {
+            "itemCode": "211",
+            "itemName": "DoubleGood Battery",
+            "itemDescription": "Keep all your devices powered up with DoubleGood Battery. Don't just settle with good, settle with DoubleGood!",
+            "itemEffect": "Increase radius of blacklight.",
+            "stockDay": 3
+        },
+        {
+            "itemCode": "213",
+            "itemName": "Timerall",
+            "itemDescription": "Have too much work and not enough time? try timerall, Newmerica's favorite long lasting pill. Get fast action relief today, tomorrow, and beyond.",
+            "itemEffect": "Increase work timer by 30 seconds."
+        }
+    ],
     "newspaperText": [
         {
             "day": 1,

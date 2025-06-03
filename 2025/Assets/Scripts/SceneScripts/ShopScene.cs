@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using System;
 
 public class ShopScene : MonoBehaviour
 {
@@ -13,8 +14,8 @@ public class ShopScene : MonoBehaviour
     [SerializeField] private string upgradeDescription2 = "Time Extension: Increases the allotted time for tasks";
     [SerializeField] private int[] upgradePrices1 = { 7, 10, 15 }; // UV Light prices per tier
     [SerializeField] private int[] upgradePrices2 = { 5, 8, 12 }; // Timer prices per tier
-    [SerializeField] private GameObject cosmeticShopEntryPrefab; // Assign in Inspector
-    [SerializeField] private CosmeticShopItem[] cosmeticItems;
+    [SerializeField] public GameObject cosmeticShopEntryPrefab; // Assign in Inspector
+    [SerializeField] public CosmeticShopItem[] cosmeticItems;
     [System.Serializable]
     public class CosmeticShopItem
     {
@@ -24,7 +25,7 @@ public class ShopScene : MonoBehaviour
         public Sprite icon;
     }
 
-    private GameObject currentShopScreen;
+    public GameObject currentShopScreen;
     private Button doneButton;
     private TextMeshProUGUI moneyText;
 
@@ -109,25 +110,48 @@ public class ShopScene : MonoBehaviour
             foreach (Transform child in cosmeticsPanel)
                 Destroy(child.gameObject);
 
+            int itemNumber = 111;
             foreach (var item in cosmeticItems)
             {
                 GameObject entry = Instantiate(cosmeticShopEntryPrefab, cosmeticsPanel);
                 // Set icon
                 entry.transform.Find("Icon").GetComponent<Image>().sprite = item.icon;
                 // Set name
-                entry.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = item.displayName;
+                //entry.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = item.displayName;
+                TextMeshProUGUI nameText = entry.transform.Find("Name").GetComponent<TextMeshProUGUI>();
+                nameText.text = item.displayName;
+                nameText.gameObject.SetActive(false);
+
                 // Set price
-                entry.transform.Find("Price").GetComponent<TextMeshProUGUI>().text = $"${item.price}";
+                //entry.transform.Find("Price").GetComponent<TextMeshProUGUI>().text = $"${item.price}";
+                TextMeshProUGUI priceText = entry.transform.Find("Price").GetComponent<TextMeshProUGUI>();
+                priceText.text = $"${item.price}";
+                RectTransform priceRect = priceText.GetComponent<RectTransform>();
+                priceRect.anchoredPosition -= new Vector2(0, 20);
+
                 // Set button
                 Button buyButton = entry.transform.Find("BuyButton").GetComponent<Button>();
                 buyButton.interactable = !gameManager.gameData.IsCosmeticPurchased(item.id) && GetPlayerMoney() >= item.price;
-                buyButton.onClick.AddListener(() => PurchaseCosmetic(item));
+                buyButton.interactable = false;
+                buyButton.onClick.AddListener(() =>
+                {
+                    PurchaseCosmetic(item);
+                    EventManager.PlaySound?.Invoke("buttonBeep", true);
+
+                });
                 // Optionally, disable button and show "OWNED" if purchased
                 if (gameManager.gameData.IsCosmeticPurchased(item.id))
                 {
                     buyButton.interactable = false;
                     buyButton.transform.Find("Text (TMP)").GetComponent<TextMeshProUGUI>().text = "OWNED";
                 }
+                else
+                {
+                    TextMeshProUGUI buttonText = entry.transform.Find("BuyButton/Text (TMP)").GetComponent<TextMeshProUGUI>();
+                    buttonText.color = Color.black;
+                    buttonText.text = $"{itemNumber}";
+                }
+                itemNumber++;
             }
         }
     }
@@ -140,6 +164,8 @@ public class ShopScene : MonoBehaviour
         SpendPlayerMoney(item.price);
         gameManager.gameData.PurchaseCosmetic(item.id);
 
+        EventManager.VendingMachineItemFall?.Invoke($"{item.displayName}");
+
         // Update UI
         SetupShopUI();
 
@@ -148,6 +174,16 @@ public class ShopScene : MonoBehaviour
         if (jobScene != null)
         {
             jobScene.RefreshCosmetics();
+        }
+    }
+
+    // For purchasing cosmetics via the keypad of VendingMachine
+    private void PurchaseCosmeticById(string id)
+    {
+        var cosmetic = Array.Find(cosmeticItems, c => c.id == id);
+        if (cosmetic != null)
+        {
+            PurchaseCosmetic(cosmetic);
         }
     }
 
@@ -367,5 +403,13 @@ public class ShopScene : MonoBehaviour
         StartCoroutine(NextScene());
     }
 
+    void OnEnable()
+    {
+        EventManager.PurchaseCosmeticById += PurchaseCosmeticById;
+    }
 
+    void OnDisable()
+    {
+        EventManager.PurchaseCosmeticById -= PurchaseCosmeticById;
+    }
 }

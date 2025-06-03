@@ -43,7 +43,7 @@ public class ObjectSpawner : MonoBehaviour
         }
 
         LoadJsonFromFile();
-        Reshuffle(newspapers);
+        //Reshuffle(newspapers);
         PassWordLists();
         SpawnNewMediaObject();
     }

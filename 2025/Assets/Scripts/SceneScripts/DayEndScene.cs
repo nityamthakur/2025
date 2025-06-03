@@ -159,12 +159,14 @@ public class DayEndScene : MonoBehaviour
         //<align=left>This is the left aligned text<line-height=0>
         //<align=right>2,500<line-height=1em>
         int currMoney = gameManager.gameData.GetCurrentMoney();
+        int jobMoney = gameManager.gameData.lastJobPay;
         int rentDue = gameManager.gameData.rent;
 
         fundsText.text = "Funds\n";
-        fundsText.text += $"\n<align=left>Savings<line-height=0>\n<align=right>{currMoney + rentDue}<line-height=1em>";
+        fundsText.text += $"\n<align=left>Savings<line-height=0>\n<align=right>{currMoney - jobMoney}<line-height=1em>";
+        fundsText.text += $"\n<align=left>Job Pay<line-height=0>\n<align=right>{jobMoney}<line-height=1em>";
         fundsText.text += $"\n<align=left>Rent<line-height=0>\n<align=right>-{rentDue}<line-height=1em>";
-        fundsText.text += $"\n\n<align=left>New Total<line-height=0>\n<align=right>${currMoney}<line-height=1em>";
+        fundsText.text += $"\n\n<align=left>New Total<line-height=0>\n<align=right>${currMoney - rentDue}<line-height=1em>";
         
         suppliesText.text = $"Office supplies\n";
         suppliesText.text += "\n<s>Getting Low On Pens";

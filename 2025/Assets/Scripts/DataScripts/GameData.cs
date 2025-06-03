@@ -16,6 +16,7 @@ public class GameData
     public int day;
     public int money, totalMoneyEarned, totalMoneySpent;
     public int rent;
+    public int lastJobPay = 0;
     public float performanceScale;
     private bool hasUVLightUpgrade = false;
     private readonly float timerUpgrade = 30f;
@@ -92,12 +93,18 @@ public class GameData
     {
         var difficultyScaler = gameMode switch
         {
-            GameMode.Easy => 1,
-            GameMode.Normal => 2,
-            GameMode.Hard => 4,
+            GameMode.Easy => 2,
+            GameMode.Normal => 4,
+            GameMode.Hard => 6,
             _ => 2,
         };
         this.rent += difficultyScaler;
+    }
+
+    public void AddJobMoney(int money)
+    {
+        this.lastJobPay = money;
+        SetCurrentMoney(lastJobPay, false);
     }
 
     public void AddNewMedia(Media newMedia)
