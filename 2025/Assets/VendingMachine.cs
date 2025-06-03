@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,18 +21,17 @@ public class VendingMachine : MonoBehaviour
     {
         gameManager = FindFirstObjectByType<GameManager>();
         shopScene = FindFirstObjectByType<ShopScene>();
+        itemCode = "";
 
         LoadJsonFromFile();
-        CreatePurchasables();
-        itemCode = "";
+        //CreatePurchasables();
         UpdateDisplayPanel();
     }
 
     public void ConfirmPurchase()
     {
-        Debug.Log("Confirm Purchase");
         EventManager.PlaySound?.Invoke("buttonBeep", true);
-        ItemFall();
+        ItemCheck();
         CancelButtonPanel();
     }
     public void CancelButtonPanel()
@@ -50,8 +48,9 @@ public class VendingMachine : MonoBehaviour
         itemCode += code;
         UpdateDisplayPanel();
     }
-    private void UpdateDisplayPanel()
+    private void UpdateDisplayPanel(string grabbedCode = null)
     {
+        if(grabbedCode == null)
         displayPanel.text = itemCode;
         VendingMachineItem item = vendingMachineItems.Find(item => item.itemCode == itemCode);
         bool stockDayCheck = false;
@@ -62,6 +61,107 @@ public class VendingMachine : MonoBehaviour
         effectText.text = stockDayCheck ? item.itemEffect : "";
     }
 
+    private void ItemCheck()
+    {
+        VendingMachineItem item = vendingMachineItems.Find(i => i.itemCode == itemCode);
+        if (item == null)
+        {
+            //Debug.Log("Item not found with code: " + itemCode);
+            return;
+        }
+
+        var cosmetic = Array.Find(shopScene.cosmeticItems, c => c.displayName == item.itemName);
+        if (cosmetic == null) return;
+
+        Transform cosmeticsPanel = shopScene.currentShopScreen.transform.Find("CosmeticsPanel");
+        Transform icon = null;
+
+        foreach (Transform itemInPanel in cosmeticsPanel)
+        {
+            TextMeshProUGUI nameField = itemInPanel.Find("Name")?.GetComponent<TextMeshProUGUI>();
+            if (nameField != null && nameField.text == item.itemName)
+            {
+                icon = itemInPanel.Find("Icon");
+                break;
+            }
+        }
+        if (icon == null)
+        {
+            Debug.LogWarning("Could not find icon for item: " + item.itemName);
+            return;
+        }
+
+        if (gameManager.gameData.IsCosmeticPurchased(cosmetic.id)) return;
+        if (gameManager.gameData.GetCurrentMoney() < cosmetic.price) return;
+
+
+        ItemFall(cosmetic, icon.position);
+    }
+
+    private void ItemFall(ShopScene.CosmeticShopItem cosmetic, Vector3 iconPosition)
+    {
+        Vector3 pos = iconPosition;
+        pos += new Vector3(5f, 2f, 0f);
+
+        EventManager.PurchaseCosmeticById?.Invoke(cosmetic.id);
+
+        GameObject entry = Instantiate(shopScene.cosmeticShopEntryPrefab, spawnLayer);
+        entry.transform.Find("Icon").GetComponent<Image>().sprite = cosmetic.icon;
+        entry.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = "";
+        entry.transform.Find("Price").GetComponent<TextMeshProUGUI>().text = "";
+        entry.transform.Find("BuyButton").gameObject.SetActive(false);
+
+        entry.transform.position = pos;
+        Rigidbody2D rb = entry.AddComponent<Rigidbody2D>();
+        rb.gravityScale = 1f;
+
+        StartCoroutine(DelaySound(1f));
+        Destroy(entry, 2f);
+    }
+
+    private void VendingMachineItemFall(string itemName)
+    {
+        var cosmetic = Array.Find(shopScene.cosmeticItems, c => c.displayName == itemName);
+        if (cosmetic == null)
+        {
+            Debug.LogWarning("No cosmetic found with name: " + itemName);
+            return;
+        }
+
+        Transform cosmeticsPanel = shopScene.currentShopScreen.transform.Find("CosmeticsPanel");
+        Transform icon = null;
+
+        foreach (Transform itemInPanel in cosmeticsPanel)
+        {
+            TextMeshProUGUI nameField = itemInPanel.Find("Name")?.GetComponent<TextMeshProUGUI>();
+            if (nameField != null && nameField.text == itemName)
+            {
+                icon = itemInPanel.Find("Icon");
+                break;
+            }
+        }
+
+        if (icon == null)
+        {
+            Debug.LogWarning("Could not find icon for item: " + itemName);
+            return;
+        }
+
+        ItemFall(cosmetic, icon.position);
+    }
+
+    
+    void OnEnable()
+    {
+        EventManager.VendingMachineItemFall += VendingMachineItemFall;
+    }
+
+    void OnDisable()
+    {
+        EventManager.VendingMachineItemFall -= VendingMachineItemFall;
+    }
+
+    /*
     private void ItemFall()
     {
         VendingMachineItem item = vendingMachineItems.Find(i => i.itemCode == itemCode);
@@ -70,24 +170,58 @@ public class VendingMachine : MonoBehaviour
             Debug.LogWarning("Item not found with code: " + itemCode);
             return;
         }
-        if (item.spawnPosition == null)
-        {
-            Debug.LogWarning("spawnPosition is null for item: " + item.itemName);
-            return;
-        }
-        if (item.itemImage == null)
-        {
-            Debug.LogWarning("itemImage is null for item: " + item.itemName);
-            return;
-        }
 
         // Find the matching cosmetic item by name
         var cosmetic = Array.Find(shopScene.cosmeticItems, c => c.displayName == item.itemName);
         if (cosmetic == null)
             return;
 
+        Vector3 position = Vector3.zero; // default fallback
+        bool found = false;
+
+        Transform cosmeticsPanel = shopScene.currentShopScreen.transform.Find("CosmeticsPanel");
+        foreach (Transform itemInPanel in cosmeticsPanel)
+        {
+            TextMeshProUGUI nameField = itemInPanel.Find("Name")?.GetComponent<TextMeshProUGUI>();
+            if (nameField != null && nameField.text == item.itemName)
+            {
+                Transform icon = itemInPanel.Find("Icon");
+                if (icon != null)
+                {
+                    position = icon.position;
+                    found = true;
+                }
+                break;
+            }
+        }
+
+        if (!found)
+        {
+            Debug.LogWarning("Could not find spawn position for item: " + item.itemName);
+            return;
+        }
+
         EventManager.PurchaseCosmeticById?.Invoke(cosmetic.id);
 
+        GameObject entry = Instantiate(shopScene.cosmeticShopEntryPrefab, spawnLayer);
+        // Set icon
+        entry.transform.Find("Icon").GetComponent<Image>().sprite = cosmetic.icon;
+        // Set name
+        entry.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = "";
+        // Set price
+        entry.transform.Find("Price").GetComponent<TextMeshProUGUI>().text = "";
+        // Set button
+        Button buyButton = entry.transform.Find("BuyButton").GetComponent<Button>();
+        buyButton.gameObject.SetActive(false);
+
+        entry.transform.position = position;
+        //entry.AddComponent<BoxCollider2D>();
+        Rigidbody2D rb = entry.AddComponent<Rigidbody2D>();
+        rb.gravityScale = 1f;
+
+        StartCoroutine(DelaySound());
+        Destroy(entry, 2f);
+        
         GameObject fallingObject = new GameObject("FallingItem_" + item.itemName);
 
         fallingObject.transform.position = item.spawnPosition.position;
@@ -106,10 +240,11 @@ public class VendingMachine : MonoBehaviour
         StartCoroutine(DelaySound());
         Destroy(fallingObject, 2f);
     }
+    */
 
-    private IEnumerator DelaySound()
+    private IEnumerator DelaySound(float time)
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(time);
         EventManager.PlaySound?.Invoke("objectThunk", true);
     }
 
@@ -161,6 +296,7 @@ public class VendingMachine : MonoBehaviour
             }
         }
     }
+
 
     [Serializable]
     private class Wrapper

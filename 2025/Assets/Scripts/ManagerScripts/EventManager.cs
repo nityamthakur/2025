@@ -79,4 +79,5 @@ public static class EventManager
 
     // ShopManager Events
     public static Action<string> PurchaseCosmeticById;
+    public static Action<string> VendingMachineItemFall;
 }

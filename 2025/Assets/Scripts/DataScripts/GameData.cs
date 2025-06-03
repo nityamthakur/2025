@@ -37,7 +37,7 @@ public class GameData
     {
         saveSlot = -1;
         day = 1;
-        money = 20;
+        money = 0;
         totalMoneyEarned = 0;
         totalMoneySpent = 0;
         rent = 5;
@@ -93,9 +93,9 @@ public class GameData
     {
         var difficultyScaler = gameMode switch
         {
-            GameMode.Easy => 1,
-            GameMode.Normal => 2,
-            GameMode.Hard => 4,
+            GameMode.Easy => 2,
+            GameMode.Normal => 4,
+            GameMode.Hard => 6,
             _ => 2,
         };
         this.rent += difficultyScaler;
