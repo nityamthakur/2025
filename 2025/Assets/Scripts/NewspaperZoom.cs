@@ -258,7 +258,7 @@ public class NewspaperZoom : MonoBehaviour
             string displayText = "<b>BAN LIST:</b>\n";
             foreach (string phrase in banWords)
             {
-                displayText += phrase.Replace(" ", "\n") + "\n\n"; // Ensures multi-word phrases are split into separate lines
+                displayText += phrase + "\n\n";
             }
 
             // Only show the Censor List from Day 2 onward
@@ -267,7 +267,7 @@ public class NewspaperZoom : MonoBehaviour
                 displayText += "<b>CENSOR LIST:</b>\n";
                 foreach (string phrase in censorWords)
                 {
-                    displayText += phrase.Replace(" ", "\n") + "\n\n";
+                    displayText += phrase + "\n\n";
                 }
             }
 

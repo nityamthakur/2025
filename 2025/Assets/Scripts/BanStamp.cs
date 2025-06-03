@@ -53,6 +53,8 @@ public class BanStamp : MonoBehaviour
             banStampCollider.transform.position = mousePosition;
             banStampCollider.SetActive(false);
 
+            gameManager.IncrementBanSlider();
+
             Debug.Log("Released ban stamp");
             return;
         }
@@ -65,6 +67,8 @@ public class BanStamp : MonoBehaviour
 
             gameManager.SetBanStampColliderParentToMediaObj(banStampCollider);
             banStampCollider.SetActive(true);
+
+            gameManager.DecrementBanSlider();
 
             Debug.Log("Pressed ban stamp");
             return;

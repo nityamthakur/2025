@@ -199,6 +199,7 @@ public class UVLight : MonoBehaviour
             {
                 gameManager.SetTargetFound(true);
             }
+            gameManager.DecrementLightSlider();
 
             StartCoroutine(ChangeLightColor());
 
