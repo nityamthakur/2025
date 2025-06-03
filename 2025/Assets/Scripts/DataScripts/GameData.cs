@@ -16,6 +16,7 @@ public class GameData
     public int day;
     public int money, totalMoneyEarned, totalMoneySpent;
     public int rent;
+    public int lastJobPay = 0;
     public float performanceScale;
     private bool hasUVLightUpgrade = false;
     private readonly float timerUpgrade = 30f;
@@ -98,6 +99,12 @@ public class GameData
             _ => 2,
         };
         this.rent += difficultyScaler;
+    }
+
+    public void AddJobMoney(int money)
+    {
+        this.lastJobPay = money;
+        SetCurrentMoney(lastJobPay, false);
     }
 
     public void AddNewMedia(Media newMedia)

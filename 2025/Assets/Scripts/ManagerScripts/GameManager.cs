@@ -656,7 +656,7 @@ public class GameManager : MonoBehaviour
         if (jobDetails.currClockTime <= 0 && jobDetails.numMediaProcessed >= jobDetails.numMediaNeeded || jobDetails.numMediaProcessed >= jobDetails.numMediaExtra)
         {
             dayEnded = true;
-            gameData.SetCurrentMoney(totalScore, false);
+            gameData.AddJobMoney(totalScore);
             jobScene.ShowResults(jobDetails.numMediaProcessed, TotalScore);
             TotalScore = 0;
             currentMediaObject = null;
