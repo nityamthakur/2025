@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using TMPro;
@@ -15,7 +16,7 @@ public class VendingMachine : MonoBehaviour
     private ShopScene shopScene;
 
     private List<VendingMachineItem> vendingMachineItems;
-    private string itemCode = "";
+    private string itemCode;
 
     private void Start()
     {
@@ -30,6 +31,7 @@ public class VendingMachine : MonoBehaviour
 
     public void ConfirmPurchase()
     {
+        Debug.Log("Confirm Purchase");
         EventManager.PlaySound?.Invoke("buttonBeep", true);
         ItemFall();
         CancelButtonPanel();
@@ -63,15 +65,26 @@ public class VendingMachine : MonoBehaviour
     private void ItemFall()
     {
         VendingMachineItem item = vendingMachineItems.Find(i => i.itemCode == itemCode);
-        if (item == null || item.spawnPosition == null || item.itemImage == null)
+        if (item == null)
+        {
+            Debug.LogWarning("Item not found with code: " + itemCode);
             return;
+        }
+        if (item.spawnPosition == null)
+        {
+            Debug.LogWarning("spawnPosition is null for item: " + item.itemName);
+            return;
+        }
+        if (item.itemImage == null)
+        {
+            Debug.LogWarning("itemImage is null for item: " + item.itemName);
+            return;
+        }
 
         // Find the matching cosmetic item by name
         var cosmetic = Array.Find(shopScene.cosmeticItems, c => c.displayName == item.itemName);
         if (cosmetic == null)
-        {
             return;
-        }
 
         EventManager.PurchaseCosmeticById?.Invoke(cosmetic.id);
 
@@ -90,7 +103,14 @@ public class VendingMachine : MonoBehaviour
 
         fallingObject.AddComponent<BoxCollider2D>();
 
+        StartCoroutine(DelaySound());
         Destroy(fallingObject, 2f);
+    }
+
+    private IEnumerator DelaySound()
+    {
+        yield return new WaitForSeconds(1f);
+        EventManager.PlaySound?.Invoke("objectThunk", true);
     }
 
     private void LoadJsonFromFile()
@@ -120,7 +140,7 @@ public class VendingMachine : MonoBehaviour
         }
     }
 
-    private void CreatePurchasables()
+    public void CreatePurchasables()
     {
         foreach (Transform itemUI in cosmeticsPanel)
         {

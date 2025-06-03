@@ -152,6 +152,7 @@ public class ShopScene : MonoBehaviour
         if (gameManager.gameData.IsCosmeticPurchased(item.id)) return;
         if (GetPlayerMoney() < item.price) return;
 
+        Debug.Log("PurchaseCosmetic");
         SpendPlayerMoney(item.price);
         gameManager.gameData.PurchaseCosmetic(item.id);
 
@@ -168,10 +169,18 @@ public class ShopScene : MonoBehaviour
 
     private void PurchaseCosmeticById(string id)
     {
+        Debug.Log("PurchaseCosmeticByID");
         var cosmetic = Array.Find(cosmeticItems, c => c.id == id);
         if (cosmetic != null)
         {
             PurchaseCosmetic(cosmetic);
+            
+            // Rebuild VendingMachine links
+            VendingMachine vending = FindFirstObjectByType<VendingMachine>();
+            if (vending != null)
+            {
+                vending.CreatePurchasables();
+            }
         }
     }
 

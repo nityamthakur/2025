@@ -16,6 +16,7 @@
         { "sound": "worksounds", "text": "People Talking, Phones Ringing, Papers Shuffling" },  
         { "sound": "glitch", "text": "Computer Making Glitching Sounds" },
         { "sound": "switchoff", "text": "Echoing Sound of a Switch" },
-        { "sound": "buttonbeep", "text": "Button Being Pressed" }
+        { "sound": "buttonbeep", "text": "Button Being Pressed" },
+        { "sound": "objectThunk", "text": "Item Tumbling in the Vending Machine"}
     ]
 }
