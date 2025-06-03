@@ -6,6 +6,7 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -26,6 +27,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject cuttingTargetObj;
     [SerializeField] GameObject UVLightObj;
     [SerializeField] GameObject banStampObj;
+
+    // Tool usage sliders
+    [SerializeField] Slider banStampSlider;
+    [SerializeField] Slider penSlider;
+    [SerializeField] Slider lightSlider;
+    [SerializeField] Slider knifeSlider;
+
     private JobDetails jobDetails;
     private JobScene jobScene;
     private Coroutine jobTimerCoroutine;
@@ -47,6 +55,7 @@ public class GameManager : MonoBehaviour
     private bool banStampPressed = false;
     private bool cuttingModeActive = false;
     private CensorTarget currentCuttingRecipient = null;
+
 
     // Set total score minimum to 0
     private int totalScore = 0;
@@ -277,6 +286,87 @@ public class GameManager : MonoBehaviour
         return currentCuttingRecipient;
     }
 
+    public int GetBanSliderValue()
+    {
+        if (banStampSlider == null)
+        {
+            Debug.LogError("BanStampSlider is null.");
+            return 0;
+        }
+
+        return (int)banStampSlider.value;
+    }
+    public void SetBanSliderMax(int value)
+    {
+        if (banStampSlider == null)
+        {
+            Debug.LogError("BanStampSlider is null.");
+            return;
+        }
+
+        banStampSlider.maxValue = value;
+    }
+    public void GetPenSliderValue(float value)
+    {
+        if (penSlider == null)
+        {
+            Debug.LogError("PenSlider is null.");
+            return;
+        }
+
+        penSlider.value = value;
+    }
+    public void SetPenSliderMax(float value)
+    {
+        if (penSlider == null)
+        {
+            Debug.LogError("PenSlider is null.");
+            return;
+        }
+
+        penSlider.maxValue = value;
+    }
+    public void GetLightSliderValue(float value)
+    {
+        if (lightSlider == null)
+        {
+            Debug.LogError("LightSlider is null.");
+            return;
+        }
+
+        lightSlider.value = value;
+    }
+    public void SetLightSliderMax(float value)
+    {
+        if (lightSlider == null)
+        {
+            Debug.LogError("LightSlider is null.");
+            return;
+        }
+
+        lightSlider.maxValue = value;
+    }
+    public void GetKnifeSliderValue(float value)
+    {
+        if (knifeSlider == null)
+        {
+            Debug.LogError("KnifeSlider is null.");
+            return;
+        }
+
+        knifeSlider.value = value;
+    }
+    public void SetKnifeSliderMax(float value)
+    {
+        if (knifeSlider == null)
+        {
+            Debug.LogError("KnifeSlider is null.");
+            return;
+        }
+
+        knifeSlider.maxValue = value;
+    }
+
     // -------------------------------------
     // Functions
     public void RestartGame()
@@ -486,6 +576,87 @@ public class GameManager : MonoBehaviour
         cuttingModeActive = false;
 
         Debug.Log("Cutting mode deactivated");
+    }
+
+    public void IncrementBanSlider()
+    {
+        if (banStampSlider == null)
+        {
+            Debug.LogError("BanStampSlider is null.");
+            return;
+        }
+
+        banStampSlider.value += 1;
+    }
+    public void DecrementBanSlider()
+    {
+        if (banStampSlider == null)
+        {
+            Debug.LogError("BanStampSlider is null.");
+            return;
+        }
+
+        banStampSlider.value -= 1;
+    }
+    public void IncrementPenSlider()
+    {
+        if (penSlider == null)
+        {
+            Debug.LogError("PenSlider is null.");
+            return;
+        }
+
+        penSlider.value += 1;
+    }
+    public void DecrementPenSlider()
+    {
+        if (penSlider == null)
+        {
+            Debug.LogError("PenSlider is null.");
+            return;
+        }
+
+        penSlider.value -= 1;
+    }
+    public void IncrementLightSlider()
+    {
+        if (lightSlider == null)
+        {
+            Debug.LogError("LightSlider is null.");
+            return;
+        }
+
+        lightSlider.value += 1;
+    }
+    public void DecrementLightSlider()
+    {
+        if (lightSlider == null)
+        {
+            Debug.LogError("LightSlider is null.");
+            return;
+        }
+
+        lightSlider.value -= 1;
+    }
+    public void IncrementKnifeSlider()
+    {
+        if (knifeSlider == null)
+        {
+            Debug.LogError("KnifeSlider is null.");
+            return;
+        }
+
+        knifeSlider.value += 1;
+    }
+    public void DecrementKnifeSlider()
+    {
+        if (knifeSlider == null)
+        {
+            Debug.LogError("KnifeSlider is null.");
+            return;
+        }
+
+        knifeSlider.value -= 1;
     }
 
     public void UpdateCensorTargets(string replacementText)
