@@ -37,7 +37,7 @@ public class GameData
     {
         saveSlot = -1;
         day = 1;
-        money = 0;
+        money = 20;
         totalMoneyEarned = 0;
         totalMoneySpent = 0;
         rent = 5;

@@ -1,8 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,33 +10,39 @@ public class VendingMachine : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI displayPanel;
     [SerializeField] private TextMeshProUGUI nameText, descriptionText, effectText;
-    //[SerializeField] private GameObject machineButtons;
     [SerializeField] private Transform cosmeticsPanel, spawnLayer;
-    [SerializeField] private GameObject fallingImage;
     private GameManager gameManager;
+    private ShopScene shopScene;
+
     private List<VendingMachineItem> vendingMachineItems;
     private string itemCode = "";
 
     private void Start()
     {
         gameManager = FindFirstObjectByType<GameManager>();
+        shopScene = FindFirstObjectByType<ShopScene>();
+
         LoadJsonFromFile();
         CreatePurchasables();
-        CancelButtonPanel();
+        itemCode = "";
+        UpdateDisplayPanel();
     }
 
     public void ConfirmPurchase()
     {
+        EventManager.PlaySound?.Invoke("buttonBeep", true);
         ItemFall();
         CancelButtonPanel();
     }
     public void CancelButtonPanel()
     {
+        EventManager.PlaySound?.Invoke("buttonBeep", true);
         itemCode = "";
         UpdateDisplayPanel();
     }
     public void InputItemCode(string code)
     {
+        EventManager.PlaySound?.Invoke("buttonBeep", true);
         if (itemCode.Length > 2)
             CancelButtonPanel();
         itemCode += code;
@@ -56,25 +62,53 @@ public class VendingMachine : MonoBehaviour
 
     private void ItemFall()
     {
+        Debug.Log($"Here {itemCode}");
         VendingMachineItem item = vendingMachineItems.Find(i => i.itemCode == itemCode);
         if (item == null)
-            return;
-
-        Debug.Log("Spawning object");
-        GameObject fallingObject = Instantiate(fallingImage, spawnLayer);
-        fallingObject.SetActive(true);
-        fallingObject.name = "FallingItem_" + item.itemName;
-        fallingObject.transform.position = item.spawnWorldPosition;
-
-        Image sr = fallingObject.GetComponent<Image>();
-        if (sr != null)
         {
-            sr.sprite = item.itemImage;
+            Debug.LogWarning("Item not found with code: " + itemCode);
+            return;
+        }
+        if (item.spawnPosition == null)
+        {
+            Debug.LogWarning("spawnPosition is null for item: " + item.itemName);
+            return;
+        }
+        if (item.itemImage == null)
+        {
+            Debug.LogWarning("itemImage is null for item: " + item.itemName);
+            return;
         }
 
-        //Destroy(fallingObject, 2f);
-    }
 
+        Debug.Log("Here");
+        // Find the matching cosmetic item by name
+        var cosmetic = Array.Find(shopScene.cosmeticItems, c => c.displayName == item.itemName);
+        if (cosmetic == null)
+        {
+            return;
+        }
+
+        Debug.Log("Here");
+        EventManager.PurchaseCosmeticById?.Invoke(cosmetic.id);
+
+        GameObject fallingObject = new GameObject("FallingItem_" + item.itemName);
+
+        fallingObject.transform.position = item.spawnPosition.position;
+        fallingObject.transform.SetParent(spawnLayer);
+        fallingObject.transform.localScale = Vector3.one / 2;
+
+        Image image = fallingObject.AddComponent<Image>();
+        image.sprite = item.itemImage;
+        image.preserveAspect = true;
+
+        Rigidbody2D rb = fallingObject.AddComponent<Rigidbody2D>();
+        rb.gravityScale = 1f;
+
+        fallingObject.AddComponent<BoxCollider2D>();
+
+        Destroy(fallingObject, 2f);
+    }
 
     private void LoadJsonFromFile()
     {
@@ -107,19 +141,12 @@ public class VendingMachine : MonoBehaviour
     {
         foreach (Transform itemUI in cosmeticsPanel)
         {
-            GameObject clone = Instantiate(itemUI.gameObject, itemUI.parent);
-            clone.name = "CLONE_" + itemUI.name;
-            //clone.SetSiblingIndex(itemUI.GetSiblingIndex() + 1); // Optional, put it right after the original
-        }
-
-
-        foreach (Transform itemUI in cosmeticsPanel)
-        {
             Transform item = itemUI.Find("Name");
             TextMeshProUGUI name = item?.GetComponent<TextMeshProUGUI>();
             if (name == null) continue;
 
             VendingMachineItem match = vendingMachineItems.Find(vm => vm.itemName == name.text);
+
             if (match != null)
             {
                 Transform iconTransform = itemUI.Find("Icon");
@@ -127,7 +154,7 @@ public class VendingMachine : MonoBehaviour
                 if (iconImage != null)
                 {
                     match.itemImage = iconImage.sprite;
-                    match.spawnWorldPosition = iconImage.transform.position;
+                    match.spawnPosition = iconImage.transform;
                 }
             }
         }
@@ -147,13 +174,8 @@ public class VendingMachine : MonoBehaviour
         public string itemDescription;
         public string itemEffect;
         public int stockDay = 0;
-        [NonSerialized] public Sprite itemImage;
-        [NonSerialized] public Vector3 spawnWorldPosition;
 
-        public IEnumerator FallAndDestroy()
-        {
-            yield return new WaitForSeconds(1f);
-            //Destroy(this.gameObject);
-        }
+        [NonSerialized] public Sprite itemImage;
+        [NonSerialized] public Transform spawnPosition;
     }
 }

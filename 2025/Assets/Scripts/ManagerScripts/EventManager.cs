@@ -76,4 +76,7 @@ public static class EventManager
     public static Action UnZoomObject;
     public static Action ResetLayerOrder;
     public static Action<bool> CanInteractWithObject;
+
+    // ShopManager Events
+    public static Action<string> PurchaseCosmeticById;
 }

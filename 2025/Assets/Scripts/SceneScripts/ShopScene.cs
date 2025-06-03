@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using System;
 
 public class ShopScene : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class ShopScene : MonoBehaviour
     [SerializeField] private int[] upgradePrices1 = { 7, 10, 15 }; // UV Light prices per tier
     [SerializeField] private int[] upgradePrices2 = { 5, 8, 12 }; // Timer prices per tier
     [SerializeField] private GameObject cosmeticShopEntryPrefab; // Assign in Inspector
-    [SerializeField] private CosmeticShopItem[] cosmeticItems;
+    [SerializeField] public CosmeticShopItem[] cosmeticItems;
     [System.Serializable]
     public class CosmeticShopItem
     {
@@ -109,15 +110,22 @@ public class ShopScene : MonoBehaviour
             foreach (Transform child in cosmeticsPanel)
                 Destroy(child.gameObject);
 
+            int itemNumber = 111;
             foreach (var item in cosmeticItems)
             {
                 GameObject entry = Instantiate(cosmeticShopEntryPrefab, cosmeticsPanel);
                 // Set icon
                 entry.transform.Find("Icon").GetComponent<Image>().sprite = item.icon;
                 // Set name
-                entry.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = item.displayName;
+                entry.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = $"";//item.displayName;
+
                 // Set price
-                entry.transform.Find("Price").GetComponent<TextMeshProUGUI>().text = $"${item.price}";
+                //entry.transform.Find("Price").GetComponent<TextMeshProUGUI>().text = $"${item.price}";
+                TextMeshProUGUI priceText = entry.transform.Find("Price").GetComponent<TextMeshProUGUI>();
+                priceText.text = $"${item.price}";
+                RectTransform priceRect = priceText.GetComponent<RectTransform>();
+                priceRect.anchoredPosition -= new Vector2(0, 20);
+
                 // Set button
                 Button buyButton = entry.transform.Find("BuyButton").GetComponent<Button>();
                 buyButton.interactable = !gameManager.gameData.IsCosmeticPurchased(item.id) && GetPlayerMoney() >= item.price;
@@ -128,6 +136,10 @@ public class ShopScene : MonoBehaviour
                     buyButton.interactable = false;
                     buyButton.transform.Find("Text (TMP)").GetComponent<TextMeshProUGUI>().text = "OWNED";
                 }
+                
+                TextMeshProUGUI buttonText = entry.transform.Find("BuyButton/Text (TMP)").GetComponent<TextMeshProUGUI>();
+                buttonText.color = Color.black;
+                buttonText.text = $"{itemNumber++}";
             }
         }
     }
@@ -137,6 +149,7 @@ public class ShopScene : MonoBehaviour
         if (gameManager.gameData.IsCosmeticPurchased(item.id)) return;
         if (GetPlayerMoney() < item.price) return;
 
+        Debug.Log($"itemPurchased: {item.displayName}");
         SpendPlayerMoney(item.price);
         gameManager.gameData.PurchaseCosmetic(item.id);
 
@@ -148,6 +161,15 @@ public class ShopScene : MonoBehaviour
         if (jobScene != null)
         {
             jobScene.RefreshCosmetics();
+        }
+    }
+
+    private void PurchaseCosmeticById(string id)
+    {
+        var cosmetic = Array.Find(cosmeticItems, c => c.id == id); // <-- Fix here
+        if (cosmetic != null)
+        {
+            PurchaseCosmetic(cosmetic);
         }
     }
 
@@ -367,5 +389,13 @@ public class ShopScene : MonoBehaviour
         StartCoroutine(NextScene());
     }
 
+    void OnEnable()
+    {
+        EventManager.PurchaseCosmeticById += PurchaseCosmeticById;
+    }
 
+    void OnDisable()
+    {
+        EventManager.PurchaseCosmeticById -= PurchaseCosmeticById;
+    }
 }
