@@ -93,7 +93,7 @@ public class Entity : MonoBehaviour
 
         // Calculate half-width and half-height in world space
         screenBounds = (topRight - bottomLeft) / 2f;
-        Debug.Log($"{screenBounds}");
+        // Debug.Log($"{screenBounds}");
         //screenBounds = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
 
         // Setting object boundaries to keep it inside the screen
@@ -717,6 +717,7 @@ public class Entity : MonoBehaviour
 
         public void CreateComplex()
         {
+            Debug.Log($"PublisherIsComplex: {publisherIsComplex}");
             publisher = publisherIsComplex ? FlattenGrammar(publisher) : publisher;
             title = titleIsComplex ? FlattenGrammar(title) : title;
             frontContent = frontIsComplex ? FlattenGrammar(frontContent) : frontContent;

@@ -743,7 +743,7 @@ public class GameManager : MonoBehaviour
         TotalScore += Math.Clamp(mediaScore, 0, 5);
 
         EvaluatePlayerScore();
-        ArticleAnalysisUpdate(mediaScore, mediaTitle, banWords, playerSucceeds, jobDetails.currClockTime <= 0);
+        ArticleAnalysisUpdate(Math.Clamp(mediaScore, 0, 5), mediaTitle, banWords, playerSucceeds, jobDetails.currClockTime <= 0);
         ResetPuzzleTracking();
         CheckDayEnd();
     }
@@ -804,6 +804,8 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+        Debug.Log($"moneyEarned: {moneyEarned}, mediaTitle: {mediaTitle}, banWords: {banwords}, playerSucceeds: {playerSucceeds}, overTime: {overTime}");
+
         foundMedia.OverTime = overTime;
         foundMedia.moneyEarned = moneyEarned;
         foundMedia.timeSpent = jobDetails.articleClockTime;
@@ -816,7 +818,7 @@ public class GameManager : MonoBehaviour
         foundMedia.numCensoredCorrectly = currentCensorNum;
         foundMedia.numCensorMistakes = numCensorMistakes;
         foundMedia.noMistakes = playerSucceeds;
-        //foundMedia.Print();
+        foundMedia.Print();
         jobDetails.articleClockTime = 0f;
     }
 
@@ -855,7 +857,6 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator BeginWorkTimer(float time)
     {
-        Debug.Log("Job Timer Started...");
         StartCoroutine(UpdateArticleTime());
 
         jobDetails.currClockTime = time;

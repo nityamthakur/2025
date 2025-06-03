@@ -88,8 +88,8 @@ public class SceneChanger : MonoBehaviour
         MainMenuDone = true;
 
         // Ignore the shop on the first day
-        //if (gameManager.gameData.GetCurrentDay() == 1 && currentSceneIndex == 1)
-        //    currentSceneIndex++;
+        if (gameManager.gameData.GetCurrentDay() == 1 && currentSceneIndex == 1)
+            currentSceneIndex++;
 
         // Call the function for the current scene
         sceneSequence[currentSceneIndex]?.Invoke();
