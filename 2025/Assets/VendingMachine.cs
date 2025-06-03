@@ -62,26 +62,10 @@ public class VendingMachine : MonoBehaviour
 
     private void ItemFall()
     {
-        Debug.Log($"Here {itemCode}");
         VendingMachineItem item = vendingMachineItems.Find(i => i.itemCode == itemCode);
-        if (item == null)
-        {
-            Debug.LogWarning("Item not found with code: " + itemCode);
+        if (item == null || item.spawnPosition == null || item.itemImage == null)
             return;
-        }
-        if (item.spawnPosition == null)
-        {
-            Debug.LogWarning("spawnPosition is null for item: " + item.itemName);
-            return;
-        }
-        if (item.itemImage == null)
-        {
-            Debug.LogWarning("itemImage is null for item: " + item.itemName);
-            return;
-        }
 
-
-        Debug.Log("Here");
         // Find the matching cosmetic item by name
         var cosmetic = Array.Find(shopScene.cosmeticItems, c => c.displayName == item.itemName);
         if (cosmetic == null)
@@ -89,7 +73,6 @@ public class VendingMachine : MonoBehaviour
             return;
         }
 
-        Debug.Log("Here");
         EventManager.PurchaseCosmeticById?.Invoke(cosmetic.id);
 
         GameObject fallingObject = new GameObject("FallingItem_" + item.itemName);
@@ -146,7 +129,6 @@ public class VendingMachine : MonoBehaviour
             if (name == null) continue;
 
             VendingMachineItem match = vendingMachineItems.Find(vm => vm.itemName == name.text);
-
             if (match != null)
             {
                 Transform iconTransform = itemUI.Find("Icon");

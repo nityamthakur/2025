@@ -110,21 +110,24 @@ public class ShopScene : MonoBehaviour
             foreach (Transform child in cosmeticsPanel)
                 Destroy(child.gameObject);
 
-            int itemNumber = 111;
+            //int itemNumber = 111;
             foreach (var item in cosmeticItems)
             {
                 GameObject entry = Instantiate(cosmeticShopEntryPrefab, cosmeticsPanel);
                 // Set icon
                 entry.transform.Find("Icon").GetComponent<Image>().sprite = item.icon;
                 // Set name
-                entry.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = $"";//item.displayName;
+                //entry.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = item.displayName;
+                TextMeshProUGUI nameText = entry.transform.Find("Name").GetComponent<TextMeshProUGUI>();
+                nameText.text = item.displayName;
+
 
                 // Set price
-                //entry.transform.Find("Price").GetComponent<TextMeshProUGUI>().text = $"${item.price}";
-                TextMeshProUGUI priceText = entry.transform.Find("Price").GetComponent<TextMeshProUGUI>();
-                priceText.text = $"${item.price}";
-                RectTransform priceRect = priceText.GetComponent<RectTransform>();
-                priceRect.anchoredPosition -= new Vector2(0, 20);
+                entry.transform.Find("Price").GetComponent<TextMeshProUGUI>().text = $"${item.price}";
+                //TextMeshProUGUI priceText = entry.transform.Find("Price").GetComponent<TextMeshProUGUI>();
+                //priceText.text = $"${item.price}";
+                //RectTransform priceRect = priceText.GetComponent<RectTransform>();
+                //priceRect.anchoredPosition -= new Vector2(0, 20);
 
                 // Set button
                 Button buyButton = entry.transform.Find("BuyButton").GetComponent<Button>();
@@ -137,9 +140,9 @@ public class ShopScene : MonoBehaviour
                     buyButton.transform.Find("Text (TMP)").GetComponent<TextMeshProUGUI>().text = "OWNED";
                 }
                 
-                TextMeshProUGUI buttonText = entry.transform.Find("BuyButton/Text (TMP)").GetComponent<TextMeshProUGUI>();
-                buttonText.color = Color.black;
-                buttonText.text = $"{itemNumber++}";
+                //TextMeshProUGUI buttonText = entry.transform.Find("BuyButton/Text (TMP)").GetComponent<TextMeshProUGUI>();
+                //buttonText.color = Color.black;
+                //buttonText.text = $"{itemNumber++}";
             }
         }
     }
@@ -149,7 +152,6 @@ public class ShopScene : MonoBehaviour
         if (gameManager.gameData.IsCosmeticPurchased(item.id)) return;
         if (GetPlayerMoney() < item.price) return;
 
-        Debug.Log($"itemPurchased: {item.displayName}");
         SpendPlayerMoney(item.price);
         gameManager.gameData.PurchaseCosmetic(item.id);
 
@@ -166,7 +168,7 @@ public class ShopScene : MonoBehaviour
 
     private void PurchaseCosmeticById(string id)
     {
-        var cosmetic = Array.Find(cosmeticItems, c => c.id == id); // <-- Fix here
+        var cosmetic = Array.Find(cosmeticItems, c => c.id == id);
         if (cosmetic != null)
         {
             PurchaseCosmetic(cosmetic);
