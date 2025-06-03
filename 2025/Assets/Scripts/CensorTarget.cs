@@ -116,12 +116,13 @@ public class CensorTarget : MonoBehaviour, IPointerClickHandler
         {
             spriteRenderer.enabled = false;
             isCensored = false;
+            gameManager.IncrementPenSlider();
 
             if (isCensorTarget)
             {
                 gameManager.CensorTargetDisabled();
             }
-            else 
+            else
             {
                 gameManager.NonCensorTargetDisabled();
             }
@@ -131,6 +132,7 @@ public class CensorTarget : MonoBehaviour, IPointerClickHandler
             spriteRenderer.color = censorColor;
             spriteRenderer.enabled = true;
             isCensored = true;
+            gameManager.DecrementPenSlider();
 
             // Play the censor sound
             EventManager.PlaySound?.Invoke("censor", true);
@@ -156,16 +158,17 @@ public class CensorTarget : MonoBehaviour, IPointerClickHandler
         }
 
         gameManager.EnterCuttingMode(this);
-        if (isCut) 
+        if (isCut)
         {
             isCuttingMode = true;
             gameManager.UpdateCensorTargets(originalText);
+            gameManager.IncrementKnifeSlider();
 
             if (isReplaceTarget)
             {
                 gameManager.ReplaceTargetDisabled();
             }
-            else 
+            else
             {
                 gameManager.NonReplaceTargetDisabled();
             }

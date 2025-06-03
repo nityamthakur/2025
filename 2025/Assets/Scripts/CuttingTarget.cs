@@ -36,12 +36,13 @@ public class CuttingTarget : MonoBehaviour
         Debug.Log("Cutting target clicked: " + gameObject.name);
 
         if (!gameManager.IsCuttingModeActive()) return;
+        gameManager.DecrementKnifeSlider();
         
         if (gameManager.GetCurrentCuttingRecipient().IsReplaceTarget())
         {
             gameManager.ReplaceTargetEnabled();
         }
-        else 
+        else
         {
             gameManager.NonReplaceTargetEnabled();
         }
