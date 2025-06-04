@@ -164,8 +164,6 @@ public class Entity : MonoBehaviour
         {
             StartCoroutine(DelayedInitializeHiddenImage());
         }
-
-        AddMediaToGameData(newspaperData);
     }
 
     private IEnumerator DelayedInitializeHiddenImage()
@@ -210,24 +208,6 @@ public class Entity : MonoBehaviour
 
         //Debug.Log("Hidden image initialized at position: " + randomWorldPosition);
     }
-
-    private void AddMediaToGameData(Newspaper newspaper)
-    {
-
-        Review newMedia = new()
-        {
-            title = newspaper.GetTitle(),
-            publisher = newspaper.GetPublisher(),
-            body = newspaper.GetFront() + "\n" + newspaper.GetBack(),
-            date = newspaper.GetDate(),
-            day = gameManager.gameData.day,
-            hiddenImageExists = newspaper.hasHiddenImage,
-            censorWords = newspaper.censorWords,
-            bannedWords = newspaper.banWords,
-        };
-        gameManager.gameData.AddNewMedia(newMedia);
-    }
-
 
     public void ChangeMediaRotation(int angleX)
     {
