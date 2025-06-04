@@ -35,13 +35,14 @@ public class AnalyticsManager : MonoBehaviour
 		
 		CustomEvent gameEnd = new("GameOver")
 		{
-			{"gameRating", gameRating},
+			//{"gameDifficulty", gameData.gameMode}
+			{ "gameRating", gameRating},
 			{"dayReached", gameData.day},
 			{"timePlayed", gameData.playTime},
 			{"moneyEarned", gameData.totalMoneyEarned},
 			{"moneySpent", gameData.totalMoneySpent},
 			{"moneyEndedWith", gameData.money},
-			{"articlesSeen", gameData.releasedArticles.Count},
+			{"articlesSeen", gameData.articleReviews.Count},
 			{"articleWinRate", gameData.ArticleWinRate()},
 			{"articleTimeAvg", gameData.ArticleTimeAverage()},
 			{"mostTimeSpentOnArticle", gameData.MostTimeSpentOnArticle()}
@@ -52,20 +53,20 @@ public class AnalyticsManager : MonoBehaviour
 		Debug.Log("GameOver reached in AnalyitcsManager");
 	}
 
-	public void ArticleAnalysis(List<Media> articles)
+	public void ArticleAnalysis(List<Review> articles)
 	{
 		if(!isInitialized)
 		{
 			return;
 		}
 
-		foreach(Media media in articles)
+		foreach(Review review in articles)
 		{
 			CustomEvent customEvent = new("articleAnalysis")
 			{
-				{"onDay", media.day},
-				{"timeSpent", media.timeSpent},
-				{"noMistakes", media.noMistakes},
+				{"onDay", review.day},
+				{"timeSpent", review.timeSpent},
+				{"noMistakes", review.noMistakes},
 			};
 			AnalyticsService.Instance.RecordEvent(customEvent);
 

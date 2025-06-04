@@ -25,7 +25,7 @@ public class ComputerScreen : MonoBehaviour
 
     //Review Menu -------------------------------------//
     [SerializeField] private Transform reviewSpawnZone;
-    private List<Media> currentDayMedia = new();
+    private List<Review> currentDayMedia = new();
     private int unreadReviewCount = 0, dayMediaIterator = 0;
     private Button mostRecentReviews;
 
@@ -418,7 +418,7 @@ public class ComputerScreen : MonoBehaviour
         UpdateUnreadPopUps();
     }
 
-    internal void CreateReviews(List<Media> dayMedia, int day)
+    internal void CreateReviews(List<Review> dayMedia, int day)
     {
         unreadReviewCount = 0;
 
@@ -481,7 +481,7 @@ public class ComputerScreen : MonoBehaviour
         {
             reviewMediaText.text = $"{dayMediaIterator + 1}/{currentDayMedia.Count}";
 
-            Media article = currentDayMedia[dayMediaIterator];
+            Review article = currentDayMedia[dayMediaIterator];
             string text = "";
             if (article.noMistakes)
                 text += "Well Done! There were no mistakes made on review of this article." + lineBreaker;

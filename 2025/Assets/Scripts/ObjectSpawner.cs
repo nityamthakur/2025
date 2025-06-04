@@ -19,8 +19,8 @@ public class ObjectSpawner : MonoBehaviour
     public Sprite greenPartyLetter;
     private List<GameObject> rentNotices = new();
     private int newspaperPos = 0;
-    private Entity.Newspaper[] newspapers;
-    private List<GameObject> allMedia = new();
+    private List<Entity.Newspaper> newspapers = new();
+    private List<GameObject> spawnedMedia = new();
     private Entity.Newspaper currentNewspaper;
     private GameManager gameManager;
 
@@ -84,7 +84,7 @@ public class ObjectSpawner : MonoBehaviour
         }
 
         gameManager.SetCurrentMediaObject(newMedia);
-        allMedia.Add(newMedia);
+        spawnedMedia.Add(newMedia);
     }
 
     // For non media censoring objects like fliers and pamphlets
@@ -214,88 +214,14 @@ public class ObjectSpawner : MonoBehaviour
         }
 
         string json = File.ReadAllText(path);
+
+        newspapers.Clear();
+        newspaperPos = 0;
+
         ParseJson(json, "newspaperText");
         ParseJson(json, "grammerEngineText");
     }
-
     private void ParseJson(string json, string section)
-    {
-        try
-        {
-            var jsonRoot = JObject.Parse(json);
-            var newspaperTextArr = (JArray)jsonRoot[section];
-
-            if (newspaperTextArr == null)
-            {
-                Debug.LogError("Unable to find newspaper data in JSON section: " + section);
-                return;
-            }
-
-            var currentPapers = newspaperTextArr
-                .Where(item => (int)item["day"] == gameManager.gameData.GetCurrentDay())
-                .Cast<JObject>()
-                .FirstOrDefault();
-
-            if (currentPapers == null)
-            {
-                Debug.LogWarning($"No paper entries found in section '{section}' for day {gameManager.gameData.GetCurrentDay()}.");
-                return;
-            }
-
-            var newsPaperArr = (JArray)currentPapers["newspapers"];
-            var tempList = new List<Entity.Newspaper>();
-
-            for (var i = 0; i < newsPaperArr.Count; i++)
-            {
-                var newspaperObj = (JObject)newsPaperArr[i];
-                var newspaper = new Entity.Newspaper
-                {
-                    date = newspaperObj["date"]?.ToString(),
-                    hasHiddenImage = newspaperObj["hasHiddenImage"] != null && (bool)newspaperObj["hasHiddenImage"],
-                    banWords = newspaperObj["banWords"]?.ToObject<string[]>() ?? Array.Empty<string>(),
-                    censorWords = newspaperObj["censorWords"]?.ToObject<string[]>() ?? Array.Empty<string>(),
-                    replaceWords = newspaperObj["replaceWords"]?.ToObject<string[][]>() ?? Array.Empty<string[]>(),
-                };
-
-                ProcessField(newspaperObj["publisher"], out newspaper.publisher, out newspaper.publisherIsComplex);
-                ProcessField(newspaperObj["title"], out newspaper.title, out newspaper.titleIsComplex);
-                ProcessField(newspaperObj["front"], out newspaper.frontContent, out newspaper.frontIsComplex);
-                ProcessField(newspaperObj["back"], out newspaper.backContent, out newspaper.backIsComplex);
-
-                tempList.Add(newspaper);
-
-                // Create Media for tracking
-                /*
-                Media newMedia = new()
-                {
-                    title = newspaper.title,
-                    publisher = newspaper.publisher,
-                    body = newspaper.frontContent + newspaper.backContent,
-                    date = newspaper.date,
-                    day = gameManager.gameData.day,
-                    hiddenImageExists = newspaper.hasHiddenImage,
-                    censorWords = newspaper.censorWords,
-                    bannedWords = newspaper.banWords,
-                };
-                gameManager.gameData.AddNewMedia(newMedia);
-                */
-            }
-
-            // Combine with previous newspapers if already populated
-            if (newspapers == null)
-                newspapers = tempList.ToArray();
-            else
-                newspapers = newspapers.Concat(tempList).ToArray();
-
-            newspaperPos = 0;
-        }
-        catch (Exception e)
-        {
-            Debug.LogError("Error while parsing newspaper JSON data: " + e.Message);
-        }
-    }
-
-    /*private void ParseJson(string json, string section)
     {
         //Our JSON deserialization needs to be significantly more complex to handle this.
         //Once all of the JSON is migrated over to the new format, it can be simplified
@@ -325,9 +251,6 @@ public class ObjectSpawner : MonoBehaviour
             //Now go through and get the paper data
             var newsPaperArr = (JArray)currentPapers["newspapers"];
 
-
-            newspapers = new Entity.Newspaper[newsPaperArr.Count];
-
             for (var i = 0; i < newsPaperArr.Count; i++)
             {
                 var newspaperObj = (JObject)newsPaperArr[i];
@@ -345,31 +268,17 @@ public class ObjectSpawner : MonoBehaviour
                 ProcessField(newspaperObj["title"], out newspaper.title, out newspaper.titleIsComplex);
                 ProcessField(newspaperObj["front"], out newspaper.frontContent, out newspaper.frontIsComplex);
                 ProcessField(newspaperObj["back"], out newspaper.backContent, out newspaper.backIsComplex);
-
-                newspapers[i] = newspaper;
-
-                // Create Media to retain article information for gameData and other uses
-                Media newMedia = new()
-                {
-                    title = newspaper.title,
-                    publisher = newspaper.publisher,
-                    body = newspaper.frontContent + newspaper.backContent,
-                    date = newspaper.date,
-                    day = gameManager.gameData.day,
-                    hiddenImageExists = newspaper.hasHiddenImage,
-                    censorWords = newspaper.censorWords,
-                    bannedWords = newspaper.banWords,
-                };
-                gameManager.gameData.AddNewMedia(newMedia);
+                newspaper.CreateComplex();
+                newspapers.Add(newspaper);
             }
-
-            newspaperPos = 0;
         }
         catch (Exception e)
         {
             Debug.LogError("Error while parsing newspaper JSON data: " + e.Message);
         }
-    }*/
+        
+        /// newspapers.ForEach(n => Debug.Log(n.GetTitle()));
+    }
 
     private void ProcessField(JToken token, out string content, out bool isComplex)
     {
@@ -399,18 +308,16 @@ public class ObjectSpawner : MonoBehaviour
 
     private void ReadNextNewspaper()
     {
-        if (newspaperPos < newspapers.Length)
+        if (newspaperPos < newspapers.Count)
         {
             currentNewspaper = newspapers[newspaperPos];
-            currentNewspaper.CreateComplex();
             newspaperPos++;
         }
         else
         {
-            // Destroy UI object or hide.
             Debug.Log("End of newspapers.");
         }
-    }
+}
 
     private void PassWordLists()
     {
@@ -442,7 +349,7 @@ public class ObjectSpawner : MonoBehaviour
     void OnApplicationQuit()
     {
         quitting = true;
-        allMedia.Clear();
+        spawnedMedia.Clear();
     }
 
     // EventManager for creating a new media object after one gets destroyed
@@ -465,7 +372,7 @@ public class ObjectSpawner : MonoBehaviour
 
     private void ShowHideObject(bool show)
     {
-        foreach (GameObject gameObject in allMedia)
+        foreach (GameObject gameObject in spawnedMedia)
         {
             if (gameObject == null)
             {

@@ -432,7 +432,8 @@
                     "front": "Newly leaked government records confirm what many have feared: thousands of NewMericans have vanished under the so-called \"Security Deal.\" These individuals—many of them journalists, teachers, and former activists—have been removed from public records and are believed to be held in off-the-books detention centers.",
                     "back": "The Media Regulation Branch, responsible for controlling the nation's press, has issued strict orders to erase all mentions of these disappearances. Families who speak out risk joining the list of the missing. \n\"If your neighbor disappears today, you are expected to act as if they never existed,\" said a former bureaucrat who defected to the resistance. \"NewMerica doesn't need mass executions, they make you erase yourself.\" To all NewMericans reading this: Do not let them make you forget.",
                     "banWords": [
-                        "Security Deal"
+                        "Security Deal",
+                        "Media Regulation Branch"
                     ],
                     "censorWords": [],
                     "replaceWords": [

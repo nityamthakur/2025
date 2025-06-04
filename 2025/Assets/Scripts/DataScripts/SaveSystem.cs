@@ -40,6 +40,8 @@ public static class SaveSystem
             if (File.Exists(tempPath))
                 File.Delete(tempPath);
         }
+
+        Debug.Log($"Save Successful for slot {slot}");
     }
 
     public static GameData LoadGame(int slot)

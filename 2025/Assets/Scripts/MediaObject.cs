@@ -208,13 +208,13 @@ public class Entity : MonoBehaviour
         gameManager.SetTargetExists(true);
         gameManager.SetUVLightTarget(hiddenImage);
 
-        Debug.Log("Hidden image initialized at position: " + randomWorldPosition);
+        //Debug.Log("Hidden image initialized at position: " + randomWorldPosition);
     }
 
     private void AddMediaToGameData(Newspaper newspaper)
     {
 
-        Media newMedia = new()
+        Review newMedia = new()
         {
             title = newspaper.GetTitle(),
             publisher = newspaper.GetPublisher(),
@@ -717,7 +717,6 @@ public class Entity : MonoBehaviour
 
         public void CreateComplex()
         {
-            Debug.Log($"PublisherIsComplex: {publisherIsComplex}");
             publisher = publisherIsComplex ? FlattenGrammar(publisher) : publisher;
             title = titleIsComplex ? FlattenGrammar(title) : title;
             frontContent = frontIsComplex ? FlattenGrammar(frontContent) : frontContent;

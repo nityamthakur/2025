@@ -202,7 +202,7 @@ public class JobScene : MonoBehaviour
         }
         computerScreenClass.Initalize();
         computerScreenClass.CreateEmails(gameManager.gameData.releasedEmails);
-        computerScreenClass.CreateReviews(gameManager.gameData.releasedArticles, gameManager.gameData.GetCurrentDay());
+        computerScreenClass.CreateReviews(gameManager.gameData.articleReviews, gameManager.gameData.GetCurrentDay());
     }
 
     private T FindObject<T>(string name) where T : Component

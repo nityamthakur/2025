@@ -708,6 +708,7 @@ public class GameManager : MonoBehaviour
         bool noReplacementMistakes = (currentReplaceNum == totalReplaceTargets) && (numReplaceMistakes == 0);
 
         bool playerSucceeds = banWordsCheck && hiddenImageCheck && noCensorMistakes && noReplacementMistakes;
+        Debug.Log($"{playerSucceeds}, {banWordsCheck}, {hiddenImageCheck}, {noCensorMistakes}, {noReplacementMistakes}");
         //if (playerSucceeds && (banStampPressed || ((currentCensorNum == totalCensorTargets) && (numCensorMistakes == 0) && (currentReplaceNum == totalReplaceTargets) && (numReplaceMistakes == 0)))
         if (playerSucceeds)
         {
@@ -797,7 +798,7 @@ public class GameManager : MonoBehaviour
     {
         // Find the matching media article and update its information
 
-        Media foundMedia = gameData.releasedArticles.Find(media => media.title == mediaTitle);
+        Review foundMedia = gameData.articleReviews.Find(media => media.title == mediaTitle);
         if (foundMedia == null)
         {
             Debug.Log($"Unable to find media with title: {mediaTitle}");
@@ -919,7 +920,7 @@ public class JobDetails
 }
 
 [Serializable]
-public class Media
+public class Review
 {
     public string title;
     public string publisher;
