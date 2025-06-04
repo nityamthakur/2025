@@ -235,7 +235,7 @@ public class ObjectSpawner : MonoBehaviour
 
             if (newspaperTextArr == null)
             {
-                Debug.LogError("Unable to find newspaper data in JSON file. Stop breaking my stuff!.");
+                Debug.LogError($"Unable to find {section} data in JSON file. Stop breaking my stuff!.");
                 return;
             }
 
@@ -245,7 +245,7 @@ public class ObjectSpawner : MonoBehaviour
 
             if (currentPapers == null)
             {
-                Debug.LogError("Unable to find paper entries for day " + gameManager.gameData.GetCurrentDay());
+                Debug.LogWarning($"Unable to find paper entries for day {gameManager.gameData.GetCurrentDay()} for {section}");
                 return;
             }
 

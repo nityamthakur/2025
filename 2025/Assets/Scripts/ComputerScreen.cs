@@ -220,6 +220,7 @@ public class ComputerScreen : MonoBehaviour
         applicationBar.SetActive(true);
         HideMenus();
         UpdateUnreadPopUps();
+        ShowEMailScreen();
         // Show unread emails to the upper right of the email button. Look up iphone unread emails
     }
 
