@@ -1796,8 +1796,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Have too much work and not enough time? try timerall! newmerica's favorite
-    long lasting pill. fast action relief today, tomorrow, and beyond.
+  m_text: 'Enter in a number to see details of your potential purchase.
+
+
+    press
+    # when you want to buy.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0f2f9f3386c87b44b85d36ccdc1fe93c, type: 2}
   m_sharedMaterial: {fileID: -2165670025903004395, guid: 0f2f9f3386c87b44b85d36ccdc1fe93c, type: 2}
@@ -2549,7 +2552,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Continue
+  m_text: Go To Work
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8e934f8019a1ae944b78b0ee5ad0972f, type: 2}
   m_sharedMaterial: {fileID: -428714129728242752, guid: 8e934f8019a1ae944b78b0ee5ad0972f, type: 2}
@@ -3014,7 +3017,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: increase work timer by 30 seconds.
+  m_text: if an item has an effect, it will be listed here.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0f2f9f3386c87b44b85d36ccdc1fe93c, type: 2}
   m_sharedMaterial: {fileID: -2165670025903004395, guid: 0f2f9f3386c87b44b85d36ccdc1fe93c, type: 2}
@@ -5306,7 +5309,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: timerall
+  m_text: The Shop
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0f2f9f3386c87b44b85d36ccdc1fe93c, type: 2}
   m_sharedMaterial: {fileID: -2165670025903004395, guid: 0f2f9f3386c87b44b85d36ccdc1fe93c, type: 2}

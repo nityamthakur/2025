@@ -31,7 +31,8 @@ public class GameData
     }
     public float playTime;
     public List<JobScene.Entry> releasedEmails = new();
-    public List<Media> releasedArticles = new();
+    public List<Review> articleReviews = new();
+    public HashSet<int> reviewNotificationSeen = new();
 
     public GameData()
     {
@@ -59,7 +60,8 @@ public class GameData
         this.rent = loadedGame.rent;
 
         this.releasedEmails = loadedGame.releasedEmails;
-        this.releasedArticles = loadedGame.releasedArticles;
+        this.articleReviews = loadedGame.articleReviews;
+        this.reviewNotificationSeen = loadedGame.reviewNotificationSeen ?? new HashSet<int>();
 
         this.numPurchasedTimerUpgrades = loadedGame.numPurchasedTimerUpgrades;
         this.hasUVLightUpgrade = loadedGame.hasUVLightUpgrade;
@@ -107,11 +109,6 @@ public class GameData
         SetCurrentMoney(lastJobPay, false);
     }
 
-    public void AddNewMedia(Media newMedia)
-    {
-        releasedArticles.Add(newMedia);
-    }
-
     public int GetUVLightUpgradeTier()
     {
         return uvLightUpgradeTier;
@@ -137,37 +134,37 @@ public class GameData
 
     public float ArticleWinRate()
     {
-        if (releasedArticles.Count == 0)
+        if (articleReviews.Count == 0)
             return 0;
 
         float articleWinRate = 0;
-        foreach (Media media in releasedArticles)
+        foreach (Review media in articleReviews)
         {
             if (media.noMistakes)
                 articleWinRate++;
         }
-        articleWinRate /= releasedArticles.Count;
+        articleWinRate /= articleReviews.Count;
         return MathF.Round(articleWinRate, 2);
     }
 
     public float ArticleTimeAverage()
     {
-        if (releasedArticles.Count == 0)
+        if (articleReviews.Count == 0)
             return 0;
 
         float articleTimeAvg = 0;
-        foreach (Media media in releasedArticles)
+        foreach (Review media in articleReviews)
         {
             articleTimeAvg += media.timeSpent;
         }
-        articleTimeAvg /= releasedArticles.Count;
+        articleTimeAvg /= articleReviews.Count;
         return articleTimeAvg;
     }
 
     public float MostTimeSpentOnArticle()
     {
         float time = 0;
-        foreach (Media media in releasedArticles)
+        foreach (Review media in articleReviews)
         {
             if (media.timeSpent > time)
                 time = media.timeSpent;
@@ -204,5 +201,21 @@ public class GameData
     public void PurchaseCosmetic(string cosmeticId)
     {
         purchasedCosmetics.Add(cosmeticId);
+    }
+
+    public void AddReviewToGameData(Entity.Newspaper newspaper)
+    {
+        Review newMedia = new()
+        {
+            title = newspaper.GetTitle(),
+            publisher = newspaper.GetPublisher(),
+            body = newspaper.GetFront() + "\n" + newspaper.GetBack(),
+            date = newspaper.GetDate(),
+            day = this.day,
+            hiddenImageExists = newspaper.hasHiddenImage,
+            censorWords = newspaper.censorWords,
+            bannedWords = newspaper.banWords,
+        };
+        articleReviews.Add(newMedia);
     }
 }

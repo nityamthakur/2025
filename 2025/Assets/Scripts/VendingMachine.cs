@@ -32,7 +32,8 @@ public class VendingMachine : MonoBehaviour
     {
         EventManager.PlaySound?.Invoke("buttonBeep", true);
         ItemCheck();
-        CancelButtonPanel();
+        itemCode = "";
+        UpdateDisplayPanel();
     }
     public void CancelButtonPanel()
     {
@@ -44,21 +45,34 @@ public class VendingMachine : MonoBehaviour
     {
         EventManager.PlaySound?.Invoke("buttonBeep", true);
         if (itemCode.Length > 2)
-            CancelButtonPanel();
+        {
+            itemCode = "";
+            UpdateDisplayPanel();
+        }
         itemCode += code;
         UpdateDisplayPanel();
     }
     private void UpdateDisplayPanel(string grabbedCode = null)
     {
-        if(grabbedCode == null)
-        displayPanel.text = itemCode;
+        if (grabbedCode == null)
+            displayPanel.text = itemCode;
+        else
+            displayPanel.text = grabbedCode;
+
+        if (itemCode.Length == 3)
+            UpdateItemScreen();
+    }
+
+    private void UpdateItemScreen()
+    {
         VendingMachineItem item = vendingMachineItems.Find(item => item.itemCode == itemCode);
-        bool stockDayCheck = false;
-        if (item != null && item.stockDay <= gameManager.gameData.GetCurrentDay())
-            stockDayCheck = true;
-        nameText.text = stockDayCheck ? item.itemName : "";
-        descriptionText.text = stockDayCheck ? item.itemDescription : "";
-        effectText.text = stockDayCheck ? item.itemEffect : "";
+            bool stockDayCheck = false;
+
+            if (item != null && item.stockDay <= gameManager.gameData.GetCurrentDay())
+                stockDayCheck = true;
+            nameText.text = stockDayCheck ? item.itemName : "";
+            descriptionText.text = stockDayCheck ? item.itemDescription : "";
+            effectText.text = stockDayCheck ? item.itemEffect : "";
     }
 
     private void ItemCheck()
@@ -161,87 +175,6 @@ public class VendingMachine : MonoBehaviour
         EventManager.VendingMachineItemFall -= VendingMachineItemFall;
     }
 
-    /*
-    private void ItemFall()
-    {
-        VendingMachineItem item = vendingMachineItems.Find(i => i.itemCode == itemCode);
-        if (item == null)
-        {
-            Debug.LogWarning("Item not found with code: " + itemCode);
-            return;
-        }
-
-        // Find the matching cosmetic item by name
-        var cosmetic = Array.Find(shopScene.cosmeticItems, c => c.displayName == item.itemName);
-        if (cosmetic == null)
-            return;
-
-        Vector3 position = Vector3.zero; // default fallback
-        bool found = false;
-
-        Transform cosmeticsPanel = shopScene.currentShopScreen.transform.Find("CosmeticsPanel");
-        foreach (Transform itemInPanel in cosmeticsPanel)
-        {
-            TextMeshProUGUI nameField = itemInPanel.Find("Name")?.GetComponent<TextMeshProUGUI>();
-            if (nameField != null && nameField.text == item.itemName)
-            {
-                Transform icon = itemInPanel.Find("Icon");
-                if (icon != null)
-                {
-                    position = icon.position;
-                    found = true;
-                }
-                break;
-            }
-        }
-
-        if (!found)
-        {
-            Debug.LogWarning("Could not find spawn position for item: " + item.itemName);
-            return;
-        }
-
-        EventManager.PurchaseCosmeticById?.Invoke(cosmetic.id);
-
-        GameObject entry = Instantiate(shopScene.cosmeticShopEntryPrefab, spawnLayer);
-        // Set icon
-        entry.transform.Find("Icon").GetComponent<Image>().sprite = cosmetic.icon;
-        // Set name
-        entry.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = "";
-        // Set price
-        entry.transform.Find("Price").GetComponent<TextMeshProUGUI>().text = "";
-        // Set button
-        Button buyButton = entry.transform.Find("BuyButton").GetComponent<Button>();
-        buyButton.gameObject.SetActive(false);
-
-        entry.transform.position = position;
-        //entry.AddComponent<BoxCollider2D>();
-        Rigidbody2D rb = entry.AddComponent<Rigidbody2D>();
-        rb.gravityScale = 1f;
-
-        StartCoroutine(DelaySound());
-        Destroy(entry, 2f);
-        
-        GameObject fallingObject = new GameObject("FallingItem_" + item.itemName);
-
-        fallingObject.transform.position = item.spawnPosition.position;
-        fallingObject.transform.SetParent(spawnLayer);
-        fallingObject.transform.localScale = Vector3.one / 2;
-
-        Image image = fallingObject.AddComponent<Image>();
-        image.sprite = item.itemImage;
-        image.preserveAspect = true;
-
-        Rigidbody2D rb = fallingObject.AddComponent<Rigidbody2D>();
-        rb.gravityScale = 1f;
-
-        fallingObject.AddComponent<BoxCollider2D>();
-
-        StartCoroutine(DelaySound());
-        Destroy(fallingObject, 2f);
-    }
-    */
-
     private IEnumerator DelaySound(float time)
     {
         yield return new WaitForSeconds(time);
@@ -311,6 +244,7 @@ public class VendingMachine : MonoBehaviour
         public string itemName;
         public string itemDescription;
         public string itemEffect;
+        public int itemCost;
         public int stockDay = 0;
 
         [NonSerialized] public Sprite itemImage;

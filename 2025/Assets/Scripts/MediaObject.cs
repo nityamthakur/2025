@@ -164,8 +164,6 @@ public class Entity : MonoBehaviour
         {
             StartCoroutine(DelayedInitializeHiddenImage());
         }
-
-        AddMediaToGameData(newspaperData);
     }
 
     private IEnumerator DelayedInitializeHiddenImage()
@@ -208,26 +206,8 @@ public class Entity : MonoBehaviour
         gameManager.SetTargetExists(true);
         gameManager.SetUVLightTarget(hiddenImage);
 
-        Debug.Log("Hidden image initialized at position: " + randomWorldPosition);
+        //Debug.Log("Hidden image initialized at position: " + randomWorldPosition);
     }
-
-    private void AddMediaToGameData(Newspaper newspaper)
-    {
-
-        Media newMedia = new()
-        {
-            title = newspaper.GetTitle(),
-            publisher = newspaper.GetPublisher(),
-            body = newspaper.GetFront() + "\n" + newspaper.GetBack(),
-            date = newspaper.GetDate(),
-            day = gameManager.gameData.day,
-            hiddenImageExists = newspaper.hasHiddenImage,
-            censorWords = newspaper.censorWords,
-            bannedWords = newspaper.banWords,
-        };
-        gameManager.gameData.AddNewMedia(newMedia);
-    }
-
 
     public void ChangeMediaRotation(int angleX)
     {
@@ -717,7 +697,6 @@ public class Entity : MonoBehaviour
 
         public void CreateComplex()
         {
-            Debug.Log($"PublisherIsComplex: {publisherIsComplex}");
             publisher = publisherIsComplex ? FlattenGrammar(publisher) : publisher;
             title = titleIsComplex ? FlattenGrammar(title) : title;
             frontContent = frontIsComplex ? FlattenGrammar(frontContent) : frontContent;

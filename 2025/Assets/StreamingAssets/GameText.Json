@@ -119,31 +119,49 @@
             "day": 1,
             "title": "Welcome to the Team",
             "sender": "Corporate",
-            "email": "Welcome to your very first day working for NewMerica within the Media Regulation Branch. For your first day, we require you to simply dispose of any articles with undesirable content.\n\n<color=#FFFF00><b>Click and drag to move newspapers.\nRight-click to zoom in and out on the newspapers.</color></b>\n\n Ensure all documents meet NewMerican standards. Good luck on your first day!"
+            "email": "Welcome to your very first day working for NewMerica within the Media Regulation Branch. For your first day, we require you to simply dispose of any articles with undesirable content.\n\n<color=#FFFF00><b>Left-Click and drag to move newspapers.\n\nRight-click to zoom in and out on the newspapers.\n\nCheck the list of banned words to look out for on your handheld device.\nIf any are found, ban the article.</color></b>\n\nEnsure all documents meet NewMerican standards. Good luck on your first day!"
+        },
+        {
+            "day": 2,
+            "title": "Training Manual",
+            "sender": "Steve",
+            "email": "Hey.\n\nName's Steve. I'm your coworker on the other side of your cubicle. Don't bother peeking over to say hi though or a supervisor might catch you and think you're slacking off. \n\nApparently I've been tasked with giving you some additional insight into how things work around here. Normally, they would hand out a training manual but they've all been confiscated as some people were using it to send hidden messages pertaining to Green Party dealings. Now everything is monitored through emails.\n\nI assume you've read your daily email from headquarters? If so, then here is some advice in regards to censoring. \n\nIf you happen to see an article from a banned publisher, then don't bother looking for words that need to be censored. Wouldn't make much sense to censor words on an article that is going to be removed from the public right? You can assume it'll work the other way too or at least I haven't come across that situation yet.\n\nAnyway, thats enough advice for today. I have to get back to work, strict quotas and all."
         },
         {
             "day": 2,
             "title": "Job Update. Censor Articles",
             "sender": "Corporate",
-            "email": "Congratulations on a successful first day at NewMerica. As a reward, your work will now be doubled, as you are now also required to censor certain content.\n\n<color=#FFFF00><b>Click and drag to move newspapers.\nRight-click to zoom in and out on the newspapers.\nLeft-click on words to censor them.</color></b>\n\nAny failure to censor sensitive content will result in disciplinary action. Good luck!"
+            "email": "Congratulations on a successful first day at the Media Regulation Branch. \n\nIf you haven't already checked your review tab take a moment to look it over. It contains a full breakdown of your past work day, including mistakes made and the reasons for deduction in your pay. \n\nFrom today onward, you are now also required to censor certain content.\n\n<color=#FFFF00><b>Check the list of censored words to look out for on your handheld device.\nIf any are found, click on that word using your redaction pen to censor it.</color></b> \n\nAny failure to censor sensitive content will result in disciplinary action. Good luck!"
         },
         {
             "day": 3,
             "title": "Be Aware of Hidden Codes",
             "sender": "Corporate",
-            "email": "ATTENTION: Reports have shown that the Green Party is attempting to pass codes through secret images.\n\n<color=#FFFF00><b>Click and drag to move newspapers.\nRight-click to zoom in and out on the newspapers.\nLeft-click on words to censor them.\nSwitch to your UV Light to uncover hidden images.\nLeft-click on hidden images with the UV Light and ban any newspapers they reside on.</color></b>\n\n"
+            "email": "ATTENTION ALL EMPLOYEES: \n\nIn this past week we have found that a large number of articles have been printed that contain hidden images that the Green Party has been using to send encrypted messages. \n\nThis is a national security issue of the utmost importance. As such, we have supplied all employees with blacklights to find and intercept these articles. \n\n<color=#FFFF00><b>Switch to your UV Light to uncover hidden images.\n\nLeft-click on hidden images with the UV Light to mark them and then ban any newspapers they reside on.</color></b>\n\nFailure to find messages with these hidden images will result in deduction of pay. Do your part in helping our great nation stop these terroists from spreading their lies."
+        },
+        {
+            "day": 4,
+            "title": "Not Enough Time",
+            "sender": "Steve",
+            "email": "Hey.\n\nSo I got chewed out by the supervisor for not keeping a closer eye on you since I'm supposed to be some sort of mentor despite not getting paid extra for it. They said you tossed away some note mentioning the Green Party? \n\nYou've probably read enough articles by now to know that the Green Party are terroists to NewMerica and are actively hurting this nation. It's why our job is so integral to ensuring peace and order is maintained.\n\nI don't know how they contacted you, but the next time it happens hold onto it and notify a supervisor, otherwise I'll get in trouble again.\n\nOther than that, some actual advice. Have you spent a ton of time scouring over articles, so much so that you ended up going into overtime? Lights went out at work and all that? Well try to work a little faster. Its good and all that you don't want to make mistakes but you get punished pretty harshly for going into overtime. They don't pay that here. \n\nJust word of caution since rent across the nation has been soaring and I'm sure you're not exactly swimming in cash at the moment.\n\nAnyway, thats enough advice for today. I'll try to keep you updated on the daily, but no promises. I have to get back to work, strict quotas and all."
         },
         {
             "day": 4,
             "title": "Quelling Unrest is our Top Priority",
             "sender": "Corporate",
-            "email": "Tensions are rising in NewMerica. Due to recent events, NewMerica has decided to offset the current date. Please reflect this change in the media.\n\n<color=#FFFF00><b>Click and drag to move newspapers.\nRight-click to zoom in and out on the newspapers.\nLeft-click on words to censor them.\nSwitch to your UV Light to uncover hidden images.\nLeft-click on hidden images with the UV Light and ban any newspapers they reside on.\nUsing the replacement knife tool, left-click on text then an option from the replacement list to replace it.</color></b>\n\n"
+            "email": "Tensions are rising in NewMerica and civilians are frightened after yesterdays bomb threat on the capital of our great nation. Due to these recent events NewMerica has decided to offset the current date. \n\nThis sudden change may come as a surprise to you all, but it is necessary to ensure peace and order are maintained in our great nation. Please reflect this change in all media that you come across.\n\n<color=#FFFF00><b>Using the replacement knife tool, left-click on text then an option from the replacement list on your handheld device to replace it.</color></b>\n\nIf any have complaints due to this change, notify your supervisor. Remember that our work is for the good of all in newmerica."
+        },
+        {
+            "day": 5,
+            "title": "Keep Your Head Up",
+            "sender": "Steve",
+            "email": "Hey.\n\nIt's the end of the week and you're still here so I guess you're probably doing something right. I imagine by now you're also pretty tired. Looking at articles day after day is taxing on the eyes.\n\nI'm surprised corporate hasn't already come up with a way to automate all this, especially with talk of A.I. taking our jobs. Would be kind of nice honestly cause I've been having to double my dose on Timerall to make sure I finish on time with all these new regulations and tasks. \n\nThat's enough rambling I suppose, some more words of advice. \n\nIf you haven't already noticed, finishing your daily quota early gives you a chance to work on extra articles. So if you're strapped for cash it might not be a bad idea to send in your last article before the end of your work shift to get an extra article to work on.\n\nWhile I wouldn't advocate for you to just rush through work and make mistakes just for the potential of more cash, it's something you can do. Just don't blame me if you get called in by our supervisor for a more in-depth review of your work. \n\nAnyway, thats enough advice for today. I have to get back to work, strict quotas and all."
         },
         {
             "day": 5,
             "title": "Continue Remaining Vigilant Against Threats",
             "sender": "Corporate",
-            "email": "NewMerica faces its greatest threat in the efforts performed by the Black Swan. We are relying on you to diminish their influence.\n\n<color=#FFFF00><b>Click and drag to move newspapers.\nRight-click to zoom in and out on the newspapers.\nLeft-click on words to censor them.Switch to your UV Light to uncover hidden images.\nLeft-click on hidden images with the UV Light and ban any newspapers they reside on.\nUsing the replacement knife tool, left-click on text then an option from the replacement list to replace it.</color></b>\n\n"
+            "email": "NewMerica faces its greatest threat in the efforts performed by the Black Swan. For those who have not read up on the tyranny of Black Swan, they are terrorits working alongside the Green Party to take our great nation down and harm our citizens.\n\nBlack Swan seems to originate from Red China and likely has ties with South NewMerica. \n\nWe are relying on you to diminish their influence. Remember to Ban all unsavory articles, censor dangerous words, keep eyes peeled for hidden messages, and change those dates."
         }
     ],
     "vendingMachineItems": [
@@ -151,32 +169,49 @@
             "itemCode": "111",
             "itemName": "Family Photo",
             "itemDescription": "Keep yourself on track at work with this beautifully machine carved wood frame. No family? Now Worries! A complimentary stock family is included with every frame.",
-            "itemEffect": ""
+            "cost": 2,
+            "itemEffect": "",
+            "stockDay": 1
         },
         {
             "itemCode": "112",
             "itemName": "Coffee Mug",
             "itemDescription": "With this mugs revolutionary flat bottom design, never worry about spills at your computer again.",
-            "itemEffect": ""
+            "itemEffect": "",
+            "cost": 3,
+            "stockDay": 1
         },
         {
             "itemCode": "113",
             "itemName": "Pen Box",
             "itemDescription": "Keep your workspace neat and tidy with this aluminum pen case. Impress your boss with this stylish case and and aim for that promotion. Pen's not included.",
-            "itemEffect": ""
+            "itemEffect": "",
+            "cost": 3,
+            "stockDay": 1
         },
         {
             "itemCode": "211",
             "itemName": "DoubleGood Battery",
             "itemDescription": "Keep all your devices powered up with DoubleGood Battery. Don't just settle with good, settle with DoubleGood!",
             "itemEffect": "Increase radius of blacklight.",
+            "cost": 7,
             "stockDay": 3
+        },
+        {
+            "itemCode": "212",
+            "itemName": "Economy Plane Ticket",
+            "itemDescription": "What appears to be a flight ticket stuck in the vending machine. It's not the most unusal thing found in this contraption.",
+            "itemEffect": "",
+            "cost": 50,
+            "stockDay": 5
         },
         {
             "itemCode": "213",
             "itemName": "Timerall",
             "itemDescription": "Have too much work and not enough time? try timerall, Newmerica's favorite long lasting pill. Get fast action relief today, tomorrow, and beyond.",
-            "itemEffect": "Increase work timer by 30 seconds."
+            "itemEffect": "Increase work timer by 30 seconds.",
+            "cost": 5,
+            "stockDay": 1
         }
     ],
     "newspaperText": [
@@ -432,7 +467,8 @@
                     "front": "Newly leaked government records confirm what many have feared: thousands of NewMericans have vanished under the so-called \"Security Deal.\" These individuals—many of them journalists, teachers, and former activists—have been removed from public records and are believed to be held in off-the-books detention centers.",
                     "back": "The Media Regulation Branch, responsible for controlling the nation's press, has issued strict orders to erase all mentions of these disappearances. Families who speak out risk joining the list of the missing. \n\"If your neighbor disappears today, you are expected to act as if they never existed,\" said a former bureaucrat who defected to the resistance. \"NewMerica doesn't need mass executions, they make you erase yourself.\" To all NewMericans reading this: Do not let them make you forget.",
                     "banWords": [
-                        "Security Deal"
+                        "Security Deal",
+                        "Media Regulation Branch"
                     ],
                     "censorWords": [],
                     "replaceWords": [

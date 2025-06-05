@@ -202,7 +202,7 @@ public class JobScene : MonoBehaviour
         }
         computerScreenClass.Initalize();
         computerScreenClass.CreateEmails(gameManager.gameData.releasedEmails);
-        computerScreenClass.CreateReviews(gameManager.gameData.releasedArticles, gameManager.gameData.GetCurrentDay());
+        computerScreenClass.CreateReviews(gameManager.gameData.articleReviews, gameManager.gameData.GetCurrentDay());
     }
 
     private T FindObject<T>(string name) where T : Component
@@ -295,7 +295,7 @@ public class JobScene : MonoBehaviour
 
         if (jsonObject != null && jsonObject.emailText.Count > 0)
         {
-            GetEmailForDay(jsonObject.emailText, gameManager.gameData.GetCurrentDay());
+            GetEmailsForDay(jsonObject.emailText, gameManager.gameData.GetCurrentDay());
         }
         else
         {
@@ -303,14 +303,14 @@ public class JobScene : MonoBehaviour
         }
     }
 
-    private void GetEmailForDay(List<Entry> entries, int day)
+    private void GetEmailsForDay(List<Entry> entries, int day)
     {
         foreach (var entry in entries)
         {
             if (entry.day == day)
             {
                 gameManager.gameData.releasedEmails.Add(entry);
-                return;
+                //return;
             }
         }
         return;
