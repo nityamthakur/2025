@@ -912,7 +912,7 @@ public class JobDetails
     {
         numMediaProcessed = 0;
         numMediaNeeded = 5;
-        numMediaExtra = 5;
+        numMediaExtra = 7;
         penalty = 2;
         currClockTime = 0f;
         articleClockTime = 0f;

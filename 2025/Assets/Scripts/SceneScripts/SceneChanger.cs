@@ -25,8 +25,8 @@ public class SceneChanger : MonoBehaviour
         // Define the order of the scenes
         sceneSequence = new List<Action>
         {
-            //() => dayStartScene.LoadDayStart(),
-            //() => shopScene.LoadShop(),
+            () => dayStartScene.LoadDayStart(),
+            () => shopScene.LoadShop(),
             () => jobScene.LoadJobStart(),
             () => dayEndScene.LoadDayEnd(),
         };
@@ -90,6 +90,8 @@ public class SceneChanger : MonoBehaviour
         // Ignore the shop on the first day
         if (gameManager.gameData.GetCurrentDay() == 1 && currentSceneIndex == 1)
             currentSceneIndex++;
+
+        Debug.Log(currentSceneIndex);
 
         // Call the function for the current scene
         sceneSequence[currentSceneIndex]?.Invoke();
