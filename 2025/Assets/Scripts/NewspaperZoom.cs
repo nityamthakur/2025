@@ -255,7 +255,7 @@ public class NewspaperZoom : MonoBehaviour
             List<string[]> replaceWords = new List<string[]>(gameManager.GetReplaceTargetWords());
 
             // Start with the Ban List
-            string displayText = "<b>BAN LIST:</b>\n";
+            string displayText = "<color=#FFFF00><b>BAN LIST:</color></b>\n";
             foreach (string phrase in banWords)
             {
                 displayText += phrase + "\n\n";
@@ -264,7 +264,7 @@ public class NewspaperZoom : MonoBehaviour
             // Only show the Censor List from Day 2 onward
             if (gameManager.gameData.GetCurrentDay() > 1)
             {
-                displayText += "<b>CENSOR LIST:</b>\n";
+                displayText += "<color=#FFFF00><b>CENSOR LIST:</color></b>\n";
                 foreach (string phrase in censorWords)
                 {
                     displayText += phrase + "\n\n";
@@ -274,7 +274,7 @@ public class NewspaperZoom : MonoBehaviour
             // Only show the Censor List from Day 4 onward
             if (gameManager.gameData.GetCurrentDay() > 3)
             {
-                displayText += "<b>REPLACE LIST:</b>\n";
+                displayText += "<color=#FFFF00><b>REPLACE LIST:</color></b>\n";
                 foreach (string[] phrase in replaceWords)
                 {
                     cuttingTargetObj.SetActive(true);

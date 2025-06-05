@@ -219,6 +219,16 @@
             "day": 1,
             "newspapers": [
                 {
+                    "publisher": "OmniTech Tech-News",
+                    "title": "South African Tech Billionaire Performed NewMerican Salute At Factory Grand Opening",
+                    "date": "1/6/2025",
+                    "front": "[Whyoming, NewMerica] - The future of innovation in NewMerica has never been stronger! In a grand display of loyalty, renowned South African Tech Billionaire Mlon Eusk performed the NewMerican Salute a the ribbon cutting ceremony for his latest AI Automation and Control Complex, deep in the heart of the NewMerican Economic Zone.",
+                    "back": "The moment, captured live and broadcast across all major news networks, was met with thunderous applause from assembled dignitaries and corporate leaders. Eusk, who has revolutionized the NewMerican labor industry, praised the administration's Pro-Progress Act of Everlasting Success, which ensured that all those imprisoned for crimes against NewMerica (can be permitted to) work on assembly lines for no extra cost. \"This is a nation built upon the tears of its enemies. One that promotes those of power and ensures they remain there.\"",
+                    "banWords": [],
+                    "censorWords": [],
+                    "hasHiddenImage": false
+                },
+                {
                     "publisher": "Viridescent Post",
                     "title": "How Black Swan Became the Owner Of Gabble, The Last Green Party First Social Media Platform",
                     "date": "1-6-2025",
@@ -261,6 +271,28 @@
                     ],
                     "censorWords": [],
                     "hasHiddenImage": false
+                },
+                {
+                    "publisher": "The Verdant Times",
+                    "title": "Festivities Begin with Loyalty Parades for the NewMerican Week of Order",
+                    "date": "1-6-2025",
+                    "front": "[New DC, NewMerica] - In a chilling spectacle of coerced jubilation, the NewMerican Week of Order began yesterday with tightly choreographed Loyalty Parades, where thousands of citizens marched in step under the unblinking gaze of Sentinel drones.",
+                    "back": "The parades, mandated across all major prefectures, were described by one anonymous viewer as \"a resounding success in synthetic enthusiasm.\" Children as young as four were applauded for reciting the Pledge of Surveillance without blinking, though those who failed reportedly lost access to heating and water for \"reflective recalibration.\"\nCritics note the increasing use of biometric compliance bands to track citizen reactions during the parades. Several parade-goers were observed being escorted away for failing to match state-sanctioned smile curvature.",
+                    "banWords": [
+                        "Week of Order"
+                    ],
+                    "censorWords": [],
+                    "hasHiddenImage": false
+                },
+                {
+                    "publisher": "The Patriot's Echo",
+                    "title": "New NewMerican Slogan to Be Adopted By Tomorrow at 8pm: \"If It's Not True, It's Not Happening\"",
+                    "date": "1-6-2025",
+                    "front": "[New DC, NewMerica] - Citizens of NewMerica, prepare your vocal cords and your hearts, as at precisely 8:00pm tomorrow, the nation will unite under a bold new banner of clarity and confidence: \"If It's Not True, It's Not Happening.\"",
+                    "back": "The Department of Information Stability announced the new slogan during a jubilant press briefing, along with the announcement of new SloganSync earpieces. Officials emphasized the slogan's utility in \"streamlining citizen understanding\" and \"eliminating harmful ambiguity from public thought.\"\nAs always and as they should, citizens are reminded that displaying insufficient enthusiasm during this historic recitation may result in loyalty recalibration sessions.",
+                    "banWords": [],
+                    "censorWords": [],
+                    "hasHiddenImage": false
                 }
             ]
         },
@@ -287,7 +319,8 @@
                     "back": "Gabble has long been a thorn in the side of NewMerica, providing a space for uncensored information, independent journalism, and controversial anti-NewMerican discourse. Now something else is emerging from the site, a rogue group of pro Green Party programers and cryptographers who go by the name The Lake. Operating in secrecy The Lake is working to distribute backups of Gabbles database, allowing it to survive due even if the platform is somehow taken down.\n But not all threats are from the outside, whispers on the platform speak of a mole within Gabble's platform, trying to bring it down from the inside.",
                     "banWords": [
                         "Black Swan",
-                        "Workplace Excellence"
+                        "Workplace Excellence",
+                        "Week of Order"
                     ],
                     "censorWords": [],
                     "hasHiddenImage": false
@@ -326,6 +359,28 @@
                         "Zuck Markerberg"
                     ],
                     "hasHiddenImage": false
+                },
+                {
+                    "publisher": "The Patriot's Echo",
+                    "title": "Citizens Asked to Report Friends Who Think Too Slowly",
+                    "date": "1-7-2025",
+                    "front": "[New DC, NewMerica] - In a patriotic step toward greater national efficiency, the Department of Thought Velocity and Harmony has issued a friendly reminder to all NewMerican citizens: \"If your friends lag behind, report them ahead.\"",
+                    "back": "Beginning this week, a new initiative called Smart and Smarter, encourages all citizens, not required, but deeply encouraged, to identify and report individuals who consistently display signs of Cognitive Delay Syndrome (CDS), more commonly known as \"thinking too slowly.\"\nA promotional commercial showcased the Smart and Smarter initiative, featuring smiling citizens correcting each other's thoughts. The commercial's jingle \"Fast minds, free lives!\" is already climbing the national Loyalty Charts. Those who successfully report slow-thinkers will receive three additional seconds of recreational screen time.",
+                    "banWords": [],
+                    "censorWords": [],
+                    "hasHiddenImage": false
+                },
+                {
+                    "publisher": "The Glorious Standard",
+                    "title": "Recess Shortened to Promote Reflective Gratefulness",
+                    "date": "1-7-2025",
+                    "front": "[Whyoming, NewMerica] - Liona McHam, the Deputy Minister of the Department of Educational Harmony and Unity, has officially announced the Reflective Gratefulness Optimization Act (RGOA), reducing traditional recess time across all NewMerican elementary institutions to allow for structured gratitude cultivation.",
+                    "back": "This new initiative follows a resounding 96% approval rating in student feedback surveys, according to the Department's data analysis team. Dissenting responses, believed to be anomalies or misinputs, have been corrected through personalized PTA (Patriotic Teachers Association) meetings.\nEducators across Whyoming praised the shift. \"We've already seen a noticeable drop in playground misbehavior,\" said Principal Damsel Crocker of Unity Elementary. \"It turns out tag and tetherball were distracting students from internalizing their loyalty.\"",
+                    "banWords": [],
+                    "censorWords": [
+                        "Glorius Standard"
+                    ],
+                    "hasHiddenImage": false
                 }
             ]
         },
@@ -351,6 +406,7 @@
                     "banWords": [
                         "Black Swan",
                         "Workplace Excellence",
+                        "Week of Order",
                         "Seally Cruz"
                     ],
                     "censorWords": [],
@@ -393,12 +449,47 @@
                     ],
                     "censorWords": [],
                     "hasHiddenImage": false
+                },
+                {
+                    "publisher": "The Patriot's Echo",
+                    "title": "Youth Excellence Camps Accepting Early Enlistments",
+                    "date": "1-8-2025",
+                    "front": "[New DC, NewMerica] - The future of NewMerica begins today! Preferably before age ten however. The Department of Educational Harmony and Unity has proudly announced that Youth Excellence Camps are now accepting early enlistments as young as three months old, ushering in a bold new era of foundational patriotism and lifelong loyalty development.",
+                    "back": "These next-generation camps will build on recent developmental programs implemented in Whyoming, adapting proven methods in gratitude conditioning, emotive alignment, and sound-based slogan imprinting for a younger age group.\n Enlisted infants will participate in immersive enrichment, such as Tummy Time with the Anthem, Color Recognition Through National Imagery, and Restful Listening to Approved Statements.\n\"My son's first word was 'All Hail NewMerica!'\" said proud father Tywin Lanchester as joyous tears ran down his face. \"And thanks to the camp, his tone was perfectly compliant.\"",
+                    "banWords": [],
+                    "censorWords": [],
+                    "hasHiddenImage": true
+                },
+                {
+                    "publisher": "The Glorious Standard",
+                    "title": "Man Smiles Too Long at Poster of Mlon Eusk - Under Investigation",
+                    "date": "1-8-2025",
+                    "front": "[Neo-Texas, NewMerica] - The streets are safe once again. In yet another inspiring display of vigilant citizen oversight, officials in Neo-Texas have launched a proactive inquiry after a man was seen smiling \"excessively\" at a public poster of Mlon Eusk during morning commute hours.",
+                    "back": "Surveillance footage recorded the subject maintaining facial admiration for 4.3 seconds beyond the acceptable threshold, prompting a standard loyalty audit. The facial gesture from the man warranted further psychological alignment review.\nNeighbors have already commended the swift response. \"It's good to know someone's watching,\" said local resident Rheel Tizyn. \"I don't know what would have happened if he was left to his own devices.\"",
+                    "banWords": [],
+                    "censorWords": [
+                        "Rheel Tizyn"
+                    ],
+                    "hasHiddenImage": false
                 }
             ]
         },
         {
             "day": 4,
             "newspapers": [
+                {
+                    "publisher": "The Credit Ledger",
+                    "title": "Department of Consumer Spending Launches \"Mandatory Investment\" Program to Boost Economy",
+                    "date": "1-9-2025",
+                    "front": "In an exciting new economic policy, the Department of Consumer Spending has announced the Mandatory Investment Initiative (MII), a groundbreaking program designed to \"teach financial responsibility\" by requiring all citizens to invest at least 40% of their income into government-approved financial markets.",
+                    "back": "\"The problem isn't that people don't have money,\" explained Senior Financial Strategist Scamuel Ponzi III. \"The problem is that people refuse to invest properly.\"\n Concerns over the recent stock market collapse were dismissed by government officials as \"market restructuring,\" with economists reassuring citizens that their investments will eventually regain value. Citizens failing to comply with the MII will be enrolled in the Economic Trustworthiness Program, where they will undergo financial re-education to correct their spending habits.",
+                    "banWords": [],
+                    "censorWords": [],
+                    "replaceWords": [
+                        ["1-9-2025", "1-10-2025"]
+                    ],
+                    "hasHiddenImage": false
+                },
                 {
                     "publisher": "The Patriot's Echo",
                     "title": "NewMerica's Latests AI, Sentinel Stores Users Input and Directly Reports All Criticism to NewMerica.",
@@ -438,6 +529,7 @@
                     "banWords": [
                         "Black Swan",
                         "Workplace Excellence",
+                        "Week of Order",
                         "Seally Cruz",
                         "Media Regulation Branch"
                     ],
@@ -446,19 +538,6 @@
                         ["1-9-2025", "1-10-2025"]
                     ],
                     "hasHiddenImage": true
-                },
-                {
-                    "publisher": "The Credit Ledger",
-                    "title": "Department of Consumer Spending Launches \"Mandatory Investment\" Program to Boost Economy",
-                    "date": "1-9-2025",
-                    "front": "In an exciting new economic policy, the Department of Consumer Spending has announced the Mandatory Investment Initiative (MII), a groundbreaking program designed to \"teach financial responsibility\" by requiring all citizens to invest at least 40% of their income into government-approved financial markets.",
-                    "back": "\"The problem isn't that people don't have money,\" explained Senior Financial Strategist Scamuel Ponzi III. \"The problem is that people refuse to invest properly.\"\n Concerns over the recent stock market collapse were dismissed by government officials as \"market restructuring,\" with economists reassuring citizens that their investments will eventually regain value. Citizens failing to comply with the MII will be enrolled in the Economic Trustworthiness Program, where they will undergo financial re-education to correct their spending habits.",
-                    "banWords": [],
-                    "censorWords": [],
-                    "replaceWords": [
-                        ["1-9-2025", "1-10-2025"]
-                    ],
-                    "hasHiddenImage": false
                 },
                 {
                     "publisher": "Underground News Network",
@@ -475,6 +554,34 @@
                         ["1-9-2025", "1-10-2025"]
                     ],
                     "hasHiddenImage": false
+                },
+                {
+                    "publisher": "The Patriot's Echo",
+                    "title": "New Sentinel Inspired Work Uniforms Available",
+                    "date": "1-9-2025",
+                    "front": "[Silicon Valley 2.0, NewMerica] - Mlon Eusk officially unveiled at the Automation Summit a Sentinel-inspired work uniform line. Part of Workplace Excellence, a sleek, function-first attire collection designed to reflect the strength, symmetry, and stability of the NewMerican workforce.",
+                    "back": "Based on the visual aesthetic pioneered by Mlon Eusk, whose famous unwavering hand salute at this year's summit was also announced to be adopted as the official national greeting, combines minimalist authority with stylish symmetry.\n\"The design reminds us of our role,\" stated Mlon Eusk. \"To show loyalty not just in word, but in fabric, posture, and purpose.\" Based on the visual aesthetic pioneered by Mlon Eusk, whose famous unwavering hand salute at this year's summit was also announced to be adopted as the official national greeting, combines minimalist authority with stylish symmetry.",
+                    "banWords": [
+                        "Workplace Excellence"
+                    ],
+                    "censorWords": [],
+                    "replaceWords": [
+                        ["1-9-2025", "1-10-2025"]
+                    ],
+                    "hasHiddenImage": false
+                },
+                {
+                    "publisher": "The Verdant Times",
+                    "title": "Family Appreciation Week Launches With Drone-Synced Fireworks",
+                    "date": "1-9-2025",
+                    "front": "[New DC, NewMerica] - Last night, Family Appreciation Week began with a sad display of drone-synced fireworks, each burst perfectly choreographed to patriotic lullabies and pre-approved slogans projected across the New DC skyline.",
+                    "back": "Citizens were instructed to gather outside in their \"assigned familial clusters\" to witness the spectacle, which included a 90-second pause for the Mandatory Reflective Gratefulness segment.\nThose who failed to smile during the final firework, shaped like the Leader's hand on a child's shoulder, reportedly received automated follow-up texts from the Ministry of Domestic Allegiance. Critics note the celebration coincides with a quiet surge in household loyalty audits, particularly among homes where children failed recent Gratefulness Metrics.",
+                    "banWords": [],
+                    "censorWords": [],
+                    "replaceWords": [
+                        ["1-9-2025", "1-10-2025"]
+                    ],
+                    "hasHiddenImage": true
                 }
             ]
         },
@@ -490,6 +597,7 @@
                     "banWords": [
                         "Black Swan",
                         "Workplace Excellence",
+                        "Week of Order",
                         "Seally Cruz",
                         "Media Regulation Branch",
                         "Security Deal",
@@ -510,6 +618,9 @@
                     "banWords": [],
                     "censorWords": [
                         "Deleanor Voluare"
+                    ],
+                    "replaceWords": [
+                        ["1-10-2025", "1-11-2025"]
                     ],
                     "hasHiddenImage": true
                 },
@@ -553,6 +664,34 @@
                     "censorWords": [
                         "Chimera",
                         "Deleanor Voluare"
+                    ],
+                    "replaceWords": [
+                        ["1-10-2025", "1-11-2025"]
+                    ],
+                    "hasHiddenImage": false
+                },
+                {
+                    "publisher": "The People's Voice",
+                    "title": "Laughter Without Permit Now Considered a Thought Crime",
+                    "date": "1-10-2025",
+                    "front": "[New DC, NewMerica] - Turns out, laughter isn't the best medicine, at least not without a permit. In NewMerica's latest leap toward emotional sterilization, the country has absurdly declared unlicensed laughter a Class C Thought Crime, citing its dangerous potential to disrupt emotional consistency and obedience, as it \"sounds too free.\"",
+                    "back": "Effective immediately, all laughter, giggles, snorts, even polite chuckles, must be pre-scheduled through the Sentinel system. Citizens caught laughing outside their assigned Humor Window will be sent for re-education, or worse, have to explain themselves to an enforcer with no sense of humor.\n\"Laughter is dangerous and should be measured, modest, and state-aligned,\" said a Ministry spokesman, somehow without laughing. One man was detained for smirking at a broken elevator. Another for chuckling when he misread a poster. As one commuter whispered through a forced smile, \"First laughter… what's next? Smiling for too long?\"",
+                    "banWords": [],
+                    "censorWords": [],
+                    "replaceWords": [
+                        ["1-10-2025", "1-11-2025"]
+                    ],
+                    "hasHiddenImage": true
+                },
+                {
+                    "publisher": "The NewMerican Truth",
+                    "title": "Peacekeeper Receive Medal for Preemptively Arresting Undecided Protesters",
+                    "date": "1-10-2025",
+                    "front": "Whyoming, NewMerica - In a glittering ceremony filled with cheers, smoke machines, and gloriously synchronized clapping, a Peacekeeper from the North Prefecture Division were awarded the Medal of Predictive Valor for successfully detaining 47 \"citizens\" who were \"considering dissent.\"",
+                    "back": "According to official records, none of the detained individuals had yet committed any crimes, but all had exhibited what the Sentinel calls \"Pre Protest Microbehaviors\" a well documented list of subtle infractions including delayed clapping, elevated blinking rates, and unsanctioned sighs.\nFootage released by the Ministry of External Harmony shows the Peacekeeper tackling a 62 year old woman moments before she allegedly would have questioned the banner reading \"Questioning is Quitting.\"",
+                    "banWords": [],
+                    "censorWords": [
+                        "Peacekeeper"
                     ],
                     "replaceWords": [
                         ["1-10-2025", "1-11-2025"]
