@@ -819,8 +819,8 @@ public class GameManager : MonoBehaviour
         foundMedia.numCensoredCorrectly = currentCensorNum;
         foundMedia.numCensorMistakes = numCensorMistakes;
         foundMedia.noMistakes = playerSucceeds;
-        foundMedia.Print();
         jobDetails.articleClockTime = 0f;
+        foundMedia.Print();
     }
 
     public void CheckDayEnd()

@@ -32,7 +32,7 @@ public class GameData
     public float playTime;
     public List<JobScene.Entry> releasedEmails = new();
     public List<Review> articleReviews = new();
-
+    public HashSet<int> reviewNotificationSeen = new();
 
     public GameData()
     {
@@ -58,9 +58,10 @@ public class GameData
         this.totalMoneyEarned = loadedGame.totalMoneyEarned;
         this.totalMoneySpent = loadedGame.totalMoneySpent;
         this.rent = loadedGame.rent;
-        
+
         this.releasedEmails = loadedGame.releasedEmails;
         this.articleReviews = loadedGame.articleReviews;
+        this.reviewNotificationSeen = loadedGame.reviewNotificationSeen ?? new HashSet<int>();
 
         this.numPurchasedTimerUpgrades = loadedGame.numPurchasedTimerUpgrades;
         this.hasUVLightUpgrade = loadedGame.hasUVLightUpgrade;
@@ -106,11 +107,6 @@ public class GameData
     {
         this.lastJobPay = money;
         SetCurrentMoney(lastJobPay, false);
-    }
-
-    public void AddNewMedia(Review newMedia)
-    {
-        articleReviews.Add(newMedia);
     }
 
     public int GetUVLightUpgradeTier()
@@ -205,5 +201,21 @@ public class GameData
     public void PurchaseCosmetic(string cosmeticId)
     {
         purchasedCosmetics.Add(cosmeticId);
+    }
+
+    public void AddReviewToGameData(Entity.Newspaper newspaper)
+    {
+        Review newMedia = new()
+        {
+            title = newspaper.GetTitle(),
+            publisher = newspaper.GetPublisher(),
+            body = newspaper.GetFront() + "\n" + newspaper.GetBack(),
+            date = newspaper.GetDate(),
+            day = this.day,
+            hiddenImageExists = newspaper.hasHiddenImage,
+            censorWords = newspaper.censorWords,
+            bannedWords = newspaper.banWords,
+        };
+        articleReviews.Add(newMedia);
     }
 }

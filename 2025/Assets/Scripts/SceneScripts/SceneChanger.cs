@@ -61,7 +61,7 @@ public class SceneChanger : MonoBehaviour
             // Start Game
             // Comment out if using with debug
             mainMenuScene.LoadMainMenu();
-            //gameManager.gameData.day = 4;
+            //gameManager.gameData.day = 1;
             //EventManager.NextScene?.Invoke();
 
             // For Debugging

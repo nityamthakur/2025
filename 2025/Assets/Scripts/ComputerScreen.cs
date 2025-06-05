@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -21,10 +22,12 @@ public class ComputerScreen : MonoBehaviour
     //Emails -------------------------------------//
     [SerializeField] private Transform emailSpawnZone;
     [SerializeField] private Button emailButtonPrefab;
+    [SerializeField] private Scrollbar emailScroll;
     private int unreadEmailCount = 0;
 
     //Review Menu -------------------------------------//
     [SerializeField] private Transform reviewSpawnZone;
+    [SerializeField] private Scrollbar reviewScroll;
     private List<Review> currentDayMedia = new();
     private int unreadReviewCount = 0, dayMediaIterator = 0;
     private Button mostRecentReviews;
@@ -33,12 +36,15 @@ public class ComputerScreen : MonoBehaviour
     private Button workButton, emailButton, reviewButton, hackButton, nextButton, previousButton;
     private TextMeshProUGUI workButtonText, emailNotificationText, reviewNotificationText;
 
+    private GameData gameData;
     private Color SELECTEDCOLOR = new(0.7843137f, 0.7843137f, 0.7843137f, 1f);
     private Color NORMALCOLOR = new(1f, 1f, 1f, 1f);
 
 
     public void Initalize()
     {
+        GameManager gameManager = FindFirstObjectByType<GameManager>();
+        gameData = gameManager.gameData;
         jobScene = FindFirstObjectByType<JobScene>();
         SetUpButtons();
         SetUpImages();
@@ -84,6 +90,7 @@ public class ComputerScreen : MonoBehaviour
         nextButton = FindObject<Button>("NextButton");
         nextButton.onClick.AddListener(() =>
         {
+            reviewScroll.value = 1;
             dayMediaIterator = (dayMediaIterator + 1) % currentDayMedia.Count;
             ReviewArticleTextUpdate();
         });
@@ -171,7 +178,8 @@ public class ComputerScreen : MonoBehaviour
         screenText.gameObject.SetActive(true);
         mostRecentReviews.gameObject.SetActive(true);
         EventManager.StopClockMovement?.Invoke();
-        ReviewCountUpdate(+1);
+        unreadReviewCount += 1;
+        UpdateUnreadPopUps();
         HideMenus();
         EventManager.ZoomCamera?.Invoke(screenZoomIn, 3.1f, 1.0f);
     }
@@ -219,8 +227,12 @@ public class ComputerScreen : MonoBehaviour
         fadingImage.gameObject.SetActive(false);
         applicationBar.SetActive(true);
         HideMenus();
+        ClearUnreadPopUps();
+
+        yield return new WaitForSeconds(1f);
+
         UpdateUnreadPopUps();
-        ShowEMailScreen();
+        // ShowEMailScreen();
         // Show unread emails to the upper right of the email button. Look up iphone unread emails
     }
 
@@ -372,13 +384,17 @@ public class ComputerScreen : MonoBehaviour
     {
         unreadEmailCount = Math.Clamp(unreadEmailCount, 0, int.MaxValue);
         emailNotificationText.text = $"{unreadEmailCount}";
-        if (unreadEmailCount == 0)
-            emailNotification.gameObject.SetActive(false);
+        emailNotification.gameObject.SetActive(unreadEmailCount > 0);
 
         unreadReviewCount = Math.Clamp(unreadReviewCount, 0, int.MaxValue);
         reviewNotificationText.text = $"{unreadReviewCount}";
-        if (unreadReviewCount == 0)
-            reviewNotification.gameObject.SetActive(false);
+        reviewNotification.gameObject.SetActive(unreadReviewCount > 0);
+    }
+
+    private void ClearUnreadPopUps()
+    {
+        emailNotification.gameObject.SetActive(false);
+        reviewNotification.gameObject.SetActive(false);
     }
 
     internal void CreateEmails(List<JobScene.Entry> releasedEmails)
@@ -398,14 +414,16 @@ public class ComputerScreen : MonoBehaviour
                 SetObjectText(emailText, email.title + "\nFrom: " + email.sender + "\n\n" + email.email);
                 if (!email.seen)
                 {
-                    EmailCountUpdate(-1);
+                    emailScroll.value = 1;
+                    unreadEmailCount -= 1;
+                    UpdateUnreadPopUps();
                     email.seen = true;
                     emailReadIndicator.color = Color.white;
                 }
             });
 
             if (!email.seen)
-                EmailCountUpdate(+1);
+                unreadEmailCount += 1;
             else
                 emailReadIndicator.color = Color.white;
             //SetEmailText(email.title + "\nFrom: " + email.sender + "\n\n" + email.email);
@@ -413,16 +431,8 @@ public class ComputerScreen : MonoBehaviour
         SetObjectText(emailText, "");
     }
 
-    private void EmailCountUpdate(int num)
-    {
-        unreadEmailCount += num;
-        UpdateUnreadPopUps();
-    }
-
     internal void CreateReviews(List<Review> dayMedia, int day)
     {
-        unreadReviewCount = 0;
-
         for (int i = 1; i <= day; i++)
         {
             int thisDay = i;
@@ -442,25 +452,24 @@ public class ComputerScreen : MonoBehaviour
                     currentDayMedia = dayMedia.Where(media => media.day == thisDay).ToList(); // Filter media by the selected day
                 }
 
-                ReviewArticleTextUpdate();
-                /*
-                if (!email.seen)
+                if (!gameData.reviewNotificationSeen.Contains(thisDay))
                 {
-                    ReviewCountUpdate(-1);
-                    email.seen = true;
+                    gameData.reviewNotificationSeen.Add(thisDay);
+                    unreadEmailCount -= 1;
+                    UpdateUnreadPopUps();
                     reviewReadIndicator.color = Color.white;
                 }
-                */
+                ReviewArticleTextUpdate();
 
                 ShowHideButton(nextButton, currentDayMedia.Count > 1);
                 //ShowHideButton(previousButton, currentDayMedia.Count >= 2);
                 reviewMediaText.gameObject.SetActive(true);
             });
 
-            //if (!email.seen)
-            //ReviewCountUpdate(+1);
-            //else
-            //reviewReadIndicator.color = Color.white;
+            // if the number already exists, change the indicator color to white as its been seen
+            if (gameData.reviewNotificationSeen.Contains(thisDay))
+                reviewReadIndicator.color = Color.white;
+
 
             if (i == day)
             {
@@ -468,16 +477,18 @@ public class ComputerScreen : MonoBehaviour
                 mostRecentReviews = spawnedReview;
             }
         }
+
+        unreadReviewCount = day - gameData.reviewNotificationSeen.Count - 1;
+
         string text = "\nView any mistakes you may have made on past articles. \n\nAny Articles released today wont be ready for view until the end of your work shift.";
         SetObjectText(reviewText, text);
         ShowHideButton(nextButton, currentDayMedia.Count >= 2);
         ShowHideButton(previousButton, currentDayMedia.Count >= 2);
-        ReviewCountUpdate(+1);
     }
 
     private void ReviewArticleTextUpdate()
     {
-        string lineBreaker = "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~";
+        string lineBreaker = "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~";
         if (currentDayMedia.Count > 0)
         {
             reviewMediaText.text = $"{dayMediaIterator + 1}/{currentDayMedia.Count}";
@@ -541,11 +552,6 @@ public class ComputerScreen : MonoBehaviour
             SetObjectText(reviewText, "");
     }
 
-    private void ReviewCountUpdate(int num)
-    {
-        unreadReviewCount += num;
-        UpdateUnreadPopUps();
-    }
 
     internal void EventTrigger(int day, bool startEnd)
     {

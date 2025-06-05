@@ -65,7 +65,7 @@ public class ObjectSpawner : MonoBehaviour
         GameObject newMedia = Instantiate(mediaObject, mediaSpawner.transform.position, Quaternion.identity);
 
         ReadNextNewspaper();
-        AddReviewToGameData(currentNewspaper);
+        gameManager.gameData.AddReviewToGameData(currentNewspaper);
 
         // Pass the spline prefab reference
         Entity mediaEntity = newMedia.GetComponent<Entity>();
@@ -293,22 +293,6 @@ public class ObjectSpawner : MonoBehaviour
             content = token?.ToString() ?? "";
             isComplex = false;
         }
-    }
-
-    private void AddReviewToGameData(Entity.Newspaper newspaper)
-    {
-        Review newMedia = new()
-        {
-            title = newspaper.GetTitle(),
-            publisher = newspaper.GetPublisher(),
-            body = newspaper.GetFront() + "\n" + newspaper.GetBack(),
-            date = newspaper.GetDate(),
-            day = gameManager.gameData.day,
-            hiddenImageExists = newspaper.hasHiddenImage,
-            censorWords = newspaper.censorWords,
-            bannedWords = newspaper.banWords,
-        };
-        gameManager.gameData.AddNewMedia(newMedia);
     }
 
     private void Reshuffle(Entity.Newspaper[] newspapers)

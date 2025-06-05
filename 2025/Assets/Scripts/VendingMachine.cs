@@ -32,7 +32,8 @@ public class VendingMachine : MonoBehaviour
     {
         EventManager.PlaySound?.Invoke("buttonBeep", true);
         ItemCheck();
-        CancelButtonPanel();
+        itemCode = "";
+        UpdateDisplayPanel();
     }
     public void CancelButtonPanel()
     {
@@ -44,21 +45,34 @@ public class VendingMachine : MonoBehaviour
     {
         EventManager.PlaySound?.Invoke("buttonBeep", true);
         if (itemCode.Length > 2)
-            CancelButtonPanel();
+        {
+            itemCode = "";
+            UpdateDisplayPanel();
+        }
         itemCode += code;
         UpdateDisplayPanel();
     }
     private void UpdateDisplayPanel(string grabbedCode = null)
     {
-        if(grabbedCode == null)
-        displayPanel.text = itemCode;
+        if (grabbedCode == null)
+            displayPanel.text = itemCode;
+        else
+            displayPanel.text = grabbedCode;
+
+        if (itemCode.Length == 3)
+            UpdateItemScreen();
+    }
+
+    private void UpdateItemScreen()
+    {
         VendingMachineItem item = vendingMachineItems.Find(item => item.itemCode == itemCode);
-        bool stockDayCheck = false;
-        if (item != null && item.stockDay <= gameManager.gameData.GetCurrentDay())
-            stockDayCheck = true;
-        nameText.text = stockDayCheck ? item.itemName : "";
-        descriptionText.text = stockDayCheck ? item.itemDescription : "";
-        effectText.text = stockDayCheck ? item.itemEffect : "";
+            bool stockDayCheck = false;
+
+            if (item != null && item.stockDay <= gameManager.gameData.GetCurrentDay())
+                stockDayCheck = true;
+            nameText.text = stockDayCheck ? item.itemName : "";
+            descriptionText.text = stockDayCheck ? item.itemDescription : "";
+            effectText.text = stockDayCheck ? item.itemEffect : "";
     }
 
     private void ItemCheck()
