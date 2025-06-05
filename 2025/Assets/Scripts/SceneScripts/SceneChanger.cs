@@ -25,8 +25,8 @@ public class SceneChanger : MonoBehaviour
         // Define the order of the scenes
         sceneSequence = new List<Action>
         {
-            () => dayStartScene.LoadDayStart(),
-            () => shopScene.LoadShop(),
+            //() => dayStartScene.LoadDayStart(),
+            //() => shopScene.LoadShop(),
             () => jobScene.LoadJobStart(),
             () => dayEndScene.LoadDayEnd(),
         };

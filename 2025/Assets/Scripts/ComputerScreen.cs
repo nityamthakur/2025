@@ -10,7 +10,7 @@ using UnityEngine.UI;
 public class ComputerScreen : MonoBehaviour
 {
     [SerializeField] private Transform screenZoomIn;
-    [SerializeField] private Sprite glitchedScreen, computerLogo;
+    [SerializeField] private Sprite glitchedScreen, computerLogo, flagHand;
     [SerializeField] private GameObject emailScreen, reviewScreen, applicationBar, backgroundScreen;
     private GameObject lastOpenedScreen = null;
     private TextMeshProUGUI screenText, mediaProcessedText, emailText, reviewText, reviewMediaText;
@@ -34,10 +34,11 @@ public class ComputerScreen : MonoBehaviour
     private Button mostRecentReviews;
 
     //Application Buttons -------------------------------------//
-    private Button workButton, emailButton, reviewButton, hackButton, nextButton, previousButton;
+    private Button workButton, emailButton, reviewButton, zoomButton, hackButton, nextButton, previousButton;
     private TextMeshProUGUI workButtonText, emailNotificationText, reviewNotificationText;
 
     private GameData gameData;
+    private bool zoomedIn, ableToZoom;
     private Color SELECTEDCOLOR = new(0.7843137f, 0.7843137f, 0.7843137f, 1f);
     private Color NORMALCOLOR = new(1f, 1f, 1f, 1f);
 
@@ -85,6 +86,30 @@ public class ComputerScreen : MonoBehaviour
                 ShowReviewScreen();
         });
 
+        zoomedIn = false;
+        ableToZoom = true;
+        zoomButton = FindObject<Button>("ZoomButton");
+        TextMeshProUGUI zoomButtonText = zoomButton.GetComponentInChildren<TextMeshProUGUI>();
+        zoomButton.onClick.AddListener(() =>
+        {
+            Debug.Log("zooming");
+            EventManager.PlaySound?.Invoke("switch1", true);
+            zoomButtonText.text = zoomedIn ? "Zoom In" : "Zoom Out";
+
+            if (!zoomedIn && ableToZoom)
+            {
+                EventManager.ZoomCamera?.Invoke(screenZoomIn, 3.1f, 0.25f);
+                zoomedIn = true;
+            }
+            else if (zoomedIn && ableToZoom)
+            {
+                EventManager.ResetCamera?.Invoke(0.25f);
+                zoomedIn = false;
+            }
+            StartCoroutine(ZoomDelay(0.3f));
+
+        });
+
         hackButton = FindObject<Button>("HackButton");
         ShowHideButton(hackButton, false);
 
@@ -121,6 +146,7 @@ public class ComputerScreen : MonoBehaviour
         reviewNotificationText = reviewNotification.transform.Find("Text").GetComponent<TextMeshProUGUI>();
 
         loadingCircleAnimation = Resources.LoadAll<Sprite>("Animations/ComputerLoadingAnimation");
+        computerGlitchAnimation = Resources.LoadAll<Sprite>("Animations/ComputerGlitchAnimation");
     }
 
     private void SetUpText()
@@ -278,6 +304,12 @@ public class ComputerScreen : MonoBehaviour
         jobScene.StartCoroutine(jobScene.NextScene());
     }
 
+    private IEnumerator ZoomDelay(float delay)
+    {
+        ableToZoom = false;
+        yield return new WaitForSeconds(delay);
+        ableToZoom = true;
+    }
 
     private IEnumerator CycleBackgroundFrames(Sprite[] frames, float duration, float frameInterval)
     {
@@ -555,32 +587,48 @@ public class ComputerScreen : MonoBehaviour
     }
 
 
+    private Coroutine glitchEffect = null;
     internal void EventTrigger(int day, bool startEnd)
     {
         if (day == 3)
         {
-            ShowHideImage(foreground, startEnd);
-            foreground.sprite = glitchedScreen;
+            //ShowHideImage(foreground, startEnd);
+            if (glitchEffect == null)
+            {
+                HideMenus();
+                glitchEffect = StartCoroutine(GlitchEffect());
+                SetProcessedText("Down with Newmerica!");
+                if (zoomedIn)
+                    zoomButton.onClick.Invoke();
+            }
+            else
+            {
+                StopCoroutine(glitchEffect);
+                background.sprite = flagHand;
+                SetProcessedText("Media Processed:\n0/5");
+            }
+
+            emailButton.interactable = reviewButton.interactable = zoomButton.interactable = !startEnd;
+
+            //foreground.sprite = glitchedScreen;
             if (lastOpenedScreen != null)
                 lastOpenedScreen.SetActive(!startEnd);
         }
     }
 
-    private bool zoomedIn = false;
-    private void Update()
+    private IEnumerator GlitchEffect()
     {
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (computerGlitchAnimation == null || computerGlitchAnimation.Length == 0)
+            yield break;
+
+        int index = 0;
+        System.Random rnd = new();
+
+        while (true)
         {
-            if (!zoomedIn)
-            {
-                //EventManager.ZoomCamera?.Invoke(screenZoomIn, 3.1f, 0.25f);
-                zoomedIn = true;
-            }
-            else
-            {
-                //EventManager.ResetCamera?.Invoke(0.25f);
-                zoomedIn = false;
-            }
+            background.sprite = computerGlitchAnimation[index];
+            index = (index + 1) % computerGlitchAnimation.Length;
+            yield return new WaitForSeconds(rnd.Next(1, 2) / rnd.Next(1, 5));
         }
     }
 
