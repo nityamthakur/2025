@@ -18,6 +18,7 @@ public class ComputerScreen : MonoBehaviour
     private Slider performanceSlider;
     private JobScene jobScene;
     private Sprite[] loadingCircleAnimation;
+    private Sprite[] computerGlitchAnimation;
 
     //Emails -------------------------------------//
     [SerializeField] private Transform emailSpawnZone;
@@ -412,9 +413,10 @@ public class ComputerScreen : MonoBehaviour
             {
                 EventManager.PlaySound?.Invoke("switch1", true);
                 SetObjectText(emailText, email.title + "\nFrom: " + email.sender + "\n\n" + email.email);
+                emailScroll.value = 1;
+
                 if (!email.seen)
                 {
-                    emailScroll.value = 1;
                     unreadEmailCount -= 1;
                     UpdateUnreadPopUps();
                     email.seen = true;
@@ -455,7 +457,7 @@ public class ComputerScreen : MonoBehaviour
                 if (!gameData.reviewNotificationSeen.Contains(thisDay))
                 {
                     gameData.reviewNotificationSeen.Add(thisDay);
-                    unreadEmailCount -= 1;
+                    unreadReviewCount -= 1;
                     UpdateUnreadPopUps();
                     reviewReadIndicator.color = Color.white;
                 }

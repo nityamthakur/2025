@@ -155,7 +155,7 @@
             "day": 5,
             "title": "Keep Your Head Up",
             "sender": "Steve",
-            "email": "Hey.\n\nIt's the end of the week and you're still here so I guess you're probably doing something right. I imagine by now you're also pretty tired. Looking at articles day after day is taxing on the eyes.\n\nI'm surprised corporate hasn't already come up with a way to automate all this, especially with all this talk of A.I. taking our jobs. Would be nice cause I've been having to double my dose on Timerall to make sure I finish on time with all these new regulations and tasks. \n\nThat's enough rambling I suppose, some more words of advice. \n\nIf you haven't already noticed, finishing your daily quota early gives you a chance to work on extra articles. So if you're strapped for cash it might not be a bad idea to send in your last article before the end of your work shift to get an extra article to work on.\n\nWhile I wouldn't advocate for you to just rush through work and make mistakes just for the potential of more cash, it's something you can do. Just don't blame me if you get called in by our supervisor for a more in-depth review of your work. \n\nAnyway, thats enough advice for today. I have to get back to work, strict quotas and all."
+            "email": "Hey.\n\nIt's the end of the week and you're still here so I guess you're probably doing something right. I imagine by now you're also pretty tired. Looking at articles day after day is taxing on the eyes.\n\nI'm surprised corporate hasn't already come up with a way to automate all this, especially with talk of A.I. taking our jobs. Would be kind of nice honestly cause I've been having to double my dose on Timerall to make sure I finish on time with all these new regulations and tasks. \n\nThat's enough rambling I suppose, some more words of advice. \n\nIf you haven't already noticed, finishing your daily quota early gives you a chance to work on extra articles. So if you're strapped for cash it might not be a bad idea to send in your last article before the end of your work shift to get an extra article to work on.\n\nWhile I wouldn't advocate for you to just rush through work and make mistakes just for the potential of more cash, it's something you can do. Just don't blame me if you get called in by our supervisor for a more in-depth review of your work. \n\nAnyway, thats enough advice for today. I have to get back to work, strict quotas and all."
         },
         {
             "day": 5,
@@ -169,32 +169,49 @@
             "itemCode": "111",
             "itemName": "Family Photo",
             "itemDescription": "Keep yourself on track at work with this beautifully machine carved wood frame. No family? Now Worries! A complimentary stock family is included with every frame.",
-            "itemEffect": ""
+            "cost": 2,
+            "itemEffect": "",
+            "stockDay": 1
         },
         {
             "itemCode": "112",
             "itemName": "Coffee Mug",
             "itemDescription": "With this mugs revolutionary flat bottom design, never worry about spills at your computer again.",
-            "itemEffect": ""
+            "itemEffect": "",
+            "cost": 3,
+            "stockDay": 1
         },
         {
             "itemCode": "113",
             "itemName": "Pen Box",
             "itemDescription": "Keep your workspace neat and tidy with this aluminum pen case. Impress your boss with this stylish case and and aim for that promotion. Pen's not included.",
-            "itemEffect": ""
+            "itemEffect": "",
+            "cost": 3,
+            "stockDay": 1
         },
         {
             "itemCode": "211",
             "itemName": "DoubleGood Battery",
             "itemDescription": "Keep all your devices powered up with DoubleGood Battery. Don't just settle with good, settle with DoubleGood!",
             "itemEffect": "Increase radius of blacklight.",
+            "cost": 7,
             "stockDay": 3
+        },
+        {
+            "itemCode": "212",
+            "itemName": "Economy Plane Ticket",
+            "itemDescription": "What appears to be a flight ticket stuck in the vending machine. It's not the most unusal thing found in this contraption.",
+            "itemEffect": "",
+            "cost": 50,
+            "stockDay": 5
         },
         {
             "itemCode": "213",
             "itemName": "Timerall",
             "itemDescription": "Have too much work and not enough time? try timerall, Newmerica's favorite long lasting pill. Get fast action relief today, tomorrow, and beyond.",
-            "itemEffect": "Increase work timer by 30 seconds."
+            "itemEffect": "Increase work timer by 30 seconds.",
+            "cost": 5,
+            "stockDay": 1
         }
     ],
     "newspaperText": [
