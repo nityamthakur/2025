@@ -22,6 +22,8 @@ public class GameData
     private readonly float timerUpgrade = 30f;
     public int numPurchasedTimerUpgrades = 0;
     public HashSet<string> purchasedCosmetics = new HashSet<string>();
+    public Dictionary<string, int> itemPurchases = new();
+
     private int uvLightUpgradeTier = 0;
     public int timerUpgradeTier = 0;
     public float PerformanceScale
@@ -66,6 +68,7 @@ public class GameData
         this.numPurchasedTimerUpgrades = loadedGame.numPurchasedTimerUpgrades;
         this.hasUVLightUpgrade = loadedGame.hasUVLightUpgrade;
         this.purchasedCosmetics = loadedGame.purchasedCosmetics;
+        this.itemPurchases = loadedGame.itemPurchases ?? new Dictionary<string, int>();
     }
 
     public int GetCurrentDay()

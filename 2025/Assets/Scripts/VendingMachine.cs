@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,8 +11,9 @@ public class VendingMachine : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI displayPanel;
     [SerializeField] private TextMeshProUGUI nameText, descriptionText, effectText;
-    [SerializeField] private Transform cosmeticsPanel, spawnLayer;
+    [SerializeField] private Transform cosmeticsPanel, fallingItemSlot, itemSlots;
     [SerializeField] private Transform vendingMachineSlots;
+    [SerializeField] private GameObject itemPrefab;
     private GameManager gameManager;
     private ShopScene shopScene;
 
@@ -85,6 +87,7 @@ public class VendingMachine : MonoBehaviour
             return;
         }
 
+        /*
         var cosmetic = Array.Find(shopScene.cosmeticItems, c => c.displayName == item.itemName);
         if (cosmetic == null) return;
 
@@ -108,9 +111,22 @@ public class VendingMachine : MonoBehaviour
 
         if (gameManager.gameData.IsCosmeticPurchased(cosmetic.id)) return;
         if (gameManager.gameData.GetCurrentMoney() < cosmetic.price) return;
-
-
         ItemFall(cosmetic, icon.position);
+        */
+        
+        // Check if player has enough money
+        int purchaseCount = gameManager.gameData.itemPurchases.TryGetValue(item.itemName, out int count) ? count : 0;
+        if (gameManager.gameData.GetCurrentMoney() < item.itemCost[purchaseCount])
+            return;
+
+        // Check if item can be purchased
+        if (purchaseCount == item.itemCost.Length)
+            return;
+
+        gameManager.gameData.SetCurrentMoney(item.itemCost[purchaseCount], true);
+        //gameManager.gameData.itemPurchases.Add(item.itemName, 1);
+
+        StartCoroutine(FallingItem(item));
     }
 
     private void ItemFall(ShopScene.CosmeticShopItem cosmetic, Vector3 iconPosition)
@@ -120,7 +136,7 @@ public class VendingMachine : MonoBehaviour
 
         EventManager.PurchaseCosmeticById?.Invoke(cosmetic.id);
 
-        GameObject entry = Instantiate(shopScene.cosmeticShopEntryPrefab, spawnLayer);
+        GameObject entry = Instantiate(shopScene.cosmeticShopEntryPrefab, fallingItemSlot);
         entry.transform.Find("Icon").GetComponent<Image>().sprite = cosmetic.icon;
         entry.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = "";
         entry.transform.Find("Price").GetComponent<TextMeshProUGUI>().text = "";
@@ -133,6 +149,26 @@ public class VendingMachine : MonoBehaviour
         StartCoroutine(DelaySound(1f));
         Destroy(entry, 2f);
     }
+
+   private IEnumerator FallingItem(VendingMachineItem item)
+    {
+        StartCoroutine(DelaySound(1f));
+
+        Image fallingImage = item.attachedUpgrade.transform.Find("FallingImage").GetComponent<Image>();
+        float time = 0f;
+        float duration = 1.0f;
+        Vector3 start = fallingImage.transform.position;
+        Vector3 end = start + Vector3.down * 10f;
+
+        while (time < duration)
+        {
+            fallingImage.transform.position = Vector3.Lerp(start, end, time / duration);
+            time += Time.deltaTime;
+            yield return null;
+        }
+        fallingImage.transform.position = start;
+
+    }        
 
     private void VendingMachineItemFall(string itemName)
     {
@@ -211,24 +247,45 @@ public class VendingMachine : MonoBehaviour
 
     public void CreatePurchasables()
     {
-        foreach (Transform item in vendingMachineSlots)
+        foreach (VendingMachineItem item in vendingMachineItems)
         {
-            Transform item = itemUI.Find("Name");
-            TextMeshProUGUI name = item?.GetComponent<TextMeshProUGUI>();
-            if (name == null) continue;
+            GameObject entry = Instantiate(itemPrefab, itemSlots);
+            if (item.stockDay > gameManager.gameData.GetCurrentDay())
+                entry.SetActive(false);
 
-            VendingMachineItem match = vendingMachineItems.Find(vm => vm.itemName == name.text);
-            if (match != null)
-            {
-                Transform iconTransform = itemUI.Find("Icon");
-                Image iconImage = iconTransform?.GetComponent<Image>();
-                if (iconImage != null)
-                {
-                    match.itemImage = iconImage.sprite;
-                    match.spawnPosition = iconImage.transform;
-                }
-            }
+            // Locate item image and place it in the instantiated entry
+            Sprite itemImage = Resources.Load<Sprite>($"Sprites/{item.itemImage}");
+            entry.transform.Find("Image").GetComponent<Image>().sprite = itemImage;
+            entry.transform.Find("FallingImage").GetComponent<Image>().sprite = itemImage;
+
+            // Grab how many times item has been purchased, and sets the appropriate cost
+            TextMeshProUGUI costComponent = entry.transform.Find("Cost").GetComponent<TextMeshProUGUI>();
+
+            int purchaseCount = gameManager.gameData.itemPurchases.TryGetValue(item.itemName, out int count) ? count : 0;
+            costComponent.text = $"${item.itemCost[purchaseCount]}";
+            if (item.itemCost.Length == count) // Already purchased, including items with multiple upgrades
+                costComponent.gameObject.SetActive(false);
+
+            // Set upgrade levels 
+            Slider upgradeBar = entry.transform.Find("UpgradeBar").GetComponent<Slider>();
+            upgradeBar.maxValue = item.itemCost.Length;
+            upgradeBar.value = purchaseCount;
+            if (item.itemCost.Length <= 1) // Make inactive if not able to be purchased multiple times
+                upgradeBar.gameObject.SetActive(false);
+
+            // Set Button. Not going to be actually active
+            Button buyButton = entry.transform.Find("BuyButton").GetComponent<Button>();
+            buyButton.interactable = false;
+            buyButton.transform.GetComponentInChildren<TextMeshProUGUI>().text = item.itemCode;
+
+            // Ensure that the reference gets set back to the item
+            item.attachedUpgrade = entry;
         }
+    }
+
+    private void CompletePurchase(VendingMachine item)
+    {
+
     }
 
 
@@ -241,14 +298,18 @@ public class VendingMachine : MonoBehaviour
     [Serializable]
     private class VendingMachineItem
     {
-        public string itemCode;
+        public string itemCode; // What number to press in vending machine for purchase and info
         public string itemName;
         public string itemDescription;
         public string itemEffect;
-        public int itemCost;
-        public int stockDay = 0;
+        public string itemImage;
+        public int[] itemCost; // Array of costs, determines number of purchasable upgrades
+        public int stockDay = 0; // What day it can appear in shop
+        public GameObject attachedUpgrade;
 
-        [NonSerialized] public Sprite itemImage;
-        [NonSerialized] public Transform spawnPosition;
+        public void Print()
+        {
+            Debug.Log($"{itemName}, {itemCode}, {itemCost}");
+        }
     }
 }

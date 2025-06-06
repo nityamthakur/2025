@@ -91,8 +91,6 @@ public class SceneChanger : MonoBehaviour
         if (gameManager.gameData.GetCurrentDay() == 1 && currentSceneIndex == 1)
             currentSceneIndex++;
 
-        Debug.Log(currentSceneIndex);
-
         // Call the function for the current scene
         sceneSequence[currentSceneIndex]?.Invoke();
 
