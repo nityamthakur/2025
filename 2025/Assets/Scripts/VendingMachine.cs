@@ -11,6 +11,7 @@ public class VendingMachine : MonoBehaviour
     [SerializeField] private TextMeshProUGUI displayPanel;
     [SerializeField] private TextMeshProUGUI nameText, descriptionText, effectText;
     [SerializeField] private Transform cosmeticsPanel, spawnLayer;
+    [SerializeField] private Transform vendingMachineSlots;
     private GameManager gameManager;
     private ShopScene shopScene;
 

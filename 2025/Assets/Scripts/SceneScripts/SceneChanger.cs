@@ -26,7 +26,7 @@ public class SceneChanger : MonoBehaviour
         sceneSequence = new List<Action>
         {
             //() => dayStartScene.LoadDayStart(),
-            //() => shopScene.LoadShop(),
+            () => shopScene.LoadShop(),
             () => jobScene.LoadJobStart(),
             () => dayEndScene.LoadDayEnd(),
         };

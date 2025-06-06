@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 using System;
+using Unity.VisualScripting;
 
 public class ShopScene : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class ShopScene : MonoBehaviour
     [SerializeField] private int[] upgradePrices2 = { 5, 8, 12 }; // Timer prices per tier
     [SerializeField] public GameObject cosmeticShopEntryPrefab; // Assign in Inspector
     [SerializeField] public CosmeticShopItem[] cosmeticItems;
+    public CosmeticShopItem[] secondRowPurchasables;
     [System.Serializable]
     public class CosmeticShopItem
     {
@@ -30,12 +32,9 @@ public class ShopScene : MonoBehaviour
     private TextMeshProUGUI moneyText;
 
     // Upgrade UI elements
-    private Button upgradeButton1; // UV Light upgrade button
-    private Button upgradeButton2;
-    private TextMeshProUGUI upgradeText1;
-    private TextMeshProUGUI upgradeText2;
-    private Image upgradeImage1;
-    private Image upgradeImage2;
+    private Button upgradeButton1, upgradeButton2, upgradeButton3;
+    private TextMeshProUGUI upgradeText1, upgradeText2, upgradeText3;
+    private Image upgradeImage1, upgradeImage2, upgradeImage3;
     private int playerMoney;
     private GameManager gameManager;
     private Image[] upgradeLevelBars1;
@@ -84,12 +83,20 @@ public class ShopScene : MonoBehaviour
 
         // Only show UV Light upgrade after day 3
         int currentDay = gameManager.gameData.GetCurrentDay();
-        Transform upgradeSlot1 = currentShopScreen.transform.Find("UpgradeSlot1");
+        Transform secondRow = currentShopScreen.transform.Find("SecondRow");
+        Transform upgradeSlot1 = secondRow.transform.Find("UpgradeSlot1");
+        Transform upgradeSlot3 = secondRow.transform.Find("UpgradeSlot3");
         if (currentDay >= 3)
         {
             if (upgradeSlot1 != null)
                 upgradeSlot1.gameObject.SetActive(true);
             SetupUpgradeSlot(1, upgradePrice1, upgradeDescription1);
+        }
+        if (currentDay < 5)
+        {
+            if (upgradeSlot3 != null)
+                upgradeSlot3.gameObject.SetActive(true);
+            SetupUpgradeSlot(3, 50);
         }
         else
         {
@@ -187,10 +194,11 @@ public class ShopScene : MonoBehaviour
         }
     }
 
-    private void SetupUpgradeSlot(int slotNumber, int price, string description)
+    private void SetupUpgradeSlot(int slotNumber, int price, string description = null)
     {
         // Find the upgrade slot parent
-        Transform upgradeSlot = currentShopScreen.transform.Find($"UpgradeSlot{slotNumber}");
+        Transform secondRow = currentShopScreen.transform.Find("SecondRow");
+        Transform upgradeSlot = secondRow.transform.Find($"UpgradeSlot{slotNumber}");
         if (upgradeSlot == null)
         {
             Debug.LogError($"UpgradeSlot{slotNumber} not found in shop prefab");
@@ -199,11 +207,28 @@ public class ShopScene : MonoBehaviour
 
         // Get button, text, and image components
         Button button = upgradeSlot.Find("BuyButton").GetComponent<Button>();
+
         TextMeshProUGUI priceText = upgradeSlot.Find("PriceText").GetComponent<TextMeshProUGUI>();
+        RectTransform priceRect = priceText.GetComponent<RectTransform>();
+        priceRect.anchoredPosition -= new Vector2(0, 20);
+
         TextMeshProUGUI descText = upgradeSlot.Find("DescriptionText").GetComponent<TextMeshProUGUI>();
+        descText.gameObject.SetActive(false);
+
         Image image = upgradeSlot.Find("UpgradeImage").GetComponent<Image>();
         Transform upgradeLevel = upgradeSlot.Find("UpgradeLevel");
+
         Image[] levelBars = upgradeLevel != null ? upgradeLevel.GetComponentsInChildren<Image>() : null;
+        if (levelBars != null)
+        {
+            foreach (Image bar in levelBars)
+            {
+                RectTransform rt = bar.GetComponent<RectTransform>();
+                if (rt != null)
+                    rt.anchoredPosition -= new Vector2(0, 20);
+            }
+        }
+
 
         // Store references for later use
         if (slotNumber == 1)
@@ -219,6 +244,11 @@ public class ShopScene : MonoBehaviour
             upgradeText2 = priceText;
             upgradeImage2 = image;
             upgradeLevelBars2 = levelBars;
+        }
+        else if (slotNumber == 3)
+        {
+            upgradeButton3 = button;
+            upgradeImage3 = image;
         }
 
         // Set the texts
@@ -402,6 +432,26 @@ public class ShopScene : MonoBehaviour
         EventManager.FadeOut?.Invoke();
         StartCoroutine(NextScene());
     }
+
+    private T FindObject<T>(string name) where T : Component
+    {
+        return FindComponentByName<T>(name);
+    }
+
+    private T FindComponentByName<T>(string name) where T : Component
+    {
+        T[] components = GetComponentsInChildren<T>(true); // Search all children, even inactive ones
+
+        foreach (T component in components)
+        {
+            if (component.gameObject.name == name)
+                return component;
+        }
+
+        Debug.LogWarning($"Component '{name}' not found!");
+        return null;
+    }
+
 
     void OnEnable()
     {
