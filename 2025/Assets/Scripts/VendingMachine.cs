@@ -25,7 +25,7 @@ public class VendingMachine : MonoBehaviour
         itemCode = "";
 
         LoadJsonFromFile();
-        //CreatePurchasables();
+        CreatePurchasables();
         UpdateDisplayPanel();
     }
 
@@ -211,7 +211,7 @@ public class VendingMachine : MonoBehaviour
 
     public void CreatePurchasables()
     {
-        foreach (Transform itemUI in cosmeticsPanel)
+        foreach (Transform item in vendingMachineSlots)
         {
             Transform item = itemUI.Find("Name");
             TextMeshProUGUI name = item?.GetComponent<TextMeshProUGUI>();
