@@ -114,7 +114,7 @@ public class UVLight : MonoBehaviour
             int currentTier = gameManager.gameData.GetUVLightUpgradeTier();
             if (currentTier < 3)
             {
-                gameManager.gameData.SetUVLightUpgradeTier(currentTier + 1);
+                //gameManager.gameData.SetUVLightUpgradeTier(currentTier + 1);
                 ApplyUpgradeTier();
                 Debug.Log("UV Light upgrade applied - new tier: " + (currentTier + 1));
             }

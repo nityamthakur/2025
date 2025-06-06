@@ -5345,10 +5345,8 @@ MonoBehaviour:
   nameText: {fileID: 3547485794891753331}
   descriptionText: {fileID: 8270343902501437565}
   effectText: {fileID: 7403479299863382056}
-  cosmeticsPanel: {fileID: 132432208442840402}
-  fallingItemSlot: {fileID: 7394956415937367270}
+  moneyText: {fileID: 4093267258604177031}
   itemSlots: {fileID: 4029424215205523977}
-  vendingMachineSlots: {fileID: 4029424215205523977}
   itemPrefab: {fileID: 1568735955896388019, guid: 89c00428655a17d438ba6f075db7c21c, type: 3}
 --- !u!1 &7082430180542569664
 GameObject:

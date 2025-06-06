@@ -10,7 +10,7 @@ using UnityEngine.UI;
 public class VendingMachine : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI displayPanel;
-    [SerializeField] private TextMeshProUGUI nameText, descriptionText, effectText;
+    [SerializeField] private TextMeshProUGUI nameText, descriptionText, effectText, moneyText;
     [SerializeField] private Transform itemSlots;
     [SerializeField] private GameObject itemPrefab;
     private List<VendingMachineItem> vendingMachineItems;
@@ -94,12 +94,13 @@ public class VendingMachine : MonoBehaviour
             TextMeshProUGUI costComponent = entry.transform.Find("Cost").GetComponent<TextMeshProUGUI>();
 
             int purchaseCount = gameManager.gameData.itemPurchases.TryGetValue(item.itemName, out int count) ? count : 0;
-            costComponent.text = $"${item.itemCost[purchaseCount]}";
             if (item.itemCost.Length == count) // Already purchased, including items with multiple upgrades
                 costComponent.gameObject.SetActive(false);
+            else
+                costComponent.text = $"${item.itemCost[purchaseCount]}";
 
             // Set upgrade levels 
-            Slider upgradeBar = entry.transform.Find("UpgradeBar").GetComponent<Slider>();
+                Slider upgradeBar = entry.transform.Find("UpgradeBar").GetComponent<Slider>();
             upgradeBar.maxValue = item.itemCost.Length;
             upgradeBar.value = purchaseCount;
             if (item.itemCost.Length <= 1) // Make inactive if not able to be purchased multiple times
@@ -124,19 +125,25 @@ public class VendingMachine : MonoBehaviour
             return;
         }
 
-        // Check if player has enough money
-        int purchaseCount = gameManager.gameData.itemPurchases.TryGetValue(item.itemName, out int count) ? count : 0;
-        if (gameManager.gameData.GetCurrentMoney() < item.itemCost[purchaseCount])
-            return;
-
         // Check if item can be purchased
+        int purchaseCount = gameManager.gameData.itemPurchases.TryGetValue(item.itemName, out int count) ? count : 0;
         if (purchaseCount == item.itemCost.Length)
             return;
 
-        Debug.Log($"{item.itemCost[purchaseCount]}, {purchaseCount}");
-        gameManager.gameData.SetCurrentMoney(item.itemCost[purchaseCount], true);
-        //gameManager.gameData.itemPurchases.Add(item.itemName, 1);
+        // Check if player has enough money
+        if (gameManager.gameData.GetCurrentMoney() < item.itemCost[purchaseCount])
+            return;
 
+        gameManager.gameData.SetCurrentMoney(-item.itemCost[purchaseCount], true);
+        moneyText.text = $"Money: {gameManager.gameData.GetCurrentMoney()}";
+
+        if (gameManager.gameData.itemPurchases.ContainsKey(item.itemName))
+            gameManager.gameData.itemPurchases[item.itemName]++;
+        else
+            gameManager.gameData.itemPurchases[item.itemName] = 1;
+
+        item.UpdateObjectInformation(gameManager.gameData);
+        shopScene.CompletePurchase(item.itemName);
         StartCoroutine(FallingItem(item));
     }
 
@@ -196,11 +203,6 @@ public class VendingMachine : MonoBehaviour
         }
     }
 
-    private void CompletePurchase(VendingMachine item)
-    {
-
-    }
-
 
     [Serializable]
     private class Wrapper
@@ -209,7 +211,7 @@ public class VendingMachine : MonoBehaviour
     }
 
     [Serializable]
-    private class VendingMachineItem
+    public class VendingMachineItem
     {
         public string itemCode; // What number to press in vending machine for purchase and info
         public string itemName;
@@ -218,7 +220,30 @@ public class VendingMachine : MonoBehaviour
         public string itemImage;
         public int[] itemCost; // Array of costs, determines number of purchasable upgrades
         public int stockDay = 0; // What day it can appear in shop
-        public GameObject attachedUpgrade;
+        [NonSerialized] public GameObject attachedUpgrade;
+
+        public void UpdateObjectInformation(GameData gameData)
+        {
+            int purchaseCount = gameData.itemPurchases.TryGetValue(itemName, out int count) ? count : 0;
+
+            Slider upgradeBar = attachedUpgrade.transform.Find("UpgradeBar").GetComponent<Slider>();
+            upgradeBar.maxValue = itemCost.Length;
+            upgradeBar.value = purchaseCount;
+            if (itemCost.Length <= 1) // Make inactive if not able to be purchased multiple times
+                upgradeBar.gameObject.SetActive(false);
+
+            TextMeshProUGUI costComponent = attachedUpgrade.transform.Find("Cost").GetComponent<TextMeshProUGUI>();
+            if (itemCost.Length == count) // Already purchased, including items with multiple upgrades
+                costComponent.gameObject.SetActive(false);
+            else
+                costComponent.text = $"${itemCost[purchaseCount]}";
+
+
+            Button buyButton = attachedUpgrade.transform.Find("BuyButton").GetComponent<Button>();
+            if (itemCost.Length == count)
+                buyButton.transform.GetComponentInChildren<TextMeshProUGUI>().text = "Sold Out";
+
+        }
 
         public void Print()
         {
