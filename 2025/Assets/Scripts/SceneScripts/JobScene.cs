@@ -22,7 +22,7 @@ public class JobScene : MonoBehaviour
     private GameObject outsideBuildingObject;
     private Canvas canvas, prefabCanvas;
     // ---------------------------------
-    private float workTimer = 150f;
+    private readonly float baseWorkTimer = 120f;
     private GameObject computerScreenPrefab;
     private ComputerScreen computerScreenClass;
 
@@ -46,7 +46,7 @@ public class JobScene : MonoBehaviour
 
     private float GetWorkTimer()
     {
-        return workTimer + gameManager.gameData.GetTimerUpgrade();
+        return baseWorkTimer + gameManager.gameData.timerUpgradeAmount * gameManager.gameData.GetTimerUpgradeTier();
     }
 
     public void LoadJobStart()
@@ -162,26 +162,20 @@ public class JobScene : MonoBehaviour
             return;
         }
 
-        allCosmeticObjects = currJobScene.GetComponentsInChildren<CosmeticObject>(true);
-        foreach (var cosmetic in allCosmeticObjects)
-        {
-            bool owned = gameManager.gameData.IsCosmeticPurchased(cosmetic.id);
-            cosmetic.gameObject.SetActive(owned);
-        }
-
+        LoadPurchasables();
         StartCoroutine(PulseGlow(dropBoxAcceptGlow));
         dropBoxAcceptGlow.gameObject.SetActive(false);
     }
 
-    public void RefreshCosmetics()
+    public void LoadPurchasables()
     {
-        if (allCosmeticObjects == null) return;
+        allCosmeticObjects = currJobScene.GetComponentsInChildren<CosmeticObject>(true);
         foreach (var cosmetic in allCosmeticObjects)
         {
-            if (cosmetic == null) continue;
-            bool owned = gameManager.gameData.IsCosmeticPurchased(cosmetic.id);
+            bool owned = gameManager.gameData.itemPurchases.ContainsKey(cosmetic.id);
             cosmetic.gameObject.SetActive(owned);
         }
+
     }
 
     private void ComputerScreenSetUp()

@@ -12,27 +12,26 @@ public class GameData
         Hard
     }
     public GameMode gameMode = GameMode.Normal;
-    public int saveSlot;
-    public int day;
-    public int money, totalMoneyEarned, totalMoneySpent;
-    public int rent;
+    public int saveSlot, day;
+    public float playTime;
+    public int money, totalMoneyEarned, totalMoneySpent, rent;
     public int lastJobPay = 0;
+
+
     public float performanceScale;
-    private bool hasUVLightUpgrade = false;
-    private readonly float timerUpgrade = 30f;
-    public int numPurchasedTimerUpgrades = 0;
-    public HashSet<string> purchasedCosmetics = new HashSet<string>();
-    private int uvLightUpgradeTier = 0;
-    public int timerUpgradeTier = 0;
     public float PerformanceScale
     {
         get { return performanceScale; }
         set { performanceScale = Mathf.Clamp(value, 0f, 1f); }
     }
-    public float playTime;
     public List<JobScene.Entry> releasedEmails = new();
     public List<Review> articleReviews = new();
     public HashSet<int> reviewNotificationSeen = new();
+
+    public Dictionary<string, int> itemPurchases = new();
+    // For reading purchases made that day. Clears each day in dayEndScene
+    public List<KeyValuePair<string, int>> dailyItemPurchases = new();
+    public readonly float timerUpgradeAmount = 30f;
 
     public GameData()
     {
@@ -63,9 +62,7 @@ public class GameData
         this.articleReviews = loadedGame.articleReviews;
         this.reviewNotificationSeen = loadedGame.reviewNotificationSeen ?? new HashSet<int>();
 
-        this.numPurchasedTimerUpgrades = loadedGame.numPurchasedTimerUpgrades;
-        this.hasUVLightUpgrade = loadedGame.hasUVLightUpgrade;
-        this.purchasedCosmetics = loadedGame.purchasedCosmetics;
+        this.itemPurchases = loadedGame.itemPurchases ?? new Dictionary<string, int>();
     }
 
     public int GetCurrentDay()
@@ -109,28 +106,47 @@ public class GameData
         SetCurrentMoney(lastJobPay, false);
     }
 
+
+    // Upgrades
+    public bool IsItemPurchased(string itemName)
+    {
+        return itemPurchases.ContainsKey(itemName);
+    }
+
+    public int GetTimerUpgradeTier()
+    {
+        string timer = "Timerall"; // Json file name pushed in itemPurchases
+        int num = itemPurchases.TryGetValue(timer, out int value) ? value : 0;
+        Debug.Log($"GetTimerUpgradeTier: {num}");
+        return num;
+    }
+    public bool HasTimerUpgrade()
+    {
+        string timer = "Timerall"; // Json file name pushed in itemPurchases
+        bool hasTimer = itemPurchases.ContainsKey(timer);
+        Debug.Log($"HasTimerUpgrade: {hasTimer}");
+        return itemPurchases.ContainsKey(timer);
+    }
+
     public int GetUVLightUpgradeTier()
     {
-        return uvLightUpgradeTier;
-    }
-    public void SetUVLightUpgradeTier(int tier)
-    {
-        uvLightUpgradeTier = Mathf.Clamp(tier, 0, 3);
+        string uvLight = "DoubleGood Battery"; // Json file name pushed in itemPurchases
+        int num = itemPurchases.TryGetValue(uvLight, out int value) ? value : 0;
+        Debug.Log($"GetUVLightUpgradeTier: {num}");
+        return num;
     }
     public bool HasUVLightUpgrade()
     {
-        return uvLightUpgradeTier > 0;
+        string uvLight = "DoubleGood Battery"; // Json file name pushed in itemPurchases
+        bool hasUV = itemPurchases.ContainsKey(uvLight);
+        Debug.Log($"HasUVLightUpgrade: {hasUV}");
+        return itemPurchases.ContainsKey(uvLight);
     }
-    public void SetUVLightUpgraded(bool upgraded)
-    {
-        if (upgraded && uvLightUpgradeTier < 3)
-            uvLightUpgradeTier++;
-    }
+
     public List<JobScene.Entry> LinkEmails()
     {
         return this.releasedEmails;
     }
-
 
     public float ArticleWinRate()
     {
@@ -170,37 +186,6 @@ public class GameData
                 time = media.timeSpent;
         }
         return time;
-    }
-
-    public int GetTimerUpgradeTier()
-    {
-        return timerUpgradeTier;
-    }
-    public void SetTimerUpgradeTier(int tier)
-    {
-        timerUpgradeTier = Mathf.Clamp(tier, 0, 3);
-    }
-    public bool HasTimerUpgrade()
-    {
-        return timerUpgradeTier > 0;
-    }
-    public void UpgradeTimer()
-    {
-        if (timerUpgradeTier < 3)
-            timerUpgradeTier++;
-    }
-    internal float GetTimerUpgrade()
-    {
-        return timerUpgradeTier * timerUpgrade;
-    }
-    public bool IsCosmeticPurchased(string cosmeticId)
-    {
-        return purchasedCosmetics.Contains(cosmeticId);
-    }
-
-    public void PurchaseCosmetic(string cosmeticId)
-    {
-        purchasedCosmetics.Add(cosmeticId);
     }
 
     public void AddReviewToGameData(Entity.Newspaper newspaper)

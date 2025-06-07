@@ -187,11 +187,11 @@ public class ObjectSpawner : MonoBehaviour
 
     private void ShowHideRentNotices(bool show)
     {
-        if(rentNotices.Count < 1)
+        if (rentNotices.Count < 1)
             return;
-        foreach(GameObject objectPiece in rentNotices)
+        foreach (GameObject objectPiece in rentNotices)
         {
-            if(objectPiece != null)
+            if (objectPiece != null)
                 objectPiece.SetActive(show);
             else
                 Destroy(objectPiece);
@@ -277,7 +277,7 @@ public class ObjectSpawner : MonoBehaviour
         {
             Debug.LogError("Error while parsing newspaper JSON data: " + e.Message);
         }
-        
+
         /// newspapers.ForEach(n => Debug.Log(n.GetTitle()));
     }
 
@@ -318,7 +318,25 @@ public class ObjectSpawner : MonoBehaviour
         {
             Debug.Log("End of newspapers.");
         }
-}
+    }
+
+    // Generated some random words. Need better words
+    List<string>[] fakeBanWords = new List<string>[]
+    {
+        new() { "Viridian Print" },
+        new() { "glower", "blunder" },
+        new() { "gravel", "knobby", "jostle" },
+        new() { "jagged", "trudge", "rattle", "bellow" },
+        new() { "repulse", "harvest", "blanket", "fragment", "scuttled" }
+    };
+    List<string>[] fakeCensorWords = new List<string>[]
+    {
+        new() {},
+        new() { "Brim", "Haunt" },
+        new() { "murky", "thrift", "enamel" },
+        new() { "modest", "frugal", "snatch", "velvet" },
+        new() { "yonder", "shifty", "lantern", "plumage", "embolden" }
+    };
 
     private void PassWordLists()
     {
@@ -342,11 +360,25 @@ public class ObjectSpawner : MonoBehaviour
             }
         }
 
+        int currentDay = gameManager.gameData.GetCurrentDay();
+        for (int i = 0; i < currentDay && i < fakeCensorWords.Length; i++)
+        {
+            censorWords.AddRange(fakeCensorWords[i]);
+        }
+        for (int i = 0; i < currentDay && i < fakeBanWords.Length; i++)
+        {
+            banWords.AddRange(fakeBanWords[i]);
+        }
+
         gameManager.SetBanTargetWords(banWords.Distinct().ToArray());
         gameManager.SetCensorTargetWords(censorWords.Distinct().ToArray());
         gameManager.SetReplaceTargetWords(replaceWords.Distinct().ToArray());
     }
-
+    void Oestroy()
+    {
+        quitting = true;
+        spawnedMedia.Clear();    
+    }
     void OnApplicationQuit()
     {
         quitting = true;

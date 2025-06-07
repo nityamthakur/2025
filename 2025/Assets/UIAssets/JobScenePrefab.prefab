@@ -287,7 +287,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf040878992394943a0d3a374ad6b676, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 1
+  id: Coffee Mug
 --- !u!1 &1407602766756397079
 GameObject:
   m_ObjectHideFlags: 0
@@ -906,7 +906,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf040878992394943a0d3a374ad6b676, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 0
+  id: Family Photo
 --- !u!1 &5289697525290493822
 GameObject:
   m_ObjectHideFlags: 0
@@ -1442,7 +1442,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf040878992394943a0d3a374ad6b676, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 2
+  id: Pen Box
 --- !u!1 &8588469360073679877
 GameObject:
   m_ObjectHideFlags: 0
@@ -1908,6 +1908,22 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8320521669576507454, guid: b266d1cd220d5e4478e3dd7f8e9e1123, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8781764919860784893, guid: b266d1cd220d5e4478e3dd7f8e9e1123, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8781764919860784893, guid: b266d1cd220d5e4478e3dd7f8e9e1123, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8781764919860784893, guid: b266d1cd220d5e4478e3dd7f8e9e1123, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8781764919860784893, guid: b266d1cd220d5e4478e3dd7f8e9e1123, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}

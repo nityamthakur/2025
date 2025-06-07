@@ -6,22 +6,24 @@ public class UVLight : MonoBehaviour
 {
     [SerializeField] private Collider2D targetCollider;
     [SerializeField] private float blinkDuration = 0.25f;
-    [SerializeField] private float defaultRadius = 1.0f; // Default radius size
-    [SerializeField] private float upgradedRadius = 1.5f; // Size after upgrade
     [SerializeField] private float[] radiusTiers = { 1.0f, 1.25f, 1.5f, 1.75f }; // index 0 = default, 1-3 = upgrades
-
+    [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private GameManager gameManager;
+    [SerializeField] private Collider2D uvLightCollider; // Reference to the collider (could be Circle or other type)
     private bool isOverlapping = false;
-    private SpriteRenderer spriteRenderer;
-    private Collider2D uvLightCollider; // Reference to the collider (could be Circle or other type)
     private Color defColor;
-    private GameManager gameManager;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        gameManager = FindObjectsByType<GameManager>(FindObjectsSortMode.None).FirstOrDefault();
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        uvLightCollider = GetComponent<Collider2D>(); // Get whatever collider type is attached
+        //gameManager = FindObjectsByType<GameManager>(FindObjectsSortMode.None).FirstOrDefault();
+        //spriteRenderer = GetComponent<SpriteRenderer>();
+        //uvLightCollider = GetComponent<Collider2D>(); // Get whatever collider type is attached
+        if (gameManager == null)
+        {
+            Debug.LogError("GameManager component not found on the UVLight object.");
+            return;            
+        }
 
         if (spriteRenderer == null)
         {
@@ -36,26 +38,18 @@ public class UVLight : MonoBehaviour
         }
 
         defColor = spriteRenderer.color;
-
-        // Check if upgrade is already purchased and apply it
-        if (gameManager != null && gameManager.gameData != null && gameManager.gameData.HasUVLightUpgrade())
-        {
-            SetUpgradedRadius();
-        }
-        else
-        {
-            // Set the default radius
-            SetDefaultRadius();
-        }
     }
+
+    void OnEnable()
+    {
+        ApplyUpgradeTier();
+    }
+
 
     // Update is called once per frame
     void Update()
     {
         if (Time.timeScale == 0) return;
-
-        // Check upgrade status every frame to ensure it's always up to date
-        CheckUpgradeStatus();
 
         // Move UV light to mouse position
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -67,27 +61,6 @@ public class UVLight : MonoBehaviour
         {
             CheckClickOnTarget(mousePos);
         }
-        ApplyUpgradeTier();
-    }
-
-    // Check if the UV Light upgrade has been purchased
-    private void CheckUpgradeStatus()
-    {
-        // Only check occasionally to reduce performance impact
-        if (Time.frameCount % 30 == 0) // Check roughly every half second at 60fps
-        {
-            if (gameManager != null && gameManager.gameData != null)
-            {
-                bool hasUpgrade = gameManager.gameData.HasUVLightUpgrade();
-
-                // If upgrade is purchased but not applied, apply it now
-                if (hasUpgrade && transform.localScale.x < upgradedRadius)
-                {
-                    SetUpgradedRadius();
-                    Debug.Log("UV Light upgrade detected and applied during gameplay");
-                }
-            }
-        }
     }
 
     public void SetTargetCollider(Collider2D newTargetCollider)
@@ -95,56 +68,13 @@ public class UVLight : MonoBehaviour
         targetCollider = newTargetCollider;
     }
 
-    private void ApplyUpgradeTier()
+    public void ApplyUpgradeTier()
     {
-        int tier = 0;
-        if (gameManager != null && gameManager.gameData != null)
-            tier = gameManager.gameData.GetUVLightUpgradeTier();
-
-        float radius = radiusTiers[Mathf.Clamp(tier, 0, radiusTiers.Length - 1)];
+        int tier = gameManager.gameData.GetUVLightUpgradeTier();
+        float radius = radiusTiers[tier];
         float xToYRatio = transform.localScale.y / transform.localScale.x;
         transform.localScale = new Vector3(radius, radius * xToYRatio, 1f);
         //Debug.Log($"UV Light set to tier {tier} radius: {radius}");
-    }
-
-    public void IncreaseRadius()
-    {
-        if (gameManager != null && gameManager.gameData != null)
-        {
-            int currentTier = gameManager.gameData.GetUVLightUpgradeTier();
-            if (currentTier < 3)
-            {
-                gameManager.gameData.SetUVLightUpgradeTier(currentTier + 1);
-                ApplyUpgradeTier();
-                Debug.Log("UV Light upgrade applied - new tier: " + (currentTier + 1));
-            }
-        }
-    }
-
-    // Set the default radius for UV light
-    private void SetDefaultRadius()
-    {
-        // Store original scale ratio in case sprite is not perfectly square
-        float xToYRatio = transform.localScale.y / transform.localScale.x;
-
-        // Scale the visual and collider, maintaining aspect ratio if needed
-        transform.localScale = new Vector3(defaultRadius, defaultRadius * xToYRatio, 1f);
-
-        // Log for debugging
-        Debug.Log("UV Light set to default radius: " + defaultRadius);
-    }
-
-    // Set the upgraded radius for UV light
-    private void SetUpgradedRadius()
-    {
-        // Store original scale ratio in case sprite is not perfectly square
-        float xToYRatio = transform.localScale.y / transform.localScale.x;
-
-        // Scale the visual and collider, maintaining aspect ratio if needed
-        transform.localScale = new Vector3(upgradedRadius, upgradedRadius * xToYRatio, 1f);
-
-        // Log for debugging
-        Debug.Log("UV Light set to upgraded radius: " + upgradedRadius);
     }
 
     private bool AreBoundsOverlapping(Bounds a, Bounds b)
