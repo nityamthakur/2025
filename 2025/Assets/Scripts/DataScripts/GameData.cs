@@ -30,7 +30,7 @@ public class GameData
 
     public Dictionary<string, int> itemPurchases = new();
     // For reading purchases made that day. Clears each day in dayEndScene
-    public List<VendingMachine.VendingMachineItem> dailyItemPurchases = new(); 
+    public List<KeyValuePair<string, int>> dailyItemPurchases = new();
     public readonly float timerUpgradeAmount = 30f;
 
     public GameData()

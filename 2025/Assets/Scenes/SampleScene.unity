@@ -814,27 +814,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 1
   m_SpriteSortPoint: 0
---- !u!114 &766681851
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 766681848}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 94bc17a1a685a5447b07a4732d1eaf48, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetCollider: {fileID: 0}
-  blinkDuration: 0.25
-  defaultRadius: 2.1
-  upgradedRadius: 3
-  radiusTiers:
-  - 1
-  - 1.25
-  - 1.5
-  - 1.75
 --- !u!58 &766681852
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -1758,26 +1737,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shopScreenPrefab: {fileID: 6950363342255637058, guid: 83e534907bf5c9141aedc2f7b55e34d0, type: 3}
-  upgradePrice1: 7
-  upgradePrice2: 5
-  upgradeDescription1: UV Light Radius
-  upgradeDescription2: Extra Time
-  upgradePrices1: 070000000a0000000f000000
-  upgradePrices2: 05000000080000000c000000
-  cosmeticShopEntryPrefab: {fileID: 4058464555176203503, guid: a11d1d2f075d74a458c8fc8fd466fb95, type: 3}
-  cosmeticItems:
-  - id: 0
-    displayName: Family Photo
-    price: 2
-    icon: {fileID: -8522433546947300881, guid: 742b968a88afcd546b1b8973a79551a6, type: 3}
-  - id: 1
-    displayName: Coffee Mug
-    price: 3
-    icon: {fileID: 4687309882487268517, guid: edaa032cb4a28c345b7807fe707a47ca, type: 3}
-  - id: 2
-    displayName: Pen Box
-    price: 3
-    icon: {fileID: 861628311583806628, guid: 96aa92e025f237044baf188e8d5da084, type: 3}
   currentShopScreen: {fileID: 0}
 --- !u!4 &1518353897
 Transform:
@@ -1892,6 +1851,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2712279179472704001, guid: 9e6adce8c8125c046a3755b6e97c7847, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6966226645410000078, guid: 9e6adce8c8125c046a3755b6e97c7847, type: 3}
+      propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6966226645410000078, guid: 9e6adce8c8125c046a3755b6e97c7847, type: 3}
@@ -2093,15 +2056,13 @@ MonoBehaviour:
     gameMode: 1
     saveSlot: -1
     day: 1
+    playTime: 0
     money: 0
     totalMoneyEarned: 0
     totalMoneySpent: 0
     rent: 3
     lastJobPay: 0
     performanceScale: 0.5
-    numPurchasedTimerUpgrades: 0
-    timerUpgradeTier: 0
-    playTime: 0
     releasedEmails: []
     articleReviews: []
   mainCamera: {fileID: 519420031}
@@ -2451,6 +2412,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4310730534138693524, guid: c7c3fcc61623b9f4689af5a0ca8191cd, type: 3}
+      propertyPath: gameManager
+      value: 
+      objectReference: {fileID: 2059682408}
+    - target: {fileID: 4310730534138693524, guid: c7c3fcc61623b9f4689af5a0ca8191cd, type: 3}
+      propertyPath: spriteRenderer
+      value: 
+      objectReference: {fileID: 766681849}
+    - target: {fileID: 4310730534138693524, guid: c7c3fcc61623b9f4689af5a0ca8191cd, type: 3}
+      propertyPath: uvLightCollider
+      value: 
+      objectReference: {fileID: 766681852}
     - target: {fileID: 5025105328630690984, guid: c7c3fcc61623b9f4689af5a0ca8191cd, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -2476,9 +2449,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6825327098602031387, guid: c7c3fcc61623b9f4689af5a0ca8191cd, type: 3}
       insertIndex: -1
       addedObject: {fileID: 766681849}
-    - targetCorrespondingSourceObject: {fileID: 6825327098602031387, guid: c7c3fcc61623b9f4689af5a0ca8191cd, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 766681851}
   m_SourcePrefab: {fileID: 100100000, guid: c7c3fcc61623b9f4689af5a0ca8191cd, type: 3}
 --- !u!1001 &6653156993321225801
 PrefabInstance:

@@ -441,8 +441,8 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.T))
         {
-            //Debug.Log("Showing Timer");
-            //onScreenTimer.enabled = !onScreenTimer.enabled; // Hide the onscreen timer
+            Debug.Log("Showing Timer");
+            onScreenTimer.enabled = !onScreenTimer.enabled; // Hide the onscreen timer
         }
 
         if (onScreenTimer.enabled == true)
@@ -815,9 +815,15 @@ public class GameManager : MonoBehaviour
         foundMedia.hiddenImageFound = hiddenImageFound;
         foundMedia.bannedWords = banwords;
         foundMedia.articleBanned = banStampPressed;
+
         foundMedia.numCensorableWords = totalCensorTargets;
         foundMedia.numCensoredCorrectly = currentCensorNum;
         foundMedia.numCensorMistakes = numCensorMistakes;
+
+        foundMedia.numReplaceWords = totalReplaceTargets;
+        foundMedia.numReplaceCorrectly = currentReplaceNum;
+        foundMedia.numReplaceMistakes = numReplaceMistakes;
+
         foundMedia.noMistakes = playerSucceeds;
         jobDetails.articleClockTime = 0f;
         foundMedia.Print();
@@ -944,6 +950,10 @@ public class Review
     public int numCensoredCorrectly; // Number of words censored correctly
     public int numCensorMistakes; // Number of words incorrectly censored
 
+    public int numReplaceWords;
+    public int numReplaceCorrectly;
+    public int numReplaceMistakes;
+
     public bool CheckBanMistake()
     {
         return (bannedWords.Length > 0) == articleBanned;
@@ -962,6 +972,11 @@ public class Review
     public bool CheckCensorMistake()
     {
         return (numCensoredCorrectly == numCensorableWords) && (numCensorMistakes == 0);
+    }
+
+    public bool CheckReplacementMistake()
+    {
+        return (numReplaceCorrectly == numReplaceWords) && (numReplaceMistakes == 0);
     }
 
     public int MaxPotentialMoney()

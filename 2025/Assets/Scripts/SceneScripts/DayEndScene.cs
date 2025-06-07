@@ -166,6 +166,16 @@ public class DayEndScene : MonoBehaviour
         fundsText.text += $"\n<align=left>Savings<line-height=0>\n<align=right>{currMoney - jobMoney}<line-height=1em>";
         fundsText.text += $"\n<align=left>Job Pay<line-height=0>\n<align=right>{jobMoney}<line-height=1em>";
         fundsText.text += $"\n<align=left>Rent<line-height=0>\n<align=right>-{rentDue}<line-height=1em>";
+
+        foreach (var record in gameManager.gameData.dailyItemPurchases)
+        {
+            string itemName = record.Key;
+            int itemCost = record.Value;
+            currMoney -= itemCost;
+            fundsText.text += $"\n<align=left>{itemName}<line-height=0>\n<align=right>-{itemCost}<line-height=1em>";
+        }
+        gameManager.gameData.dailyItemPurchases.Clear();
+
         fundsText.text += $"\n\n<align=left>New Total<line-height=0>\n<align=right>${currMoney - rentDue}<line-height=1em>";
         
         suppliesText.text = $"Office supplies\n";

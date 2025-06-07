@@ -22,6 +22,7 @@ public class VendingMachine : MonoBehaviour
     {
         gameManager = FindFirstObjectByType<GameManager>();
         shopScene = FindFirstObjectByType<ShopScene>();
+        moneyText.text = $"Money: {gameManager.gameData.GetCurrentMoney()}";
         itemCode = "";
 
         LoadJsonFromFile();
@@ -142,8 +143,9 @@ public class VendingMachine : MonoBehaviour
         else
             gameManager.gameData.itemPurchases[item.itemName] = 1;
 
+        gameManager.gameData.dailyItemPurchases.Add(new KeyValuePair<string, int>(item.itemName, item.itemCost[purchaseCount]));
+
         item.UpdateObjectInformation(gameManager.gameData);
-        shopScene.CompletePurchase(item.itemName);
         StartCoroutine(FallingItem(item));
     }
 

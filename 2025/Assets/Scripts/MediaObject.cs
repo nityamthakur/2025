@@ -632,13 +632,15 @@ public class Entity : MonoBehaviour
 
         // Wait for the movement to complete (adjust time if needed)
         yield return new WaitForSeconds(1.5f);
-
+        destroyedViaSlot = true;
         Destroy(gameObject);
     }
 
+    bool destroyedViaSlot = false;
     private void OnDestroy()
     {
-        if (!GameManager.IsRestarting) // Prevent triggering OnMediaDestroyed when restarting
+        StopAllCoroutines();
+        if (!GameManager.IsRestarting && destroyedViaSlot) // Prevent triggering OnMediaDestroyed when restarting
         {
             EventManager.OnMediaDestroyed?.Invoke(gameObject);
         }
