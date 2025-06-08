@@ -340,6 +340,8 @@ public class DayEndScene : MonoBehaviour
 
     private void ShowPlaytestFormQRCode()
     {
+        StartCoroutine(RestartGame());
+        /* Removed for demo and future release
         gameButton.onClick.RemoveAllListeners();
         gameButton.onClick.AddListener(() => StartCoroutine(RestartGame()) );  
 
@@ -347,6 +349,7 @@ public class DayEndScene : MonoBehaviour
         backgroundImage.gameObject.SetActive(true);
         backgroundImage.sprite = playtestQRCode;
         textBoxText.text = "<align=center>Please Fill Out Our Playtest Form</align>";   
+        */
     }
 
     private void LoadJsonFromFile()

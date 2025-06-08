@@ -541,12 +541,12 @@ public class ComputerScreen : MonoBehaviour
                         text += "\n\nWe located a image hidden within this article. Ensure that future articles are scoured diligently and banned accordingly." + lineBreaker;
 
                 // Check if article should have been banned or was banned mistakenly
-                if (article.bannedWords.Length > 0 && !article.articleBanned)
+                if (article.bannedWords.Count > 0 && !article.articleBanned)
                 {
                     text += "\n\nThe publisher of this article is untruthful and a hazard to NewMerica. Always ban articles from this publisher.\nBe on the look out for future articles from:\n";
-                    for (int i = 0; i < article.bannedWords.Length; i++)
+                    for (int i = 0; i < article.bannedWords.Count; i++)
                     {
-                        if (i > 0 && i == article.bannedWords.Length - 1)
+                        if (i > 0 && i == article.bannedWords.Count - 1)
                             text += " or ";
                         else if (i > 0)
                             text += ", ";
@@ -555,16 +555,16 @@ public class ComputerScreen : MonoBehaviour
                     }
                     text += "." + lineBreaker;
                 }
-                else if (article.bannedWords.Length == 0 && article.articleBanned)
+                else if (article.bannedWords.Count == 0 && article.articleBanned)
                     text += "\n\nThis article was from a reputable source. Ensure only articles from select publishers are banned." + lineBreaker;
 
                 // Check words that were not censored or words that were censored.
                 if (article.numCensorableWords != article.numCensoredCorrectly)
                 {
                     text += $"\n\nYou missed {article.numCensorableWords - article.numCensoredCorrectly} word(s) that should have censored. We have provided the list of censored words found on this article. Ensure you remember them:\n";
-                    for (int i = 0; i < article.censorWords.Length; i++)
+                    for (int i = 0; i < article.censorWords.Count; i++)
                     {
-                        if (i > 0 && i == article.censorWords.Length - 1)
+                        if (i > 0 && i == article.censorWords.Count - 1)
                             text += " and ";
                         else if (i > 0)
                             text += ", ";

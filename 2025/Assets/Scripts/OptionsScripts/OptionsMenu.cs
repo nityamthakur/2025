@@ -302,7 +302,7 @@ public class OptionsMenu : MonoBehaviour
 
                 EventManager.PlaySound?.Invoke("switch1", true); 
                 EventManager.ToggleFullScreenState();
-                fullScreenActiveText.text = isOn ? "On" : "Off";
+                fullScreenActiveText.text = EventManager.IsFullScreen ? "On" : "Off";
                 Screen.fullScreen = fullScreenToggle.isOn;
                 SavePersistentSettings();
             });
@@ -327,7 +327,7 @@ public class OptionsMenu : MonoBehaviour
                 
                 EventManager.PlaySound?.Invoke("switch1", true); 
                 EventManager.ToggleGrayscaleState();
-                grayscaleActiveText.text = isOn ? "On" : "Off";
+                grayscaleActiveText.text = EventManager.IsGrayscale ? "On" : "Off";
                 SavePersistentSettings();
             });
         }
@@ -434,7 +434,7 @@ public class OptionsMenu : MonoBehaviour
         PlayerPrefs.SetFloat("TextSpeed", textSpeedSlider.value);
         PlayerPrefs.SetInt("MuteState", muteToggle.isOn ? 1 : 0);
         PlayerPrefs.SetInt("SubtitleState", subtitleToggle.isOn ? 1 : 0);
-        PlayerPrefs.SetInt("GrayState", grayscaleToggle.isOn ? 1 : 0);
+        PlayerPrefs.SetInt("GrayState", EventManager.IsGrayscale ? 1 : 0);
         PlayerPrefs.SetInt("FullScreenState", fullScreenToggle.isOn ? 1 : 0);
         PlayerPrefs.Save();
     }
@@ -464,9 +464,6 @@ public class OptionsMenu : MonoBehaviour
 
         bool subtitleOn = PlayerPrefs.GetInt("SubtitleState", 0) == 1;
         subtitleToggle.isOn = subtitleOn;
-
-        int grayOn = PlayerPrefs.GetInt("GrayState", 0);
-        grayscaleToggle.isOn = grayOn == 1;
 
         int fullScreenOn = PlayerPrefs.GetInt("FullScreenState", 0);
         fullScreenToggle.isOn = fullScreenOn == 1;
