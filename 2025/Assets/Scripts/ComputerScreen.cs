@@ -92,7 +92,6 @@ public class ComputerScreen : MonoBehaviour
         TextMeshProUGUI zoomButtonText = zoomButton.GetComponentInChildren<TextMeshProUGUI>();
         zoomButton.onClick.AddListener(() =>
         {
-            Debug.Log("zooming");
             EventManager.PlaySound?.Invoke("switch1", true);
             zoomButtonText.text = zoomedIn ? "Zoom In" : "Zoom Out";
 
@@ -208,7 +207,7 @@ public class ComputerScreen : MonoBehaviour
         unreadReviewCount += 1;
         UpdateUnreadPopUps();
         HideMenus();
-        EventManager.ZoomCamera?.Invoke(screenZoomIn, 3.1f, 1.0f);
+        zoomButton.onClick.Invoke();
     }
 
     public void StartComputer()

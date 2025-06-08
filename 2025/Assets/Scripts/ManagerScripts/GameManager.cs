@@ -40,9 +40,10 @@ public class GameManager : MonoBehaviour
     private GameObject currentMediaObject;
     private SelectedToolManager selectedToolManager;
 
-    private string[] censorTargetWords;
-    private string[] banTargetWords;
-    private string[][] replaceTargetWords;
+    List<(string, int)> banTargetWords = new();
+    List<(string, int)> censorTargetWords = new();
+    List<(string[] pair, int day)> replaceTargetWords = new();
+
     private int totalCensorTargets = 0;
     private int currentCensorNum = 0;
     private int numCensorMistakes = 0;
@@ -116,38 +117,38 @@ public class GameManager : MonoBehaviour
         currentMediaObject = mediaObj;
     }
 
-    public string[] GetCensorTargetWords()
+    public List<(string, int)> GetCensorTargetWords()
     {
         return censorTargetWords;
     }
 
-    public void SetCensorTargetWords(string[] words)
+    public void SetCensorTargetWords(List<(string, int)> words)
     {
         censorTargetWords = words;
     }
 
-    public string[] GetBanTargetWords()
+    public List<(string, int)> GetBanTargetWords()
     {
         return banTargetWords;
     }
 
-    public void SetBanTargetWords(string[] words)
+    public void SetBanTargetWords(List<(string word, int day)> words)
     {
         banTargetWords = words;
     }
 
-    public string[][] GetReplaceTargetWords()
+    public List<(string[] pair, int day)> GetReplaceTargetWords()
     {
         return replaceTargetWords;
     }
 
-    public void SetReplaceTargetWords(string[][] words)
+    public void SetReplaceTargetWords(List<(string[] pair, int day)> words)
     {
         replaceTargetWords = words;
 
-        foreach (string[] wordSet in words)
+        foreach (var (pair, day) in words)
         {
-            foreach (string word in wordSet)
+            foreach (string word in pair)
             {
                 Debug.Log($"Replace target word: {word}");
             }

@@ -15,7 +15,7 @@ public class MainMenuScene : MonoBehaviour
     private Coroutine animationCoroutine;
 
     public void LoadMainMenu() {
-        EventManager.PlayMusic?.Invoke("menu"); 
+        EventManager.PlayMusic?.Invoke("crusadeheavyindustry"); 
 
         currentMenuObject = Instantiate(menuObject);
         if (menuObject == null)

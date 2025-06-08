@@ -310,7 +310,7 @@ public class Entity : MonoBehaviour
     private bool WordisCensorable(string word)
     {
         // Find if the word contains any censor words
-        foreach (string censorWord in gameManager.GetCensorTargetWords())
+        foreach (string censorWord in newspaperData.censorWords)
         {
             // Split the censor word/phrase into individual words
             string[] splicedWord = censorWord.Split(' ');
@@ -327,7 +327,7 @@ public class Entity : MonoBehaviour
     private bool WordisReplaceable(string word)
     {
         // Find if the word contains any replace words
-        foreach (string[] replaceWord in gameManager.GetReplaceTargetWords())
+        foreach (string[] replaceWord in newspaperData.replaceWords)
         {
             // Split the replace word/phrase into individual words
             string[] splicedWord = replaceWord[0].Split(' ');
@@ -644,6 +644,7 @@ public class Entity : MonoBehaviour
         public string publisher = null;
         public string title = null;
         public string date;
+        public int day;
         
         [JsonIgnore] public string backContent;
         [JsonIgnore] public string frontContent;

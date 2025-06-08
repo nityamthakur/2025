@@ -21,10 +21,6 @@ public class ObjectSpawner : MonoBehaviour
     private Entity.Newspaper currentNewspaper;
     private GameManager gameManager;
 
-    List<string> banWords = new();
-    List<string> censorWords = new();
-    List<string[]> replaceWords = new();
-
     bool quitting = false;
 
     public void Initialize()
@@ -34,6 +30,8 @@ public class ObjectSpawner : MonoBehaviour
             Debug.LogError("Media Object, Media Spawner, Spline Path, or Rent Notice is not assigned.");
         }
         gameManager = FindFirstObjectByType<GameManager>();
+
+        LoadJsonFromFile();
     }
 
     public void StartMediaSpawn()
@@ -43,10 +41,35 @@ public class ObjectSpawner : MonoBehaviour
             Debug.LogError("jobDetails is null.");
         }
 
-        LoadJsonFromFile();
+        //LoadJsonFromFile();
         //Reshuffle(newspapers);
         //PassWordLists();
         SpawnNewMediaObject();
+    }
+
+    private void Reshuffle(Entity.Newspaper[] newspapers)
+    {
+        // Knuth shuffle algorithm :: courtesy of Wikipedia
+        for (int t = 0; t < newspapers.Length; t++)
+        {
+            Entity.Newspaper tmp = newspapers[t];
+            int r = Random.Range(t, newspapers.Length);
+            newspapers[t] = newspapers[r];
+            newspapers[r] = tmp;
+        }
+    }
+
+    private void ReadNextNewspaper()
+    {
+        if (newspaperPos < newspapers.Count)
+        {
+            currentNewspaper = newspapers[newspaperPos];
+            newspaperPos++;
+        }
+        else
+        {
+            Debug.Log("End of newspapers.");
+        }
     }
 
     private void SpawnNewMediaObject()
@@ -204,10 +227,223 @@ public class ObjectSpawner : MonoBehaviour
         newspaperPos = 0;
 
         LoadTargetWords(json);
+        //ParseJsonForDay(json, "newspaperText");
+        //ParseJsonForDay(json, "grammerEngineText");
         ParseJson(json, "newspaperText");
         ParseJson(json, "grammerEngineText");
     }
+
     private void ParseJson(string json, string section)
+    {
+        try
+        {
+            var jsonRoot = JObject.Parse(json);
+            var newspaperTextArr = (JArray)jsonRoot[section];
+
+            if (newspaperTextArr == null)
+            {
+                Debug.LogError($"Unable to find {section} data in JSON file.");
+                return;
+            }
+
+            // Loop through all days
+            foreach (var entry in newspaperTextArr.Cast<JObject>())
+            {
+                int day = (int)entry["day"];
+                var newsPaperArr = (JArray)entry["newspapers"];
+
+                foreach (var newspaperObj in newsPaperArr.Cast<JObject>())
+                {
+                    var newspaper = new Entity.Newspaper
+                    {
+                        date = newspaperObj["date"]?.ToString(),
+                        hasHiddenImage = newspaperObj["hasHiddenImage"] != null && (bool)newspaperObj["hasHiddenImage"],
+                        day = day
+                    };
+
+                    ProcessField(newspaperObj["publisher"], out newspaper.publisher, out newspaper.publisherIsComplex);
+                    ProcessField(newspaperObj["title"], out newspaper.title, out newspaper.titleIsComplex);
+                    ProcessField(newspaperObj["front"], out newspaper.frontContent, out newspaper.frontIsComplex);
+                    ProcessField(newspaperObj["back"], out newspaper.backContent, out newspaper.backIsComplex);
+                    newspaper.CreateComplex();
+
+                    SetTargetWords(newspaper);
+                    newspapers.Add(newspaper); // This is your full list of all newspapers
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Error while parsing newspaper JSON data: " + e.Message);
+        }
+    }
+
+
+    private void ProcessField(JToken token, out string content, out bool isComplex)
+    {
+        if (token is JObject)
+        {
+            content = token.ToString();
+            isComplex = true;
+        }
+        else
+        {
+            content = token?.ToString() ?? "";
+            isComplex = false;
+        }
+    }
+
+    private void LoadTargetWords(string json)
+    {
+        List<(string, int)> banWords = new();
+        List<(string, int)> censorWords = new();
+        List<(string[], int)> replaceWords = new();
+
+        try
+        {
+            JObject jsonRoot = JObject.Parse(json);
+            JArray wordArray = (JArray)jsonRoot["targetWords"];
+
+            if (wordArray == null)
+            {
+                Debug.LogError("Unable to find targetWords in JSON.");
+                return;
+            }
+
+            for (int i = 0; i < wordArray.Count; i++)
+            {
+                JObject entry = (JObject)wordArray[i];
+                int day = entry.ContainsKey("day") ? entry["day"].ToObject<int>() : i + 1;
+
+                foreach (var word in entry["banWords"] ?? new JArray())
+                {
+                    banWords.Add((word.ToString(), day));
+                }
+
+                foreach (var word in entry["censorWords"] ?? new JArray())
+                {
+                    censorWords.Add((word.ToString(), day));
+                }
+
+                foreach (var pair in entry["replaceWords"] ?? new JArray())
+                {
+                    JArray pairArray = (JArray)pair;
+                    if (pairArray.Count == 2)
+                    {
+                        string[] replacementPair = new string[] { pairArray[0].ToString(), pairArray[1].ToString() };
+                        replaceWords.Add((replacementPair, day));
+                    }
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Error parsing targetWords: " + e.Message);
+        }
+
+        gameManager.SetBanTargetWords(banWords);
+        gameManager.SetCensorTargetWords(censorWords);
+        gameManager.SetReplaceTargetWords(replaceWords);
+    }
+
+    private void SetTargetWords(Entity.Newspaper newspaper)
+    {
+        string allText = (newspaper.GetTitle() + " " +
+                        newspaper.GetPublisher() + " " +
+                        newspaper.GetFront() + " " +
+                        newspaper.GetBack() + " " +
+                        newspaper.date).ToLower();
+
+        int upToDay = newspaper.day;
+
+        foreach ((string word, int day) in gameManager.GetBanTargetWords())
+        {
+            if (day <= upToDay && allText.Contains(word.ToLower()))
+            {
+                newspaper.banWords.Add(word);
+            }
+        }
+
+        foreach ((string word, int day) in gameManager.GetCensorTargetWords())
+        {
+            if (day <= upToDay &&
+                allText.Contains(word.ToLower()) &&
+                !newspaper.banWords.Contains(word))
+            {
+                newspaper.censorWords.Add(word);
+            }
+        }
+
+        foreach ((string[] pair, int day) in gameManager.GetReplaceTargetWords())
+        {
+            if (day <= upToDay &&
+                pair.Length == 2 &&
+                allText.Contains(pair[0].ToLower()))
+            {
+                newspaper.replaceWords.Add(pair);
+            }
+        }
+    }
+
+
+    void OnDestroy()
+    {
+        quitting = true;
+        spawnedMedia.Clear();
+    }
+    void OnApplicationQuit()
+    {
+        quitting = true;
+        spawnedMedia.Clear();
+    }
+
+    // EventManager for creating a new media object after one gets destroyed
+    private void OnEnable()
+    {
+        EventManager.ShowHideRentNotices += ShowHideRentNotices;
+        EventManager.OnMediaDestroyed += HandleMediaDestroyed;
+        GameManager.OnGameRestart += StopSpawningOnRestart; // Listen for restarts
+        EventManager.CameraZoomed += ShowHideObject;
+    }
+
+    private void OnDisable()
+    {
+        EventManager.ShowHideRentNotices -= ShowHideRentNotices;
+        EventManager.OnMediaDestroyed -= HandleMediaDestroyed;
+        GameManager.OnGameRestart -= StopSpawningOnRestart;
+        EventManager.CameraZoomed -= ShowHideObject;
+    }
+
+
+    private void ShowHideObject(bool show)
+    {
+        foreach (GameObject gameObject in spawnedMedia)
+        {
+            if (gameObject == null)
+            {
+                //Destroy(gameObject);
+            }
+            else
+            {
+                //gameObject.SetActive(!show);
+            }
+        }
+    }
+
+    private void HandleMediaDestroyed(GameObject customer)
+    {
+        if (quitting)
+            return;
+        SpawnNewMediaObject();
+    }
+
+    private void StopSpawningOnRestart()
+    {
+        quitting = true;
+    }
+    
+    /*
+    private void ParseJsonForDay(string json, string section)
     {
         //Our JSON deserialization needs to be significantly more complex to handle this.
         //Once all of the JSON is migrated over to the new format, it can be simplified
@@ -264,47 +500,49 @@ public class ObjectSpawner : MonoBehaviour
 
         /// newspapers.ForEach(n => Debug.Log(n.GetTitle()));
     }
-
-    private void ProcessField(JToken token, out string content, out bool isComplex)
+    
+    private void SetTargetWordsForDay(Entity.Newspaper newspaper)
     {
-        if (token is JObject)
+        // Combine all newspaper text
+        string allText = newspaper.GetTitle() + " " +
+                        newspaper.GetPublisher() + " " +
+                        newspaper.GetFront() + " " +
+                        newspaper.GetBack() + " " +
+                        newspaper.date;
+
+        allText = allText.ToLower();
+        Debug.Log($"SetTargetWords: {allText}");
+        foreach (string word in banWords)
         {
-            content = token.ToString();
-            isComplex = true;
+            if (allText.Contains(word.ToLower()))
+            {
+                newspaper.banWords.Add(word);
+                Debug.Log($"Banned Word {word} found on: {newspaper.GetTitle()}");
+            }
         }
-        else
+
+        // Add censor words if they appear and are not also in banWords
+        foreach (string word in censorWords)
         {
-            content = token?.ToString() ?? "";
-            isComplex = false;
+            if (allText.Contains(word.ToLower()) && !newspaper.banWords.Contains(word))
+            {
+                newspaper.censorWords.Add(word);
+                Debug.Log($"Censored Word {word} found on: {newspaper.GetTitle()}");
+            }
+        }
+
+        // Add replace pairs if the first word appears
+        foreach (string[] pair in replaceWords)
+        {
+            if (pair.Length == 2 && allText.Contains(pair[0].ToLower()))
+            {
+                newspaper.replaceWords.Add(pair);
+                Debug.Log($"Replace Word {pair} found on: {newspaper.GetTitle()}");
+            }
         }
     }
 
-    private void Reshuffle(Entity.Newspaper[] newspapers)
-    {
-        // Knuth shuffle algorithm :: courtesy of Wikipedia
-        for (int t = 0; t < newspapers.Length; t++)
-        {
-            Entity.Newspaper tmp = newspapers[t];
-            int r = Random.Range(t, newspapers.Length);
-            newspapers[t] = newspapers[r];
-            newspapers[r] = tmp;
-        }
-    }
-
-    private void ReadNextNewspaper()
-    {
-        if (newspaperPos < newspapers.Count)
-        {
-            currentNewspaper = newspapers[newspaperPos];
-            newspaperPos++;
-        }
-        else
-        {
-            Debug.Log("End of newspapers.");
-        }
-    }
-
-    private void LoadTargetWords(string json)
+    private void LoadTargetWordsForDay(string json)
     {
         try
         {
@@ -357,103 +595,5 @@ public class ObjectSpawner : MonoBehaviour
         gameManager.SetCensorTargetWords(censorWords.Distinct().ToArray());
         gameManager.SetReplaceTargetWords(replaceWords.Distinct().ToArray());
     }
-
-    private void SetTargetWords(Entity.Newspaper newspaper)
-    {
-        // Combine all newspaper text
-        string allText = newspaper.GetTitle() + " " +
-                        newspaper.GetPublisher() + " " +
-                        newspaper.GetFront() + " " +
-                        newspaper.GetBack() + " " +
-                        newspaper.date;
-
-        allText = allText.ToLower();
-        Debug.Log($"SetTargetWords: {allText}");
-        foreach (string word in banWords)
-        {
-            if (allText.Contains(word.ToLower()))
-            {
-                newspaper.banWords.Add(word);
-                Debug.Log($"Banned Word {word} found on: {newspaper.GetTitle()}");
-            }
-        }
-
-        // Add censor words if they appear and are not also in banWords
-        foreach (string word in censorWords)
-        {
-            if (allText.Contains(word.ToLower()) && !newspaper.banWords.Contains(word))
-            {
-                newspaper.censorWords.Add(word);
-                Debug.Log($"Censored Word {word} found on: {newspaper.GetTitle()}");
-            }
-        }
-
-        // Add replace pairs if the first word appears
-        foreach (string[] pair in replaceWords)
-        {
-            if (pair.Length == 2 && allText.Contains(pair[0].ToLower()))
-            {
-                newspaper.replaceWords.Add(pair);
-                Debug.Log($"Replace Word {pair} found on: {newspaper.GetTitle()}");
-            }
-        }
-    }
-
-
-    void OnDestroy()
-    {
-        quitting = true;
-        spawnedMedia.Clear();    
-    }
-    void OnApplicationQuit()
-    {
-        quitting = true;
-        spawnedMedia.Clear();
-    }
-
-    // EventManager for creating a new media object after one gets destroyed
-    private void OnEnable()
-    {
-        EventManager.ShowHideRentNotices += ShowHideRentNotices;
-        EventManager.OnMediaDestroyed += HandleMediaDestroyed;
-        GameManager.OnGameRestart += StopSpawningOnRestart; // Listen for restarts
-        EventManager.CameraZoomed += ShowHideObject;
-    }
-
-    private void OnDisable()
-    {
-        EventManager.ShowHideRentNotices -= ShowHideRentNotices;
-        EventManager.OnMediaDestroyed -= HandleMediaDestroyed;
-        GameManager.OnGameRestart -= StopSpawningOnRestart;
-        EventManager.CameraZoomed -= ShowHideObject;
-    }
-
-
-    private void ShowHideObject(bool show)
-    {
-        foreach (GameObject gameObject in spawnedMedia)
-        {
-            if (gameObject == null)
-            {
-                //Destroy(gameObject);
-            }
-            else
-            {
-                //gameObject.SetActive(!show);
-            }
-        }
-    }
-
-    private void HandleMediaDestroyed(GameObject customer)
-    {
-        if (quitting)
-            return;
-        SpawnNewMediaObject();
-    }
-    
-    private void StopSpawningOnRestart()
-    {
-        quitting = true;
-    }
-    
+    */
 }

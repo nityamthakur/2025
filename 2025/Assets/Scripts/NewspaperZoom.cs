@@ -250,24 +250,29 @@ public class NewspaperZoom : MonoBehaviour
     {
         if (phoneText != null)
         {
-            List<string> banWords = new List<string>(gameManager.GetBanTargetWords());
-            List<string> censorWords = new List<string>(gameManager.GetCensorTargetWords());
-            List<string[]> replaceWords = new List<string[]>(gameManager.GetReplaceTargetWords());
+            List<(string, int)> banWords = new(gameManager.GetBanTargetWords());
+            List<(string, int)> censorWords = new(gameManager.GetCensorTargetWords());
+            List<(string[] pair, int day)> replaceWords = new(gameManager.GetReplaceTargetWords());
+
 
             // Start with the Ban List
             string displayText = "<color=#FFFF00><b>BAN LIST:</color></b>\n";
-            foreach (string phrase in banWords)
+            foreach ((string, int) phrase in banWords)
             {
-                displayText += phrase + "\n\n";
+                if(phrase.Item2 <= gameManager.gameData.GetCurrentDay())
+                    displayText += phrase.Item1 + "\n\n";
             }
 
             // Only show the Censor List from Day 2 onward
             if (gameManager.gameData.GetCurrentDay() > 1)
             {
                 displayText += "<color=#FFFF00><b>CENSOR LIST:</color></b>\n";
-                foreach (string phrase in censorWords)
+                foreach ((string, int) phrase in censorWords)
                 {
-                    displayText += phrase + "\n\n";
+                    // Prevent confusion for the player if a word appears on the banlist 
+                    // on later days, it wont show up on censor list anymore
+                    if (phrase.Item2 <= gameManager.gameData.GetCurrentDay() && !displayText.Contains(phrase.Item1))
+                        displayText += phrase + "\n\n";
                 }
             }
 
@@ -275,10 +280,13 @@ public class NewspaperZoom : MonoBehaviour
             if (gameManager.gameData.GetCurrentDay() > 3)
             {
                 displayText += "<color=#FFFF00><b>REPLACE LIST:</color></b>\n";
-                foreach (string[] phrase in replaceWords)
+                foreach ((string[], int) phrase in replaceWords)
                 {
-                    cuttingTargetObj.SetActive(true);
-                    cuttingTargetObj.GetComponent<CuttingTarget>().SetReplacementText(phrase[1]);
+                    if (phrase.Item2 <= gameManager.gameData.GetCurrentDay())
+                    {
+                        cuttingTargetObj.SetActive(true);
+                        cuttingTargetObj.GetComponent<CuttingTarget>().SetReplacementText(phrase.Item1[1]);
+                    }
                 }
             }
 
