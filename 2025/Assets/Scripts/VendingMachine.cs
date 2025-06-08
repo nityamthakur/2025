@@ -110,7 +110,7 @@ public class VendingMachine : MonoBehaviour
             // Set Button. Not going to be actually active
             Button buyButton = entry.transform.Find("BuyButton").GetComponent<Button>();
             buyButton.interactable = false;
-            buyButton.transform.GetComponentInChildren<TextMeshProUGUI>().text = item.itemCode;
+            buyButton.transform.GetComponentInChildren<TextMeshProUGUI>().text = (item.itemCost.Length == count) ? "Sold Out" : item.itemCode;
 
             // Ensure that the reference gets set back to the item
             item.attachedUpgrade = entry;

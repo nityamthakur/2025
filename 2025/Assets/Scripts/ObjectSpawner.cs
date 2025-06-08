@@ -9,6 +9,7 @@ using Newtonsoft.Json.Linq;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 using Unity.VisualScripting;
+using Unity.Collections;
 
 public class ObjectSpawner : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class ObjectSpawner : MonoBehaviour
     private List<GameObject> rentNotices = new();
     private int newspaperPos = 0;
     private List<Entity.Newspaper> newspapers = new();
+    private List<Entity.Newspaper> dailyNewspapers = new();
     private List<GameObject> spawnedMedia = new();
     private Entity.Newspaper currentNewspaper;
     private GameManager gameManager;
@@ -44,6 +46,7 @@ public class ObjectSpawner : MonoBehaviour
         //LoadJsonFromFile();
         //Reshuffle(newspapers);
         //PassWordLists();
+        GetDailyNewspapers();
         SpawnNewMediaObject();
     }
 
@@ -59,11 +62,22 @@ public class ObjectSpawner : MonoBehaviour
         }
     }
 
+    private void GetDailyNewspapers()
+    {
+        newspaperPos = 0;
+        dailyNewspapers.Clear();
+
+        int currentDay = gameManager.gameData.GetCurrentDay();
+        dailyNewspapers = newspapers
+            .Where(paper => paper.day == currentDay)
+            .ToList();
+    }
+
     private void ReadNextNewspaper()
     {
-        if (newspaperPos < newspapers.Count)
+        if (newspaperPos < dailyNewspapers.Count)
         {
-            currentNewspaper = newspapers[newspaperPos];
+            currentNewspaper = dailyNewspapers[newspaperPos];
             newspaperPos++;
         }
         else
@@ -364,23 +378,27 @@ public class ObjectSpawner : MonoBehaviour
             }
         }
 
-        foreach ((string word, int day) in gameManager.GetCensorTargetWords())
+        // Only censor or replace words if the article doesn't need to be banned or has a hidden image
+        if (newspaper.banWords.Count() == 0 && !newspaper.hasHiddenImage)
         {
-            if (day <= upToDay &&
-                allText.Contains(word.ToLower()) &&
-                !newspaper.banWords.Contains(word))
+            foreach ((string word, int day) in gameManager.GetCensorTargetWords())
             {
-                newspaper.censorWords.Add(word);
+                if (day <= upToDay &&
+                    allText.Contains(word.ToLower()) &&
+                    !newspaper.banWords.Contains(word))
+                {
+                    newspaper.censorWords.Add(word);
+                }
             }
-        }
 
-        foreach ((string[] pair, int day) in gameManager.GetReplaceTargetWords())
-        {
-            if (day <= upToDay &&
-                pair.Length == 2 &&
-                allText.Contains(pair[0].ToLower()))
+            foreach ((string[] pair, int day) in gameManager.GetReplaceTargetWords())
             {
-                newspaper.replaceWords.Add(pair);
+                if (day <= upToDay &&
+                    pair.Length == 2 &&
+                    allText.Contains(pair[0].ToLower()))
+                {
+                    newspaper.replaceWords.Add(pair);
+                }
             }
         }
     }

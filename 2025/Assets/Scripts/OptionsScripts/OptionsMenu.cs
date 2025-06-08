@@ -408,6 +408,9 @@ public class OptionsMenu : MonoBehaviour
         TMP_Text subtitleActiveText = FindComponentByName<TMP_Text>("SubtitleOnOffText");
         if (subtitleToggle != null && subtitleActiveText != null)
         {
+            bool startingOn = PlayerPrefs.GetInt("SubtitleState", 0) == 1;
+            subtitleToggle.isOn = startingOn;
+            subtitleActiveText.text = startingOn ? "On" : "Off";
             // Listen for changes when toggle is clicked
             subtitleToggle.onValueChanged.AddListener((bool isOn) =>
             {
@@ -415,7 +418,7 @@ public class OptionsMenu : MonoBehaviour
 
                 bool subtitleIsOn = PlayerPrefs.GetInt("SubtitleState", 0) == 1;
                 PlayerPrefs.SetInt("SubtitleState", !subtitleIsOn ? 1 : 0);
-                subtitleActiveText.text = subtitleIsOn ? "On" : "Off";
+                subtitleActiveText.text = !subtitleIsOn ? "On" : "Off";
 
                 EventManager.SubtitleToggle?.Invoke();
                 EventManager.PlaySound?.Invoke("switch1", true);
@@ -461,9 +464,6 @@ public class OptionsMenu : MonoBehaviour
         int muteOn = PlayerPrefs.GetInt("MuteState", 0);
         muteToggle.isOn = muteOn == 1;
         audioManager.MuteToggle(muteToggle.isOn);
-
-        bool subtitleOn = PlayerPrefs.GetInt("SubtitleState", 0) == 1;
-        subtitleToggle.isOn = subtitleOn;
 
         int fullScreenOn = PlayerPrefs.GetInt("FullScreenState", 0);
         fullScreenToggle.isOn = fullScreenOn == 1;

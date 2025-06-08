@@ -254,6 +254,9 @@ public class NewspaperZoom : MonoBehaviour
             List<(string, int)> censorWords = new(gameManager.GetCensorTargetWords());
             List<(string[] pair, int day)> replaceWords = new(gameManager.GetReplaceTargetWords());
 
+            banWords.Sort();
+            censorWords.Sort();
+            //replaceWords.Sort();
 
             // Start with the Ban List
             string displayText = "<color=#FFFF00><b>BAN LIST:</color></b>\n";
@@ -272,7 +275,7 @@ public class NewspaperZoom : MonoBehaviour
                     // Prevent confusion for the player if a word appears on the banlist 
                     // on later days, it wont show up on censor list anymore
                     if (phrase.Item2 <= gameManager.gameData.GetCurrentDay() && !displayText.Contains(phrase.Item1))
-                        displayText += phrase + "\n\n";
+                        displayText += phrase.Item1 + "\n\n";
                 }
             }
 

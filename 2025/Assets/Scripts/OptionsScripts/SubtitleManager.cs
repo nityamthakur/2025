@@ -10,8 +10,8 @@ public class SubtitleManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI subtitleTextObject;
     [SerializeField] private RectTransform subtitleBackground;
     private Coroutine subtitleTime;
-    private float paddingX = 20f; // Horizontal padding
-    private float paddingY = 10f; // Vertical padding
+    private float paddingX = 20f;
+    private float paddingY = 10f;
     private Dictionary<string, string> subtitleDictionary = new Dictionary<string, string>();
     private bool subtitlesOn = false;
 
@@ -128,8 +128,9 @@ public class SubtitleManager : MonoBehaviour
     }
 
     public void SubtitleToggle()
-    {   
+    { 
         bool isOn = PlayerPrefs.GetInt("SubtitleState", 0) == 1;
+        Debug.Log($"Subtitles on: {isOn}");
         subtitlesOn = isOn;
         ShowHideSubtitle(isOn);
     }
