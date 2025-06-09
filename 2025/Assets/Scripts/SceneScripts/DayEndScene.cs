@@ -177,11 +177,15 @@ public class DayEndScene : MonoBehaviour
         gameManager.gameData.dailyItemPurchases.Clear();
 
         fundsText.text += $"\n\n<align=left>New Total<line-height=0>\n<align=right>${currMoney - rentDue}<line-height=1em>";
-        
+
         suppliesText.text = $"Office supplies\n";
-        suppliesText.text += "\n<s>Getting Low On Pens";
-        suppliesText.text += "\n<s>Ran out of batteries";
-        suppliesText.text += "\n<s>Getting Low On Stamp Ink";
+        suppliesText.text += "\nStamp Ink still";
+        if (gameManager.gameData.GetCurrentDay() >= 2)
+            suppliesText.text += "\nPens have plenty of ink";
+        if (gameManager.gameData.GetCurrentDay() >= 3)
+            suppliesText.text += "\nBlacklight has plenty of power";
+
+        //suppliesText.text += "\n<s>Blacklight has plenty of power";
     }
 
     private bool CheckGameOver()
