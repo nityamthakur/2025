@@ -161,9 +161,13 @@ public class DayEndScene : MonoBehaviour
         int currMoney = gameManager.gameData.GetCurrentMoney();
         int jobMoney = gameManager.gameData.lastJobPay;
         int rentDue = gameManager.gameData.rent;
+        gameManager.gameData.IncreaseRent();
+        int totalPurchase = 0;
+        foreach (var record in gameManager.gameData.dailyItemPurchases)
+            totalPurchase += record.Value;
 
         fundsText.text = "Funds\n";
-        fundsText.text += $"\n<align=left>Savings<line-height=0>\n<align=right>{currMoney - jobMoney}<line-height=1em>";
+        fundsText.text += $"\n<align=left>Savings<line-height=0>\n<align=right>{currMoney}<line-height=1em>";
         fundsText.text += $"\n<align=left>Job Pay<line-height=0>\n<align=right>{jobMoney}<line-height=1em>";
         fundsText.text += $"\n<align=left>Rent<line-height=0>\n<align=right>-{rentDue}<line-height=1em>";
 
@@ -171,17 +175,21 @@ public class DayEndScene : MonoBehaviour
         {
             string itemName = record.Key;
             int itemCost = record.Value;
-            currMoney -= itemCost;
+            gameManager.gameData.SetCurrentMoney(-itemCost, true); // Begin subtracting costs
             fundsText.text += $"\n<align=left>{itemName}<line-height=0>\n<align=right>-{itemCost}<line-height=1em>";
         }
         gameManager.gameData.dailyItemPurchases.Clear();
 
-        fundsText.text += $"\n\n<align=left>New Total<line-height=0>\n<align=right>${currMoney - rentDue}<line-height=1em>";
+        // Final total. Set the gameData money here:
+        gameManager.gameData.SetCurrentMoney(jobMoney, false);
+        gameManager.gameData.SetCurrentMoney(-rentDue, false);
+        currMoney = gameManager.gameData.GetCurrentMoney();
+        fundsText.text += $"\n\n<align=left>Day End Total<line-height=0>\n<align=right>${currMoney}<line-height=1em>";
 
         suppliesText.text = $"Office supplies\n";
-        suppliesText.text += "\nStamp Ink still";
+        suppliesText.text += "\nStamp Ink still full";
         if (gameManager.gameData.GetCurrentDay() >= 2)
-            suppliesText.text += "\nPens have plenty of ink";
+            suppliesText.text += "\nHave plenty of Pens";
         if (gameManager.gameData.GetCurrentDay() >= 3)
             suppliesText.text += "\nBlacklight has plenty of power";
 
@@ -213,11 +221,9 @@ public class DayEndScene : MonoBehaviour
 
     private int SelectedEnding()
     {
-        gameManager.gameData.SetCurrentMoney(-gameManager.gameData.rent, false);
-        gameManager.gameData.IncreaseRent();
-
+        Debug.Log(gameManager.gameData.PerformanceScale);
         // Bad / Evicted Ending
-        if (gameManager.gameData.money < 0)
+        if (gameManager.gameData.GetCurrentMoney() < 0)
         {
             EventManager.PlayMusic?.Invoke("darkfog");
             return 3;

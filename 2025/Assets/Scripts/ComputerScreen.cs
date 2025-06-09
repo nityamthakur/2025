@@ -255,7 +255,7 @@ public class ComputerScreen : MonoBehaviour
         HideMenus();
         ClearUnreadPopUps();
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
 
         UpdateUnreadPopUps();
         // ShowEMailScreen();
@@ -574,7 +574,31 @@ public class ComputerScreen : MonoBehaviour
                 }
                 if (article.numCensorMistakes > 0)
                     text += $"\n\nWe have found that you censored {article.numCensorMistakes} word(s) that should not have been censored. Censoring incorrect words can lead to untruths which confuse readers and can sow disorder. Do not censor words according to your own discretion." + lineBreaker;
-            }
+
+                // Check replacement words
+                // If there were words that were replaced
+                if (article.numReplaceCorrectly >= 1 || article.numReplaceMistakes >= 1)
+                {
+                    if (article.articleBanned)
+                        text += $"\n\nEnsure that next time you don't waste company time and resources altering articles that need to be banned, including censoring and article doctoring.\n";
+
+                    else if (article.numReplaceMistakes >= 1)
+                    {
+                        text += $"\n\nEnsure that you read company emails and articles throughly to ensure that certain words are replaced.:\n";
+                        for (int i = 0; i < article.replaceWords.Count; i++)
+                        {
+                            if (i > 0 && i == article.replaceWords.Count - 1)
+                                text += " and ";
+                            else if (i > 0)
+                                text += ", ";
+
+                            text += $"{article.replaceWords[i]}";
+                        }
+                        text += "." + lineBreaker;
+                    }
+                }
+            }            
+            
             text += $"\n\nYour resulting pay for this article was {article.moneyEarned}.";
             if (article.OverTime)
                 text += $"\nYour pay was decreased for working overtime. Overtime pay is not permitted. Ensure you work more effciently next time.";

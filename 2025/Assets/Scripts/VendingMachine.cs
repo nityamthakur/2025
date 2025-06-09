@@ -17,13 +17,15 @@ public class VendingMachine : MonoBehaviour
     private GameManager gameManager;
     private ShopScene shopScene;
     private string itemCode;
+    private int currentMoney;
 
     private void Start()
     {
         gameManager = FindFirstObjectByType<GameManager>();
         shopScene = FindFirstObjectByType<ShopScene>();
-        moneyText.text = $"Money: {gameManager.gameData.GetCurrentMoney()}";
         itemCode = "";
+        currentMoney = gameManager.gameData.GetCurrentMoney();
+        moneyText.text = $"Money: {currentMoney}";
 
         LoadJsonFromFile();
         CreatePurchasables();
@@ -132,11 +134,11 @@ public class VendingMachine : MonoBehaviour
             return;
 
         // Check if player has enough money
-        if (gameManager.gameData.GetCurrentMoney() < item.itemCost[purchaseCount])
+        if (currentMoney < item.itemCost[purchaseCount])
             return;
 
-        gameManager.gameData.SetCurrentMoney(-item.itemCost[purchaseCount], true);
-        moneyText.text = $"Money: {gameManager.gameData.GetCurrentMoney()}";
+        currentMoney -= item.itemCost[purchaseCount];
+        moneyText.text = $"Money: {currentMoney}";
 
         if (gameManager.gameData.itemPurchases.ContainsKey(item.itemName))
             gameManager.gameData.itemPurchases[item.itemName]++;

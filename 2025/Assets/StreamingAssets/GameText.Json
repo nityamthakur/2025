@@ -235,7 +235,7 @@
         },
         {
             "day": 3,
-            "banWords": ["Seally Cruz", "Green-National-Convention"],
+            "banWords": ["Seally Cruz", "Green National Convention"],
             "censorWords": ["Black Swan", "Credric Siphens", "Lake", "Rheel Tizyn", "Balanced Budget", "Independent"],
             "replaceWords": []
         },
@@ -243,7 +243,7 @@
             "day": 4,
             "banWords": ["Black Swan", "Security Deal"],
             "censorWords": ["Deleanor Voluare", "Woke", "Fragmented", "Glass Ceiling", "Bomb"],
-            "replaceWords": [["1-9-2025", "1-10-2025"], ["Media-Regulation-Branch", "Branch of Truth"]]
+            "replaceWords": [["1-9-2025", "1-10-2025"]]
         },
         {
             "day": 5,
@@ -414,8 +414,8 @@
                     "publisher": "The Future Press",
                     "title": "Members of Green Party Assassinated",
                     "date": "1-8-2025",
-                    "front": "BREAKING - Members of Green Party, Anne Aptos and Charlie Wanderfelt, have been reportedly assassinated just last night. This information comes days before the Green-National-Convention, where our sources say an important announcement regarding the future of NewMerica was going to take place.",
-                    "back": "Green Party member Henry Darrell had this to say about the tragic loss of life, \"NewMerica suffers a great loss today. Anne and Charlie were committed to the advancement of NewMerica…and they were great friends. It is a shame that we live in a world that can inspire these terrible actions. Justice must be served.\"\n While the perpetrators are still at large, the Green Party has announced that this situation will not impact their determination to create a better NewMerica. Those who wish to stand against a government willing to silence those in opposition are encouraged to attend the Green-National-Convention.",
+                    "front": "BREAKING - Members of Green Party, Anne Aptos and Charlie Wanderfelt, have been reportedly assassinated just last night. This information comes days before the Green National Convention, where our sources say an important announcement regarding the future of NewMerica was going to take place.",
+                    "back": "Green Party member Henry Darrell had this to say about the tragic loss of life, \"NewMerica suffers a great loss today. Anne and Charlie were committed to the advancement of NewMerica…and they were great friends. It is a shame that we live in a world that can inspire these terrible actions. Justice must be served.\"\n While the perpetrators are still at large, the Green Party has announced that this situation will not impact their determination to create a better NewMerica. Those who wish to stand against a government willing to silence those in opposition are encouraged to attend the Green National Convention.",
                     "hasHiddenImage": false
                 },
                 {

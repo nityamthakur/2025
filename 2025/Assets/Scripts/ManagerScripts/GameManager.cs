@@ -444,6 +444,7 @@ public class GameManager : MonoBehaviour
         {
             //Debug.Log("Showing Timer");
             //onScreenTimer.enabled = !onScreenTimer.enabled; // Hide the onscreen timer
+            Debug.Log($"Money: {gameData.GetCurrentMoney()}");
         }
 
         if (onScreenTimer.enabled == true)
@@ -819,6 +820,7 @@ public class GameManager : MonoBehaviour
 
     public void StartJobTimer(float time)
     {
+        phoneOverlayObj.GetComponent<PhoneManager>().SetPhoneText();
         if (jobTimerCoroutine != null)
         {
             StopCoroutine(jobTimerCoroutine); // Stops any previous job timer
