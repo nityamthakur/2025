@@ -310,7 +310,7 @@ public class Entity : MonoBehaviour
     private bool WordisCensorable(string word)
     {
         // Find if the word contains any censor words
-        foreach (string censorWord in gameManager.GetCensorTargetWords())
+        foreach (string censorWord in newspaperData.censorWords)
         {
             // Split the censor word/phrase into individual words
             string[] splicedWord = censorWord.Split(' ');
@@ -327,7 +327,7 @@ public class Entity : MonoBehaviour
     private bool WordisReplaceable(string word)
     {
         // Find if the word contains any replace words
-        foreach (string[] replaceWord in gameManager.GetReplaceTargetWords())
+        foreach (string[] replaceWord in newspaperData.replaceWords)
         {
             // Split the replace word/phrase into individual words
             string[] splicedWord = replaceWord[0].Split(' ');
@@ -540,20 +540,6 @@ public class Entity : MonoBehaviour
     private bool isInsideTrigger = false;
     private Collider2D storedTrigger = null;
 
-    /*
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.gameObject.CompareTag("DropBoxAccept") || other.gameObject.CompareTag("DropBoxDestroy"))
-        {
-            if (other.gameObject.CompareTag("DropBoxAccept"))
-                EventManager.GlowingBoxShow?.Invoke("accept", true);
-            //if(other.gameObject.CompareTag("DropBoxDestroy"))
-            //EventManager.GlowingBoxShow?.Invoke("destroy", true);
-            isInsideTrigger = true;
-            storedTrigger = other;
-        }
-    }
-    */
 
     private void OnTriggerStay2D(Collider2D other)
     {
@@ -658,6 +644,7 @@ public class Entity : MonoBehaviour
         public string publisher = null;
         public string title = null;
         public string date;
+        public int day;
         
         [JsonIgnore] public string backContent;
         [JsonIgnore] public string frontContent;
@@ -669,21 +656,19 @@ public class Entity : MonoBehaviour
         [JsonIgnore] public bool publisherIsComplex;
         [JsonIgnore] public bool titleIsComplex;
         
-        public string[] banWords;
-        public string[] censorWords;
-        public string[][] replaceWords;
+        public List<string> banWords = new();
+        public List<string> censorWords = new();
+        public List<string[]> replaceWords = new();
         public bool hasHiddenImage;
 
         public string GetPublisher()
         {
             return publisher;
         }
-
         public string GetTitle()
         {
             return title;
         }
-        
         public string GetFront()
         {
             return frontContent;

@@ -92,7 +92,6 @@ public class ComputerScreen : MonoBehaviour
         TextMeshProUGUI zoomButtonText = zoomButton.GetComponentInChildren<TextMeshProUGUI>();
         zoomButton.onClick.AddListener(() =>
         {
-            Debug.Log("zooming");
             EventManager.PlaySound?.Invoke("switch1", true);
             zoomButtonText.text = zoomedIn ? "Zoom In" : "Zoom Out";
 
@@ -208,7 +207,7 @@ public class ComputerScreen : MonoBehaviour
         unreadReviewCount += 1;
         UpdateUnreadPopUps();
         HideMenus();
-        EventManager.ZoomCamera?.Invoke(screenZoomIn, 3.1f, 1.0f);
+        zoomButton.onClick.Invoke();
     }
 
     public void StartComputer()
@@ -256,7 +255,7 @@ public class ComputerScreen : MonoBehaviour
         HideMenus();
         ClearUnreadPopUps();
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
 
         UpdateUnreadPopUps();
         // ShowEMailScreen();
@@ -541,12 +540,12 @@ public class ComputerScreen : MonoBehaviour
                         text += "\n\nWe located a image hidden within this article. Ensure that future articles are scoured diligently and banned accordingly." + lineBreaker;
 
                 // Check if article should have been banned or was banned mistakenly
-                if (article.bannedWords.Length > 0 && !article.articleBanned)
+                if (article.bannedWords.Count > 0 && !article.articleBanned)
                 {
                     text += "\n\nThe publisher of this article is untruthful and a hazard to NewMerica. Always ban articles from this publisher.\nBe on the look out for future articles from:\n";
-                    for (int i = 0; i < article.bannedWords.Length; i++)
+                    for (int i = 0; i < article.bannedWords.Count; i++)
                     {
-                        if (i > 0 && i == article.bannedWords.Length - 1)
+                        if (i > 0 && i == article.bannedWords.Count - 1)
                             text += " or ";
                         else if (i > 0)
                             text += ", ";
@@ -555,16 +554,16 @@ public class ComputerScreen : MonoBehaviour
                     }
                     text += "." + lineBreaker;
                 }
-                else if (article.bannedWords.Length == 0 && article.articleBanned)
+                else if (article.bannedWords.Count == 0 && article.articleBanned)
                     text += "\n\nThis article was from a reputable source. Ensure only articles from select publishers are banned." + lineBreaker;
 
                 // Check words that were not censored or words that were censored.
                 if (article.numCensorableWords != article.numCensoredCorrectly)
                 {
                     text += $"\n\nYou missed {article.numCensorableWords - article.numCensoredCorrectly} word(s) that should have censored. We have provided the list of censored words found on this article. Ensure you remember them:\n";
-                    for (int i = 0; i < article.censorWords.Length; i++)
+                    for (int i = 0; i < article.censorWords.Count; i++)
                     {
-                        if (i > 0 && i == article.censorWords.Length - 1)
+                        if (i > 0 && i == article.censorWords.Count - 1)
                             text += " and ";
                         else if (i > 0)
                             text += ", ";
@@ -575,7 +574,31 @@ public class ComputerScreen : MonoBehaviour
                 }
                 if (article.numCensorMistakes > 0)
                     text += $"\n\nWe have found that you censored {article.numCensorMistakes} word(s) that should not have been censored. Censoring incorrect words can lead to untruths which confuse readers and can sow disorder. Do not censor words according to your own discretion." + lineBreaker;
-            }
+
+                // Check replacement words
+                // If there were words that were replaced
+                if (article.numReplaceCorrectly >= 1 || article.numReplaceMistakes >= 1)
+                {
+                    if (article.articleBanned)
+                        text += $"\n\nEnsure that next time you don't waste company time and resources altering articles that need to be banned, including censoring and article doctoring.\n";
+
+                    else if (article.numReplaceMistakes >= 1)
+                    {
+                        text += $"\n\nEnsure that you read company emails and articles throughly to ensure that certain words are replaced.:\n";
+                        for (int i = 0; i < article.replaceWords.Count; i++)
+                        {
+                            if (i > 0 && i == article.replaceWords.Count - 1)
+                                text += " and ";
+                            else if (i > 0)
+                                text += ", ";
+
+                            text += $"{article.replaceWords[i]}";
+                        }
+                        text += "." + lineBreaker;
+                    }
+                }
+            }            
+            
             text += $"\n\nYour resulting pay for this article was {article.moneyEarned}.";
             if (article.OverTime)
                 text += $"\nYour pay was decreased for working overtime. Overtime pay is not permitted. Ensure you work more effciently next time.";

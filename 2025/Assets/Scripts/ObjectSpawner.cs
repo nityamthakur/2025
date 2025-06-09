@@ -8,18 +8,17 @@ using TMPro;
 using Newtonsoft.Json.Linq;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
+using Unity.VisualScripting;
+using Unity.Collections;
 
 public class ObjectSpawner : MonoBehaviour
 {
-    [SerializeField] private GameObject mediaObject;
-    [SerializeField] private GameObject mediaSpawner;
-    [SerializeField] private GameObject splinePath;
-    [SerializeField] private GameObject rentNoticePrefab;
-    [SerializeField] private GameObject imageObject;
+    [SerializeField] private GameObject mediaObject, mediaSpawner, splinePath, rentNoticePrefab, imageObject;
     public Sprite greenPartyLetter;
     private List<GameObject> rentNotices = new();
     private int newspaperPos = 0;
     private List<Entity.Newspaper> newspapers = new();
+    private List<Entity.Newspaper> dailyNewspapers = new();
     private List<GameObject> spawnedMedia = new();
     private Entity.Newspaper currentNewspaper;
     private GameManager gameManager;
@@ -33,6 +32,8 @@ public class ObjectSpawner : MonoBehaviour
             Debug.LogError("Media Object, Media Spawner, Spline Path, or Rent Notice is not assigned.");
         }
         gameManager = FindFirstObjectByType<GameManager>();
+
+        LoadJsonFromFile();
     }
 
     public void StartMediaSpawn()
@@ -42,10 +43,47 @@ public class ObjectSpawner : MonoBehaviour
             Debug.LogError("jobDetails is null.");
         }
 
-        LoadJsonFromFile();
+        //LoadJsonFromFile();
         //Reshuffle(newspapers);
-        PassWordLists();
+        //PassWordLists();
+        GetDailyNewspapers();
         SpawnNewMediaObject();
+    }
+
+    private void Reshuffle(Entity.Newspaper[] newspapers)
+    {
+        // Knuth shuffle algorithm :: courtesy of Wikipedia
+        for (int t = 0; t < newspapers.Length; t++)
+        {
+            Entity.Newspaper tmp = newspapers[t];
+            int r = Random.Range(t, newspapers.Length);
+            newspapers[t] = newspapers[r];
+            newspapers[r] = tmp;
+        }
+    }
+
+    private void GetDailyNewspapers()
+    {
+        newspaperPos = 0;
+        dailyNewspapers.Clear();
+
+        int currentDay = gameManager.gameData.GetCurrentDay();
+        dailyNewspapers = newspapers
+            .Where(paper => paper.day == currentDay)
+            .ToList();
+    }
+
+    private void ReadNextNewspaper()
+    {
+        if (newspaperPos < dailyNewspapers.Count)
+        {
+            currentNewspaper = dailyNewspapers[newspaperPos];
+            newspaperPos++;
+        }
+        else
+        {
+            Debug.Log("End of newspapers.");
+        }
     }
 
     private void SpawnNewMediaObject()
@@ -91,22 +129,6 @@ public class ObjectSpawner : MonoBehaviour
     // For non media censoring objects like fliers and pamphlets
     public void SpawnImageObject(bool takeActionOnDestroy)
     {
-        /*
-        // Create new media object
-        GameObject newMedia = Instantiate(imageObject, mediaSpawner.transform.position, Quaternion.identity);
-
-        // Pass the spline prefab reference
-        ImageObject mediaEntity = newMedia.GetComponent<ImageObject>();
-        if (mediaEntity != null)
-        {
-            mediaEntity.takeActionOnDestroy = takeActionOnDestroy;
-            mediaEntity.SetUpSplinePath(splinePath); // Pass the splinePath prefab reference
-        }
-        else
-        {
-            Debug.LogError("Spawned media object is missing the Entity script!");
-        }
-        */
         // Create new media object
         GameObject rentNoticeInstance = Instantiate(rentNoticePrefab);
         Canvas prefabCanvas = rentNoticeInstance.GetComponentInChildren<Canvas>();
@@ -160,7 +182,6 @@ public class ObjectSpawner : MonoBehaviour
             prefabCanvas.worldCamera = Camera.main;
         }
         rentNotices.Add(rentNoticeInstance);
-
 
         int rent = gameManager.gameData.rent;
         string rentText = $"Dear Tenet,\n\nThis is a reminder that due to missed payments, your rent has been increased to <color=yellow>${rent}.</color>\n\nIf you are unable to pay by end of day, expect to be evicted.";
@@ -219,67 +240,58 @@ public class ObjectSpawner : MonoBehaviour
         newspapers.Clear();
         newspaperPos = 0;
 
+        LoadTargetWords(json);
+        //ParseJsonForDay(json, "newspaperText");
+        //ParseJsonForDay(json, "grammerEngineText");
         ParseJson(json, "newspaperText");
         ParseJson(json, "grammerEngineText");
     }
+
     private void ParseJson(string json, string section)
     {
-        //Our JSON deserialization needs to be significantly more complex to handle this.
-        //Once all of the JSON is migrated over to the new format, it can be simplified
         try
         {
-            //Load everything
             var jsonRoot = JObject.Parse(json);
-            //Get just the newspaper text
             var newspaperTextArr = (JArray)jsonRoot[section];
 
             if (newspaperTextArr == null)
             {
-                Debug.LogError($"Unable to find {section} data in JSON file. Stop breaking my stuff!.");
+                Debug.LogError($"Unable to find {section} data in JSON file.");
                 return;
             }
 
-            //Get the current day obj
-            var currentPapers = newspaperTextArr.Where(item => (int)item["day"] == gameManager.gameData.GetCurrentDay())
-                .Cast<JObject>().FirstOrDefault();
-
-            if (currentPapers == null)
+            // Loop through all days
+            foreach (var entry in newspaperTextArr.Cast<JObject>())
             {
-                Debug.LogWarning($"Unable to find paper entries for day {gameManager.gameData.GetCurrentDay()} for {section}");
-                return;
-            }
+                int day = (int)entry["day"];
+                var newsPaperArr = (JArray)entry["newspapers"];
 
-            //Now go through and get the paper data
-            var newsPaperArr = (JArray)currentPapers["newspapers"];
-
-            for (var i = 0; i < newsPaperArr.Count; i++)
-            {
-                var newspaperObj = (JObject)newsPaperArr[i];
-                var newspaper = new Entity.Newspaper
+                foreach (var newspaperObj in newsPaperArr.Cast<JObject>())
                 {
-                    date = newspaperObj["date"]?.ToString(),
-                    hasHiddenImage = newspaperObj["hasHiddenImage"] != null && (bool)newspaperObj["hasHiddenImage"],
-                    banWords = newspaperObj["banWords"]?.ToObject<string[]>() ?? Array.Empty<string>(),
-                    censorWords = newspaperObj["censorWords"]?.ToObject<string[]>() ?? Array.Empty<string>(),
-                    replaceWords = newspaperObj["replaceWords"]?.ToObject<string[][]>() ?? Array.Empty<string[]>(),
-                };
+                    var newspaper = new Entity.Newspaper
+                    {
+                        date = newspaperObj["date"]?.ToString(),
+                        hasHiddenImage = newspaperObj["hasHiddenImage"] != null && (bool)newspaperObj["hasHiddenImage"],
+                        day = day
+                    };
 
-                //Add all of the possibly complex objects
-                ProcessField(newspaperObj["publisher"], out newspaper.publisher, out newspaper.publisherIsComplex);
-                ProcessField(newspaperObj["title"], out newspaper.title, out newspaper.titleIsComplex);
-                ProcessField(newspaperObj["front"], out newspaper.frontContent, out newspaper.frontIsComplex);
-                ProcessField(newspaperObj["back"], out newspaper.backContent, out newspaper.backIsComplex);
-                newspaper.CreateComplex();
-                newspapers.Add(newspaper);
+                    ProcessField(newspaperObj["publisher"], out newspaper.publisher, out newspaper.publisherIsComplex);
+                    ProcessField(newspaperObj["title"], out newspaper.title, out newspaper.titleIsComplex);
+                    ProcessField(newspaperObj["front"], out newspaper.frontContent, out newspaper.frontIsComplex);
+                    ProcessField(newspaperObj["back"], out newspaper.backContent, out newspaper.backIsComplex);
+                    newspaper.CreateComplex();
+
+                    SetTargetWords(newspaper);
+                    newspapers.Add(newspaper); // This is your full list of all newspapers
+                }
             }
         }
         catch (Exception e)
         {
             Debug.LogError("Error while parsing newspaper JSON data: " + e.Message);
         }
-
-        /// newspapers.ForEach(n => Debug.Log(n.GetTitle()));
     }
+
 
     private void ProcessField(JToken token, out string content, out bool isComplex)
     {
@@ -295,89 +307,107 @@ public class ObjectSpawner : MonoBehaviour
         }
     }
 
-    private void Reshuffle(Entity.Newspaper[] newspapers)
+    private void LoadTargetWords(string json)
     {
-        // Knuth shuffle algorithm :: courtesy of Wikipedia
-        for (int t = 0; t < newspapers.Length; t++)
+        List<(string, int)> banWords = new();
+        List<(string, int)> censorWords = new();
+        List<(string[], int)> replaceWords = new();
+
+        try
         {
-            Entity.Newspaper tmp = newspapers[t];
-            int r = Random.Range(t, newspapers.Length);
-            newspapers[t] = newspapers[r];
-            newspapers[r] = tmp;
+            JObject jsonRoot = JObject.Parse(json);
+            JArray wordArray = (JArray)jsonRoot["targetWords"];
+
+            if (wordArray == null)
+            {
+                Debug.LogError("Unable to find targetWords in JSON.");
+                return;
+            }
+
+            for (int i = 0; i < wordArray.Count; i++)
+            {
+                JObject entry = (JObject)wordArray[i];
+                int day = entry.ContainsKey("day") ? entry["day"].ToObject<int>() : i + 1;
+
+                foreach (var word in entry["banWords"] ?? new JArray())
+                {
+                    banWords.Add((word.ToString(), day));
+                }
+
+                foreach (var word in entry["censorWords"] ?? new JArray())
+                {
+                    censorWords.Add((word.ToString(), day));
+                }
+
+                foreach (var pair in entry["replaceWords"] ?? new JArray())
+                {
+                    JArray pairArray = (JArray)pair;
+                    if (pairArray.Count == 2)
+                    {
+                        string[] replacementPair = new string[] { pairArray[0].ToString(), pairArray[1].ToString() };
+                        replaceWords.Add((replacementPair, day));
+                    }
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Error parsing targetWords: " + e.Message);
+        }
+
+        gameManager.SetBanTargetWords(banWords);
+        gameManager.SetCensorTargetWords(censorWords);
+        gameManager.SetReplaceTargetWords(replaceWords);
+    }
+
+    private void SetTargetWords(Entity.Newspaper newspaper)
+    {
+        string allText = (newspaper.GetTitle() + " " +
+                        newspaper.GetPublisher() + " " +
+                        newspaper.GetFront() + " " +
+                        newspaper.GetBack() + " " +
+                        newspaper.date).ToLower();
+
+        int upToDay = newspaper.day;
+
+        foreach ((string word, int day) in gameManager.GetBanTargetWords())
+        {
+            if (day <= upToDay && allText.Contains(word.ToLower()))
+            {
+                newspaper.banWords.Add(word);
+            }
+        }
+
+        // Only censor or replace words if the article doesn't need to be banned or has a hidden image
+        if (newspaper.banWords.Count() == 0 && !newspaper.hasHiddenImage)
+        {
+            foreach ((string word, int day) in gameManager.GetCensorTargetWords())
+            {
+                if (day <= upToDay &&
+                    allText.Contains(word.ToLower()) &&
+                    !newspaper.banWords.Contains(word))
+                {
+                    newspaper.censorWords.Add(word);
+                }
+            }
+
+            foreach ((string[] pair, int day) in gameManager.GetReplaceTargetWords())
+            {
+                if (day <= upToDay &&
+                    pair.Length == 2 &&
+                    allText.Contains(pair[0].ToLower()))
+                {
+                    newspaper.replaceWords.Add(pair);
+                }
+            }
         }
     }
 
-    private void ReadNextNewspaper()
-    {
-        if (newspaperPos < newspapers.Count)
-        {
-            currentNewspaper = newspapers[newspaperPos];
-            newspaperPos++;
-        }
-        else
-        {
-            Debug.Log("End of newspapers.");
-        }
-    }
 
-    // Generated some random words. Need better words
-    List<string>[] fakeBanWords = new List<string>[]
-    {
-        new() { "Viridian Print" },
-        new() { "glower", "blunder" },
-        new() { "gravel", "knobby", "jostle" },
-        new() { "jagged", "trudge", "rattle", "bellow" },
-        new() { "repulse", "harvest", "blanket", "fragment", "scuttled" }
-    };
-    List<string>[] fakeCensorWords = new List<string>[]
-    {
-        new() {},
-        new() { "Brim", "Haunt" },
-        new() { "murky", "thrift", "enamel" },
-        new() { "modest", "frugal", "snatch", "velvet" },
-        new() { "yonder", "shifty", "lantern", "plumage", "embolden" }
-    };
-
-    private void PassWordLists()
-    {
-        List<string> banWords = new List<string>();
-        List<string> censorWords = new List<string>();
-        List<string[]> replaceWords = new List<string[]>();
-
-        foreach (var newspaper in newspapers)
-        {
-            foreach (string word in newspaper.banWords)
-            {
-                banWords.Add(word);
-            }
-            foreach (string word in newspaper.censorWords)
-            {
-                censorWords.Add(word);
-            }
-            foreach (string[] wordPair in newspaper.replaceWords)
-            {
-                replaceWords.Add(wordPair);
-            }
-        }
-
-        int currentDay = gameManager.gameData.GetCurrentDay();
-        for (int i = 0; i < currentDay && i < fakeCensorWords.Length; i++)
-        {
-            censorWords.AddRange(fakeCensorWords[i]);
-        }
-        for (int i = 0; i < currentDay && i < fakeBanWords.Length; i++)
-        {
-            banWords.AddRange(fakeBanWords[i]);
-        }
-
-        gameManager.SetBanTargetWords(banWords.Distinct().ToArray());
-        gameManager.SetCensorTargetWords(censorWords.Distinct().ToArray());
-        gameManager.SetReplaceTargetWords(replaceWords.Distinct().ToArray());
-    }
-    void Oestroy()
+    void OnDestroy()
     {
         quitting = true;
-        spawnedMedia.Clear();    
+        spawnedMedia.Clear();
     }
     void OnApplicationQuit()
     {
@@ -424,10 +454,164 @@ public class ObjectSpawner : MonoBehaviour
             return;
         SpawnNewMediaObject();
     }
-    
+
     private void StopSpawningOnRestart()
     {
         quitting = true;
     }
     
+    /*
+    private void ParseJsonForDay(string json, string section)
+    {
+        //Our JSON deserialization needs to be significantly more complex to handle this.
+        //Once all of the JSON is migrated over to the new format, it can be simplified
+        try
+        {
+            //Load everything
+            var jsonRoot = JObject.Parse(json);
+            //Get just the newspaper text
+            var newspaperTextArr = (JArray)jsonRoot[section];
+
+            if (newspaperTextArr == null)
+            {
+                Debug.LogError($"Unable to find {section} data in JSON file. Stop breaking my stuff!.");
+                return;
+            }
+
+            //Get the current day obj
+            var currentPapers = newspaperTextArr.Where(item => (int)item["day"] == gameManager.gameData.GetCurrentDay())
+                .Cast<JObject>().FirstOrDefault();
+
+            if (currentPapers == null)
+            {
+                Debug.LogWarning($"Unable to find paper entries for day {gameManager.gameData.GetCurrentDay()} for {section}");
+                return;
+            }
+
+            //Now go through and get the paper data
+            var newsPaperArr = (JArray)currentPapers["newspapers"];
+
+            for (var i = 0; i < newsPaperArr.Count; i++)
+            {
+                var newspaperObj = (JObject)newsPaperArr[i];
+                var newspaper = new Entity.Newspaper
+                {
+                    date = newspaperObj["date"]?.ToString(),
+                    hasHiddenImage = newspaperObj["hasHiddenImage"] != null && (bool)newspaperObj["hasHiddenImage"],
+                };
+
+                //Add all of the possibly complex objects
+                ProcessField(newspaperObj["publisher"], out newspaper.publisher, out newspaper.publisherIsComplex);
+                ProcessField(newspaperObj["title"], out newspaper.title, out newspaper.titleIsComplex);
+                ProcessField(newspaperObj["front"], out newspaper.frontContent, out newspaper.frontIsComplex);
+                ProcessField(newspaperObj["back"], out newspaper.backContent, out newspaper.backIsComplex);
+                newspaper.CreateComplex();
+
+                SetTargetWords(newspaper);
+                newspapers.Add(newspaper);
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Error while parsing newspaper JSON data: " + e.Message);
+        }
+
+        /// newspapers.ForEach(n => Debug.Log(n.GetTitle()));
+    }
+    
+    private void SetTargetWordsForDay(Entity.Newspaper newspaper)
+    {
+        // Combine all newspaper text
+        string allText = newspaper.GetTitle() + " " +
+                        newspaper.GetPublisher() + " " +
+                        newspaper.GetFront() + " " +
+                        newspaper.GetBack() + " " +
+                        newspaper.date;
+
+        allText = allText.ToLower();
+        Debug.Log($"SetTargetWords: {allText}");
+        foreach (string word in banWords)
+        {
+            if (allText.Contains(word.ToLower()))
+            {
+                newspaper.banWords.Add(word);
+                Debug.Log($"Banned Word {word} found on: {newspaper.GetTitle()}");
+            }
+        }
+
+        // Add censor words if they appear and are not also in banWords
+        foreach (string word in censorWords)
+        {
+            if (allText.Contains(word.ToLower()) && !newspaper.banWords.Contains(word))
+            {
+                newspaper.censorWords.Add(word);
+                Debug.Log($"Censored Word {word} found on: {newspaper.GetTitle()}");
+            }
+        }
+
+        // Add replace pairs if the first word appears
+        foreach (string[] pair in replaceWords)
+        {
+            if (pair.Length == 2 && allText.Contains(pair[0].ToLower()))
+            {
+                newspaper.replaceWords.Add(pair);
+                Debug.Log($"Replace Word {pair} found on: {newspaper.GetTitle()}");
+            }
+        }
+    }
+
+    private void LoadTargetWordsForDay(string json)
+    {
+        try
+        {
+            JObject jsonRoot = JObject.Parse(json);
+            JArray wordArray = (JArray)jsonRoot["targetWords"];
+
+            if (wordArray == null)
+            {
+                Debug.LogError("Unable to find targetWords in JSON.");
+                return;
+            }
+
+            int currentDay = gameManager.gameData.GetCurrentDay();
+
+            banWords.Clear();
+            censorWords.Clear();
+            replaceWords.Clear();
+
+            for (int i = 0; i < currentDay && i < wordArray.Count; i++)
+            {
+                JObject entry = (JObject)wordArray[i];
+
+                // Add ban words
+                foreach (var word in entry["banWords"] ?? new JArray())
+                    banWords.Add(word.ToString());
+
+                // Add censor words
+                foreach (var word in entry["censorWords"] ?? new JArray())
+                    censorWords.Add(word.ToString());
+
+                // Add replace word pairs
+                foreach (var pair in entry["replaceWords"] ?? new JArray())
+                {
+                    string[] wordPair = pair.Select(p => p.ToString()).ToArray();
+                    if (wordPair.Length == 2)
+                        replaceWords.Add(wordPair);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Error parsing targetWords: " + e.Message);
+        }
+
+        banWords.Sort();
+        censorWords.Sort();
+        replaceWords.Sort();
+
+        gameManager.SetBanTargetWords(banWords.Distinct().ToArray());
+        gameManager.SetCensorTargetWords(censorWords.Distinct().ToArray());
+        gameManager.SetReplaceTargetWords(replaceWords.Distinct().ToArray());
+    }
+    */
 }

@@ -3,9 +3,14 @@ using UnityEngine;
 public class GrayscaleToggle : MonoBehaviour
 {
     [SerializeField] GameObject volume;
-    void Start()
+    private bool grayscaleOn = false;
+    void Awake()
     {
-        SetGrayscale(EventManager.IsGrayscale);
+        if (!PlayerPrefs.HasKey("GrayState"))
+            PlayerPrefs.SetInt("GrayState", 0);
+
+        grayscaleOn = PlayerPrefs.GetInt("GrayState", 0) == 1;
+        SetGrayscale(grayscaleOn);
     }
 
     void OnEnable()
@@ -20,7 +25,9 @@ public class GrayscaleToggle : MonoBehaviour
 
     public void SetGrayscale(bool enable)
     {
-        if(volume != null)
+        if (volume != null)
             volume.SetActive(enable);
+
+        EventManager.IsGrayscale = enable;
     }
 }

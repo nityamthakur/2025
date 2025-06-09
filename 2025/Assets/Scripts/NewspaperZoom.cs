@@ -35,7 +35,6 @@ public class NewspaperZoom : MonoBehaviour
     // Phone object
     private GameObject phoneOverlayUI;
     private Vector3 phoneOverlayStartPos, phoneOverlayEndPos;
-    private TextMeshProUGUI phoneText;
     private GameObject cuttingTargetObj;
 
     [SerializeField] private Collider2D newspaperCollider;
@@ -85,7 +84,6 @@ public class NewspaperZoom : MonoBehaviour
         }
         phoneOverlayStartPos = phoneOverlayUI.GetComponent<RectTransform>().anchoredPosition;
         phoneOverlayEndPos = phoneOverlayStartPos + new Vector3(0f, -1200f, 0f);
-        phoneText = phoneOverlayUI.GetComponentInChildren<TextMeshProUGUI>();
         
         cuttingTargetObj = gameManager.GetCuttingTargetObj();
 
@@ -210,7 +208,6 @@ public class NewspaperZoom : MonoBehaviour
                 hiddenImage.SetActive(true);
             }
 
-            UpdatePhoneText();
             StartCoroutine(ShowUIObject(phoneOverlayUI, phoneOverlayStartPos, phoneOverlayEndPos));
             StartCoroutine(ShowUIObject(toolOverlayUI, toolOverlayStartPos, toolOverlayEndPos));
         }
@@ -244,46 +241,6 @@ public class NewspaperZoom : MonoBehaviour
             newspaperCollider.enabled = true;
         else
             transform.position = zoomPosition;
-    }
-
-    private void UpdatePhoneText()
-    {
-        if (phoneText != null)
-        {
-            List<string> banWords = new List<string>(gameManager.GetBanTargetWords());
-            List<string> censorWords = new List<string>(gameManager.GetCensorTargetWords());
-            List<string[]> replaceWords = new List<string[]>(gameManager.GetReplaceTargetWords());
-
-            // Start with the Ban List
-            string displayText = "<color=#FFFF00><b>BAN LIST:</color></b>\n";
-            foreach (string phrase in banWords)
-            {
-                displayText += phrase + "\n\n";
-            }
-
-            // Only show the Censor List from Day 2 onward
-            if (gameManager.gameData.GetCurrentDay() > 1)
-            {
-                displayText += "<color=#FFFF00><b>CENSOR LIST:</color></b>\n";
-                foreach (string phrase in censorWords)
-                {
-                    displayText += phrase + "\n\n";
-                }
-            }
-
-            // Only show the Censor List from Day 4 onward
-            if (gameManager.gameData.GetCurrentDay() > 3)
-            {
-                displayText += "<color=#FFFF00><b>REPLACE LIST:</color></b>\n";
-                foreach (string[] phrase in replaceWords)
-                {
-                    cuttingTargetObj.SetActive(true);
-                    cuttingTargetObj.GetComponent<CuttingTarget>().SetReplacementText(phrase[1]);
-                }
-            }
-
-            phoneText.text = displayText;
-        }
     }
 
     private IEnumerator ShowUIObject(GameObject instance, Vector3 startPos, Vector3 endPos)

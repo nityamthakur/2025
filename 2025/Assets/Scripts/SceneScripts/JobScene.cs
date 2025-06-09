@@ -58,7 +58,7 @@ public class JobScene : MonoBehaviour
         computerScreenClass.StartComputer();
         EventManager.ShowHideRentNotices?.Invoke(true);
         EventManager.FadeIn?.Invoke();
-        EventManager.PlayMusic?.Invoke("work");
+        EventManager.PlayMusic?.Invoke("screensaver");
     }
 
     private void CanvasChanger(bool change)

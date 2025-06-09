@@ -37,7 +37,7 @@ public static class EventManager
     public static Action<string, bool> PlaySound;
 
     public static Action<bool> ToggleGrayscale;
-    public static bool IsGrayscale { get; private set; } = false;
+    public static bool IsGrayscale { get; set; } = false;
     public static void ToggleGrayscaleState()
     {
         IsGrayscale = !IsGrayscale;

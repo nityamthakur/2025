@@ -22,7 +22,7 @@ public class AnalyticsManager : MonoBehaviour
     private async void Start()
     {
 		await UnityServices.InitializeAsync();	
-		AnalyticsService.Instance.StartDataCollection();
+		//AnalyticsService.Instance.StartDataCollection();
 		isInitialized = true;
     }
 

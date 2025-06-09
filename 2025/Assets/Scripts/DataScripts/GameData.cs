@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using Unity.VisualScripting;
 
 [System.Serializable]
 public class GameData
@@ -14,7 +15,7 @@ public class GameData
     public GameMode gameMode = GameMode.Normal;
     public int saveSlot, day;
     public float playTime;
-    public int money, totalMoneyEarned, totalMoneySpent, rent;
+    public int money = 0, totalMoneyEarned, totalMoneySpent, rent;
     public int lastJobPay = 0;
 
 
@@ -103,7 +104,7 @@ public class GameData
     public void AddJobMoney(int money)
     {
         this.lastJobPay = money;
-        SetCurrentMoney(lastJobPay, false);
+        //SetCurrentMoney(lastJobPay, false);
     }
 
 
