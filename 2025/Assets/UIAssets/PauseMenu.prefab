@@ -1274,7 +1274,7 @@ MonoBehaviour:
   m_text: "Production Lead, Art Director, Game Writer: \r\n\\nDesign Lead, Puzzle
     Designer, UI Designer: \r\n\r\\nEngine Lead, Narrative Designer, CO-Lead Programmer:\n\\nTools
     Lead, Sound Designer, CO-Lead Programmer:\r\n \r\\nPlaytesting Lead, Game Writer,
-    UI Designer:\n\\nContractors:\n\\ngrammar engine programmer:\n\\nGame Optimizer:\n\\nWriters:\n\\n\\n\\nQA
+    UI Designer:\n\\nContractors:\n\\ngrammar engine programmer:\n\\nWriters:\n\\n\\n\\nQA
     Tester:\n\\n\\nMusic:\n\\nAmericana\nCrusade - Heavy Industry\nDark Fog\nScreen
     Saver\n\\n\\n\\n\\nNews Jingle\n"
   m_isRightToLeft: 0
@@ -2357,22 +2357,19 @@ MonoBehaviour:
 
     \n\n\n\nThomas Wessel
 
-    \nAnthony A
+    \nPatrick James Alcantara
 
-    \nPatrick
-    James Alcantara
-
-    Shazer Rizzo
+    Shazer
+    Rizzo
 
     Zane Shan
 
     \nJacqueline gracey
 
-    \n\n\n\nKevin
-    MacLeod (incompetech.com)
+    \n\n\n\nKevin MacLeod (incompetech.com)
 
-    Licensed under Creative Commons: By Attribution
-    3.0 License
+    Licensed
+    under Creative Commons: By Attribution 3.0 License
 
     http://creativecommons.org/licenses/by/3.0/
 
@@ -3846,8 +3843,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5649284127737599427}
   m_HandleRect: {fileID: 2979551002520952161}
   m_Direction: 2
-  m_Value: -0.00004215234
-  m_Size: 0.4103302
+  m_Value: 1
+  m_Size: 0.41035604
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -9822,7 +9819,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 715.36206}
+  m_AnchoredPosition: {x: 0, y: 184.66016}
   m_SizeDelta: {x: 0, y: 900}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &2355122956089113391
